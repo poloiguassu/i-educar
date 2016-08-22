@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version   $Id$
  */
 
@@ -38,11 +38,11 @@ require_once 'Educacenso/Model/DocenteDataMapper.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -58,11 +58,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -82,7 +82,7 @@ class indice extends clsCadastro
 
   var $total_horas_alocadas;
 
-  // Determina se o servidor é um docente para buscar código Educacenso/Inep.
+  // Determina se o servidor ï¿½ um docente para buscar cï¿½digo Educacenso/Inep.
   var $docente = FALSE;
 
   function Inicializar()
@@ -123,7 +123,7 @@ class indice extends clsCadastro
 
         $db = new clsBanco();
 
-        // Carga horária alocada
+        // Carga horï¿½ria alocada
         $sql = sprintf("SELECT
             carga_horaria
           FROM
@@ -144,7 +144,7 @@ class indice extends clsCadastro
         $this->total_horas_alocadas = sprintf('%02d:%02d',
           $carga / 60, $carga % 60);
 
-        // Funções
+        // Funï¿½ï¿½es
         $obj_funcoes = new clsPmieducarServidorFuncao();
         $lst_funcoes = $obj_funcoes->lista($this->ref_cod_instituicao, $this->cod_servidor);
 
@@ -198,7 +198,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""        => "{$nomeMenu} servidor"             
     ));
     $this->enviaLocalizacao($localizacao->montar());    
@@ -249,7 +249,7 @@ class indice extends clsCadastro
 
     $script = "javascript:showExpansivelIframe(350, 100, 'educar_deficiencia_cad_pop.php');";
     $script = "<img id='img_deficiencia' style='display: \'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-    $this->campoLista('ref_cod_deficiencia', 'Deficiência', $opcoes,
+    $this->campoLista('ref_cod_deficiencia', 'Deficiï¿½ncia', $opcoes,
       $this->ref_cod_deficiencia, '', FALSE, '', $script, FALSE, FALSE);
 
     $opcoes = array('' => 'Selecione');
@@ -295,12 +295,12 @@ class indice extends clsCadastro
       $opcoes = array('' => 'Erro na geracao');
     }
 
-    $this->campoTabelaInicio('funcao', 'Funções Servidor',
-      array("Função", "Componentes Curriculares", "Cursos"), ($this->ref_cod_funcao));
+    $this->campoTabelaInicio('funcao', 'Funï¿½ï¿½es Servidor',
+      array("Funï¿½ï¿½o", "Componentes Curriculares", "Cursos"), ($this->ref_cod_funcao));
 
     $funcao = 'popless()';
 
-    $this->campoLista('ref_cod_funcao', 'Função', $opcoes, $this->ref_cod_funcao,
+    $this->campoLista('ref_cod_funcao', 'Funï¿½ï¿½o', $opcoes, $this->ref_cod_funcao,
       'funcaoChange(this)', '', '', '');
 
     $this->campoRotulo('disciplina', 'Componentes Curriculares',
@@ -329,8 +329,8 @@ class indice extends clsCadastro
       $hora_formatada = sprintf('%02d:%02d', $horas, $minutos);
     }
 
-    $this->campoHora('carga_horaria', 'Carga Horária', $hora_formatada, TRUE,
-      'Número de horas deve ser maior que horas alocadas','',FALSE);
+    $this->campoHora('carga_horaria', 'Carga Horï¿½ria', $hora_formatada, TRUE,
+      'Nï¿½mero de horas deve ser maior que horas alocadas','',FALSE);
 
     // Dados do docente no Inep/Educacenso.
     if ($this->docente) {
@@ -344,7 +344,7 @@ class indice extends clsCadastro
       }
 
       if (isset($docenteInep)) {
-        $this->campoRotulo('_inep_cod_docente', 'Código do docente no Educacenso/Inep',
+        $this->campoRotulo('_inep_cod_docente', 'Cï¿½digo do docente no Educacenso/Inep',
           $docenteInep->docenteInep);
 
         if (isset($docenteInep->nomeInep)) {
@@ -412,7 +412,7 @@ class indice extends clsCadastro
       }
     }
 
-    $this->mensagem = 'Cadastro não realizado.<br>';
+    $this->mensagem = 'Cadastro nï¿½o realizado.<br>';
     return FALSE;
   }
 
@@ -445,7 +445,7 @@ class indice extends clsCadastro
 
         include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
-        $this->mensagem .= 'Edição efetuada com sucesso.<br>';
+        $this->mensagem .= 'Ediï¿½ï¿½o efetuada com sucesso.<br>';
         header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
         die();
       }
@@ -456,7 +456,7 @@ class indice extends clsCadastro
         NULL, NULL, 1, $this->ref_cod_instituicao);
 
       if ($obj_quadro_horario->detalhe()) {
-        $this->mensagem = "Edição não realizada. O servidor está vinculado a um quadro de horários.<br>";
+        $this->mensagem = "Ediï¿½ï¿½o nï¿½o realizada. O servidor estï¿½ vinculado a um quadro de horï¿½rios.<br>";
         return FALSE;
       }
       else {
@@ -465,7 +465,7 @@ class indice extends clsCadastro
           NULL, NULL, 1, NULL, $this->ref_cod_instituicao);
 
         if ($obj_quadro_horario->detalhe()) {
-          $this->mensagem = "Edição não realizada. O servidor está vinculado a um quadro de horários.<br>";
+          $this->mensagem = "Ediï¿½ï¿½o nï¿½o realizada. O servidor estï¿½ vinculado a um quadro de horï¿½rios.<br>";
           return FALSE;
         }
         else {
@@ -494,7 +494,7 @@ class indice extends clsCadastro
 
               include 'educar_limpa_sessao_curso_disciplina_servidor.php';
 
-              $this->mensagem .= "Edição efetuada com sucesso.<br>";
+              $this->mensagem .= "Ediï¿½ï¿½o efetuada com sucesso.<br>";
               header("Location: educar_servidor_det.php?cod_servidor={$this->cod_servidor}&ref_cod_instituicao={$this->ref_cod_instituicao}");
               die();
             }
@@ -503,7 +503,7 @@ class indice extends clsCadastro
       }
     }
 
-    $this->mensagem = "Edição não realizada.<br>";
+    $this->mensagem = "Ediï¿½ï¿½o nï¿½o realizada.<br>";
     return FALSE;
   }
 
@@ -522,7 +522,7 @@ class indice extends clsCadastro
       NULL, 1, $this->ref_cod_instituicao);
 
     if ($obj_quadro_horario->detalhe()) {
-      $this->mensagem = "Exclusão não realizada. O servidor está vinculado a um quadro de horários.<br>";
+      $this->mensagem = "Exclusï¿½o nï¿½o realizada. O servidor estï¿½ vinculado a um quadro de horï¿½rios.<br>";
       return FALSE;
     }
     else {
@@ -531,7 +531,7 @@ class indice extends clsCadastro
         NULL, NULL, 1, NULL, $this->ref_cod_instituicao);
 
       if ($obj_quadro_horario->detalhe()) {
-        $this->mensagem = "Exclusão não realizada. O servidor está vinculado a um quadro de horários.<br>";
+        $this->mensagem = "Exclusï¿½o nï¿½o realizada. O servidor estï¿½ vinculado a um quadro de horï¿½rios.<br>";
         return FALSE;
       }
       else {
@@ -543,14 +543,14 @@ class indice extends clsCadastro
 
         if ($excluiu) {
           $this->excluiFuncoes();
-          $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
+          $this->mensagem .= "Exclusï¿½o efetuada com sucesso.<br>";
           header("Location: educar_servidor_lst.php");
           die();
         }
       }
     }
 
-    $this->mensagem = 'Exclusão não realizada.<br>';
+    $this->mensagem = 'Exclusï¿½o nï¿½o realizada.<br>';
     return FALSE;
   }
 
@@ -640,21 +640,21 @@ class indice extends clsCadastro
 
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteï¿½do ï¿½ï¿½ pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
 /**
- * Carrega as opções de um campo select de funções via Ajax
+ * Carrega as opï¿½ï¿½es de um campo select de funï¿½ï¿½es via Ajax
  */
 function getFuncao(id_campo)
 {
@@ -664,7 +664,7 @@ function getFuncao(id_campo)
 
   if (campoFuncao) {
     campoFuncao.disabled = true;
-    campoFuncao.options[0].text = 'Carregando funções';
+    campoFuncao.options[0].text = 'Carregando funï¿½ï¿½es';
 
     var xml = new ajax(atualizaLstFuncao,id_campo);
     xml.envia("educar_funcao_xml.php?ins="+campoInstituicao+"&professor=true");
@@ -683,7 +683,7 @@ function atualizaLstFuncao(xml)
   var campoFuncao = document.getElementById(arguments[1]);
 
   campoFuncao.length = 1;
-  campoFuncao.options[0].text = 'Selecione uma função';
+  campoFuncao.options[0].text = 'Selecione uma funï¿½ï¿½o';
   campoFuncao.disabled = false;
 
   funcaoChange(campoFuncao);
@@ -696,18 +696,18 @@ function atualizaLstFuncao(xml)
     }
   }
   else {
-    campoFuncao.options[0].text = 'A instituição não possui funções de servidores';
+    campoFuncao.options[0].text = 'A instituiï¿½ï¿½o nï¿½o possui funï¿½ï¿½es de servidores';
   }
 }
 
 
 /**
- * Altera a visibilidade de opções extras
+ * Altera a visibilidade de opï¿½ï¿½es extras
  *
- * Quando a função escolhida para o servidor for do tipo professor, torna as
- * opções de escolha de disciplina e cursos visíveis
+ * Quando a funï¿½ï¿½o escolhida para o servidor for do tipo professor, torna as
+ * opï¿½ï¿½es de escolha de disciplina e cursos visï¿½veis
  *
- * É um toggle on/off
+ * ï¿½ um toggle on/off
  */
 function funcaoChange(campo)
 {
@@ -731,12 +731,12 @@ function funcaoChange(campo)
 
 
 /**
- * Chama as funções getFuncao e funcaoChange para todas as linhas da tabela
- * de função de servidor
+ * Chama as funï¿½ï¿½es getFuncao e funcaoChange para todas as linhas da tabela
+ * de funï¿½ï¿½o de servidor
  */
 function trocaTodasfuncoes() {
   for (var ct = 0; ct < tab_add_1.id; ct++) {
-    // Não executa durante onload senão, funções atuais são substituídas
+    // Nï¿½o executa durante onload senï¿½o, funï¿½ï¿½es atuais sï¿½o substituï¿½das
     if (onloadCallOnce == false) {
       getFuncao('ref_cod_funcao[' + ct + ']');
     }
@@ -746,13 +746,13 @@ function trocaTodasfuncoes() {
 
 
 /**
- * Verifica se ref_cod_instituicao existe via DOM e dá um bind no evento
- * onchange do elemento para executar a função trocaTodasfuncoes()
+ * Verifica se ref_cod_instituicao existe via DOM e dï¿½ um bind no evento
+ * onchange do elemento para executar a funï¿½ï¿½o trocaTodasfuncoes()
  */
 if (document.getElementById('ref_cod_instituicao')) {
   var ref_cod_instituicao = document.getElementById('ref_cod_instituicao');
 
-  // Função anônima para evento onchance do select de instituição
+  // Funï¿½ï¿½o anï¿½nima para evento onchance do select de instituiï¿½ï¿½o
   ref_cod_instituicao.onchange = function() {
     trocaTodasfuncoes();
     var xml = new ajax(function(){});
@@ -762,7 +762,7 @@ if (document.getElementById('ref_cod_instituicao')) {
 
 
 /**
- * Chama as funções funcaoChange e getFuncao após a execução da função addRow
+ * Chama as funï¿½ï¿½es funcaoChange e getFuncao apï¿½s a execuï¿½ï¿½o da funï¿½ï¿½o addRow
  */
 tab_add_1.afterAddRow = function () {
   funcaoChange(document.getElementById('ref_cod_funcao['+(tab_add_1.id - 1)+']'));
@@ -771,8 +771,8 @@ tab_add_1.afterAddRow = function () {
 
 
 /**
- * Variável de estado, deve ser checada por funções que queiram executar ou
- * não um trecho de código apenas durante o onload
+ * Variï¿½vel de estado, deve ser checada por funï¿½ï¿½es que queiram executar ou
+ * nï¿½o um trecho de cï¿½digo apenas durante o onload
  */
 var onloadCallOnce = true;
 window.onload = function() {
@@ -799,7 +799,7 @@ function acao2()
   var carga_horaria = (document.getElementById('carga_horaria').value).replace(',', '.');
 
   if (parseFloat(total_horas_alocadas) > parseFloat(carga_horaria)) {
-    alert('Atenção, carga horária deve ser maior que horas alocadas!');
+    alert('Atenï¿½ï¿½o, carga horï¿½ria deve ser maior que horas alocadas!');
 
     return false;
   }

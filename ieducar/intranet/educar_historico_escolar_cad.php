@@ -1,26 +1,26 @@
 <?php
 /**
  *
- * @author  Prefeitura Municipal de Itajaí
+ * @author  Prefeitura Municipal de Itajaï¿½
  * @version SVN: $Id$
  *
- * Pacote: i-PLB Software Público Livre e Brasileiro
+ * Pacote: i-PLB Software Pï¿½blico Livre e Brasileiro
  *
- * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaï¿½
  *            ctima@itajai.sc.gov.br
  *
- * Este  programa  é  software livre, você pode redistribuí-lo e/ou
- * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
- * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
- * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ * Este  programa  ï¿½  software livre, vocï¿½ pode redistribuï¿½-lo e/ou
+ * modificï¿½-lo sob os termos da Licenï¿½a Pï¿½blica Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a versï¿½o 2 da
+ * Licenï¿½a   como  (a  seu  critï¿½rio)  qualquer  versï¿½o  mais  nova.
  *
- * Este programa  é distribuído na expectativa de ser útil, mas SEM
- * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
- * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
- * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ * Este programa  ï¿½ distribuï¿½do na expectativa de ser ï¿½til, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia implï¿½cita de COMERCIALI-
+ * ZAï¿½ï¿½O  ou  de ADEQUAï¿½ï¿½O A QUALQUER PROPï¿½SITO EM PARTICULAR. Con-
+ * sulte  a  Licenï¿½a  Pï¿½blica  Geral  GNU para obter mais detalhes.
  *
- * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
- * junto  com  este  programa. Se não, escreva para a Free Software
+ * Vocï¿½  deve  ter  recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU
+ * junto  com  este  programa. Se nï¿½o, escreva para a Free Software
  * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
  * 02111-1307, USA.
  *
@@ -133,7 +133,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""        => "{$nomeMenu} hist&oacute;rico escolar"             
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -200,7 +200,7 @@ class indice extends clsCadastro
 			$obj_uf = new clsUf($this->escola_uf);
 			$det_uf = $obj_uf->detalhe();
 		}
-		$lista_pais_origem = array('45' => "País da escola");
+		$lista_pais_origem = array('45' => "Paï¿½s da escola");
 		$obj_pais = new clsPais();
 		$obj_pais_lista = $obj_pais->lista(null,null,null,"","","nome asc");
 		if($obj_pais_lista)
@@ -236,9 +236,9 @@ class indice extends clsCadastro
 		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", is_numeric($this->faltas_globalizadas) ? 'on' : '');
 		$this->campoNumero( "faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas, 4, 4, false );
 		$this->campoNumero( "dias_letivos", "Dias Letivos", $this->dias_letivos, 3, 3, true );
-		$this->campoMonetario( "frequencia", "Frequência", $this->frequencia, 8, 6, true );
+		$this->campoMonetario( "frequencia", "Frequï¿½ncia", $this->frequencia, 8, 6, true );
 		$this->campoCheck( "extra_curricular", "Extra-Curricular", $this->extra_curricular );
-		$this->campoCheck( "aceleracao", "Aceleração", $this->aceleracao );
+		$this->campoCheck( "aceleracao", "Aceleraï¿½ï¿½o", $this->aceleracao );
 		$this->campoMemo( "observacao", "Observa&ccedil;&atilde;o", $this->observacao, 60, 5, false );
 
 		$opcoes = array( "" => "Selecione", 1 => "Aprovado", 2 => "Reprovado", 3 => "Em Andamento", 4 => "Transferido" );
@@ -292,7 +292,7 @@ class indice extends clsCadastro
 		$this->campoQuebra();
 	//---------------------FIM INCLUI DISCIPLINAS---------------------//
 
-    // carrega estilo para feedback messages, para exibir msg validação frequencia.
+    // carrega estilo para feedback messages, para exibir msg validaï¿½ï¿½o frequencia.
 
     $style = "/modules/Portabilis/Assets/Stylesheets/Frontend.css";
     Portabilis_View_Helper_Application::loadStylesheet($this, $style);
@@ -370,7 +370,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro ao cadastrar clsPmieducarHistoricoEscolar\nvalores obrigatorios\nis_numeric( $this->ref_cod_aluno ) && is_numeric( $this->pessoa_logada ) && is_string( $this->nm_serie ) && is_numeric( $this->ano ) && is_numeric( $this->carga_horaria ) && is_numeric( $this->dias_letivos ) && is_string( $this->escola ) && is_string( $this->escola_cidade ) && is_string( $this->escola_uf ) && is_numeric( $this->aprovado ) && is_numeric( $this->ref_cod_instituicao ) && is_numeric( $this->extra_curricular )\n-->";
 			return false;
 /*    }
-		echo "<script> alert('É necessário adicionar pelo menos 1 Disciplina!') </script>";
+		echo "<script> alert('ï¿½ necessï¿½rio adicionar pelo menos 1 Disciplina!') </script>";
 		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 		return false;
 		*/
@@ -447,7 +447,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro ao editar clsPmieducarHistoricoEscolar\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->sequencial ) && is_numeric( $this->pessoa_logada ) )\n-->";
 			return false;
 /*    }
-		echo "<script> alert('É necessário adicionar pelo menos 1 Disciplina!') </script>";
+		echo "<script> alert('ï¿½ necessï¿½rio adicionar pelo menos 1 Disciplina!') </script>";
 		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
 		return false;
 		*/
@@ -562,7 +562,7 @@ $pagina->MakeAll();
 
 		}
 		if ( campoEstado.length == 1 ) {
-			campoEstado.options[0] = new Option( 'País não possui estados', '', false, false );
+			campoEstado.options[0] = new Option( 'Paï¿½s nï¿½o possui estados', '', false, false );
 		}
 
 		campoEstado.disabled = false;

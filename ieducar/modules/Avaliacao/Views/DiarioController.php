@@ -71,11 +71,10 @@ class DiarioController extends Portabilis_Controller_Page_ListController
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Lan&ccedil;amento de notas"             
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+         ""                                  => "Lan&ccedil;amento de faltas"
     ));
-    $this->enviaLocalizacao($localizacao->montar(), true);     
-  }  
+    $this->enviaLocalizacao($localizacao->montar(), true);
+  }
 }
 ?>
-

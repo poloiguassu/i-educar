@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version   $Id$
  */
 
@@ -36,11 +36,11 @@ require_once 'include/pmieducar/geral.inc.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -56,11 +56,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -131,7 +131,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""        => "{$nomeMenu} curso"             
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -185,7 +185,7 @@ class indice extends clsCadastro
     $obrigatorio = true;
     include('include/pmieducar/educar_campo_lista.php');
 
-    // Nível ensino
+    // Nï¿½vel ensino
     $opcoes = array( '' => 'Selecione' );
 
     if ($this->ref_cod_instituicao) {
@@ -323,7 +323,7 @@ class indice extends clsCadastro
 
     $this->campoOculto('habilitacao_curso', serialize($this->habilitacao_curso));
 
-    // Habilitação
+    // Habilitaï¿½ï¿½o
     $opcoes = array('' => 'Selecione');
 
     if ($this->ref_cod_instituicao) {
@@ -350,7 +350,7 @@ class indice extends clsCadastro
     $this->campoOculto('incluir', '');
     $this->campoQuebra();
 
-    // Padrão ano escolar
+    // Padrï¿½o ano escolar
     $this->campoCheck('padrao_ano_escolar', 'Padr&atilde;o Ano Escolar', $this->padrao_ano_escolar);
 
     $this->campoCheck('multi_seriado', 'Multi seriado', $this->multi_seriado);
@@ -359,7 +359,7 @@ class indice extends clsCadastro
     $this->campoMemo('objetivo_curso', 'Objetivo Curso', $this->objetivo_curso,
       60, 5, FALSE);
 
-    // Público alvo
+    // Pï¿½blico alvo
     $this->campoMemo('publico_alvo', 'P&uacute;blico Alvo', $this->publico_alvo,
       60, 5, FALSE);
   }
@@ -503,16 +503,16 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteï¿½do ï¿½ï¿½ pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
@@ -523,7 +523,7 @@ function getNivelEnsino(xml_nivel_ensino)
 
   if (DOM_array.length) {
     campoNivelEnsino.length = 1;
-    campoNivelEnsino.options[0].text = 'Selecione um nível de ensino';
+    campoNivelEnsino.options[0].text = 'Selecione um nï¿½vel de ensino';
     campoNivelEnsino.disabled = false;
 
     for (var i = 0; i < DOM_array.length; i++) {
@@ -534,7 +534,7 @@ function getNivelEnsino(xml_nivel_ensino)
     }
   }
   else {
-    campoNivelEnsino.options[0].text = 'A instituição não possui nenhum nível de ensino';
+    campoNivelEnsino.options[0].text = 'A instituiï¿½ï¿½o nï¿½o possui nenhum nï¿½vel de ensino';
   }
 }
 
@@ -556,7 +556,7 @@ function getTipoEnsino(xml_tipo_ensino)
     }
   }
   else {
-    campoTipoEnsino.options[0].text = 'A instituição não possui nenhum tipo de ensino';
+    campoTipoEnsino.options[0].text = 'A instituiï¿½ï¿½o nï¿½o possui nenhum tipo de ensino';
   }
 }
 
@@ -579,7 +579,7 @@ function getTipoRegime(xml_tipo_regime)
     }
   }
   else {
-    campoTipoRegime.options[0].text = 'A instituição não possui nenhum tipo de regime';
+    campoTipoRegime.options[0].text = 'A instituiï¿½ï¿½o nï¿½o possui nenhum tipo de regime';
   }
 }
 
@@ -590,7 +590,7 @@ function getHabilitacao(xml_habilitacao)
 
   if (DOM_array.length) {
     campoHabilitacao.length = 1;
-    campoHabilitacao.options[0].text = 'Selecione uma habilitação';
+    campoHabilitacao.options[0].text = 'Selecione uma habilitaï¿½ï¿½o';
     campoHabilitacao.disabled = false;
 
     for (var i = 0; i < DOM_array.length; i++) {
@@ -601,7 +601,7 @@ function getHabilitacao(xml_habilitacao)
     }
   }
   else {
-    campoHabilitacao.options[0].text = 'A instituição não possui nenhuma habilitação';
+    campoHabilitacao.options[0].text = 'A instituiï¿½ï¿½o nï¿½o possui nenhuma habilitaï¿½ï¿½o';
   }
 }
 
@@ -612,7 +612,7 @@ document.getElementById('ref_cod_instituicao').onchange = function()
   var campoNivelEnsino = document.getElementById('ref_cod_nivel_ensino');
   campoNivelEnsino.length = 1;
   campoNivelEnsino.disabled = true;
-  campoNivelEnsino.options[0].text = 'Carregando nível de ensino';
+  campoNivelEnsino.options[0].text = 'Carregando nï¿½vel de ensino';
 
   var campoTipoEnsino = document.getElementById('ref_cod_tipo_ensino');
   campoTipoEnsino.length = 1;
@@ -627,7 +627,7 @@ document.getElementById('ref_cod_instituicao').onchange = function()
   var campoHabilitacao = document.getElementById('habilitacao');
   campoHabilitacao.length = 1;
   campoHabilitacao.disabled = true;
-  campoHabilitacao.options[0].text = 'Carregando habilitação';
+  campoHabilitacao.options[0].text = 'Carregando habilitaï¿½ï¿½o';
 
   var xml_nivel_ensino = new ajax(getNivelEnsino);
   xml_nivel_ensino.envia("educar_nivel_ensino_xml.php?ins="+campoInstituicao);

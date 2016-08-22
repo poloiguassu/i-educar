@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paixï¿½o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     ComponenteCurricular
  * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.1.0
+ * @since       Arquivo disponï¿½vel desde a versï¿½o 1.1.0
  * @version     $Id$
  */
 
@@ -36,12 +36,12 @@ require_once 'ComponenteCurricular/Model/TipoBase.php';
 /**
  * EditController class.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paixï¿½o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     ComponenteCurricular
  * @subpackage  Modules
- * @since       Classe disponível desde a versão 1.1.0
+ * @since       Classe disponï¿½vel desde a versï¿½o 1.1.0
  * @version     @@package_version@@
  */
 class EditController extends Core_Controller_Page_EditController
@@ -55,7 +55,7 @@ class EditController extends Core_Controller_Page_EditController
 
   protected $_formMap = array(
     'instituicao' => array(
-      'label'  => 'Instituição',
+      'label'  => 'Instituiï¿½ï¿½o',
       'help'   => '',
     ),
     'nome' => array(
@@ -73,7 +73,7 @@ class EditController extends Core_Controller_Page_EditController
       'entity' => 'tipo_base'
     ),
     'area_conhecimento' => array(
-      'label'  => 'Área conhecimento',
+      'label'  => 'ï¿½rea conhecimento',
       'help'   => '',
       'entity' => 'area_conhecimento'
     ),
@@ -89,7 +89,7 @@ class EditController extends Core_Controller_Page_EditController
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""        => "$nomeMenu componente curricular"             
     ));
     $this->enviaLocalizacao($localizacao->montar());    
@@ -102,7 +102,7 @@ class EditController extends Core_Controller_Page_EditController
   {
     $this->campoOculto('id', $this->getEntity()->id);
 
-    // Instituição
+    // Instituiï¿½ï¿½o
     $instituicoes = App_Model_IedFinder::getInstituicoes();
     $this->campoLista('instituicao', $this->_getLabel('instituicao'),
       $instituicoes, $this->getEntity()->instituicao);
@@ -121,7 +121,7 @@ class EditController extends Core_Controller_Page_EditController
     $this->campoRadio('tipo_base', $this->_getLabel('tipo_base'),
       $tipoBase->getEnums(), $this->getEntity()->get('tipo_base'));
 
-    // Área de conhecimento
+    // ï¿½rea de conhecimento
     $areas = $this->getDataMapper()->findAreaConhecimento();
     $areas = CoreExt_Entity::entityFilterAttr($areas, 'id', 'nome');
     $this->campoLista('area_conhecimento', $this->_getLabel('area_conhecimento'),

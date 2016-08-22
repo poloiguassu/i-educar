@@ -1,23 +1,23 @@
 <?php
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
@@ -40,7 +40,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Itinerário" );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Itinerï¿½rio" );
 		$this->processoAp = "21238";
 		$this->addEstilo('localizacaoSistema');
 	}
@@ -99,7 +99,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""                                  => "Editar itiner&aacute;rio"
     ));
     $this->enviaLocalizacao($localizacao->montar());		
@@ -114,7 +114,7 @@ class indice extends clsCadastro
 			foreach( $_POST AS $campo => $val )
 				$this->$campo = ( !$this->$campo ) ?  $val : $this->$campo ;
 
-		$this->campoRotulo("cod_rota","Código da rota" ,$this->cod_rota);
+		$this->campoRotulo("cod_rota","Cï¿½digo da rota" ,$this->cod_rota);
 		$this->campoRotulo("descricao","Rota", $this->descricao );
 	
 		$this->campoQuebra();
@@ -138,13 +138,13 @@ class indice extends clsCadastro
 			}
 		}
 
-		$this->campoTabelaInicio("pontos","Itinerário",array("Ponto (Requer pré-cadastro)<br/> <spam style=\" font-weight: normal; font-size: 10px;\">Digite o código ou nome do ponto e selecione o desejado</spam>","Hora","Tipo","Veículo (Requer pré-cadastro)<br/> <spam style=\" font-weight: normal; font-size: 10px;\">Digite o código, nome ou placa do veículo e selecione o desejado</spam>" ),$this->pontos);
+		$this->campoTabelaInicio("pontos","Itinerï¿½rio",array("Ponto (Requer prï¿½-cadastro)<br/> <spam style=\" font-weight: normal; font-size: 10px;\">Digite o cï¿½digo ou nome do ponto e selecione o desejado</spam>","Hora","Tipo","Veï¿½culo (Requer prï¿½-cadastro)<br/> <spam style=\" font-weight: normal; font-size: 10px;\">Digite o cï¿½digo, nome ou placa do veï¿½culo e selecione o desejado</spam>" ),$this->pontos);
 
-		$this->campoTexto( "ref_cod_ponto_transporte_escolar", "Ponto (Requer pré-cadastro)", $this->ref_cod_ponto_transporte_escolar, 50, 255, false, true, false, '', '', '', 'onfocus' );
+		$this->campoTexto( "ref_cod_ponto_transporte_escolar", "Ponto (Requer prï¿½-cadastro)", $this->ref_cod_ponto_transporte_escolar, 50, 255, false, true, false, '', '', '', 'onfocus' );
 
 		$this->campoHora( "hora", "Hora", $this->hora);
 		$this->campoLista( "tipo", "Tipo", array( '' => "Selecione", 'I' => 'Ida', 'V' => 'Volta'),$this->tipo );
-		$this->campoTexto( "ref_cod_veiculo", "Veículo", $this->ref_cod_veiculo, 50, 255, false, false, false, '', '', '', 'onfocus' );
+		$this->campoTexto( "ref_cod_veiculo", "Veï¿½culo", $this->ref_cod_veiculo, 50, 255, false, false, false, '', '', '', 'onfocus' );
 		$this->campoTabelaFim();
 
 		$this->campoQuebra();  
@@ -304,7 +304,7 @@ $pagina->MakeAll();
 	       	location.href="transporte_rota_det.php?cod_rota="+cod_rota;
 	    } else if(targetElement.value == "Excluir todos"){
 	    	var cod_rota = $j('#cod_rota').val();
-	    	if(confirm('Este procedimento irá excluir todos os pontos do itinerário. Tem certeza que deseja continuar?')){
+	    	if(confirm('Este procedimento irï¿½ excluir todos os pontos do itinerï¿½rio. Tem certeza que deseja continuar?')){
 	    		location.href="transporte_itinerario_del.php?cod_rota="+cod_rota;
 	    	}
 	    }

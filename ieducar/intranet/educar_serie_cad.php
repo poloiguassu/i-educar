@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version   $Id$
  */
 
@@ -37,11 +37,11 @@ require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -57,11 +57,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -134,7 +134,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""        => "{$nomeMenu} s&eacute;rie"
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -182,7 +182,7 @@ class indice extends clsCadastro
 
     $this->campoLista('etapa_curso', 'Etapa Curso', $opcoes, $this->etapa_curso);
 
-    // Regra de avaliação
+    // Regra de avaliaï¿½ï¿½o
     $mapper = new RegraAvaliacao_Model_RegraDataMapper();
     $regras = array();
     if (!is_null($this->ref_cod_instituicao)) {
@@ -192,7 +192,7 @@ class indice extends clsCadastro
       $regras = CoreExt_Entity::entityFilterAttr($regras, 'id', 'nome');
     }
 
-    $this->campoLista('regra_avaliacao_id', 'Regra Avaliação', $regras, $this->regra_avaliacao_id);
+    $this->campoLista('regra_avaliacao_id', 'Regra Avaliaï¿½ï¿½o', $regras, $this->regra_avaliacao_id);
 
     $opcoes = array('' => 'Selecione', 1 => 'n&atilde;o', 2 => 'sim');
 
@@ -207,9 +207,9 @@ class indice extends clsCadastro
     $this->campoNumero('idade_inicial', 'Faixa et&aacute;ria', $this->idade_inicial,
       2, 2, FALSE, '', '', FALSE, FALSE, TRUE);
 
-    $this->campoNumero('idade_final', '&nbsp;até', $this->idade_final, 2, 2, FALSE);
+    $this->campoNumero('idade_final', '&nbsp;atï¿½', $this->idade_final, 2, 2, FALSE);
 
-		$this->campoMemo( "observacao_historico", "Observa&ccedil;&atilde;o histórico", $this->observacao_historico, 60, 5, false );
+		$this->campoMemo( "observacao_historico", "Observa&ccedil;&atilde;o histï¿½rico", $this->observacao_historico, 60, 5, false );
   }
 
   function Novo()
@@ -288,16 +288,16 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteï¿½do ï¿½ï¿½ pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
@@ -332,7 +332,7 @@ function EtapasCurso(xml_qtd_etapas)
     }
   }
   else {
-    campoEtapas.options[0].text = 'O curso não possui nenhuma etapa';
+    campoEtapas.options[0].text = 'O curso nï¿½o possui nenhuma etapa';
   }
 }
 
@@ -353,7 +353,7 @@ function RegrasInstituicao(xml_qtd_regras)
     }
   }
   else {
-	  campoRegras.options[0].text = 'A instituição não possui uma Regra de Avaliação';
+	  campoRegras.options[0].text = 'A instituiï¿½ï¿½o nï¿½o possui uma Regra de Avaliaï¿½ï¿½o';
   }
 }
 
@@ -375,10 +375,10 @@ document.getElementById('ref_cod_curso').onchange = function()
  */
 document.getElementById('ref_cod_instituicao').onchange = function()
 {
-  // Essa ação é a padrão do item, via include
+  // Essa aï¿½ï¿½o ï¿½ a padrï¿½o do item, via include
   getCurso();
 
-  // Requisição Ajax para as Regras de Avaliação
+  // Requisiï¿½ï¿½o Ajax para as Regras de Avaliaï¿½ï¿½o
   getRegra();
 }
 </script>

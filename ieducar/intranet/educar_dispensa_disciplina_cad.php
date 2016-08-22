@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version   $Id$
  */
 
@@ -37,11 +37,11 @@ require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -57,11 +57,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -152,7 +152,7 @@ class indice extends clsCadastro
       $localizacao = new LocalizacaoSistema();
       $localizacao->entradaCaminhos( array(
            $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-           "educar_index.php"                  => "i-Educar - Escola",
+           "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
            ""        => "{$nomeMenu} dispensa de disciplina"
       ));
       $this->enviaLocalizacao($localizacao->montar());
@@ -193,7 +193,7 @@ class indice extends clsCadastro
     $this->campoRotulo('nm_aluno', 'Nome do Aluno', $det_aluno['nome_aluno']);
 
     if (!isset($this->ref_cod_turma)) {
-      $this->mensagem = 'Para dispensar um aluno de um componente curricular, é necessário que este esteja enturmado.';
+      $this->mensagem = 'Para dispensar um aluno de um componente curricular, ï¿½ necessï¿½rio que este esteja enturmado.';
       return;
     }
 
@@ -248,7 +248,7 @@ class indice extends clsCadastro
     $this->campoLista('ref_cod_tipo_dispensa', 'Tipo Dispensa', $opcoes,
       $this->ref_cod_tipo_dispensa);
 
-    $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 10, FALSE);
+    $this->campoMemo('observacao', 'Observaï¿½ï¿½o', $this->observacao, 60, 10, FALSE);
   }
 
   function Novo()
@@ -265,7 +265,7 @@ class indice extends clsCadastro
     $db  = new clsBanco();
     $max_cod_dispensa = $db->CampoUnico($sql);
 
-    // Caso não exista nenhuma dispensa, atribui o código 1, tabela não utiliza sequences
+    // Caso nï¿½o exista nenhuma dispensa, atribui o cï¿½digo 1, tabela nï¿½o utiliza sequences
     $max_cod_dispensa = $max_cod_dispensa > 0 ? $max_cod_dispensa : 1;
 
     $obj = new clsPmieducarDispensaDisciplina($this->ref_cod_matricula,
@@ -291,7 +291,7 @@ class indice extends clsCadastro
       die();
     }
 
-    $this->mensagem = 'Cadastro não realizado.<br />';
+    $this->mensagem = 'Cadastro nï¿½o realizado.<br />';
     echo "<!--\nErro ao cadastrar clsPmieducarDispensaDisciplina\nvalores obrigatorios\n is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_tipo_dispensa )\n-->";
     return FALSE;
   }
@@ -313,12 +313,12 @@ class indice extends clsCadastro
 
     $editou = $obj->edita();
     if ($editou) {
-      $this->mensagem .= 'Edição efetuada com sucesso.<br />';
+      $this->mensagem .= 'Ediï¿½ï¿½o efetuada com sucesso.<br />';
       header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
       die();
     }
 
-    $this->mensagem = 'Edição não realizada.<br />';
+    $this->mensagem = 'Ediï¿½ï¿½o nï¿½o realizada.<br />';
     echo "<!--\nErro ao editar clsPmieducarDispensaDisciplina\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->pessoa_logada ) )\n-->";
     return FALSE;
   }
@@ -341,25 +341,25 @@ class indice extends clsCadastro
     $excluiu = $obj->excluir();
 
     if ($excluiu) {
-      $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
+      $this->mensagem .= 'Exclusï¿½o efetuada com sucesso.<br />';
       header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
       die();
     }
 
-    $this->mensagem = 'Exclusão não realizada.<br />';
+    $this->mensagem = 'Exclusï¿½o nï¿½o realizada.<br />';
     echo "<!--\nErro ao excluir clsPmieducarDispensaDisciplina\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->pessoa_logada ) )\n-->";
     return FALSE;
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteï¿½do ï¿½  pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();

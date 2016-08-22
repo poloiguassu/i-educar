@@ -76,7 +76,7 @@ class RedefinirSenhaController extends Portabilis_Controller_Page_EditController
   {
     require_once 'Core/View.php';
     $viewBase = new Core_View($instance);
-    $viewBase->titulo = 'i-Educar - Redefini&ccedil;&atilde;o senha';
+    $viewBase->titulo = 'Trilha Jovem Iguassu - Redefini&ccedil;&atilde;o senha';
     $instance->titulo = 'Redefini&ccedil;&atilde;o senha';
     $viewBase->addForm($instance);
     //$viewBase->Formular();

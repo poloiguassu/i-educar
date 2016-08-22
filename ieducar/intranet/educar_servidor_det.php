@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version   $Id$
  */
 
@@ -39,11 +39,11 @@ require_once 'Educacenso/Model/DocenteDataMapper.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase {
@@ -58,11 +58,11 @@ class clsIndexBase extends clsBase {
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
@@ -85,7 +85,7 @@ class indice extends clsDetalhe
     $alocacao_array      = array();
 
   /**
-   * Implementação do método Gerar()
+   * Implementaï¿½ï¿½o do mï¿½todo Gerar()
    */
   function Gerar()
   {
@@ -110,7 +110,7 @@ class indice extends clsDetalhe
       die();
     }
 
-    // Deficiência
+    // Deficiï¿½ncia
     $obj_ref_cod_deficiencia = new clsCadastroDeficiencia($registro['ref_cod_deficiencia']);
     $det_ref_cod_deficiencia = $obj_ref_cod_deficiencia->detalhe();
     $registro['ref_cod_deficiencia'] = $det_ref_cod_deficiencia['nm_deficiencia'];
@@ -120,7 +120,7 @@ class indice extends clsDetalhe
     $det_ref_idesco = $obj_ref_idesco->detalhe();
     $registro['ref_idesco'] = $det_ref_idesco['descricao'];
 
-    // Função
+    // Funï¿½ï¿½o
     $obj_ref_cod_funcao = new clsPmieducarFuncao($registro['ref_cod_funcao'],
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
     $det_ref_cod_funcao = $obj_ref_cod_funcao->detalhe();
@@ -134,12 +134,12 @@ class indice extends clsDetalhe
     $det_cod_servidor = $det_cod_servidor['idpes']->detalhe();
     $registro['nome'] = $det_cod_servidor['nome'];
 
-    // Instituição
+    // Instituiï¿½ï¿½o
     $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
     $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
     $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
-    // Alocação do servidor
+    // Alocaï¿½ï¿½o do servidor
     $obj = new clsPmieducarServidorAlocacao();
     $obj->setOrderby('periodo, carga_horaria');
     $lista = $obj->lista(NULL, $this->ref_cod_instituicao, NULL, NULL, NULL,
@@ -166,7 +166,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['matricula']) {
-      $this->addDetalhe(array('Matrícula', $registro['matricula']));
+      $this->addDetalhe(array('Matrï¿½cula', $registro['matricula']));
     }
 
     if ($registro['nome']) {
@@ -174,11 +174,11 @@ class indice extends clsDetalhe
     }
 
     if ($registro['ref_cod_instituicao']) {
-      $this->addDetalhe( array( "Instituição", $registro['ref_cod_instituicao']));
+      $this->addDetalhe( array( "Instituiï¿½ï¿½o", $registro['ref_cod_instituicao']));
     }
 
     if ($registro['ref_cod_deficiencia']) {
-      $this->addDetalhe(array('Deficiência', $registro['ref_cod_deficiencia']));
+      $this->addDetalhe(array('Deficiï¿½ncia', $registro['ref_cod_deficiencia']));
     }
 
     if( $registro['ref_idesco']) {
@@ -189,11 +189,11 @@ class indice extends clsDetalhe
       $obj_nivel = new clsPmieducarSubnivel($registro['ref_cod_subnivel']);
       $det_nivel = $obj_nivel->detalhe();
 
-      $this->addDetalhe(array('Nível', $det_nivel['nm_subnivel']));
+      $this->addDetalhe(array('Nï¿½vel', $det_nivel['nm_subnivel']));
     }
 
     if ($registro['ref_cod_funcao']) {
-      $this->addDetalhe(array('Função', $registro['ref_cod_funcao']));
+      $this->addDetalhe(array('Funï¿½ï¿½o', $registro['ref_cod_funcao']));
     }
 
     $obj_funcao = new clsPmieducarServidorFuncao();
@@ -206,7 +206,7 @@ class indice extends clsDetalhe
       $tabela .= "
         <table cellspacing='0' cellpadding='0' border='0'>
           <tr bgcolor='#A1B3BD' align='center'>
-            <td width='150'>Função</td>
+            <td width='150'>Funï¿½ï¿½o</td>
           </tr>";
 
       $class = 'formlttd';
@@ -301,39 +301,39 @@ class indice extends clsDetalhe
       }
 
       $tabela .= "</table>";
-      $this->addDetalhe(array('Função',
+      $this->addDetalhe(array('Funï¿½ï¿½o',
         "<a href='javascript:trocaDisplay(\"det_f\");' >Mostrar detalhe</a><div id='det_f' name='det_f' style='display:none;'>".$tabela."</div>"));
     }
 
     $tabela = NULL;
 
     /**
-     * @todo  Criar função de transformação de hora decimal. Ver educar_servidor_cad.php em 276
+     * @todo  Criar funï¿½ï¿½o de transformaï¿½ï¿½o de hora decimal. Ver educar_servidor_cad.php em 276
      */
     if ($registro['carga_horaria']) {
       $cargaHoraria = $registro['carga_horaria'];
       $horas   = (int)$cargaHoraria;
       $minutos = round(($cargaHoraria - $horas) * 60);
       $cargaHoraria = sprintf('%02d:%02d', $horas, $minutos);
-      $this->addDetalhe(array('Carga Horária', $cargaHoraria));
+      $this->addDetalhe(array('Carga Horï¿½ria', $cargaHoraria));
     }
 
     $dias_da_semana = array(
       '' => 'Selecione',
       1  => 'Domingo',
       2  => 'Segunda',
-      3  => 'Terça',
+      3  => 'Terï¿½a',
       4  => 'Quarta',
       5  => 'Quinta',
       6  => 'Sexta',
-      7  => 'Sábado');
+      7  => 'Sï¿½bado');
 
     if ($this->alocacao_array) {
       $tabela .= "
         <table cellspacing='0' cellpadding='0' border='0'>
           <tr bgcolor='#A1B3BD' align='center'>
-            <td width='150'>Carga Horária</td>
-            <td width='80'>Período</td>
+            <td width='150'>Carga Horï¿½ria</td>
+            <td width='80'>Perï¿½odo</td>
             <td width='150'>Escola</td>
           </tr>";
 
@@ -363,11 +363,11 @@ class indice extends clsDetalhe
 
       $tabela .= "</table>";
 
-      $this->addDetalhe(array('Horários de trabalho',
+      $this->addDetalhe(array('Horï¿½rios de trabalho',
         "<a href='javascript:trocaDisplay(\"det_pree\");' >Mostrar detalhe</a><div id='det_pree' name='det_pree' style='display:none;'>".$tabela."</div>"));
     }
 
-    // Horários do professor
+    // Horï¿½rios do professor
     $horarios = $tmp_obj->getHorariosServidor($registro['cod_servidor'],
       $this->ref_cod_instituicao);
 
@@ -377,7 +377,7 @@ class indice extends clsDetalhe
           <tr bgcolor='#A1B3BD' align='center'>
             <td width='150'>Escola</td>
             <td width='100'>Curso</td>
-            <td width='70'>Série</td>
+            <td width='70'>Sï¿½rie</td>
             <td width='70'>Turma</td>
             <td width='100'>Componente curricular</td>
             <td width='70'>Dia da semana</td>
@@ -409,7 +409,7 @@ class indice extends clsDetalhe
       $tabela .= "</table>";
 
       $this->addDetalhe(array(
-        'Horários de aula',
+        'Horï¿½rios de aula',
         "<a href='javascript:trocaDisplay(\"horarios\");' >Mostrar detalhes</a>" .
         "<div id='horarios' name='det_pree' style='display:none;'>" . $tabela . "</div>"
       ));
@@ -427,7 +427,7 @@ class indice extends clsDetalhe
       }
 
       if (isset($docenteInep)) {
-        $this->addDetalhe(array('Código do docente no Educacenso/Inep', $docenteInep->docenteInep));
+        $this->addDetalhe(array('Cï¿½digo do docente no Educacenso/Inep', $docenteInep->docenteInep));
 
         if (isset($docenteInep->nomeInep)) {
           $this->addDetalhe(array('Nome do docente no Educacenso/Inep', $docenteInep->nomeInep));
@@ -447,10 +447,10 @@ class indice extends clsDetalhe
       $this->array_botao = array();
       $this->array_botao_url_script = array();
 
-      $this->array_botao[] = 'Avaliação de Desempenho';
+      $this->array_botao[] = 'Avaliaï¿½ï¿½o de Desempenho';
       $this->array_botao_url_script[] = "go(\"educar_avaliacao_desempenho_lst.php?{$get_padrao}\");";
 
-      $this->array_botao[] = 'Formação';
+      $this->array_botao[] = 'Formaï¿½ï¿½o';
       $this->array_botao_url_script[] = "go(\"educar_servidor_formacao_lst.php?{$get_padrao}\");";
 
       $this->array_botao[] = 'Cursos superiores/Licenciaturas';
@@ -465,7 +465,7 @@ class indice extends clsDetalhe
       $this->array_botao[] = 'Alocar Servidor';
       $this->array_botao_url_script[] = "go(\"educar_servidor_alocacao_cad.php?{$get_padrao}\");";
 
-      $this->array_botao[] = 'Alterar Nível';
+      $this->array_botao[] = 'Alterar Nï¿½vel';
       $this->array_botao_url_script[] = "popless();";
 
       $obj_servidor_alocacao = new clsPmieducarServidorAlocacao();
@@ -474,7 +474,7 @@ class indice extends clsDetalhe
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
       if ($lista) {
-        $this->array_botao[] = 'Substituir Horário Servidor';
+        $this->array_botao[] = 'Substituir Horï¿½rio Servidor';
         $this->array_botao_url_script[] = "go(\"educar_servidor_substituicao_cad.php?{$get_padrao}\");";
       }
 
@@ -497,20 +497,20 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""                                  => "Detalhe do servidor"
     ));
     $this->enviaLocalizacao($localizacao->montar());    
   }
 }
 
-// Instancia o objeto da página
+// Instancia o objeto da pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia o objeto de conteúdo
+// Instancia o objeto de conteï¿½do
 $miolo = new indice();
 
-// Passa o conteúdo para a página
+// Passa o conteï¿½do para a pï¿½gina
 $pagina->addForm($miolo);
 
 // Gera o HTML

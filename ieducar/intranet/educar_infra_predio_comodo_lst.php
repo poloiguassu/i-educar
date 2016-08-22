@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de Itajaï¿½								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software Pï¿½blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaï¿½			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  ï¿½  software livre, vocï¿½ pode redistribuï¿½-lo e/ou	 *
+	*	modificï¿½-lo sob os termos da Licenï¿½a Pï¿½blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versï¿½o 2 da	 *
+	*	Licenï¿½a   como  (a  seu  critï¿½rio)  qualquer  versï¿½o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  ï¿½ distribuï¿½do na expectativa de ser ï¿½til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implï¿½cita de COMERCIALI-	 *
+	*	ZAï¿½ï¿½O  ou  de ADEQUAï¿½ï¿½O A QUALQUER PROPï¿½SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licenï¿½a  Pï¿½blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	Vocï¿½  deve  ter  recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU	 *
+	*	junto  com  este  programa. Se nï¿½o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -269,7 +269,7 @@ class indice extends clsListagem
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "i-Educar - Escola",
+	         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
 	         ""        => "Listagem de c&ocirc;modos de pr&eacute;dios"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());
@@ -308,7 +308,7 @@ function getInfraPredioFuncao(xml_infra_comodo_funcao)
 	if(DOM_array.length)
 	{
 		campoFuncao.length = 1;
-		campoFuncao.options[0].text = 'Selecione uma função';
+		campoFuncao.options[0].text = 'Selecione uma funï¿½ï¿½o';
 		campoFuncao.disabled = false;
 
 		for( var i = 0; i < DOM_array.length; i++ )
@@ -317,7 +317,7 @@ function getInfraPredioFuncao(xml_infra_comodo_funcao)
 		}
 	}
 	else
-		campoFuncao.options[0].text = 'A escola não possui nenhuma função';
+		campoFuncao.options[0].text = 'A escola nï¿½o possui nenhuma funï¿½ï¿½o';
 }
 
 document.getElementById('ref_cod_escola').onchange = function()
@@ -330,7 +330,7 @@ document.getElementById('ref_cod_escola').onchange = function()
 	var campoFuncao	= document.getElementById('ref_cod_infra_comodo_funcao');
 	campoFuncao.length = 1;
 	campoFuncao.disabled = true;
-	campoFuncao.options[0].text = 'Carregando função';
+	campoFuncao.options[0].text = 'Carregando funï¿½ï¿½o';
 
 	var xml_infra_comodo_funcao = new ajax( getInfraPredioFuncao );
 	xml_infra_comodo_funcao.envia( "educar_infra_comodo_funcao_xml.php?esc="+campoEscola );

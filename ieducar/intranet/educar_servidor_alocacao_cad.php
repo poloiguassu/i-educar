@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
  * @author    Haissam Yebahi <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version   $Id$
  */
 
@@ -42,14 +42,14 @@ require_once 'include/pmieducar/geral.inc.php';
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Alocação');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Alocaï¿½ï¿½o');
     $this->processoAp = 635;
     $this->addEstilo('localizacaoSistema');
   }
@@ -63,7 +63,7 @@ class clsIndexBase extends clsBase
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -141,7 +141,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""        => "Alocar servidor"             
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -164,7 +164,7 @@ class indice extends clsCadastro
     $obj_inst = new clsPmieducarInstituicao($this->ref_ref_cod_instituicao);
     $inst_det = $obj_inst->detalhe();
 
-    $this->campoRotulo('nm_instituicao', 'Instituição', $inst_det['nm_instituicao']);
+    $this->campoRotulo('nm_instituicao', 'Instituiï¿½ï¿½o', $inst_det['nm_instituicao']);
     $this->campoOculto('ref_ref_cod_instituicao', $this->ref_ref_cod_instituicao);
 
     // Dados do servidor
@@ -210,7 +210,7 @@ class indice extends clsCadastro
       unset($this->ref_cod_escola);
     }
 
-    // Exclusão
+    // Exclusï¿½o
     if ($this->alocacao_array) {
       foreach ($this->alocacao_array as $key => $alocacao) {
         if (is_numeric($_POST['excluir_periodo'])) {
@@ -223,9 +223,9 @@ class indice extends clsCadastro
       }
     }
 
-    // Carga horária
+    // Carga horï¿½ria
     $carga = $this->carga_horaria_disponivel;
-    $this->campoRotulo('carga_horaria_disponivel', 'Carga Horária', $carga . ':00');
+    $this->campoRotulo('carga_horaria_disponivel', 'Carga Horï¿½ria', $carga . ':00');
 
     foreach ($this->alocacao_array as $alocacao) {
       $carga_horaria_ = explode(':', $alocacao['carga_horaria_alocada']);
@@ -253,7 +253,7 @@ class indice extends clsCadastro
     $obj_escola = new clsPmieducarEscola();
     $permissao  = new clsPermissoes();
 
-    // Exibe apenas a escola ao qual o usuário de nível escola está alocado
+    // Exibe apenas a escola ao qual o usuï¿½rio de nï¿½vel escola estï¿½ alocado
     if (4 == $permissao->nivel_acesso($this->pessoa_logada)) {
       $lista_escola = $obj_escola->lista($permissao->getEscola($this->pessoa_logada),
         NULL, NULL, $this->ref_ref_cod_instituicao, NULL, NULL, NULL, NULL, NULL,
@@ -265,7 +265,7 @@ class indice extends clsCadastro
       $this->campoTextoInv('ref_cod_escola_label', 'Escola', $nome_escola, 100, 255, FALSE);
       $this->campoOculto('ref_cod_escola', $cod_escola);
     }
-    // Usuário administrador visualiza todas as escolas disponíveis
+    // Usuï¿½rio administrador visualiza todas as escolas disponï¿½veis
     else {
       $lista_escola = $obj_escola->lista(NULL, NULL, NULL,
         $this->ref_ref_cod_instituicao, NULL, NULL, NULL, NULL, NULL, NULL, 1);
@@ -289,20 +289,20 @@ class indice extends clsCadastro
     );
     self::$periodos = $periodo;
 
-    $this->campoLista('periodo', 'Período', $periodo, $this->periodo, NULL, FALSE,
+    $this->campoLista('periodo', 'Perï¿½odo', $periodo, $this->periodo, NULL, FALSE,
       '', '', FALSE, FALSE);
 
-    $this->campoHora('carga_horaria_alocada', 'Carga Horária',
+    $this->campoHora('carga_horaria_alocada', 'Carga Horï¿½ria',
       $this->carga_horaria_alocada, FALSE);
 
-    // Altera a string de descrição original do campo hora
-    $this->campos['carga_horaria_alocada'][6] = sprintf('Formato hh:mm (máximo de %d horas por período)', clsPmieducarServidorAlocacao::$cargaHorariaMax);
+    // Altera a string de descriï¿½ï¿½o original do campo hora
+    $this->campos['carga_horaria_alocada'][6] = sprintf('Formato hh:mm (mï¿½ximo de %d horas por perï¿½odo)', clsPmieducarServidorAlocacao::$cargaHorariaMax);
 
     $this->campoOculto('alocacao_array', serialize($this->alocacao_array));
 
     $this->campoOculto('alocacao_excluida_array', serialize($this->alocacao_excluida_array));
 
-    $this->campoRotulo('bt_incluir_periodo', 'Período', "<a href='#' onclick=\"if(validaHora()) { document.getElementById('incluir_periodo').value = 'S'; document.getElementById('tipoacao').value = ''; document.{$this->__nome}.submit();}\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
+    $this->campoRotulo('bt_incluir_periodo', 'Perï¿½odo', "<a href='#' onclick=\"if(validaHora()) { document.getElementById('incluir_periodo').value = 'S'; document.getElementById('tipoacao').value = ''; document.{$this->__nome}.submit();}\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
 
     if ($this->alocacao_array) {
       $excluir_ok = FALSE;
@@ -344,7 +344,7 @@ class indice extends clsCadastro
             break;
         }
 
-        // Períodos usados na escola
+        // Perï¿½odos usados na escola
         self::$escolasPeriodos[$alocacao['ref_cod_escola']][$alocacao['periodo']] = $alocacao['periodo'];
 
         $this->campoTextoInv('periodo_' . $key, '', $nm_periodo, 10, 10, FALSE,
@@ -440,7 +440,7 @@ class indice extends clsCadastro
           }
 
           if (!$cadastrou) {
-            $this->mensagem = 'Cadastro não realizado.<br />';
+            $this->mensagem = 'Cadastro nï¿½o realizado.<br />';
             echo "<!--\nErro ao cadastrar clsPmieducarServidorAlocacao\nvalores obrigatorios\nis_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_servidor) && is_numeric($this->periodo) && ($this->carga_horaria_alocada)\n-->";
             return FALSE;
           }
@@ -465,16 +465,16 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteï¿½do ï¿½  pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
@@ -516,12 +516,12 @@ function validaHora()
   }
 
   if (!((/[0-9]{2}:[0-9]{2}/).test(document.formcadastro.carga_horaria_alocada.value))) {
-    alert('Preencha o campo "Carga Horária" corretamente!');
+    alert('Preencha o campo "Carga Horï¿½ria" corretamente!');
     return false;
   }
 
   if (!periodo) {
-    alert('Preencha o campo "Período" corretamente!');
+    alert('Preencha o campo "Perï¿½odo" corretamente!');
     return false;
   }
 
@@ -535,13 +535,13 @@ function validaHora()
   hora_restantes_ = Date.UTC(1970, 01, 01, horas_restantes[0], horas_restantes[1], 0);
 
   if (hora_ > hora_max_) {
-    message = <?php print sprintf('"O número de horas máximo por período/escola é de %.0fh."', clsPmieducarServidorAlocacao::$cargaHorariaMax); ?>;
+    message = <?php print sprintf('"O nï¿½mero de horas mï¿½ximo por perï¿½odo/escola ï¿½ de %.0fh."', clsPmieducarServidorAlocacao::$cargaHorariaMax); ?>;
     alert(message);
     return false;
   }
 
   if (hora_ > hora_restantes_) {
-    alert("Atenção número de horas excedem o número de horas disponíveis! Por favor, corrija.");
+    alert("Atenï¿½ï¿½o nï¿½mero de horas excedem o nï¿½mero de horas disponï¿½veis! Por favor, corrija.");
     document.getElementById('ref_cod_escola').value        = '';
     document.getElementById('periodo').value               = '';
     document.getElementById('carga_horaria_alocada').value = '';

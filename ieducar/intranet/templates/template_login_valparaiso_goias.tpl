@@ -143,7 +143,7 @@
 		<hr>
 
 		<a class="logo_rodape" href="http://pagina.softwarepublico.gov.br/ieducar/" target="_top">
-			<img id="logo_ieducar" src="imagens/logo_ieducar.png" alt="i-Educar - Software de Gest&atilde;o Escolar"> </img>
+			<img id="logo_ieducar" src="imagens/logo_ieducar.png" alt="Trilha Jovem Iguassu - Software de Gest&atilde;o Escolar"> </img>
 		</a>
 		<a class="logo_rodape" href="http://serpro.gov.br" target="_top">
 			<img id="logo_serpro" src="imagens/logo_serpro.png" alt="Serviço Federal de Processamento de Dados - SERPRO"> </img>

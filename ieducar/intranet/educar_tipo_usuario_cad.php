@@ -2,32 +2,32 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  pmieducar
  * @subpackage  Administrativo
  * @subpackage  TipoUsuario
- * @since       Arquivo disponível desde a versão 1.0.0
+ * @since       Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version     $Id$
  */
 
@@ -39,7 +39,7 @@ require_once 'include/pmieducar/geral.inc.php';
 class clsIndexBase extends clsBase
 {
   function Formular() {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Tipo Usuário');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Tipo Usuï¿½rio');
     $this->processoAp = '554';
     $this->addEstilo('localizacaoSistema');
   }
@@ -48,7 +48,7 @@ class clsIndexBase extends clsBase
 class indice extends clsCadastro
 {
  /**
-  * Referência a usuário da sessão.
+  * Referï¿½ncia a usuï¿½rio da sessï¿½o.
   * @var int
   */
   var $pessoa_logada;
@@ -72,7 +72,7 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    // Verifica se o usuário tem permissão para realizar o cadastro
+    // Verifica se o usuï¿½rio tem permissï¿½o para realizar o cadastro
     $obj_permissao = new clsPermissoes();
     $obj_permissao->permissao_cadastra(554, $this->pessoa_logada, 1,
       'educar_tipo_usuario_lst.php', TRUE);
@@ -107,7 +107,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""        => "{$nomeMenu} tipo de usu&aacute;rio"             
     ));
     $this->enviaLocalizacao($localizacao->montar());    
@@ -120,7 +120,7 @@ class indice extends clsCadastro
     // Primary key
     $this->campoOculto('cod_tipo_usuario', $this->cod_tipo_usuario);
 
-    $this->campoTexto('nm_tipo', 'Tipo de Usuário', $this->nm_tipo, 40, 255, TRUE);
+    $this->campoTexto('nm_tipo', 'Tipo de Usuï¿½rio', $this->nm_tipo, 40, 255, TRUE);
 
     $array_nivel = array(
       '8' => 'Biblioteca',
@@ -210,8 +210,8 @@ class indice extends clsCadastro
 
         $this->campoOculto("permissoes[{$id}][id]", $id);
 
-        /* alterado para campos não usar inline, pois por algum motivo os dois primeiros checkboxes
-           não estavam funcionando devidamente */
+        /* alterado para campos nï¿½o usar inline, pois por algum motivo os dois primeiros checkboxes
+           nï¿½o estavam funcionando devidamente */
 
         // visualiza
 
@@ -287,15 +287,15 @@ class indice extends clsCadastro
   protected function createMenuTipoUsuario() {
     if ($this->permissoes) {
 
-      // remove todos menus vinculados ao tipo de usuário.
+      // remove todos menus vinculados ao tipo de usuï¿½rio.
       $menuTipoUsuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario);
       $menuTipoUsuario->excluirTudo();
 
-      // vinvula ao tipo de usuário, menus com alguma permissão marcada
+      // vinvula ao tipo de usuï¿½rio, menus com alguma permissï¿½o marcada
       foreach ($this->permissoes as $menuSubmenuId => $permissao) {
         if ($permissao['cadastra'] || $permissao['visualiza'] || $permissao['exclui']) {
 
-          // recebe código falso em algum momento?
+          // recebe cï¿½digo falso em algum momento?
           if ($this->cod_tipo_usuario == FALSE)
              $this->cod_tipo_usuario = '0';
 
@@ -344,21 +344,21 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteï¿½do ï¿½  pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
 /**
- * Marca/desmarca todas as opções de submenu (operações de sistema) de um dados
+ * Marca/desmarca todas as opï¿½ï¿½es de submenu (operaï¿½ï¿½es de sistema) de um dados
  * menu pai.
  *
  * @param  int     menu_pai

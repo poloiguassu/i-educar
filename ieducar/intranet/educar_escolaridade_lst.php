@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  Escolaridade
- * @since       Arquivo disponível desde a versão 1.0.0
+ * @since       Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version     $Id$
  */
 
@@ -46,25 +46,25 @@ class clsIndexBase extends clsBase
 class indice extends clsListagem
 {
   /**
-   * Referência a usuário da sessão
+   * Referï¿½ncia a usuï¿½rio da sessï¿½o
    * @var int
    */
   var $pessoa_logada = NULL;
 
   /**
-   * Título no topo da página
+   * Tï¿½tulo no topo da pï¿½gina
    * @var string
    */
   var $titulo = '';
 
   /**
-   * Limite de registros por página
+   * Limite de registros por pï¿½gina
    * @var int
    */
   var $limite = 0;
 
   /**
-   * Início dos registros a serem exibidos (limit)
+   * Inï¿½cio dos registros a serem exibidos (limit)
    * @var int
    */
   var $offset = 0;
@@ -92,7 +92,7 @@ class indice extends clsListagem
     ));
 
     // Outros Filtros
-    $this->campoTexto('descricao', 'Descrição', $this->descricao, 30, 255, FALSE);
+    $this->campoTexto('descricao', 'Descriï¿½ï¿½o', $this->descricao, 30, 255, FALSE);
 
     // Paginador
     $this->limite = 20;
@@ -127,7 +127,7 @@ class indice extends clsListagem
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""                                  => "Listagem de escolaridades"
     ));
     $this->enviaLocalizacao($localizacao->montar());    
@@ -136,14 +136,14 @@ class indice extends clsListagem
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à página
+// Atribui o conteï¿½do ï¿½ pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();

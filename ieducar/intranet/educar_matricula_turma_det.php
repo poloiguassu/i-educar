@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version   $Id$
  */
 
@@ -36,11 +36,11 @@ require_once 'include/pmieducar/geral.inc.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -56,11 +56,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
@@ -148,7 +148,7 @@ class indice extends clsDetalhe
     $det_ref_cod_turma_tipo = $obj_ref_cod_turma_tipo->detalhe();
     $registro['ref_cod_turma_tipo'] = $det_ref_cod_turma_tipo['nm_tipo'];
 
-    // Código da instituição
+    // Cï¿½digo da instituiï¿½ï¿½o
     $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
     $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
     $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
@@ -164,12 +164,12 @@ class indice extends clsDetalhe
     $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
     $padrao_ano_escolar = $det_ref_cod_curso['padrao_ano_escolar'];
 
-    // Nome da série
+    // Nome da sï¿½rie
     $obj_ser = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
     $det_ser = $obj_ser->detalhe();
     $registro['ref_ref_cod_serie'] = $det_ser['nm_serie'];
 
-    // Matrícula
+    // Matrï¿½cula
     $obj_ref_cod_matricula = new clsPmieducarMatricula();
     $detalhe_aluno = array_shift($obj_ref_cod_matricula->lista($this->ref_cod_matricula));
 
@@ -198,7 +198,7 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('S&eacute;rie', $registro['ref_ref_cod_serie']));
     }
 
-    //(enturmações) turma atual
+    //(enturmaï¿½ï¿½es) turma atual
     $enturmacoes = new clsPmieducarMatriculaTurma();
     $enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
@@ -212,7 +212,7 @@ class indice extends clsDetalhe
 
     if (is_numeric($total_alunos)) {
       $this->addDetalhe(array('Alunos enturmados', $total_alunos));
-      $this->addDetalhe(array('Vagas disponíveis', $registro['max_aluno'] - $total_alunos));
+      $this->addDetalhe(array('Vagas disponï¿½veis', $registro['max_aluno'] - $total_alunos));
     }
 
     if ($this->possuiEnturmacao) {
@@ -238,11 +238,11 @@ class indice extends clsDetalhe
         $selectEnturmacoes = "<input id='ref_cod_turma_origem' type='hidden' value = '{$enturmacoes[0]['ref_cod_turma']}'/>{$enturmacoes[0]['nm_turma']}";
       }
 
-      $this->addDetalhe(array('<b>Enturmação</b>', $selectEnturmacoes));
+      $this->addDetalhe(array('<b>Enturmaï¿½ï¿½o</b>', $selectEnturmacoes));
     }
 
     if(!$this->possuiEnturmacaoTurmaDestino)
-      $this->addDetalhe(array('Data da enturmação', '<input onkeypress="formataData(this,event);" value="'.date('d/m/Y').'" class="geral" type="text" name="data_enturmacao" id="data_enturmacao" size="9" maxlength="10"/>'));    
+      $this->addDetalhe(array('Data da enturmaï¿½ï¿½o', '<input onkeypress="formataData(this,event);" value="'.date('d/m/Y').'" class="geral" type="text" name="data_enturmacao" id="data_enturmacao" size="9" maxlength="10"/>'));    
 
     $this->addDetalhe(array(
       '-',
@@ -264,16 +264,16 @@ class indice extends clsDetalhe
       $escolaSerie = $this->getEscolaSerie($det_ref_cod_escola['cod_escola'], $det_ser['cod_serie']);
 
       if($escolaSerie['bloquear_enturmacao_sem_vagas'] != 1) {
-        $msg = sprintf('Atenção! Turma sem vagas! Deseja continuar com a enturmação mesmo assim?');
+        $msg = sprintf('Atenï¿½ï¿½o! Turma sem vagas! Deseja continuar com a enturmaï¿½ï¿½o mesmo assim?');
         $jsEnturmacao = sprintf('if (!confirm("%s")) return false;', $msg);
       }
       else {
-        $msg = sprintf('Enturmação não pode ser realizada,\n\no limite de vagas da turma já foi atingido e para esta série e escola foi definido bloqueio de enturmação após atingir tal limite.');
+        $msg = sprintf('Enturmaï¿½ï¿½o nï¿½o pode ser realizada,\n\no limite de vagas da turma jï¿½ foi atingido e para esta sï¿½rie e escola foi definido bloqueio de enturmaï¿½ï¿½o apï¿½s atingir tal limite.');
         $jsEnturmacao = sprintf('alert("%s"); return false;', $msg);
       }
     }
     else
-      $jsEnturmacao = 'if (!confirm("Confirma a enturmação?")) return false;';
+      $jsEnturmacao = 'if (!confirm("Confirma a enturmaï¿½ï¿½o?")) return false;';
 
     $script = sprintf('
       <script type="text/javascript">
@@ -286,7 +286,7 @@ class indice extends clsDetalhe
             if (turmaOrigemId && turmaOrigemId.value)
               document.formcadastro.ref_cod_turma_origem.value = turmaOrigemId.value;
             else {
-              alert("Por favor, selecione a enturmação a ser transferida.");
+              alert("Por favor, selecione a enturmaï¿½ï¿½o a ser transferida.");
               return false;
             }
           }
@@ -301,7 +301,7 @@ class indice extends clsDetalhe
 
         function removerEnturmacao(ref_cod_matricula, ref_cod_turma_destino) {
 
-          if (! confirm("Confirma remoção da enturmação?"))
+          if (! confirm("Confirma remoï¿½ï¿½o da enturmaï¿½ï¿½o?"))
             return false;
 
           document.formcadastro.ref_cod_turma_origem.value = "remover-enturmacao-destino";
@@ -318,18 +318,18 @@ class indice extends clsDetalhe
     $canCreate = $canCreate->permissao_cadastra(578, $this->pessoa_logada, 7);
 
     if ($this->possuiEnturmacaoTurmaDestino && $canCreate){
-      $this->array_botao            = array('Remover (enturmação) da turma selecionada');
+      $this->array_botao            = array('Remover (enturmaï¿½ï¿½o) da turma selecionada');
       $this->array_botao_url_script = array("removerEnturmacao({$this->ref_cod_matricula}, {$this->ref_cod_turma})");
     }
 
     if (! $this->turmaOrigemMesmaDestino && $canCreate) {
-      //mover enturmação
+      //mover enturmaï¿½ï¿½o
       if ($this->possuiEnturmacao) {
         $this->array_botao[]            = 'Transferir para turma selecionada';
         $this->array_botao_url_script[] = "enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"transferir\")";
       }
 
-      //nova enturmação
+      //nova enturmaï¿½ï¿½o
       if (! $this->possuiEnturmacaoTurmaDestino && $canCreate) {
         $this->array_botao[]            = 'Enturmar na turma selecionada';
         $this->array_botao_url_script[] = "enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"nova\")";
@@ -344,7 +344,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""                                  => "Detalhe da enturma&ccedil;&atilde;o da matr&iacute;cula"
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -360,14 +360,14 @@ class indice extends clsDetalhe
 
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteï¿½do ï¿½  pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();

@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version   $Id$
  */
 
@@ -40,18 +40,18 @@ require_once 'ComponenteCurricular/Model/TurmaDataMapper.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí
+ * @author    Prefeitura Municipal de Itajaï¿½
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Ano Letivo Módulo');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Ano Letivo Mï¿½dulo');
     $this->processoAp = 561;
     $this->addEstilo("localizacaoSistema");
   }
@@ -60,11 +60,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí
+ * @author    Prefeitura Municipal de Itajaï¿½
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -121,7 +121,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""        => "{$nomeMenu} m&oacute;dulos do ano letivo"
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -155,17 +155,17 @@ class indice extends clsCadastro
       $tabela = "<table border=0 style='' cellpadding=2 width='100%'>";
       $tabela .= "<tr bgcolor=$cor><td colspan='2'><b>M&oacute;dulos do ano anterior (".($this->ref_ano - 1).")</b></td></tr><tr><td>";
       $tabela .= "<table cellpadding=\"2\" cellspacing=\"2\" border=\"0\" align=\"left\" width='300px'>";
-      $tabela .= "<tr bgcolor='#A1B3BD'><th width='100px'>Etapa<a name='ano_letivo'/></th><th width='200px'>Período</th></tr>";
+      $tabela .= "<tr bgcolor='#A1B3BD'><th width='100px'>Etapa<a name='ano_letivo'/></th><th width='200px'>Perï¿½odo</th></tr>";
 
      foreach ($registros as $campo) {
       $cor = "#E3E8EF"; #$cor == "#FFFFFF" ? "#E3E8EF" : "#FFFFFF";
       $cont++;
-      $tabela .= "<tr bgcolor='$cor'><td align='center'>{$cont}</td><td align='center'>".dataFromPgToBr($campo['data_inicio'])." à ".dataFromPgToBr($campo['data_fim'])."</td></tr>";
-      //$modulosAnoAnterior .= ++$cont."ª Etapa: De ".dataFromPgToBr($campo['data_inicio'])." à ".dataFromPgToBr($campo['data_fim']);
+      $tabela .= "<tr bgcolor='$cor'><td align='center'>{$cont}</td><td align='center'>".dataFromPgToBr($campo['data_inicio'])." ï¿½ ".dataFromPgToBr($campo['data_fim'])."</td></tr>";
+      //$modulosAnoAnterior .= ++$cont."ï¿½ Etapa: De ".dataFromPgToBr($campo['data_inicio'])." ï¿½ ".dataFromPgToBr($campo['data_fim']);
      }
 
      $tabela .="</table>";
-     $tabela .= "<tr><td colspan='2'><b> Adicione os módulos abaixo para {$this->ref_ano} semelhante ao exemplo do ano anterior: </b></td></tr><tr><td>";
+     $tabela .= "<tr><td colspan='2'><b> Adicione os mï¿½dulos abaixo para {$this->ref_ano} semelhante ao exemplo do ano anterior: </b></td></tr><tr><td>";
      $tabela .= "</table>";
     }
 
@@ -177,7 +177,7 @@ class indice extends clsCadastro
     if ($tabela)
       $this->campoRotulo('modulosAnoAnterior', '-', $tabela);
 
-    // Módulos do ano letivo
+    // Mï¿½dulos do ano letivo
     if ($_POST['ano_letivo_modulo']) {
       $this->ano_letivo_modulo = unserialize(urldecode($_POST['ano_letivo_modulo']));
     }
@@ -281,26 +281,26 @@ class indice extends clsCadastro
       }
     }
     else {
-      $opcoes = array('' => 'Erro na geração');
+      $opcoes = array('' => 'Erro na geraï¿½ï¿½o');
     }
 
     // data
     if ($qtd_modulo > 1) {
-      $this->campoLista('ref_cod_modulo', 'Módulo', $opcoes,
+      $this->campoLista('ref_cod_modulo', 'Mï¿½dulo', $opcoes,
         $this->ref_cod_modulo, NULL, NULL, NULL, NULL, NULL, FALSE);
 
-      $this->campoData('data_inicio', 'Data Início', $this->data_inicio);
+      $this->campoData('data_inicio', 'Data Inï¿½cio', $this->data_inicio);
 
       $this->campoData('data_fim', 'Data Fim', $this->data_fim);
     }
     else {
-      $this->campoLista('ref_cod_modulo', 'Módulo', $opcoes, $this->ref_cod_modulo);
-      $this->campoData('data_inicio', 'Data Início', $this->data_inicio, TRUE);
+      $this->campoLista('ref_cod_modulo', 'Mï¿½dulo', $opcoes, $this->ref_cod_modulo);
+      $this->campoData('data_inicio', 'Data Inï¿½cio', $this->data_inicio, TRUE);
       $this->campoData('data_fim', 'Data Fim', $this->data_fim, TRUE);
     }
 
     $this->campoOculto('incluir_modulo', '');
-    $this->campoRotulo('bt_incluir_modulo', 'Módulo',
+    $this->campoRotulo('bt_incluir_modulo', 'Mï¿½dulo',
      '<a href="#" id="add_module"><img src="imagens/nvp_bot_adiciona.gif" title="Incluir" border="0" /></a>'
     );
 
@@ -347,7 +347,7 @@ class indice extends clsCadastro
           $cadastrou1 = $obj->cadastra();
 
           if (! $cadastrou1) {
-            $this->mensagem = 'Cadastro não realizado.<br />';
+            $this->mensagem = 'Cadastro nï¿½o realizado.<br />';
             return FALSE;
           }
         }
@@ -358,12 +358,12 @@ class indice extends clsCadastro
         die();
       }
 
-      $this->mensagem = 'Cadastro não realizado. <br />';
+      $this->mensagem = 'Cadastro nï¿½o realizado. <br />';
       return FALSE;
     }
 
-    echo '<script>alert("É necessário adicionar pelo menos um módulo!")</script>';
-    $this->mensagem = 'Cadastro não realizado.<br />';
+    echo '<script>alert("ï¿½ necessï¿½rio adicionar pelo menos um mï¿½dulo!")</script>';
+    $this->mensagem = 'Cadastro nï¿½o realizado.<br />';
     return FALSE;
   }
 
@@ -401,19 +401,19 @@ class indice extends clsCadastro
           $cadastrou = $obj->cadastra();
 
           if (! $cadastrou) {
-            $this->mensagem = 'Edição não realizada.<br />';
+            $this->mensagem = 'Ediï¿½ï¿½o nï¿½o realizada.<br />';
             return FALSE;
           }
         }
 
-        $this->mensagem .= 'Edição efetuada com sucesso.<br />';
+        $this->mensagem .= 'Ediï¿½ï¿½o efetuada com sucesso.<br />';
         header('Location: educar_escola_lst.php');
         die();
       }
     }
 
-    echo "<script>alert('É necessário adicionar pelo menos um módulo!')</script>";
-    $this->mensagem = 'Edição não realizada.<br />';
+    echo "<script>alert('ï¿½ necessï¿½rio adicionar pelo menos um mï¿½dulo!')</script>";
+    $this->mensagem = 'Ediï¿½ï¿½o nï¿½o realizada.<br />';
     return FALSE;
   }
 
@@ -437,26 +437,26 @@ class indice extends clsCadastro
       $excluiu1 = $obj->excluirTodos();
 
       if ($excluiu1) {
-        $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
+        $this->mensagem .= 'Exclusï¿½o efetuada com sucesso.<br />';
         header('Location: educar_escola_lst.php');
         die();
       }
 
-      $this->mensagem = 'Exclusão não realizada.<br />';
+      $this->mensagem = 'Exclusï¿½o nï¿½o realizada.<br />';
       return FALSE;
     }
 
-    $this->mensagem = 'Exclusão não realizada.<br />';
+    $this->mensagem = 'Exclusï¿½o nï¿½o realizada.<br />';
     return FALSE;
   }
 
   /**
-   * Verifica se ao menos uma das datas as datas de início dos módulos é do
+   * Verifica se ao menos uma das datas as datas de inï¿½cio dos mï¿½dulos ï¿½ do
    * mesmo ano letivo da escola. Em caso de erro, configura a mensagem de
-   * erro que é retornado pelo formulário.
+   * erro que ï¿½ retornado pelo formulï¿½rio.
    *
    * @access private
-   * @param  array $modulos O array associativo recebido via POST pelo formulário.
+   * @param  array $modulos O array associativo recebido via POST pelo formulï¿½rio.
    * @return bool  FALSE caso nenhuma das datas esteja no mesmo ano letivo da escola.
    */
   function _verificaModuloDatas(array $modulos)
@@ -543,8 +543,8 @@ class indice extends clsCadastro
         'cargaHoraria'         => $componenteTurmaOrigem->get('cargaHoraria'),
         'turma'                => $turmaDestinoId,
 
-        // está sendo mantido o mesmo ano_escolar_id, uma vez que não foi
-        // foi encontrado de onde o valor deste campo é obtido.
+        // estï¿½ sendo mantido o mesmo ano_escolar_id, uma vez que nï¿½o foi
+        // foi encontrado de onde o valor deste campo ï¿½ obtido.
         'anoEscolar'           => $componenteTurmaOrigem->get('anoEscolar')
       );
 
@@ -594,21 +594,21 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteï¿½do ï¿½  pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
 /**
- * Realiza validação client-side do forComponenteCurricular_Model_TurmaDataMappermulário.
+ * Realiza validaï¿½ï¿½o client-side do forComponenteCurricular_Model_TurmaDataMappermulï¿½rio.
  */
 function incluir()
 {
@@ -620,13 +620,13 @@ function incluir()
   endDate   = document.getElementById('data_fim').value.split('/');
 
   if ('' === document.getElementById('ref_cod_modulo').value) {
-    alert('É necessário selecionar um "módulo".');
+    alert('ï¿½ necessï¿½rio selecionar um "mï¿½dulo".');
     return false;
   }
 
   if (!phpjs.checkdate(startDate[1], startDate[0], startDate[2])) {
     document.getElementById('data_inicio').className = 'formdestaque';
-    alert('Preencha o campo "Data Início" corretamente!');
+    alert('Preencha o campo "Data Inï¿½cio" corretamente!');
     document.getElementById('data_inicio').focus();
     return false;
   }
@@ -642,7 +642,7 @@ function incluir()
   endDate   = new Date(parseInt(endDate[2], 10), parseInt(endDate[1], 10) - 1, parseInt(endDate[0], 10));
 
   if (endDate < startDate) {
-    alert('"Data Início" não pode ser posterior a "Data Fim".');
+    alert('"Data Inï¿½cio" nï¿½o pode ser posterior a "Data Fim".');
     return false;
   }
 

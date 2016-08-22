@@ -177,7 +177,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""        => "{$nomeMenu} turma"
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -256,9 +256,9 @@ class indice extends clsCadastro
 	if ($bloqueia){
       $this->campoOculto('serie_param',$this->serie_param = $this->ref_ref_cod_serie);
       $this->campoOculto('escola_param',$this->escola_param = $this->ref_cod_escola);
-    }    
+    }
 
-    $this->campoLista('ref_ref_cod_serie', 'Série', $opcoes_serie, $this->ref_ref_cod_serie,
+    $this->campoLista('ref_ref_cod_serie', 'Eixo', $opcoes_serie, $this->ref_ref_cod_serie,
       '', FALSE, '', NULL, $bloqueia);
 
     // o campo ano somente é exibido para turmas novas  ou cadastradas após inclusão deste campo.
@@ -340,7 +340,7 @@ class indice extends clsCadastro
     $this->campoCheck('multiseriada', 'Multi-Seriada', $this->multiseriada, '',
       FALSE, FALSE);
 
-    $this->campoLista('ref_ref_cod_serie_mult','Série', array('' => 'Selecione'),
+    $this->campoLista('ref_ref_cod_serie_mult','Eixo', array('' => 'Selecione'),
       '', '', FALSE, '', '', '', FALSE);
 
     $this->campoOculto('ref_ref_cod_serie_mult_',$this->ref_ref_cod_serie_mult);
@@ -489,7 +489,7 @@ class indice extends clsCadastro
       $qtd_modulo = count($this->turma_modulo) == 0 ? 1 : (count($this->turma_modulo) + 1);
       echo "
         <script type=\"text/javascript\">
-          window.setTimeout(function() { 
+          window.setTimeout(function() {
             document.getElementById(\"event_incluir_dia_semana\").focus();
           }, 500);
         </script>
@@ -772,13 +772,13 @@ class indice extends clsCadastro
             foreach ($this->turma_dia_semana as $campo) {
               $obj = new clsPmieducarTurmaDiaSemana($campo["dia_semana_"],
                 $cadastrou, $campo["hora_inicial_"], $campo["hora_final_"]);
-  
+
               $cadastrou2  = $obj->cadastra();
-  
+
               if (!$cadastrou2) {
                 $this->mensagem = 'Cadastro não realizado.';
                 echo "<!--\nErro ao cadastrar clsPmieducarTurmaDiaSemana\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$campo["dia_semana_"]} ) && is_string( {$campo["hora_inicial_"]} ) && is_string( {$campo["hora_final_"]} )\n-->";
-  
+
                 return FALSE;
               }
             }
@@ -1686,7 +1686,7 @@ function valida_xml(xml)
 
   if (document.getElementById('ref_cod_escola').value) {
     if (!document.getElementById('ref_ref_cod_serie').value) {
-      alert(stringUtils.toUtf8("Preencha o campo 'Série' corretamente!"));
+      alert(stringUtils.toUtf8("Preencha o campo 'Eixo' corretamente!"));
       document.getElementById('ref_ref_cod_serie').focus();
       return false;
     }
@@ -1694,7 +1694,7 @@ function valida_xml(xml)
 
   if (document.getElementById('multiseriada').checked) {
     if (!document.getElementById('ref_ref_cod_serie_mult')){
-      alert(stringUtils.toUtf8("Preencha o campo 'Série Multi-seriada' corretamente!"));
+      alert(stringUtils.toUtf8("Preencha o campo 'Eixo Multi-seriada' corretamente!"));
       document.getElementById('ref_ref_cod_serie_mult').focus();
       return false;
     }
@@ -1837,8 +1837,8 @@ function atualizaLstEscolaCursoSerie(xml)
 document.getElementById('event_incluir_modulo').onclick = incluirModulo;
 
 function incluirModulo(){
-  document.getElementById('incluir_modulo').value = 'S'; 
-  document.getElementById('tipoacao').value = ''; 
+  document.getElementById('incluir_modulo').value = 'S';
+  document.getElementById('tipoacao').value = '';
   acao();
 }
 

@@ -38,7 +38,7 @@
 	  MATCH SIMPLE
 	  ON UPDATE RESTRICT ON DELETE RESTRICT;
 
-  INSERT INTO pmieducar.historico_grade_curso values (1,'Série','1990-12-30 00:00:00',NULL,8,1);
+  INSERT INTO pmieducar.historico_grade_curso values (1,'Eixo','1990-12-30 00:00:00',NULL,8,1);
   INSERT INTO pmieducar.historico_grade_curso values (2,'Ano','1990-12-30 00:00:00',null,9,1);
 
   ALTER TABLE pmieducar.historico_escolar

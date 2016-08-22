@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  ReservaVaga
- * @since       Arquivo disponível desde a versão 1.0.0
+ * @since       Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version     $Id$
  */
 
@@ -35,7 +35,7 @@ require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndexBase extends clsBase {
   public function Formular() {
-    $this->SetTitulo($this->_instituicao . 'i-Educar - Vagas Reservadas');
+    $this->SetTitulo($this->_instituicao . 'Trilha Jovem Iguassu - Vagas Reservadas');
     $this->processoAp = '639';
     $this->addEstilo("localizacaoSistema");
   }
@@ -44,13 +44,13 @@ class clsIndexBase extends clsBase {
 class indice extends clsDetalhe
 {
   /**
-   * Referência a usuário da sessão
+   * Referï¿½ncia a usuï¿½rio da sessï¿½o
    * @var int
    */
   var $pessoa_logada = NULL;
 
   /**
-   * Título no topo da página
+   * Tï¿½tulo no topo da pï¿½gina
    * @var string
    */
   var $titulo = '';
@@ -68,25 +68,25 @@ class indice extends clsDetalhe
     $ativo;
 
   /**
-   * Identificação para pmieducar.escola.
+   * Identificaï¿½ï¿½o para pmieducar.escola.
    * @var int
    */
   var $ref_cod_escola;
 
   /**
-   * Identificação para pmieducar.curso.
+   * Identificaï¿½ï¿½o para pmieducar.curso.
    * @var int
    */
   var $ref_cod_curso;
 
   /**
-   * Identificação para pmieducar.serie.
+   * Identificaï¿½ï¿½o para pmieducar.serie.
    * @var int
    */
   var $ref_cod_serie;
 
   /**
-   * Identificação para pmieducar.instituicao.
+   * Identificaï¿½ï¿½o para pmieducar.instituicao.
    * @var int
    */
   var $ref_cod_instituicao;
@@ -118,7 +118,7 @@ class indice extends clsDetalhe
       die();
     }
 
-    // Atribui códigos a variáveis de instância
+    // Atribui cï¿½digos a variï¿½veis de instï¿½ncia
     $this->ref_cod_escola = $registro['ref_ref_cod_escola'];
     $this->ref_cod_curso  = $registro['ref_cod_curso'];
     $this->ref_cod_serie  = $registro['ref_ref_cod_serie'];
@@ -129,7 +129,7 @@ class indice extends clsDetalhe
       $this->_desativar();
     }
 
-    // Instituição
+    // Instituiï¿½ï¿½o
     $obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
     $det_instituicao = $obj_instituicao->detalhe();
     $registro['ref_cod_instituicao'] = $det_instituicao['nm_instituicao'];
@@ -139,7 +139,7 @@ class indice extends clsDetalhe
     $det_escola = $obj_escola->detalhe();
     $registro['ref_ref_cod_escola'] = $det_escola['nome'];
 
-    // Série
+    // Sï¿½rie
     $obj_serie = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
     $det_serie = $obj_serie->detalhe();
     $registro['ref_ref_cod_serie'] = $det_serie['nm_serie'];
@@ -193,7 +193,7 @@ class indice extends clsDetalhe
     $obj_permissao = new clsPermissoes();
     if ($obj_permissao->permissao_cadastra(639, $this->pessoa_logada,7)) {
       $this->array_botao = array('Emiss&atilde;o de Documento de Reserva de Vaga', 'Desativar Reserva');
-      $this->array_botao_url_script = array("showExpansivelImprimir(400, 200,  \"educar_relatorio_solicitacao_transferencia.php?cod_reserva_vaga={$this->cod_reserva_vaga}\",[], \"Relatório de Solicitação de transferência\")","go(\"educar_reservada_vaga_det.php?cod_reserva_vaga={$this->cod_reserva_vaga}&desativa=true\")");
+      $this->array_botao_url_script = array("showExpansivelImprimir(400, 200,  \"educar_relatorio_solicitacao_transferencia.php?cod_reserva_vaga={$this->cod_reserva_vaga}\",[], \"Relatï¿½rio de Solicitaï¿½ï¿½o de transferï¿½ncia\")","go(\"educar_reservada_vaga_det.php?cod_reserva_vaga={$this->cod_reserva_vaga}&desativa=true\")");
     }
 
     $this->url_cancelar = 'educar_reservada_vaga_lst.php?ref_cod_escola=' .
@@ -203,7 +203,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""                                  => "Detalhe da vaga reservada"
     ));
     $this->enviaLocalizacao($localizacao->montar());    
@@ -232,14 +232,14 @@ class indice extends clsDetalhe
 
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à página
+// Atribui o conteï¿½do ï¿½ pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();

@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  ReservaVaga
- * @since       Arquivo disponível desde a versão 1.0.0
+ * @since       Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version     $Id$
  */
 
@@ -44,25 +44,25 @@ class clsIndexBase extends clsBase {
 class indice extends clsListagem
 {
   /**
-   * Referência a usuário da sessão
+   * Referï¿½ncia a usuï¿½rio da sessï¿½o
    * @var int
    */
   var $pessoa_logada = NULL;
 
   /**
-   * Título no topo da página
+   * Tï¿½tulo no topo da pï¿½gina
    * @var string
    */
   var $titulo = '';
 
   /**
-   * Limite de registros por página
+   * Limite de registros por pï¿½gina
    * @var int
    */
   var $limite = 0;
 
   /**
-   * Início dos registros a serem exibidos (limit)
+   * Inï¿½cio dos registros a serem exibidos (limit)
    * @var int
    */
   var $offset = 0;
@@ -80,7 +80,7 @@ class indice extends clsListagem
     $ativo              = NULL;
 
   /**
-   * Atributos para apresentação
+   * Atributos para apresentaï¿½ï¿½o
    * @var mixed
    */
   var
@@ -114,7 +114,7 @@ class indice extends clsListagem
       'Curso'
     );
 
-    // Recupera ní­vel de acesso do usuário logado
+    // Recupera nï¿½ï¿½vel de acesso do usuï¿½rio logado
     $obj_permissao = new clsPermissoes();
     $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
@@ -127,13 +127,13 @@ class indice extends clsListagem
     }
     $this->addCabecalhos($lista_busca);
 
-    // Lista de opçõees para o formulário de pesquisa rápida
+    // Lista de opï¿½ï¿½ees para o formulï¿½rio de pesquisa rï¿½pida
     $get_escola = TRUE;
     $get_curso  = TRUE;
     $get_escola_curso_serie = TRUE;
     include 'include/pmieducar/educar_campo_lista.php';
 
-    // Referência de escola
+    // Referï¿½ncia de escola
     if ($this->ref_cod_escola) {
       $this->ref_ref_cod_escola = $this->ref_cod_escola;
     }
@@ -141,7 +141,7 @@ class indice extends clsListagem
       $this->ref_ref_cod_escola = intval($_GET['ref_cod_escola']);
     }
 
-    // Referência de série
+    // Referï¿½ncia de sï¿½rie
     if ($this->ref_cod_serie) {
       $this->ref_ref_cod_serie = $this->ref_cod_serie;
     }
@@ -149,11 +149,11 @@ class indice extends clsListagem
       $this->ref_ref_cod_serie = intval($_GET['ref_cod_serie']);
     }
 
-    // Campos do formulário
+    // Campos do formulï¿½rio
     $this->campoTexto('nm_aluno', 'Aluno', $this->nm_aluno, 30, 255, FALSE, FALSE,
       FALSE, '', '<img border="0" onclick="pesquisa_aluno();" id="ref_cod_aluno_lupa" name="ref_cod_aluno_lupa" src="imagens/lupa.png" />');
 
-    // Código do aluno (retornado de pop-up de busca da pesquisa de alunos - lupa)
+    // Cï¿½digo do aluno (retornado de pop-up de busca da pesquisa de alunos - lupa)
     $this->campoOculto('ref_cod_aluno', $this->ref_cod_aluno);
 
     // Paginador
@@ -162,7 +162,7 @@ class indice extends clsListagem
       ($_GET["pagina_{$this->nome}"] * $this->limite - $this->limite)
       : 0;
 
-    // Instância objeto de mapeamento relacional com o tabela pmieducar.reserva_vaga
+    // Instï¿½ncia objeto de mapeamento relacional com o tabela pmieducar.reserva_vaga
     $obj_reserva_vaga = new clsPmieducarReservaVaga();
     $obj_reserva_vaga->setOrderby('data_cadastro ASC');
     $obj_reserva_vaga->setLimite($this->limite, $this->offset);
@@ -187,10 +187,10 @@ class indice extends clsListagem
     // Pega o total de registros encontrados
     $total = $obj_reserva_vaga->_total;
 
-    // Itera sobre resultados montando a lista de apresentação
+    // Itera sobre resultados montando a lista de apresentaï¿½ï¿½o
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $registro) {
-        // Recupera nome da série da reserva de vaga
+        // Recupera nome da sï¿½rie da reserva de vaga
         $obj_serie = new clsPmieducarSerie($registro['ref_ref_cod_serie']);
         $det_serie = $obj_serie->detalhe();
         $nm_serie  = $det_serie['nm_serie'];
@@ -205,14 +205,14 @@ class indice extends clsListagem
         $det_escola = $obj_escola->detalhe();
         $nm_escola = $det_escola['nome'];
 
-        // Recupera o nome da instituição da reserva de vaga
+        // Recupera o nome da instituiï¿½ï¿½o da reserva de vaga
         $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
         $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
         $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
         /*
          * Se for um aluno previamente cadastrado, procuramos seu nome, primeiro
-         * buscando a referência de Pessoa e depois pesquisando a tabela para
+         * buscando a referï¿½ncia de Pessoa e depois pesquisando a tabela para
          * carregar o nome
          */
         if ($registro['ref_cod_aluno']) {
@@ -230,14 +230,14 @@ class indice extends clsListagem
           $registro['ref_cod_aluno'] = $registro['nm_aluno'] . ' (aluno externo)';
         }
 
-        // Array de dados formatados para apresentação
+        // Array de dados formatados para apresentaï¿½ï¿½o
         $lista_busca = array(
           "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro["cod_reserva_vaga"]}\">{$registro["ref_cod_aluno"]}</a>",
           "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro["cod_reserva_vaga"]}\">{$nm_serie}</a>",
           "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro["cod_reserva_vaga"]}\">{$registro["ref_cod_curso"]}</a>"
         );
 
-        // Verifica por permissões
+        // Verifica por permissï¿½es
         if ($nivel_usuario == 1) {
           $lista_busca[] = "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro["cod_reserva_vaga"]}\">{$nm_escola}</a>";
           $lista_busca[] = "<a href=\"educar_reservada_vaga_det.php?cod_reserva_vaga={$registro["cod_reserva_vaga"]}\">{$registro["ref_cod_instituicao"]}</a>";
@@ -258,23 +258,23 @@ class indice extends clsListagem
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""                                  => "Listagem de vagas reservadas"
     ));
     $this->enviaLocalizacao($localizacao->montar());    
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteï¿½do ï¿½ï¿½ pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();
 ?>
 

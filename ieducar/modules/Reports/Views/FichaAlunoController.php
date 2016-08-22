@@ -61,7 +61,7 @@ class FichaAlunoController extends Portabilis_Controller_ReportCoreController
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""                                  => "Emiss&atilde;o da ficha do aluno"             
     ));
     $this->enviaLocalizacao($localizacao->montar());     

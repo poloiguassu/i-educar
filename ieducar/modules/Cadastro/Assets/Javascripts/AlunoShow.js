@@ -12,7 +12,7 @@ function fixupTabelaMatriculas() {
   $j('<th>').html(stringUtils.toUtf8('Situação')).appendTo($tr);
   $j('<th>').html('Turma').appendTo($tr);
   $j('<th>').html('\u00daltima enturma\u00e7\u00e3o').appendTo($tr);
-  $j('<th>').html(stringUtils.toUtf8('Série')).appendTo($tr);
+  $j('<th>').html(stringUtils.toUtf8('Eixo')).appendTo($tr);
   $j('<th>').html('Curso').appendTo($tr);
   $j('<th>').html('Escola').appendTo($tr);
   $j('<th>').html('Entrada').appendTo($tr);

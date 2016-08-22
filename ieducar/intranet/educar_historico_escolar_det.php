@@ -134,7 +134,7 @@ class indice extends clsDetalhe
 			}
 			if( $registro["nm_serie"] )
 			{
-				$this->addDetalhe( array( "Série", "{$registro["nm_serie"]}") );
+				$this->addDetalhe( array( "Eixo", "{$registro["nm_serie"]}") );
 			}
 		}
 		else
@@ -314,7 +314,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""                                  => "Detalhe do hist&oacute;rico escolar"
     ));
     $this->enviaLocalizacao($localizacao->montar());				

@@ -113,7 +113,7 @@
 		</form>
 
 		<a class="logo_rodape" href="http://pagina.softwarepublico.gov.br/ieducar/" target="_top">
-			<img id="logo_ieducar" src="imagens/logo_ieducar.png" alt="i-Educar"> </img>
+			<img id="logo_ieducar" src="imagens/logo_ieducar.png" alt="Trilha Jovem Iguassu"> </img>
 		</a>
 		
 		<a class="logo_rodape" href="http://serpro.gov.br" target="_top">

@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paixï¿½o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     TabelaArredondamento
  * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.1.0
+ * @since       Arquivo disponï¿½vel desde a versï¿½o 1.1.0
  * @version     $Id$
  */
 
@@ -36,12 +36,12 @@ require_once 'TabelaArredondamento/Model/TabelaValor.php';
 /**
  * EditController class.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paixï¿½o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     TabelaArredondamento
  * @subpackage  Modules
- * @since       Classe disponível desde a versão 1.1.0
+ * @since       Classe disponï¿½vel desde a versï¿½o 1.1.0
  * @version     @@package_version@@
  */
 class EditController extends Core_Controller_Page_EditController
@@ -55,38 +55,38 @@ class EditController extends Core_Controller_Page_EditController
 
   protected $_formMap = array(
     'instituicao' => array(
-      'label' => 'Instituição',
+      'label' => 'Instituiï¿½ï¿½o',
       'help'  => ''
     ),
     'nome' => array(
       'label'  => 'Nome',
-      'help'   => 'Um nome para a tabela. Exemplo: "<em>Tabela genérica de conceitos</em>".'
+      'help'   => 'Um nome para a tabela. Exemplo: "<em>Tabela genï¿½rica de conceitos</em>".'
     ),
     'tipoNota' => array(
       'label'  => 'Tipo de nota',
       'help'   => ''
     ),
     'valor_nome' => array(
-      'label'  => 'Rótulo da nota:',
+      'label'  => 'Rï¿½tulo da nota:',
       'help'   => 'Exemplos: A, B, C (conceituais)<br />
-                  <b>6,5<b>, <b>7,5<b> (numéricas)'
+                  <b>6,5<b>, <b>7,5<b> (numï¿½ricas)'
     ),
     'valor_descricao' => array(
-      'label'  => '<span style="padding-left: 10px"></span>Descrição:',
+      'label'  => '<span style="padding-left: 10px"></span>Descriï¿½ï¿½o:',
       'help'   => 'Exemplos: Bom, Regular, Em Processo.'
     ),
     'valor_valor_minimo' => array(
-      'label'  => '<span style="padding-left: 10px"></span>Valor mínimo:',
-      'help'   => 'O valor numérico mínimo da nota.'
+      'label'  => '<span style="padding-left: 10px"></span>Valor mï¿½nimo:',
+      'help'   => 'O valor numï¿½rico mï¿½nimo da nota.'
     ),
     'valor_valor_maximo' => array(
-      'label'  => '<span style="padding-left: 10px"></span>Valor máximo:',
-      'help'   => 'O valor numérico máximo da nota.'
+      'label'  => '<span style="padding-left: 10px"></span>Valor mï¿½ximo:',
+      'help'   => 'O valor numï¿½rico mï¿½ximo da nota.'
     )
   );
 
   /**
-   * Array de instâncias TabelaArredondamento_Model_TabelaValor.
+   * Array de instï¿½ncias TabelaArredondamento_Model_TabelaValor.
    * @var array
    */
   protected $_valores = array();
@@ -94,7 +94,7 @@ class EditController extends Core_Controller_Page_EditController
   /**
    * Setter.
    * @param array $valores
-   * @return Core_Controller_Page_Abstract Provê interface fluída
+   * @return Core_Controller_Page_Abstract Provï¿½ interface fluï¿½da
    */
   protected function _setValores(array $valores = array())
   {
@@ -125,7 +125,7 @@ class EditController extends Core_Controller_Page_EditController
 
   /**
    * @see Core_Controller_Page_EditController#_preConstruct()
-   * @todo Interação com a API está errada. Isso já é feito em _initNovo()
+   * @todo Interaï¿½ï¿½o com a API estï¿½ errada. Isso jï¿½ ï¿½ feito em _initNovo()
    *   na superclasse. VER.
    */
   protected function _preConstruct()
@@ -146,7 +146,7 @@ class EditController extends Core_Controller_Page_EditController
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""        => "$nomeMenu tabela de arredondamento"             
     ));
     $this->enviaLocalizacao($localizacao->montar());   
@@ -159,7 +159,7 @@ class EditController extends Core_Controller_Page_EditController
   {
     $this->campoOculto('id', $this->getEntity()->id);
 
-    // Instituição
+    // Instituiï¿½ï¿½o
     $instituicoes = App_Model_IedFinder::getInstituicoes();
     $this->campoLista('instituicao', $this->_getLabel('instituicao'),
       $instituicoes, $this->getEntity()->instituicao);
@@ -185,9 +185,9 @@ class EditController extends Core_Controller_Page_EditController
       $this->campoQuebra();
 
       // Ajuda
-      $help = 'Caso seja necessário adicionar mais notas, '
-            . 'salve o formulário. Automaticamente 3 campos '
-            . 'novos ficarão disponíveis.<br /><br />';
+      $help = 'Caso seja necessï¿½rio adicionar mais notas, '
+            . 'salve o formulï¿½rio. Automaticamente 3 campos '
+            . 'novos ficarï¿½o disponï¿½veis.<br /><br />';
 
       $this->campoRotulo('__help1', '<strong>Notas para arredondamento</strong><br />', $help, FALSE, '', '');
 
@@ -214,19 +214,19 @@ class EditController extends Core_Controller_Page_EditController
         $this->campoTexto($valor_nome, $this->_getLabel('valor_nome'),
           $valorNota->nome, 5, 5, FALSE, FALSE, TRUE, $this->_getHelp('valor_nome'));
 
-        // Descrição (se conceitual)
+        // Descriï¿½ï¿½o (se conceitual)
         if (RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL == $this->getEntity()->get('tipoNota')) {
           $this->campoTexto($valor_descricao, $this->_getLabel('valor_descricao'),
             $valorNota->descricao, 15, 25, FALSE, FALSE, TRUE,
             $this->_getHelp('valor_descricao'));
         }
 
-        // Valor mínimo
+        // Valor mï¿½nimo
         $this->campoTexto($valor_valor_minimo, $this->_getLabel('valor_valor_minimo'),
           $valorNota->valorMinimo, 6, 6, FALSE, FALSE, TRUE,
           $this->_getHelp('valor_valor_minimo'));
 
-        // Valor máximo
+        // Valor mï¿½ximo
         $this->campoTexto($valor_valor_maximo, $this->_getLabel('valor_valor_maximo'),
           $valorNota->valorMaximo, 6, 6, FALSE, FALSE, FALSE,
           $this->_getHelp('valor_valor_maximo'));
@@ -239,7 +239,7 @@ class EditController extends Core_Controller_Page_EditController
 
   protected function _save()
   {
-    // Verifica pela existência do field identity
+    // Verifica pela existï¿½ncia do field identity
     if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
       $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
       $entity = $this->getEntity();
@@ -250,10 +250,10 @@ class EditController extends Core_Controller_Page_EditController
       return parent::_save();
     }
 
-    // Processa os dados da requisição, apenas os valores para a tabela de valores.
+    // Processa os dados da requisiï¿½ï¿½o, apenas os valores para a tabela de valores.
     $valores = $this->getRequest()->valor;
 
-    // A contagem usa um dos índices do formulário, senão ia contar sempre 4.
+    // A contagem usa um dos ï¿½ndices do formulï¿½rio, senï¿½o ia contar sempre 4.
     $loop    = count($valores['id']);
 
     // Array de objetos a persistir
@@ -263,8 +263,8 @@ class EditController extends Core_Controller_Page_EditController
     for ($i = 0; $i < $loop; $i++) {
       $id = $valores['id'][$i];
 
-      // Não atribui a instância de $entity senão não teria sucesso em verificar
-      // se a instância é isNull().
+      // Nï¿½o atribui a instï¿½ncia de $entity senï¿½o nï¿½o teria sucesso em verificar
+      // se a instï¿½ncia ï¿½ isNull().
       $data = array(
         'id' => $id,
         'nome' => $valores['nome'][$i],
@@ -273,7 +273,7 @@ class EditController extends Core_Controller_Page_EditController
         'valorMaximo' => $valores['valor_maximo'][$i]
       );
 
-      // Se a instância já existir, use-a para garantir UPDATE
+      // Se a instï¿½ncia jï¿½ existir, use-a para garantir UPDATE
       if (NULL != ($instance = $this->_getValor($id))) {
         $insert[$id] = $instance->setOptions($data);
       }
@@ -287,15 +287,15 @@ class EditController extends Core_Controller_Page_EditController
 
     // Persiste
     foreach ($insert as $tabelaValor) {
-      // Atribui uma tabela de arredondamento a instância de tabela valor
+      // Atribui uma tabela de arredondamento a instï¿½ncia de tabela valor
       $tabelaValor->tabelaArredondamento = $entity;
 
-      // Se não tiver nome, passa para o próximo
+      // Se nï¿½o tiver nome, passa para o prï¿½ximo
       if ($tabelaValor->isValid()) {
         $this->getDataMapper()->getTabelaValorDataMapper()->save($tabelaValor);
       }
       else {
-        $this->mensagem = 'Erro no formulário';
+        $this->mensagem = 'Erro no formulï¿½rio';
         return FALSE;
       }
     }

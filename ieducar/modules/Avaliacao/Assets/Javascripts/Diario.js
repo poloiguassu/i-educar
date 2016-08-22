@@ -462,7 +462,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
 
   $j('<th />').html('Etapa').appendTo($linha);
   $j('<th />').html('Turma').appendTo($linha);
-  $j('<th />').html(safeUtf8Decode('Série')).appendTo($linha);
+  $j('<th />').html(safeUtf8Decode('Eixo')).appendTo($linha);
   $j('<th />').html('Ano').appendTo($linha);
   $j('<th />').html('Escola').appendTo($linha);
   $j('<th />').html('Regra avalia&#231;&#227;o').appendTo($linha);

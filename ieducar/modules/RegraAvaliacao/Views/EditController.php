@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paixï¿½o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     RegraAvaliacao
  * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.1.0
+ * @since       Arquivo disponï¿½vel desde a versï¿½o 1.1.0
  * @version     $Id$
  */
 
@@ -35,18 +35,18 @@ require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 /**
  * EditController class.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paixï¿½o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     RegraAvaliacao
  * @subpackage  Modules
- * @since       Classe disponível desde a versão 1.1.0
+ * @since       Classe disponï¿½vel desde a versï¿½o 1.1.0
  * @version     @@package_version@@
  */
 class EditController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper        = 'RegraAvaliacao_Model_RegraDataMapper';
-  protected $_titulo            = 'Cadastro de regra de avaliação';
+  protected $_titulo            = 'Cadastro de regra de avaliaï¿½ï¿½o';
   protected $_processoAp        = 947;
   protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
   protected $_saveOption        = TRUE;
@@ -54,7 +54,7 @@ class EditController extends Core_Controller_Page_EditController
 
   protected $_formMap = array(
     'instituicao' => array(
-      'label'  => 'Instituição',
+      'label'  => 'Instituiï¿½ï¿½o',
       'help'   => '',
     ),
     'nome' => array(
@@ -66,39 +66,39 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => ''
     ),
     'tipoProgressao' => array(
-      'label'  => 'Progressão',
-      'help'   => 'Selecione o método de progressão para a regra.'
+      'label'  => 'Progressï¿½o',
+      'help'   => 'Selecione o mï¿½todo de progressï¿½o para a regra.'
     ),
     'tabelaArredondamento' => array(
       'label'  => 'Tabela de arredondamento de nota',
       'help'   => ''
     ),
     'media' => array(
-      'label'  => 'Média final para promoção',
-      'help'   => 'Informe a média necessária para promoção<br />
-                   do aluno, aceita até 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
-                   Se o tipo de progressão for <b>"Progressiva"</b>, esse<br />
-                   valor não será considerado.'
+      'label'  => 'Mï¿½dia final para promoï¿½ï¿½o',
+      'help'   => 'Informe a mï¿½dia necessï¿½ria para promoï¿½ï¿½o<br />
+                   do aluno, aceita atï¿½ 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
+                   Se o tipo de progressï¿½o for <b>"Progressiva"</b>, esse<br />
+                   valor nï¿½o serï¿½ considerado.'
     ),
     'mediaRecuperacao' => array(
-      'label'  => 'Média exame final para promoção',
-      'help'   => 'Informe a média necessária para promoção<br />
-                   do aluno, aceita até 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
+      'label'  => 'Mï¿½dia exame final para promoï¿½ï¿½o',
+      'help'   => 'Informe a mï¿½dia necessï¿½ria para promoï¿½ï¿½o<br />
+                   do aluno, aceita atï¿½ 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
                    Desconsidere esse campo caso selecione o tipo de nota "conceitual"'
     ),
     'formulaMedia' => array(
-      'label'  => 'Fórmula de cálculo da média',
+      'label'  => 'Fï¿½rmula de cï¿½lculo da mï¿½dia',
       'help'   => '',
     ),
     'formulaRecuperacao' => array(
-      'label'  => 'Fórmula de cálculo da média de recuperação',
+      'label'  => 'Fï¿½rmula de cï¿½lculo da mï¿½dia de recuperaï¿½ï¿½o',
       'help'   => '',
     ),
     'porcentagemPresenca' => array(
-      'label'  => 'Porcentagem de presença',
-      'help'   => 'A porcentagem de presença necessária para o aluno ser aprovado.<br />
-                   Esse valor é desconsiderado caso o campo "Progressão" esteja como<br />
-                   "Não progressiva automática - Somente média".<br />
+      'label'  => 'Porcentagem de presenï¿½a',
+      'help'   => 'A porcentagem de presenï¿½a necessï¿½ria para o aluno ser aprovado.<br />
+                   Esse valor ï¿½ desconsiderado caso o campo "Progressï¿½o" esteja como<br />
+                   "Nï¿½o progressiva automï¿½tica - Somente mï¿½dia".<br />
                    Em porcentagem, exemplo: <b>75</b> ou <b>80,750</b>'
     ),
     'parecerDescritivo' => array(
@@ -106,7 +106,7 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => '',
     ),
     'tipoPresenca' => array(
-      'label'  => 'Apuração de presença',
+      'label'  => 'Apuraï¿½ï¿½o de presenï¿½a',
       'help'   => ''
     )
   );
@@ -168,7 +168,7 @@ var tabela_arredondamento = new function() {
 
     if (tabelas.length == 0) {
       docObj.options[0] = new Option(
-        \'O tipo de nota não possui tabela de arredondamento.\', \'\', false, false
+        \'O tipo de nota nï¿½o possui tabela de arredondamento.\', \'\', false, false
       );
     }
   }
@@ -179,7 +179,7 @@ var tabela_arredondamento = new function() {
   {
     parent::_preRender();
 
-    // Adiciona o código Javascript de controle do formulário.
+    // Adiciona o cï¿½digo Javascript de controle do formulï¿½rio.
     $js = sprintf('
       <script type="text/javascript">
         %s
@@ -212,7 +212,7 @@ var tabela_arredondamento = new function() {
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""        => "$nomeMenu regra de avalia&ccedil;&atilde;o"             
     ));
     $this->enviaLocalizacao($localizacao->montar());    
@@ -225,7 +225,7 @@ var tabela_arredondamento = new function() {
   {
     $this->campoOculto('id', $this->getEntity()->id);
 
-    // Instituição
+    // Instituiï¿½ï¿½o
     $instituicoes = App_Model_IedFinder::getInstituicoes();
     $this->campoLista('instituicao', $this->_getLabel('instituicao'), $instituicoes,
       $this->getEntity()->instituicao);
@@ -244,42 +244,42 @@ var tabela_arredondamento = new function() {
     $tabelaArredondamento = CoreExt_Entity::entityFilterAttr($tabelaArredondamento, 'id', 'nome');
 
     if (empty($tabelaArredondamento)) {
-      $tabelaArredondamento = array(0 => 'O tipo de nota não possui tabela de arredondamento.');
+      $tabelaArredondamento = array(0 => 'O tipo de nota nï¿½o possui tabela de arredondamento.');
     }
 
     $this->campoLista('tabelaArredondamento', $this->_getLabel('tabelaArredondamento'),
       $tabelaArredondamento, $this->getEntity()->get('tabelaArredondamento'), '',
       FALSE, $this->_getHelp('tabelaArredondamento'), '', FALSE, FALSE);
 
-    // Tipo progressão
+    // Tipo progressï¿½o
     $tipoProgressao = RegraAvaliacao_Model_TipoProgressao::getInstance();
     $this->campoRadio('tipoProgressao', $this->_getLabel('tipoProgressao'),
       $tipoProgressao->getEnums(), $this->getEntity()->get('tipoProgressao'), '',
       $this->_getHelp('tipoProgressao'));
 
-    // Média
+    // Mï¿½dia
     $this->campoTexto('media', $this->_getLabel('media'), $this->getEntity()->media,
       5, 50, FALSE, FALSE, FALSE, $this->_getHelp('media'));
 
     $this->campoTexto('mediaRecuperacao', $this->_getLabel('mediaRecuperacao'), $this->getEntity()->mediaRecuperacao, 5, 50, FALSE, FALSE, FALSE, $this->_getHelp('mediaRecuperacao'));
 
-    // Cálculo média
+    // Cï¿½lculo mï¿½dia
     $formulas = $this->getDataMapper()->findFormulaMediaFinal();
     $formulas = CoreExt_Entity::entityFilterAttr($formulas, 'id', 'nome');
     $this->campoLista('formulaMedia', $this->_getLabel('formulaMedia'),
       $formulas, $this->getEntity()->get('formulaMedia'), '', FALSE,
       $this->_getHelp('formulaMedia'), '', FALSE, FALSE);
 
-    // Cálculo média recuperação
+    // Cï¿½lculo mï¿½dia recuperaï¿½ï¿½o
     $formulas = $this->getDataMapper()->findFormulaMediaRecuperacao();
-    $formulasArray = array(0 => 'Não usar recuperação');
+    $formulasArray = array(0 => 'Nï¿½o usar recuperaï¿½ï¿½o');
     $formulasArray = $formulasArray + CoreExt_Entity::entityFilterAttr($formulas, 'id', 'nome');
 
     $this->campoLista('formulaRecuperacao', $this->_getLabel('formulaRecuperacao'),
       $formulasArray, $this->getEntity()->get('formulaRecuperacao'), '', FALSE,
       $this->_getHelp('formulaRecuperacao'), '', FALSE, FALSE);
 
-    // Porcentagem presença
+    // Porcentagem presenï¿½a
     $this->campoTexto('porcentagemPresenca', $this->_getLabel('porcentagemPresenca'),
       $this->getEntity()->porcentagemPresenca, 5, 50, TRUE, FALSE, FALSE,
       $this->_getHelp('porcentagemPresenca'));
@@ -290,7 +290,7 @@ var tabela_arredondamento = new function() {
       $parecerDescritivo->getEnums(), $this->getEntity()->get('parecerDescritivo'), '',
       $this->_getHelp('parecerDescritivo'));
 
-    // Presença
+    // Presenï¿½a
     $tipoPresenca = RegraAvaliacao_Model_TipoPresenca::getInstance();
     $this->campoRadio('tipoPresenca', $this->_getLabel('tipoPresenca'),
       $tipoPresenca->getEnums(), $this->getEntity()->get('tipoPresenca'), '',

@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de Itajaï¿½								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software Pï¿½blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaï¿½			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  ï¿½  software livre, vocï¿½ pode redistribuï¿½-lo e/ou	 *
+	*	modificï¿½-lo sob os termos da Licenï¿½a Pï¿½blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versï¿½o 2 da	 *
+	*	Licenï¿½a   como  (a  seu  critï¿½rio)  qualquer  versï¿½o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  ï¿½ distribuï¿½do na expectativa de ser ï¿½til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implï¿½cita de COMERCIALI-	 *
+	*	ZAï¿½ï¿½O  ou  de ADEQUAï¿½ï¿½O A QUALQUER PROPï¿½SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licenï¿½a  Pï¿½blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	Vocï¿½  deve  ter  recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU	 *
+	*	junto  com  este  programa. Se nï¿½o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -101,7 +101,7 @@ class indice extends clsCadastro
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "i-Educar - Escola",
+             "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
              ""        => "{$nomeMenu} reclassifica&ccedil;&atilde;o da matr&iacute;cula"
         ));
         $this->enviaLocalizacao($localizacao->montar());
@@ -204,7 +204,7 @@ class indice extends clsCadastro
 			if($seq_correta == false)
 			{
 				///$todas_sequencias = "var sequencia_serie = new Array();\n";
-				$cursos = array('' => 'Não existem cursos/séries para reclassificação');
+				$cursos = array('' => 'Nï¿½o existem cursos/sï¿½ries para reclassificaï¿½ï¿½o');
 			}else
 			{
 				break;
@@ -230,12 +230,12 @@ class indice extends clsCadastro
 
 
 		$this->campoLista("ref_cod_curso","Curso",$cursos,$this->ref_cod_curso,"getSerie();");
-		$this->campoLista("ref_ref_cod_serie","S&eacute;rie",array('' => 'Selecione uma série'),'');
+		$this->campoLista("ref_ref_cod_serie","S&eacute;rie",array('' => 'Selecione uma sï¿½rie'),'');
 		//$this->campoOculto("ref_ref_cod_serie_antiga",$this->ref_ref_cod_serie);
 		$this->inputsHelper()->date('data_cancel', array('label' => 'Data da reclassifica&ccedil;&atilde;o', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
 		$this->campoMemo("descricao_reclassificacao","Descri&ccedil;&atilde;o",$this->descricao_reclassificacao,100,10,true);
 
-		$this->acao_enviar = 'if(confirm("Deseja reclassificar está matrícula?"))acao();';
+		$this->acao_enviar = 'if(confirm("Deseja reclassificar estï¿½ matrï¿½cula?"))acao();';
 
 
 	}
@@ -260,13 +260,13 @@ class indice extends clsCadastro
 
 			if(substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel){
 
-				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
+				$this->mensagem = "Data de abandono nï¿½o pode ser inferior a data da matrï¿½cula.<br>";
 				return false;	
 				die();							
 			} 
 		}else{
 			if(substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel){
-				$this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
+				$this->mensagem = "Data de abandono nï¿½o pode ser inferior a data da matrï¿½cula.<br>";
 				return false;
 				die();
 			}
@@ -280,8 +280,8 @@ class indice extends clsCadastro
 
 		if(!$obj_matricula->edita())
 		{
-			echo "<script>alert('Erro ao reclassificar matrícula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
-			die("Erro ao reclassificar matrícula");
+			echo "<script>alert('Erro ao reclassificar matrï¿½cula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
+			die("Erro ao reclassificar matrï¿½cula");
 		}
 		$obj_serie = new clsPmieducarSerie( $this->ref_ref_cod_serie );
 		$det_serie = $obj_serie->detalhe();
@@ -290,8 +290,8 @@ class indice extends clsCadastro
 		$cadastrou = $obj_matricula->cadastra();
 
 		if(!$cadastrou){
-			echo "<script>alert('Erro ao reclassificar matrícula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
-			die("Erro ao reclassificar matrícula");
+			echo "<script>alert('Erro ao reclassificar matrï¿½cula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
+			die("Erro ao reclassificar matrï¿½cula");
 		}else{
 			/**
 			 * desativa todas as enturmacoes da matricula anterior
@@ -299,13 +299,13 @@ class indice extends clsCadastro
 			$obj_matricula_turma = new clsPmieducarMatriculaTurma($this->cod_matricula);
 			if(!$obj_matricula_turma->reclassificacao())
 			{
-				echo "<script>alert('Erro ao desativar enturmações da matrícula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrícula!');</script>";
+				echo "<script>alert('Erro ao desativar enturmaï¿½ï¿½es da matrï¿½cula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrï¿½cula!');</script>";
 			}
 			//window.location='educar_matricula_det.php?cod_matricula={$this->cod_matricula}&ref_cod_aluno={$this->ref_cod_aluno}';
-			echo "<script>alert('Reclassificação realizada com sucesso!\\nO Código da nova matrícula é: $cadastrou.');
+			echo "<script>alert('Reclassificaï¿½ï¿½o realizada com sucesso!\\nO Cï¿½digo da nova matrï¿½cula ï¿½: $cadastrou.');
 			window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';
 			</script>";
-			die('Reclassificação realizada com sucesso!');
+			die('Reclassificaï¿½ï¿½o realizada com sucesso!');
 
 		}
 

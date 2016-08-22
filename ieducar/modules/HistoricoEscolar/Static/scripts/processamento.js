@@ -361,7 +361,7 @@
           var $linha = $('<tr />');
           $('<th />').html('Selecionar').appendTo($linha);
           $('<th />').html('Curso').appendTo($linha);
-          $('<th />').html(safeUtf8Decode('Série')).appendTo($linha);
+          $('<th />').html(safeUtf8Decode('Eixo')).appendTo($linha);
           $('<th />').html('Turma').appendTo($linha);
           $('<th />').html('Matricula').appendTo($linha);
           $('<th />').html('Aluno').appendTo($linha);

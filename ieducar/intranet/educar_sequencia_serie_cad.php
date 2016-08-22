@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de Itajaï¿½								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software Pï¿½blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaï¿½			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  ï¿½  software livre, vocï¿½ pode redistribuï¿½-lo e/ou	 *
+	*	modificï¿½-lo sob os termos da Licenï¿½a Pï¿½blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versï¿½o 2 da	 *
+	*	Licenï¿½a   como  (a  seu  critï¿½rio)  qualquer  versï¿½o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  ï¿½ distribuï¿½do na expectativa de ser ï¿½til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implï¿½cita de COMERCIALI-	 *
+	*	ZAï¿½ï¿½O  ou  de ADEQUAï¿½ï¿½O A QUALQUER PROPï¿½SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licenï¿½a  Pï¿½blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	Vocï¿½  deve  ter  recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU	 *
+	*	junto  com  este  programa. Se nï¿½o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -115,7 +115,7 @@ class indice extends clsCadastro
 	    $localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
 	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "i-Educar - Escola",
+	         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
 	         ""        => "{$nomeMenu} sequ&ecirc;ncia de enturma&ccedil;&atilde;o"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());
@@ -325,7 +325,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro ao editar clsPmieducarSequenciaSerie\nvalores obrigat&oacute;rios\nif( is_numeric( $this->ref_serie_origem ) && is_numeric( $this->ref_serie_destino ) && is_numeric( $this->pessoa_logada ) )\n-->";
 			return false;
 		}
-		echo "<script> alert('Edição não realizada! \\n Já existe essa sequência.') </script>";
+		echo "<script> alert('Ediï¿½ï¿½o nï¿½o realizada! \\n Jï¿½ existe essa sequï¿½ncia.') </script>";
 		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
 		return false;
 	}
@@ -408,8 +408,8 @@ function getCurso(xml_curso)
 	}
 	else
 	{
-		campoCurso.options[0].text = 'A instituição não possui nenhum curso';
-		campoCurso_.options[0].text = 'A instituição não possui nenhum curso';
+		campoCurso.options[0].text = 'A instituiï¿½ï¿½o nï¿½o possui nenhum curso';
+		campoCurso_.options[0].text = 'A instituiï¿½ï¿½o nï¿½o possui nenhum curso';
 	}
 }
 
@@ -421,7 +421,7 @@ function getSerie(xml_serie)
 	if(DOM_array.length)
 	{
 		campoSerie.length = 1;
-		campoSerie.options[0].text = 'Selecione uma série origem';
+		campoSerie.options[0].text = 'Selecione uma sï¿½rie origem';
 		campoSerie.disabled = false;
 
 		for( var i = 0; i < DOM_array.length; i++ )
@@ -430,7 +430,7 @@ function getSerie(xml_serie)
 		}
 	}
 	else
-		campoSerie.options[0].text = 'O curso origem não possui nenhuma série';
+		campoSerie.options[0].text = 'O curso origem nï¿½o possui nenhuma sï¿½rie';
 }
 
 function getSerie_(xml_serie_)
@@ -441,7 +441,7 @@ function getSerie_(xml_serie_)
 	if(DOM_array.length)
 	{
 		campoSerie_.length = 1;
-		campoSerie_.options[0].text = 'Selecione uma série destino';
+		campoSerie_.options[0].text = 'Selecione uma sï¿½rie destino';
 		campoSerie_.disabled = false;
 
 		for( var i = 0; i < DOM_array.length; i++ )
@@ -450,7 +450,7 @@ function getSerie_(xml_serie_)
 		}
 	}
 	else
-		campoSerie_.options[0].text = 'O curso origem não possui nenhuma série';
+		campoSerie_.options[0].text = 'O curso origem nï¿½o possui nenhuma sï¿½rie';
 }
 /*
 function getSerie( tipo )
@@ -551,7 +551,7 @@ document.getElementById('ref_curso_origem').onchange = function()
 	var campoSerie = document.getElementById('ref_serie_origem');
 	campoSerie.length = 1;
 	campoSerie.disabled = true;
-	campoSerie.options[0].text = 'Carregando série origem';
+	campoSerie.options[0].text = 'Carregando sï¿½rie origem';
 
 	var xml_serie = new ajax( getSerie );
 	xml_serie.envia( "educar_serie_xml.php?cur="+campoCurso )
@@ -565,7 +565,7 @@ document.getElementById('ref_curso_destino').onchange = function()
 	var campoSerie_ = document.getElementById('ref_serie_destino');
 	campoSerie_.length = 1;
 	campoSerie_.disabled = true;
-	campoSerie_.options[0].text = 'Carregando série destino';
+	campoSerie_.options[0].text = 'Carregando sï¿½rie destino';
 
 	var xml_serie_ = new ajax( getSerie_ );
 	xml_serie_.envia( "educar_serie_xml.php?cur="+campoCurso_ )

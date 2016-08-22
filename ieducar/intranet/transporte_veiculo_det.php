@@ -1,24 +1,24 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
@@ -41,11 +41,11 @@ require_once 'Portabilis/View/Helper/Application.php';
 /**
  * clsIndexBase class.21239
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -61,11 +61,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
@@ -78,7 +78,7 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    // Verificação de permissão para cadastro.
+    // Verificaï¿½ï¿½o de permissï¿½o para cadastro.
     $this->obj_permissao = new clsPermissoes();
 
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
@@ -96,36 +96,36 @@ class indice extends clsDetalhe
       die();
     }
     
-    $this->addDetalhe( array("Código do veículo", $cod_veiculo));
-    $this->addDetalhe( array("Descrição", $registro['descricao']) );
+    $this->addDetalhe( array("Cï¿½digo do veï¿½culo", $cod_veiculo));
+    $this->addDetalhe( array("Descriï¿½ï¿½o", $registro['descricao']) );
     $this->addDetalhe( array("Placa", $registro['placa']) );
     $this->addDetalhe( array("Renavam", $registro['renavam']) );
     $this->addDetalhe( array("Chassi", $registro['chassi']) );
     $this->addDetalhe( array("Marca", $registro['marca']) );
-    $this->addDetalhe( array("Ano fabricação", $registro['ano_fabricacao']) );
+    $this->addDetalhe( array("Ano fabricaï¿½ï¿½o", $registro['ano_fabricacao']) );
     $this->addDetalhe( array("Ano modelo", $registro['ano_modelo']) );
     $this->addDetalhe( array("Limite de passageiros", $registro['passageiros']) );
     $malha ='';
     switch ($registro['malha']){
       case 'A':
-        $malha = 'Aquática/Embarcação';
+        $malha = 'Aquï¿½tica/Embarcaï¿½ï¿½o';
         break;
       case 'F':
-        $malha = 'Ferroviária';
+        $malha = 'Ferroviï¿½ria';
         break;
       case 'R':
-        $malha = 'Rodoviária';
+        $malha = 'Rodoviï¿½ria';
         break;
     }
     $this->addDetalhe( array("Malha", $malha) );
     $this->addDetalhe( array("Categoria", $registro['descricao_tipo']) );
-    $this->addDetalhe( array("Exclusivo para transporte escolar", ($registro['exclusivo_transporte_escolar'] == 'S' ? 'Sim' : 'Não')) );
-    $this->addDetalhe( array("Adaptado para pessoas com necessidades especiais", ($registro['adaptado_necessidades_especiais'] == 'S' ? 'Sim' : 'Não')) );
-    $this->addDetalhe( array("Ativo", ($registro['ativo'] == 'S' ? 'Sim' : 'Não')) );
+    $this->addDetalhe( array("Exclusivo para transporte escolar", ($registro['exclusivo_transporte_escolar'] == 'S' ? 'Sim' : 'Nï¿½o')) );
+    $this->addDetalhe( array("Adaptado para pessoas com necessidades especiais", ($registro['adaptado_necessidades_especiais'] == 'S' ? 'Sim' : 'Nï¿½o')) );
+    $this->addDetalhe( array("Ativo", ($registro['ativo'] == 'S' ? 'Sim' : 'Nï¿½o')) );
     if ($registro['ativo']=='N')
-      $this->addDetalhe( array("Descrição inativo", $registro['descricao_inativo']) );
+      $this->addDetalhe( array("Descriï¿½ï¿½o inativo", $registro['descricao_inativo']) );
     $this->addDetalhe( array("Empresa", $registro['nome_empresa']) );
-    $this->addDetalhe( array("Motorista responsável", $registro['nome_motorista']) );
+    $this->addDetalhe( array("Motorista responsï¿½vel", $registro['nome_motorista']) );
     $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));
     $this->url_novo = "../module/TransporteEscolar/Veiculo";
     $this->url_editar = "../module/TransporteEscolar/Veiculo?id={$cod_veiculo}";
@@ -136,20 +136,20 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""                                  => "Detalhe do ve&iacute;culo"
     ));
     $this->enviaLocalizacao($localizacao->montar());    
   }
 }
 
-// Instancia o objeto da página
+// Instancia o objeto da pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia o objeto de conteúdo
+// Instancia o objeto de conteï¿½do
 $miolo = new indice();
 
-// Passa o conteúdo para a página
+// Passa o conteï¿½do para a pï¿½gina
 $pagina->addForm($miolo);
 
 // Gera o HTML
