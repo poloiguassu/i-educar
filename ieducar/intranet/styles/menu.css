@@ -33,7 +33,7 @@
 
 .clLevel0
 {
-	background-color: #546c76;
+	background-color: #341803;
 	/*layer-background-color: #546c76;*/
 	color: #FFFFFF;
 	border-top: 1px solid #FFFFFF;
@@ -41,12 +41,12 @@
 
 .clLevel0over
 {
-	background-color:#3c505b; 
+	background-color:#524134; 
 	/*layer-background-color:#3c505b;	*/
 	color: #DDDDDD; 
 	cursor: pointer; 
 	/*cursor: hand;*/
-	border-top: 2px solid #AAAAAA;
+	border-top: 3px solid #AAAAAA;
 }
 
 .clLevel0border
@@ -64,22 +64,32 @@
 	padding:2px; 
 	font-family: arial, verdana, lucida, helvetica, sans-serif;
 	font-size:12px; 
+	color: #ffffff;
+	
+}
+
+.clLevel1:hover
+{
+	background-color:#d3c4b0; 
+	/*layer-background-color:#D9DCE5; */
+	color:#341803;
 }
 
 .clLevel1
 {
-	background-color:#D9DCE5; 
+	background-color:#d3c4b0; 
 	/*layer-background-color:#D9DCE5; */
-	color:#000000;
+	color:#341803;
 }
 
 .clLevel1over
 {
-	background-color:#3c505b; 
+	background-color:#524134; 
 	/*layer-background-color:#3c505b; */
 	color:#FFFFFF; 
 	cursor:pointer; 
 	/*cursor:hand; */
+	
 }
 
 .clLevel1border
@@ -101,14 +111,14 @@
 
 .clLevel2
 {
-	background-color:#D9DCE5; 
+	background-color:#d3c4b0; 
 	/*layer-background-color:#D9DCE5; */
 	color:#000000;
 }
 
 .clLevel2over
 {
-	background-color:#3c505b; 
+	background-color:#524134; 
 	/*layer-background-color:#3c505b; */
 	color:#FFFFFF; 
 	cursor:pointer; 

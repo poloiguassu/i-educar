@@ -3,7 +3,6 @@
 	<head>
 		<title>Intranet</title>
     <meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1' />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta http-equiv="Pragma" content="no-cache" />
 		<meta http-equiv="Expires" content="-1" />
 
@@ -62,7 +61,7 @@
     <div id="flash-container">
 
       <!--[if lt IE 7]>
-      <p style="min-height: 32px;" class="flash update-browser"><strong>Seu navegador est&aacute desatualizado.</strong> Para melhor navega&ccedil;&atildeo  no sistema, por favor, atualize seu navegador.<a href="http://br.mozdev.org/download/" target="_blank"><img style="margin-top:4px;" src="http://www.mozilla.org/contribute/buttons/110x32bubble_r_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></p>
+      <p style="min-height: 32px;" class="flash update-browser"><strong>Seu navegador está desatualizado.</strong> Para melhor navegação  no sistema, por favor, atualize seu navegador.<a href="http://br.mozdev.org/download/" target="_blank"><img style="margin-top:4px;" src="http://www.mozilla.org/contribute/buttons/110x32bubble_r_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></p>
       <![endif]-->
 
       <!-- #&ERROLOGIN&# -->
@@ -77,31 +76,40 @@
         <table>
           <tbody><tr>
     		    <td>
-              <label class="" for="login">Matr&iacute;cula:</label>
-              <input type="text" name="login" id="login"></td>
+							<label class="" for="login">Login (Usuário ou CPF):</label>
+						</td>
+						<tr>
+						</tr>
+						<td>
+								<input type="text" name="login" id="login">
+						</td>
     	    </tr>
 
           <tr>
     		    <td>
-              <label class="" for="senha">Senha:</label>
-              <input type="password" name="senha" id="senha">
-            </td>
-          </tr>
-          <tr>
-            <td><!-- #&RECAPTCHA&# --></td>
-          </tr>
-          <tr>
+							<label class="" for="senha">Senha:</label>
+					</td>
+			<tr>
+			</tr>
+					<td>
+							<input type="password" name="senha" id="senha">
+					</td>
+				</tr>
+				<tr>
+					<td><!-- #&RECAPTCHA&# --></td>
+				</tr>
+				<tr>
     		    <td>
-              <input type="submit" class="submit" src="imagens/nvp_bot_entra_webmail.jpg" value="Entrar">
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <p class="forget-password"><a class="light small" href="/module/Usuario/RedefinirSenha">Esqueceu sua senha?</a></p>
-            </p>
-            </td>
-          </tr>
-        </tbody></table>
+							<input type="submit" class="submit" src="imagens/nvp_bot_entra_webmail.jpg" value="Entrar">
+					</td>
+				</tr>
+				<tr>
+					<td>
+							<p class="forget-password"><a class="light small" href="/module/Usuario/RedefinirSenha">Esqueceu sua senha?</a></p>
+					</td>
+				</tr>
+	</tbody>
+	</table>
         </form>
 
       </div> <!-- end login-form -->
@@ -110,8 +118,8 @@
         <p class="requiriments title">Requisitos</p>
         <p class="explanation">Para melhor uso do sistema, recomendamos:</p>
         <ul class="requiriments unstyled">
-          <li>- Navegador <a target="_blank" class="light decorated" href="https://www.google.com/intl/pt-BR/chrome/browser/">Google Chrome</a> ou <a target="_blank" class="light decorated" href="http://br.mozdev.org/download/">Mozilla Firefox</a></li>
-          <li>- Leitor relat&oacute;rios PDF <a target="_blank" class="light decorated" href="http://get.adobe.com/br/reader/">Adobe Reader</a> ou <a target="_blank" class="light decorated" href="http://www.foxitsoftware.com/downloads#reader">Foxit</a></li>
+          <li>- Navegador Internet Explorer 9 ou <a target="_blank" class="light decorated" href="http://br.mozdev.org/download/">Mozilla Firefox</a></li>
+          <li>- Leitor relatórios PDF <a target="_blank" class="light decorated" href="http://get.adobe.com/br/reader/">Adobe Reader</a> ou <a target="_blank" class="light decorated" href="http://www.foxitsoftware.com/downloads#reader">Foxit</a></li>
         </ul>
       </div>
 

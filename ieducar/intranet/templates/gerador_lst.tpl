@@ -7,7 +7,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "Prefeitura de Itaja&iacute; - #nome_pagina#" );
+		$this->SetTitulo( "Trilha Jovem - #nome_pagina#" );
 		$this->processoAp = "0";
 	}
 }

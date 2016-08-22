@@ -1,5 +1,5 @@
 /**
-* @author Prefeitura Municipal de Itajaí
+* @author Prefeitura Municipal de ItajaÃ­
 *
 * Criado em #data_criacao#
 */
@@ -12,7 +12,7 @@ class clsIndex extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "Prefeitura de Itaja&iacute; - #upper_nome_schema# - Cadastro de #nome_tabela#" );
+		$this->SetTitulo( "Trilha Jovem - #upper_nome_schema# - Cadastro de #nome_tabela#" );
 		$this->processoAp = "0";
 	}
 }

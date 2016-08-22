@@ -72,8 +72,17 @@ body {
   padding-bottom: 6px;*/
 }
 
+.logoTJ {
+  	background-image: url(/intranet/imagens/top_logo-tji.png);
+	background-repeat: no-repeat;
+	background-size:100% 114%;
+	padding-left: 11%;
+	padding-bottom: 8px;
+	padding-top: 15px;
+}
+
 #cabecalho, #ccorpo {
-	background-color: #184e7f;
+	background-color: #f8822a;
 }
 
 #flash-container, #menu, #corpo, /*#cabecalho #ccorpo,*/ #rodape {
@@ -83,9 +92,9 @@ body {
 }
 
 #cabecalho #ccorpo {
-  line-height: 1.2;
-	padding: 0px;
-	padding-left: 10px;
+  line-height: 1.8;
+	padding: 14px;
+	padding-left: 18px;
 	padding-right: 10px;
 }
 

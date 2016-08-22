@@ -23,7 +23,7 @@
 
   <script type="text/javascript" src="scripts/padrao.js?1"></script>
   <script type="text/javascript" src="scripts/novo.js?1"></script>
-  <script type="text/javascript" src="scripts/dom.js?2"></script>
+  <script type="text/javascript" src="scripts/dom.js?1"></script>
   <script type="text/javascript" src="scripts/menu.js?1"></script>
   <script type="text/javascript" src="scripts/ied/forms.js?1"></script>
   <script type="text/javascript" src="scripts/ied/phpjs.js?1"></script>
@@ -42,7 +42,7 @@
       var src    = imagem.src.indexOf('arrow-up') ;
 
       imagem.src = (src!= -1) ?
-        'imagens/arrow-down2.gif' : 'imagens/arrow-up2.gif' ;
+        'imagens/arrow-down2.png' : 'imagens/arrow-up2.png' ;
 
       imagem.title = (src!= -1) ?
         imagem.title.replace('Abrir', 'Fechar') :

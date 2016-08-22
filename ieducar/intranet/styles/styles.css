@@ -37,13 +37,13 @@ body{
 }
 
 a {
-  color:#0000aa;
+  color:#341803;
   text-decoration: none;
 }
 
 a:hover {
-  color:#000055;
-  text-decoration: underline;
+  color:#a05a2a;
+  text-decoration: none;
 }
 
 .tabelalogin {
@@ -116,8 +116,8 @@ a:hover {
 
 .linkmenu:hover{
   font-size: 10px;
-  color: white;
-  text-decoration: underline;
+  color: a05a2a;
+  text-decoration: none;
   font-weight: bold;
 }
 

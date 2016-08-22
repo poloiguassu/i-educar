@@ -7,7 +7,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "Prefeitura de Itaja&iacute; - #nome_pagina#" );
+		$this->SetTitulo( "Trilha Jovem; - #nome_pagina#" );
 		$this->processoAp = "0";
 	}
 }
@@ -102,13 +102,13 @@ class indice extends clsCadastro
 		$editou = $obj->edita();
 		if( $editou )
 		{
-			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+			$this->mensagem .= "Edição efetuada com sucesso.<br>";
 			header( "Location: #nome_schema_limpo#_#nome_tabela#_lst.php" );
 			die();
 			return true;
 		}
 
-		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+		$this->mensagem = "Edição não realizada.<br>";
 		echo "<!--\nErro ao editar #nome_classe#\nvalores obrigatorios\n#debug_pk_start_edicao#-->";
 		return false;
 	}
@@ -125,13 +125,13 @@ class indice extends clsCadastro
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
-			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+			$this->mensagem .= "Exclusão efetuada com sucesso.<br>";
 			header( "Location: #nome_schema_limpo#_#nome_tabela#_lst.php" );
 			die();
 			return true;
 		}
 
-		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+		$this->mensagem = "Exclusão não realizada.<br>";
 		echo "<!--\nErro ao excluir #nome_classe#\nvalores obrigatorios\n#debug_pk_start_edicao#-->";
 		return false;
 	}

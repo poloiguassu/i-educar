@@ -6,12 +6,12 @@ TABLE, BODY
 }
 TD.claro
 {
-	background-color: #FFFFFF;
+	background-color: #FAF2ED;
 	padding: 5px;
 }
 TD.escuro
 {
-	background-color: #e4e9ed;
+	background-color: #d3c4b0;
 	padding: 5px;
 }
 .titulo
@@ -26,21 +26,21 @@ TD.escuro
 	font-family: arial, heveltica, sans, verdana;
 	font-size: 22px;
 	font-weight: bold;
-	color: #e4e9ed;
+	color: #d3c4b0;
 }
 .data2
 {
 	font-family: arial, heveltica, sans, verdana;
 	font-size: 16px;
 	font-weight: bold;
-	color: #e4e9ed;
+	color: #d3c4b0;
 }
 .data3
 {
 	font-family: arial, heveltica, sans, verdana;
 	font-size: 13px;
 	font-weight: bold;
-	color: #e4e9ed;
+	color: #d3c4b0;
 }
 .comp_tit
 {
@@ -71,7 +71,7 @@ INPUT.notas
 	font-family: arial, heveltica, sans, verdana;
 	font-size: 9px;
 	color: #000000;
-	background-color: #e4e9ed;
+	background-color: #FAF2ED;
 }
 INPUT.agenda_hora
 {
