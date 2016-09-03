@@ -210,7 +210,7 @@ class indice extends clsDetalhe
 		}
 		if( $registro["ref_cod_curso"] )
 		{
-			$this->addDetalhe( array( "Curso", "{$registro["ref_cod_curso"]}") );
+			$this->addDetalhe( array( "Projeto", "{$registro["ref_cod_curso"]}") );
 		}
 		if( $nm_serie )
 		{

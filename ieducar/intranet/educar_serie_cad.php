@@ -180,7 +180,7 @@ class indice extends clsCadastro
       }
     }
 
-    $this->campoLista('etapa_curso', 'Etapa Curso', $opcoes, $this->etapa_curso);
+    $this->campoLista('etapa_curso', 'Etapa Projeto', $opcoes, $this->etapa_curso);
 
     // Regra de avalia��o
     $mapper = new RegraAvaliacao_Model_RegraDataMapper();

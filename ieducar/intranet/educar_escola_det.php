@@ -475,7 +475,7 @@ class indice extends clsDetalhe
 		}
 		if( $nm_curso )
 		{
-			$this->addDetalhe( array( "Curso", "{$tabela}") );
+			$this->addDetalhe( array( "Projeto", "{$tabela}") );
 		}
 
 		if( $tabela = $this->listaAnos() ) {

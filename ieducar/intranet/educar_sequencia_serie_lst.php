@@ -95,9 +95,9 @@ class indice extends clsListagem
 		
 
 		$lista_busca = array(
-			"Curso Origem",
+			"Projeto Origem",
 			"S&eacute;rie Origem",
-			"Curso Destino",
+			"Projeto Destino",
 			"S&eacute;rie Destino"
 		);
 
@@ -168,8 +168,8 @@ class indice extends clsListagem
 			echo "<!--\nErro\nClasse clsPmieducarCurso n&atilde;o encontrada\n-->";
 			$opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
 		}
-		$this->campoLista( "ref_curso_origem", "Curso Origem", $opcoes, $this->ref_curso_origem,"",true,"","",false,false);
-		$this->campoLista( "ref_curso_destino", " Curso Destino", $opcoes_, $this->ref_curso_destino,"",false,"","",false,false);
+		$this->campoLista( "ref_curso_origem", "Projeto Origem", $opcoes, $this->ref_curso_origem,"",true,"","",false,false);
+		$this->campoLista( "ref_curso_destino", " Projeto Destino", $opcoes_, $this->ref_curso_destino,"",false,"","",false,false);
 
 		// primary keys
 

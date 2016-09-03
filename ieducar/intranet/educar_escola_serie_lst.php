@@ -101,7 +101,7 @@ class indice extends clsListagem
 
     $lista_busca = array(
       'S&eacute;rie',
-      'Curso'
+      'Projeto'
     );
 
     $obj_permissao = new clsPermissoes();

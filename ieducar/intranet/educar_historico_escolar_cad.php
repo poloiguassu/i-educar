@@ -224,7 +224,7 @@ class indice extends clsCadastro
 		}
 		$this->campoLista("escola_uf", "Estado da Escola", $lista_estado, $this->escola_uf );
 
-		$this->campoTexto( "nm_curso", "Curso", $this->nm_curso, 30, 255, false );
+		$this->campoTexto( "nm_curso", "Projeto", $this->nm_curso, 30, 255, false );
 
 		$opcoesGradeCurso = getOpcoesGradeCurso();
 		$this->campoLista( "historico_grade_curso_id", "Grade curso", $opcoesGradeCurso, $this->historico_grade_curso_id );

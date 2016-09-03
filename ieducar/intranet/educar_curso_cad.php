@@ -47,7 +47,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Curso');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Projeto');
     $this->processoAp = '566';
     $this->addEstilo("localizacaoSistema");
   }
@@ -269,9 +269,9 @@ class indice extends clsCadastro
       $this->ref_cod_tipo_regime, '', FALSE, '', $script, FALSE, FALSE);
 
     // Outros campos
-    $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, TRUE);
+    $this->campoTexto('nm_curso', 'Projeto', $this->nm_curso, 30, 255, TRUE);
 
-    $this->campoTexto('sgl_curso', 'Sigla Curso', $this->sgl_curso, 15, 15, TRUE);
+    $this->campoTexto('sgl_curso', 'Sigla Projeto', $this->sgl_curso, 15, 15, TRUE);
 
     $this->campoNumero('qtd_etapas', 'Quantidade Etapas', $this->qtd_etapas, 2, 2, TRUE);
 
@@ -356,7 +356,7 @@ class indice extends clsCadastro
     $this->campoCheck('multi_seriado', 'Multi seriado', $this->multi_seriado);
 
     // Objetivo do curso
-    $this->campoMemo('objetivo_curso', 'Objetivo Curso', $this->objetivo_curso,
+    $this->campoMemo('objetivo_curso', 'Objetivo Projeto', $this->objetivo_curso,
       60, 5, FALSE);
 
     // P�blico alvo

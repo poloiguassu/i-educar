@@ -195,8 +195,8 @@ class indice extends clsCadastro
 			echo "<!--\nErro\nClasse clsPmieducarCurso n&atilde;o encontrada\n-->";
 			$opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
 		}
-		$this->campoLista( "ref_curso_origem", "Curso Origem", $opcoes, $this->ref_curso_origem,"",true );
-		$this->campoLista( "ref_curso_destino", " Curso Destino", $opcoes_, $this->ref_curso_destino );
+		$this->campoLista( "ref_curso_origem", "Projeto Origem", $opcoes, $this->ref_curso_origem,"",true );
+		$this->campoLista( "ref_curso_destino", " Projeto Destino", $opcoes_, $this->ref_curso_destino );
 
 		// primary keys
 

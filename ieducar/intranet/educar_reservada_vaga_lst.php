@@ -111,7 +111,7 @@ class indice extends clsListagem
     $lista_busca = array(
       'Aluno',
       'S&eacute;rie',
-      'Curso'
+      'Projeto'
     );
 
     // Recupera n��vel de acesso do usu�rio logado

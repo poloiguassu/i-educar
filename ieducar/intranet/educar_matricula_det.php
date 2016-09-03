@@ -111,7 +111,7 @@ class indice extends clsDetalhe
       die();
     }
 
-    // Curso
+    // Projeto
     $obj_ref_cod_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
     $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
     $registro['ref_cod_curso'] = $det_ref_cod_curso['nm_curso'];
@@ -158,7 +158,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['ref_cod_curso']) {
-      $this->addDetalhe(array('Curso', $registro['ref_cod_curso']));
+      $this->addDetalhe(array('Projeto', $registro['ref_cod_curso']));
     }
 
     if ($registro['ref_ref_cod_serie']) {

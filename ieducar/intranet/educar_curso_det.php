@@ -47,7 +47,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Curso');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Projeto');
     $this->processoAp = '566';
     $this->addEstilo("localizacaoSistema");
   }
@@ -94,7 +94,7 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Curso - Detalhe';
+    $this->titulo = 'Projeto - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg',
       'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
@@ -146,11 +146,11 @@ class indice extends clsDetalhe
     }
 
     if ($registro['nm_curso']) {
-      $this->addDetalhe(array('Curso', $registro['nm_curso']));
+      $this->addDetalhe(array('Projeto', $registro['nm_curso']));
     }
 
     if ($registro['sgl_curso']) {
-      $this->addDetalhe(array('Sigla Curso', $registro['sgl_curso']));
+      $this->addDetalhe(array('Sigla Projeto', $registro['sgl_curso']));
     }
 
     if ($registro['qtd_etapas']) {
@@ -218,7 +218,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['objetivo_curso']) {
-      $this->addDetalhe( array('Objetivo Curso', $registro['objetivo_curso']));
+      $this->addDetalhe( array('Objetivo Projeto', $registro['objetivo_curso']));
     }
 
     if ($registro['publico_alvo']) {

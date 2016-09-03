@@ -400,7 +400,7 @@ class indice extends clsCadastro
 
     /*
      * Atribui valor para atributos usados em Gerar(), sen�o o formul�rio volta
-     * a liberar os campos Institui��o, Escola e Curso que devem ser read-only
+     * a liberar os campos Institui��o, Escola e Projeto que devem ser read-only
      * quando em modo de edi��o
      */
     $this->ref_cod_instituicao = $this->ref_cod_instituicao_;

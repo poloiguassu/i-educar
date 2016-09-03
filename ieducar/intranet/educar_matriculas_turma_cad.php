@@ -175,7 +175,7 @@ class indice extends clsCadastro
       $obj_ref_cod_curso = new clsPmieducarCurso($this->ref_cod_curso);
       $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
       $nm_curso = $det_ref_cod_curso['nm_curso'];
-      $this->campoRotulo('nm_curso', 'Curso', $nm_curso);
+      $this->campoRotulo('nm_curso', 'Projeto', $nm_curso);
     }
 
     if ($this->ref_ref_cod_serie) {

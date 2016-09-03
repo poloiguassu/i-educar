@@ -130,7 +130,7 @@ class indice extends clsListagem
 			if (!$this->extra_curricular)
 				$lista_busca[] = "Escola";
 		}
-    $lista_busca = array_merge($lista_busca, array('Curso', 'S�rie', 'Registro', 'Livro', 'Folha'));
+    $lista_busca = array_merge($lista_busca, array('Projeto', 'S�rie', 'Registro', 'Livro', 'Folha'));
 
 		$this->addCabecalhos($lista_busca);
 

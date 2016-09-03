@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version   $Id$
  */
 
@@ -42,14 +42,14 @@ require_once 'CoreExt/View/Helper/UrlHelper.php';
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Formação');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Formaï¿½ï¿½o');
     $this->processoAp = 635;
   }
 }
@@ -61,7 +61,7 @@ class clsIndexBase extends clsBase
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsListagem
@@ -102,7 +102,7 @@ class indice extends clsListagem
     
 
     $this->addCabecalhos(array(
-      'Nome Formação',
+      'Nome Formaï¿½ï¿½o',
       'Tipo'
     ));
 
@@ -110,17 +110,17 @@ class indice extends clsListagem
     $this->campoOculto('ref_cod_instituicao', $this->ref_cod_instituicao);
 
     // Filtros
-    $this->campoTexto('nm_formacao', 'Nome da Formação', $this->nm_formacao,
+    $this->campoTexto('nm_formacao', 'Nome da Formaï¿½ï¿½o', $this->nm_formacao,
       30, 255, FALSE);
 
     $opcoes = array(
       ''  => 'Selecione',
       'C' => 'Cursos',
-      'T' => 'Títulos',
+      'T' => 'Tï¿½tulos',
       'O' => 'Concursos'
     );
 
-    $this->campoLista('tipo', 'Tipo de Formação', $opcoes, $this->tipo);
+    $this->campoLista('tipo', 'Tipo de Formaï¿½ï¿½o', $opcoes, $this->tipo);
 
     // Paginador
     $this->limite = 20;
@@ -179,10 +179,10 @@ class indice extends clsListagem
         }
 
         if ($registro['tipo'] == 'C') {
-          $registro['tipo'] = 'Curso';
+          $registro['tipo'] = 'Projeto';
         }
         elseif ($registro['tipo'] == 'T') {
-          $registro['tipo'] = 'Título';
+          $registro['tipo'] = 'Tï¿½tulo';
         }
         else {
           $registro['tipo'] = 'Concurso';
@@ -223,14 +223,14 @@ class indice extends clsListagem
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteï¿½do ï¿½ï¿½ pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();

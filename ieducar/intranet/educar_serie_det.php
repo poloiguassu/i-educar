@@ -124,7 +124,7 @@ class indice extends clsDetalhe
     }
 
     if ( $registro['ref_cod_curso'] ) {
-      $this->addDetalhe(array('Curso', $registro['ref_cod_curso']));
+      $this->addDetalhe(array('Projeto', $registro['ref_cod_curso']));
     }
 
     if ($registro['nm_serie']) {
@@ -132,7 +132,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['etapa_curso']) {
-      $this->addDetalhe(array('Etapa Curso', $registro['etapa_curso']));
+      $this->addDetalhe(array('Etapa Projeto', $registro['etapa_curso']));
     }
 
     if ($regraId = $registro['regra_avaliacao_id']) {

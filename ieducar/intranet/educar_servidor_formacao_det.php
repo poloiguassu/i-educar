@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version   $Id$
  */
 
@@ -40,14 +40,14 @@ require_once 'include/pmieducar/geral.inc.php';
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Formação');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Formaï¿½ï¿½o');
     $this->processoAp = 635;
   }
 }
@@ -59,7 +59,7 @@ class clsIndexBase extends clsBase
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
@@ -109,7 +109,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['nm_formacao']) {
-      $this->addDetalhe(array('Nome Formação', $registro['nm_formacao']));
+      $this->addDetalhe(array('Nome Formaï¿½ï¿½o', $registro['nm_formacao']));
     }
 
     if ($registro['tipo'] == 'C') {
@@ -123,7 +123,7 @@ class indice extends clsDetalhe
 
     if ($registro['tipo']) {
       if ($registro['tipo'] == 'C') {
-        $registro['tipo'] = 'Curso';
+        $registro['tipo'] = 'Projeto';
       }
       elseif ($registro['tipo'] == 'T') {
         $registro['tipo'] = 'T&iacute;tulo';
@@ -136,11 +136,11 @@ class indice extends clsDetalhe
     }
 
     if ($registro['descricao']) {
-      $this->addDetalhe(array('Descricção', $registro['descricao']));
+      $this->addDetalhe(array('Descricï¿½ï¿½o', $registro['descricao']));
     }
 
     if ($det_curso['data_conclusao']) {
-      $this->addDetalhe(array('Data de Conclusão', dataFromPgToBr($det_curso['data_conclusao'])));
+      $this->addDetalhe(array('Data de Conclusï¿½o', dataFromPgToBr($det_curso['data_conclusao'])));
     }
 
     if ($det_curso['data_registro']) {
@@ -151,15 +151,15 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Diplomas e Registros', $det_curso['diplomas_registros']));
     }
 
-    if ($det_titulo['data_vigencia_homolog'] && $registro['tipo'] == 'Título') {
-      $this->addDetalhe(array('Data de Vigência', dataFromPgToBr($det_titulo['data_vigencia_homolog'])));
+    if ($det_titulo['data_vigencia_homolog'] && $registro['tipo'] == 'Tï¿½tulo') {
+      $this->addDetalhe(array('Data de Vigï¿½ncia', dataFromPgToBr($det_titulo['data_vigencia_homolog'])));
     }
     elseif ($det_titulo['data_vigencia_homolog'] && $registro['tipo'] == 'Concurso') {
-      $this->addDetalhe(array('Data de Homologação', dataFromPgToBr($det_titulo['data_vigencia_homolog'])));
+      $this->addDetalhe(array('Data de Homologaï¿½ï¿½o', dataFromPgToBr($det_titulo['data_vigencia_homolog'])));
     }
 
     if ($det_titulo['data_publicacao']) {
-      $this->addDetalhe(array('Data de Publicação', dataFromPgToBr($det_titulo['data_publicacao'])));
+      $this->addDetalhe(array('Data de Publicaï¿½ï¿½o', dataFromPgToBr($det_titulo['data_publicacao'])));
     }
 
     $obj_permissoes = new clsPermissoes();
@@ -182,14 +182,14 @@ class indice extends clsDetalhe
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pï¿½gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteï¿½do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteï¿½do ï¿½ï¿½ pï¿½gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cï¿½digo HTML
 $pagina->MakeAll();

@@ -93,7 +93,7 @@ class indice extends clsListagem
 			"Ano",
 			"Turma",
 			"S&eacute;rie",
-			"Curso"
+			"Projeto"
 		);
 
 		$obj_permissao = new clsPermissoes();

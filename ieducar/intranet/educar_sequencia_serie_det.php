@@ -147,7 +147,7 @@ class indice extends clsDetalhe
 		}
 		if( $nm_curso_origem )
 		{
-			$this->addDetalhe( array( "Curso Origem", "{$nm_curso_origem}") );
+			$this->addDetalhe( array( "Projeto Origem", "{$nm_curso_origem}") );
 		}
 		if( $nm_serie_origem )
 		{
@@ -155,7 +155,7 @@ class indice extends clsDetalhe
 		}
 		if( $nm_curso_destino )
 		{
-			$this->addDetalhe( array( "Curso Destino", "{$nm_curso_destino}") );
+			$this->addDetalhe( array( "Projeto Destino", "{$nm_curso_destino}") );
 		}
 		if( $nm_serie_destino )
 		{

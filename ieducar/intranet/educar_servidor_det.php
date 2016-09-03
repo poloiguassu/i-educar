@@ -376,7 +376,7 @@ class indice extends clsDetalhe
         <table cellspacing='0' cellpadding='0' border='0'>
           <tr bgcolor='#A1B3BD' align='center'>
             <td width='150'>Escola</td>
-            <td width='100'>Curso</td>
+            <td width='100'>Projeto</td>
             <td width='70'>S�rie</td>
             <td width='70'>Turma</td>
             <td width='100'>Componente curricular</td>

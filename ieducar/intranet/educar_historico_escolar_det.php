@@ -159,7 +159,7 @@ class indice extends clsDetalhe
 
 		if( $registro["nm_curso"] )
 		{
-			$this->addDetalhe( array( "Curso", "{$registro["nm_curso"]}") );
+			$this->addDetalhe( array( "Projeto", "{$registro["nm_curso"]}") );
 		}
 
 		if( $registro["ano"] )

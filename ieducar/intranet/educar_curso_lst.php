@@ -48,7 +48,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Curso');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Projeto');
     $this->processoAp = '566';
     $this->addEstilo( "localizacaoSistema" );
   }
@@ -97,7 +97,7 @@ class indice extends clsListagem
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Curso - Listagem';
+    $this->titulo = 'Projeto - Listagem';
 
     // passa todos os valores obtidos no GET para atributos do objeto
     foreach ($_GET AS $var => $val) {
@@ -108,7 +108,7 @@ class indice extends clsListagem
       'Intranet');
 
     $lista_busca = array(
-      'Curso',
+      'Projeto',
       'N&iacute;vel Ensino',
       'Tipo Ensino'
     );
@@ -123,7 +123,7 @@ class indice extends clsListagem
     include('include/pmieducar/educar_campo_lista.php');
 
     // outros Filtros
-    $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, FALSE);
+    $this->campoTexto('nm_curso', 'Projeto', $this->nm_curso, 30, 255, FALSE);
 
     // outros de Foreign Keys
     $opcoes = array('' => 'Selecione');

@@ -308,7 +308,7 @@ class indice extends clsCadastro
 
     $funcao = 'popCurso()';
 
-    $this->campoRotulo('curso', 'Curso',
+    $this->campoRotulo('curso', 'Projeto',
       "<img src='imagens/lupa_antiga.png' border='0' style='cursor:pointer;' alt='Buscar Cursos' title='Buscar Cursos' onclick=\"$funcao\">");
 
     $this->campoTabelaFim();
