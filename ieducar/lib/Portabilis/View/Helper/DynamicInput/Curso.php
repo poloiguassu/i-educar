@@ -62,7 +62,7 @@ class Portabilis_View_Helper_DynamicInput_Curso extends Portabilis_View_Helper_D
     elseif ($escolaId && empty($resources))
       $resources = App_Model_IedFinder::getCursos($escolaId);
 
-    return $this->insertOption(null, "Selecione um curso", $resources);
+    return $this->insertOption(null, "Selecione um Projeto", $resources);
   }
 
   public function curso($options = array()) {
