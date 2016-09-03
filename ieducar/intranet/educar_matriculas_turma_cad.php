@@ -182,7 +182,7 @@ class indice extends clsCadastro
       $obj_ref_cod_serie = new clsPmieducarSerie($this->ref_ref_cod_serie);
       $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
       $nm_serie = $det_ref_cod_serie["nm_serie"];
-      $this->campoRotulo('nm_serie', 'S&eacute;rie', $nm_serie);
+      $this->campoRotulo('nm_serie', 'Eixo', $nm_serie);
 
       // busca o ano em q a escola esta em andamento
       $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo();

@@ -214,7 +214,7 @@ class indice extends clsDetalhe
 		}
 		if( $nm_serie )
 		{
-			$this->addDetalhe( array( "S&eacute;rie", "{$nm_serie}") );
+			$this->addDetalhe( array( "Eixo", "{$nm_serie}") );
 		}
 		if( $nm_turma )
 		{

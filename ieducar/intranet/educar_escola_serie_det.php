@@ -49,7 +49,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Escola S&eacute;rie');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Escola Eixo');
     $this->processoAp = '585';
     $this->addEstilo("localizacaoSistema");
   }
@@ -87,7 +87,7 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Escola S&eacute;rie - Detalhe';
+    $this->titulo = 'Escola Eixo - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg',
       'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
@@ -139,7 +139,7 @@ class indice extends clsDetalhe
     }
 
     if ($nm_serie) {
-      $this->addDetalhe(array('S&eacute;rie', $nm_serie));
+      $this->addDetalhe(array('Eixo', $nm_serie));
     }
 
     if ($registro['hora_inicial']) {

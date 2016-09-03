@@ -114,7 +114,7 @@ class indice extends clsListagem
 			"Ano",
 			"Turma",
       "Turno",
-			"S&eacute;rie",
+			"Eixo",
 			"Projeto"
 		);
 

@@ -48,7 +48,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Eixo');
     $this->processoAp = '583';
     $this->addEstilo( "localizacaoSistema" );
   }
@@ -92,7 +92,7 @@ class indice extends clsListagem
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = "S&eacute;rie - Listagem";
+    $this->titulo = "Eixo - Listagem";
 
     // passa todos os valores obtidos no GET para atributos do objeto
     foreach ($_GET as $var => $val) {
@@ -103,7 +103,7 @@ class indice extends clsListagem
       'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
     $lista_busca = array(
-      'S&eacute;rie',
+      'Eixo',
       'Projeto'
     );
 
@@ -121,7 +121,7 @@ class indice extends clsListagem
     include('include/pmieducar/educar_campo_lista.php');
 
     // outros Filtros
-    $this->campoTexto('nm_serie', 'S&eacute;rie', $this->nm_serie, 30, 255, FALSE);
+    $this->campoTexto('nm_serie', 'Eixo', $this->nm_serie, 30, 255, FALSE);
 
     // Paginador
     $this->limite = 20;

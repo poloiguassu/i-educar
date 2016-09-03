@@ -111,7 +111,7 @@ class indice extends clsListagem
       "Matr�cula",
       "Situa��o",
       "Turma",
-			"S&eacute;rie",
+			"Eixo",
 			"Projeto"
 		);
 

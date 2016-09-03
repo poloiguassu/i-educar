@@ -96,9 +96,9 @@ class indice extends clsListagem
 
 		$lista_busca = array(
 			"Projeto Origem",
-			"S&eacute;rie Origem",
+			"Eixo Origem",
 			"Projeto Destino",
-			"S&eacute;rie Destino"
+			"Eixo Destino"
 		);
 
 		$obj_permissoes = new clsPermissoes();
@@ -220,8 +220,8 @@ class indice extends clsListagem
 			$opcoes = array( "" => "Erro na geracao" );
 			$opcoes_ = array( "" => "Erro na geracao" );
 		}
-		$this->campoLista( "ref_serie_origem", "S&eacute;rie Origem", $opcoes, $this->ref_serie_origem,null,true,"","",false,false);
-		$this->campoLista( "ref_serie_destino", " S&eacute;rie Destino", $opcoes_, $this->ref_serie_destino,"",false,"","",false,false);
+		$this->campoLista( "ref_serie_origem", "Eixo Origem", $opcoes, $this->ref_serie_origem,null,true,"","",false,false);
+		$this->campoLista( "ref_serie_destino", " Eixo Destino", $opcoes_, $this->ref_serie_destino,"",false,"","",false,false);
 
 
 		// Paginador

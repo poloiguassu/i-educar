@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - S&eacute;rie" );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Eixo" );
 		$this->processoAp = "583";
 		$this->renderBanner = false;
 		$this->renderMenu = false;
@@ -133,7 +133,7 @@ class indice extends clsCadastro
 		}
 		// text
 	
-		$this->campoTexto( "nm_serie", "S&eacute;rie", $this->nm_serie, 30, 255, true );
+		$this->campoTexto( "nm_serie", "Eixo", $this->nm_serie, 30, 255, true );
 
 		$opcoes = array( "" => "Selecione" );
 		if( $this->ref_cod_curso )

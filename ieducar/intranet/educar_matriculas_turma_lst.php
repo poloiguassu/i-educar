@@ -92,7 +92,7 @@ class indice extends clsListagem
 		$lista_busca = array(
 			"Ano",
 			"Turma",
-			"S&eacute;rie",
+			"Eixo",
 			"Projeto"
 		);
 

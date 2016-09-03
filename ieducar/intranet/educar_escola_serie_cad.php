@@ -49,7 +49,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Escola S&eacute;rie');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Escola Eixo');
     $this->processoAp = 585;
     $this->addEstilo("localizacaoSistema");
   }

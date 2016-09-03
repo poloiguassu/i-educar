@@ -230,7 +230,7 @@ class indice extends clsCadastro
 		$this->campoLista( "historico_grade_curso_id", "Grade curso", $opcoesGradeCurso, $this->historico_grade_curso_id );
 
 
-		$this->campoTexto( "nm_serie", "S&eacute;rie", $this->nm_serie, 30, 255, true );
+		$this->campoTexto( "nm_serie", "Eixo", $this->nm_serie, 30, 255, true );
 		$this->campoNumero( "ano", "Ano", $this->ano, 4, 4, true );
 		$this->campoMonetario( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 8, 8, true );
 		$this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", is_numeric($this->faltas_globalizadas) ? 'on' : '');

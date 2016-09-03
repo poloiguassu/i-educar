@@ -230,7 +230,7 @@ class indice extends clsCadastro
 
 
 		$this->campoLista("ref_cod_curso","Projeto",$cursos,$this->ref_cod_curso,"getSerie();");
-		$this->campoLista("ref_ref_cod_serie","S&eacute;rie",array('' => 'Selecione uma s�rie'),'');
+		$this->campoLista("ref_ref_cod_serie","Eixo",array('' => 'Selecione uma s�rie'),'');
 		//$this->campoOculto("ref_ref_cod_serie_antiga",$this->ref_ref_cod_serie);
 		$this->inputsHelper()->date('data_cancel', array('label' => 'Data da reclassifica&ccedil;&atilde;o', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
 		$this->campoMemo("descricao_reclassificacao","Descri&ccedil;&atilde;o",$this->descricao_reclassificacao,100,10,true);

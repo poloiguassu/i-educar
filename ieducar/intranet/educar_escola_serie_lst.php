@@ -47,7 +47,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Escola S&eacute;rie');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Escola Eixo');
     $this->processoAp = '585';
     $this->addEstilo("localizacaoSistema");
   }
@@ -92,7 +92,7 @@ class indice extends clsListagem
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'Escola S&eacute;rie - Listagem';
+    $this->titulo = 'Escola Eixo - Listagem';
 
     foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
       $this->$var = ( $val === '' ) ? null: $val;
@@ -100,7 +100,7 @@ class indice extends clsListagem
     $this->addBanner( 'imagens/nvp_top_intranet.jpg', 'imagens/nvp_vert_intranet.jpg', 'Intranet' );
 
     $lista_busca = array(
-      'S&eacute;rie',
+      'Eixo',
       'Projeto'
     );
 

@@ -48,7 +48,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Eixo');
     $this->processoAp = '583';
     $this->addEstilo("localizacaoSistema");
   }
@@ -159,7 +159,7 @@ class indice extends clsCadastro
     $get_curso = TRUE;
     include('include/pmieducar/educar_campo_lista.php');
 
-    $this->campoTexto("nm_serie", "S&eacute;rie", $this->nm_serie, 30, 255, TRUE);
+    $this->campoTexto("nm_serie", "Eixo", $this->nm_serie, 30, 255, TRUE);
 
     $opcoes = array("" => "Selecione");
 

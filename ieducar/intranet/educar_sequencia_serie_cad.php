@@ -250,8 +250,8 @@ class indice extends clsCadastro
 			$opcoes = array( "" => "Erro na geracao" );
 			$opcoes_ = array( "" => "Erro na geracao" );
 		}
-		$this->campoLista( "ref_serie_origem", "S&eacute;rie Origem", $opcoes, $this->ref_serie_origem,null,true);
-		$this->campoLista( "ref_serie_destino", " S&eacute;rie Destino", $opcoes_, $this->ref_serie_destino);
+		$this->campoLista( "ref_serie_origem", "Eixo Origem", $opcoes, $this->ref_serie_origem,null,true);
+		$this->campoLista( "ref_serie_destino", " Eixo Destino", $opcoes_, $this->ref_serie_destino);
 		
 		
 		$this->campoOculto("nivel_usuario", $nivel_usuario);

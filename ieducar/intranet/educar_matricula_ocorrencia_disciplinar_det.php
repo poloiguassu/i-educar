@@ -165,7 +165,7 @@ class indice extends clsDetalhe
 
 		if( $registro["ref_ref_cod_serie"] )
 		{
-			$this->addDetalhe( array( "S&eacute;rie", "{$registro["ref_ref_cod_serie"]}") );
+			$this->addDetalhe( array( "Eixo", "{$registro["ref_ref_cod_serie"]}") );
 		}
 
 		if( $det_mat_turma["det_turma"] )

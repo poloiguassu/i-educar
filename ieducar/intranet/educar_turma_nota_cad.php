@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de Itajaï¿½								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software Pï¿½blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaï¿½			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  ï¿½  software livre, vocï¿½ pode redistribuï¿½-lo e/ou	 *
+	*	modificï¿½-lo sob os termos da Licenï¿½a Pï¿½blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versï¿½o 2 da	 *
+	*	Licenï¿½a   como  (a  seu  critï¿½rio)  qualquer  versï¿½o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  ï¿½ distribuï¿½do na expectativa de ser ï¿½til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implï¿½cita de COMERCIALI-	 *
+	*	ZAï¿½ï¿½O  ou  de ADEQUAï¿½ï¿½O A QUALQUER PROPï¿½SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licenï¿½a  Pï¿½blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	Vocï¿½  deve  ter  recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU	 *
+	*	junto  com  este  programa. Se nï¿½o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -357,7 +357,7 @@ class indice extends clsCadastro
 					 * nao existem disciplinas sem nota redireciona para listagem de nota turma
 					 */
 					if(!$_POST)
-						echo "<script>alert('Todas as disciplinas já se encontram com nota!');window.location='educar_turma_mvto_det.php?cod_turma=$this->ref_cod_turma';</script>";
+						echo "<script>alert('Todas as disciplinas jï¿½ se encontram com nota!');window.location='educar_turma_mvto_det.php?cod_turma=$this->ref_cod_turma';</script>";
 					else
 						header("location:educar_turma_mvto_det.php?cod_turma=$this->ref_cod_turma");
 					die;
@@ -371,7 +371,7 @@ class indice extends clsCadastro
 			}
 
 			$this->campoRotulo("nm_turma","Turma",$detalhe_turma["nm_turma"]);
-			$this->campoRotulo("nm_serie","S&eacute;rie",$detalhe_turma["multiseriada"] ? "{$detalhe_serie["nm_serie"]} e {$detalhe_serie_mult["nm_serie"]}": $detalhe_serie["nm_serie"] );
+			$this->campoRotulo("nm_serie","Eixo",$detalhe_turma["multiseriada"] ? "{$detalhe_serie["nm_serie"]} e {$detalhe_serie_mult["nm_serie"]}": $detalhe_serie["nm_serie"] );
 			$this->campoRotulo("nm_modulo","M&oacute;dulo",$detalhe_modulo["nm_tipo"]);
 			$this->campoRotulo("num_modulo2","N&uacute;mero do M&oacute;dulo",$this->num_modulo . "
 			<style>
@@ -583,7 +583,7 @@ class indice extends clsCadastro
 								if ($this->pula_passo) 
 								{
 //									$opcoes_conceito = array("" => "Selecione", 1 => "Aprovado", 2 => "Reprovado");
-//									$this->campoLista("conceito[{$matricula["cod_matricula"]}]", " &nbsp; &nbsp; &nbsp; Situação", $opcoes_conceito, "");
+//									$this->campoLista("conceito[{$matricula["cod_matricula"]}]", " &nbsp; &nbsp; &nbsp; Situaï¿½ï¿½o", $opcoes_conceito, "");
 									$this->campoLista("resultado_final[{$matricula["cod_matricula"]}]","&nbsp; &nbsp; &nbsp;Resultado final",array(""=>"Selecione","1"=>"Aprovado","2"=>"Reprovado"),"","",false,"","",false,true);
 								}
 							}
@@ -601,7 +601,7 @@ class indice extends clsCadastro
 						if (!$matriculas_exame_disponivel && $this->exame)
 						{
 							echo "<script>
-										alert('Todos os alunos estão com notas do exame nessa disciplina');
+										alert('Todos os alunos estï¿½o com notas do exame nessa disciplina');
 										window.location='educar_turma_nota_cad.php?ref_cod_turma={$this->ref_cod_turma}&ref_ref_cod_escola={$this->ref_ref_cod_escola}&ref_ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}';
 								  </script>";
 						}
@@ -667,7 +667,7 @@ class indice extends clsCadastro
 				if( is_array($lista_excessoes) )
 				{
 					$this->campoQuebra2();
-					$this->campoRotulo("descricao","Aviso","Existem alunos que reprovaram por falta e pegaram exame.<br>Você deve decidir se permitirá que eles façam exame ou reprovem.");
+					$this->campoRotulo("descricao","Aviso","Existem alunos que reprovaram por falta e pegaram exame.<br>Vocï¿½ deve decidir se permitirï¿½ que eles faï¿½am exame ou reprovem.");
 					$opcoes_excessao = array(""=>"Selecione","0"=>"Reprovar","1"=>"Permitir Exame");
 					// ainda tem alguma excessao que precisa de exame
 					foreach ($lista_excessoes AS $excessao)
@@ -1139,7 +1139,7 @@ class indice extends clsCadastro
 						$det_matricula = $objMatricula->detalhe();
 						$max_modulo_nota = (int)$db->CampoUnico("SELECT max(modulo) FROM pmieducar.nota_aluno WHERE ref_cod_matricula = '{$matricula}' AND ativo = 1");
 						/**
-						 * so avança o modulo
+						 * so avanï¿½a o modulo
 						 * caso ele seja igual ao da maior nota
 						 * e que seja a ultima disciplina
 						 */
@@ -1279,7 +1279,7 @@ class indice extends clsCadastro
 							}
 
 							/**
-							 * calcula outro modo de média se for especial
+							 * calcula outro modo de mï¿½dia se for especial
 							 */
 
 							if($media_especial)
@@ -1588,12 +1588,12 @@ class indice extends clsCadastro
 												$this->ref_cod_disciplina, $matricula, null, $this->pessoa_logada, 
 												null, null, null, $this->num_modulo, $this->ref_cod_curso, $valorNota["valor"]);
 						if (!$objNotaAluno->cadastra()) {
-							die("não cadastrou (nota)");
+							die("nï¿½o cadastrou (nota)");
 						}
 						$objMatricula = new clsPmieducarMatricula($matricula, null, null, null, $this->pessoa_logada, $this->pessoa_logada, 
 																  null, $this->resultado_final[$matricula]);
 						if (!$objMatricula->edita()) {
-							die("não cadastrou (resultado final)");
+							die("nï¿½o cadastrou (resultado final)");
 						}
 						$objFaltaAluno = new clsPmieducarFaltaAluno();										   
 						$existe_falta = $objFaltaAluno->lista(null, null, null, $this->ref_cod_serie_disciplina,
@@ -1606,7 +1606,7 @@ class indice extends clsCadastro
 																   $matricula, $this->falta[$matricula], null,
 																   null, null, $this->num_modulo);		
 							if (!$objFaltaAluno->edita()) {
-								die("não editou (falta)");
+								die("nï¿½o editou (falta)");
 							}
 						} else { 				
 							$objFaltaAluno = new clsPmieducarFaltaAluno(null, null, $this->pessoa_logada, $this->ref_cod_serie_disciplina,
@@ -1614,12 +1614,12 @@ class indice extends clsCadastro
 																   $matricula, $this->falta[$matricula], null,
 																   null, null, $this->num_modulo);				  
 							if (!$objFaltaAluno->cadastra()) {
-								die("não cadastrou (falta)");
+								die("nï¿½o cadastrou (falta)");
 							}
 						}
 					}
 				} else {
-					die("falto parâmetros");	
+					die("falto parï¿½metros");	
 				}
 			}
 //			die("nao");

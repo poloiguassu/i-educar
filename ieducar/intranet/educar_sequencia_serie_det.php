@@ -151,7 +151,7 @@ class indice extends clsDetalhe
 		}
 		if( $nm_serie_origem )
 		{
-			$this->addDetalhe( array( "S&eacute;rie Origem", "{$nm_serie_origem}") );
+			$this->addDetalhe( array( "Eixo Origem", "{$nm_serie_origem}") );
 		}
 		if( $nm_curso_destino )
 		{
@@ -159,7 +159,7 @@ class indice extends clsDetalhe
 		}
 		if( $nm_serie_destino )
 		{
-			$this->addDetalhe( array( "S&eacute;rie Destino", "{$nm_serie_destino}") );
+			$this->addDetalhe( array( "Eixo Destino", "{$nm_serie_destino}") );
 		}
 
 		$obj_permissoes = new clsPermissoes();

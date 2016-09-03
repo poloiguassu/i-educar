@@ -145,7 +145,7 @@ class indice extends clsDetalhe
     }
 
     if ($nm_serie) {
-      $this->addDetalhe(array('S&eacute;rie', $nm_serie));
+      $this->addDetalhe(array('Eixo', $nm_serie));
     }
 
     $obj_turmas = new clsPmieducarTurma();
