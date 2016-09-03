@@ -303,7 +303,7 @@ class indice extends clsCadastro
       $array_servidor[$this->ref_cod_regente] = $det['nome'];
     }
 
-    $this->campoListaPesq('ref_cod_regente', 'Professor/Regente', $array_servidor,
+    $this->campoListaPesq('ref_cod_regente', 'Educador', $array_servidor,
       $this->ref_cod_regente, '', '', FALSE, '', '', NULL, NULL, '', TRUE, FALSE, FALSE);
 
     // Turma tipo
@@ -443,7 +443,7 @@ class indice extends clsCadastro
         $disciplinas .= '</table>';
       }
       else {
-        $disciplinas = Portabilis_String_Utils::toLatin1('A série/ano escolar não possui componentes curriculares cadastrados.');
+        $disciplinas = Portabilis_String_Utils::toLatin1('A eixo/ano escolar não possui componentes curriculares cadastrados.');
       }
     }
 
@@ -1065,7 +1065,7 @@ class indice extends clsCadastro
     $ano = $this->getAnoEscolarEmAndamento($escolaId);
 
     if (! is_numeric($ano)) {
-      $this->mensagem = "Não foi possivel obter um ano em andamento, por favor, inicie um ano para a escola ou desative a configuração (para série e escola) 'Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)'.";
+      $this->mensagem = "Não foi possivel obter um ano em andamento, por favor, inicie um ano para a escola ou desative a configuração (para eixo e escola) 'Bloquear cadastro de novas turmas antes de atingir limite de vagas (no mesmo turno)'.";
 
       return false;
     }
@@ -1093,7 +1093,7 @@ class indice extends clsCadastro
 
         elseif($turma['max_aluno'] - $countMatriculas > 0) {
           $vagas = $turma['max_aluno'] - $countMatriculas;
-          $this->mensagem = "Não é possivel cadastrar turmas, pois ainda existem $vagas vagas em aberto na turma '{$turma['nm_turma']}' desta serie e turno.\n\nTal limitação ocorre devido definição feita para esta escola e série.";
+          $this->mensagem = "Não é possivel cadastrar turmas, pois ainda existem $vagas vagas em aberto na turma '{$turma['nm_turma']}' desta serie e turno.\n\nTal limitação ocorre devido definição feita para esta escola e eixo.";
           return false;
         }
       }
@@ -1378,7 +1378,7 @@ function atualizaMultiSerie(xml)
   var campoSerie      = document.getElementById('ref_ref_cod_serie');
 
   campoSerieMult.length = 1;
-  campoSerieMult.options[0] = new Option(stringUtils.toUtf8('Selecione uma série'), '', false, false);
+  campoSerieMult.options[0] = new Option(stringUtils.toUtf8('Selecione uma eixo'), '', false, false);
 
   var multi_serie = xml.getElementsByTagName('serie');
 
@@ -1391,7 +1391,7 @@ function atualizaMultiSerie(xml)
   }
 
   if (campoSerieMult.length == 1 && campoCurso != '') {
-    campoSerieMult.options[0] = new Option(stringUtils.toUtf8('O curso não possui nenhuma série'), '', false, false);
+    campoSerieMult.options[0] = new Option(stringUtils.toUtf8('O curso não possui nenhuma eixo'), '', false, false);
   }
 
   document.getElementById('ref_ref_cod_serie_mult').value = document.getElementById('ref_ref_cod_serie_mult_').value;
@@ -1803,7 +1803,7 @@ function getEscolaCursoSerie()
 
   if (campoEscola && campoCurso) {
     campoSerie.disabled = true;
-    campoSerie.options[0].text = stringUtils.toUtf8('Carregando séries');
+    campoSerie.options[0].text = stringUtils.toUtf8('Carregando eixos');
 
     var xml = new ajax(atualizaLstEscolaCursoSerie);
     xml.envia('educar_escola_curso_serie_xml.php?esc=' + campoEscola + '&cur=' + campoCurso);
@@ -1817,7 +1817,7 @@ function atualizaLstEscolaCursoSerie(xml)
 {
   var campoSerie             = document.getElementById('ref_ref_cod_serie');
   campoSerie.length          = 1;
-  campoSerie.options[0].text = stringUtils.toUtf8('Selecione uma série');
+  campoSerie.options[0].text = stringUtils.toUtf8('Selecione uma eixo');
   campoSerie.disabled        = false;
 
   series = xml.getElementsByTagName('serie');
@@ -1830,7 +1830,7 @@ function atualizaLstEscolaCursoSerie(xml)
     }
   }
   else {
-    campoSerie.options[0].text = stringUtils.toUtf8('A escola/curso não possui nenhuma série');
+    campoSerie.options[0].text = stringUtils.toUtf8('A escola/curso não possui nenhuma eixo');
   }
 }
 

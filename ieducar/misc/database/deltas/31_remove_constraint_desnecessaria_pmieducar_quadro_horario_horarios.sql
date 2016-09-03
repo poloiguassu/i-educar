@@ -7,7 +7,7 @@
 -- AnoEscolar.
 --
 -- A interface se encarrega de exibir apenas os componentes para a turma ou para
--- a escola-série.
+-- a escola-eixo.
 --
 -- @author   Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
