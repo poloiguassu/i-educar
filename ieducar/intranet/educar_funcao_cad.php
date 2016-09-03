@@ -101,7 +101,7 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
-         ""        => "{$nomeMenu} fun&ccedil;&atilde;o"             
+         ""        => "{$nomeMenu} fun&ccedil;&atilde;o"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -124,7 +124,7 @@ class indice extends clsCadastro
 						'N' => 'N&atilde;o'
 						);
 
-		$this->campoLista( "professor", "Professor",$opcoes, $this->professor,"",false,"","",false,true);
+		$this->campoLista( "professor", "Educador",$opcoes, $this->professor,"",false,"","",false,true);
 	}
 
 	function Novo()

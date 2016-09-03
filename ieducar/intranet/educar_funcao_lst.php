@@ -93,12 +93,12 @@ class indice extends clsListagem
 			$this->$var = ( $val === "" ) ? null: $val;
 
 
-		
+
 
 		$lista_busca = array(
 			"Nome Func&atilde;o",
 			"Abreviatura",
-			"Professor"
+			"Educador"
 		);
 
 		$obj_permissoes = new clsPermissoes();
@@ -203,7 +203,7 @@ class indice extends clsListagem
          "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""                                  => "Listagem das fun&ccedil;&otilde;es"
     ));
-    $this->enviaLocalizacao($localizacao->montar());   		
+    $this->enviaLocalizacao($localizacao->montar());
 	}
 }
 // cria uma extensao da classe base

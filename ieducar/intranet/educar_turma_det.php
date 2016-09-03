@@ -217,7 +217,7 @@ class indice extends clsDetalhe
       $obj_pessoa = new clsPessoa_($registro['ref_cod_regente']);
       $det = $obj_pessoa->detalhe();
 
-      $this->addDetalhe(array('Professor/Regente', $det['nome']));
+      $this->addDetalhe(array('Educador', $det['nome']));
     }
 
     if ($registro['ref_cod_infra_predio_comodo']) {
