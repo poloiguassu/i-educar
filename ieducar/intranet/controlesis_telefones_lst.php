@@ -72,7 +72,13 @@ class indice extends clsListagem
 	var $ref_funcionario_cad;
 	var $ref_funcionario_exc;
 	var $nome;
+	var $ddd_numero;
 	var $numero;
+	var $responsavel;
+	var $ddd_celular;
+	var $celular;
+	var $email;
+	var $endereco;
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
@@ -83,7 +89,7 @@ class indice extends clsListagem
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
-		$this->titulo = "Telefones - Listagem";
+		$this->titulo = "Agenda Telefonica - Listagem";
 
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
@@ -91,17 +97,21 @@ class indice extends clsListagem
 		
 
 		$this->addCabecalhos( array(
-
-			"Nome",
-			"Numero"
+			"Instituição",
+			"Responsável",
+			"Numero",
+			"Celular",
+			"Email"
 		) );
 
 		// Filtros de Foreign Keys
 
 
 		// outros Filtros
-		$this->campoTexto( "nome", "Nome", $this->nome, 30, 255, false );
-		$this->campoNumero( "numero", "Numero", $this->numero, 15, 255, false );
+		$this->campoTexto("nome", "Instituição", $this->nome, 30, 255, false );
+		$this->campoTexto("responsavel", "Responsável", $this->responsavel, 30, 255, false );
+		$this->campoNumero("numero", "Numero", $this->numero, 15, 255, false );
+		$this->campoTexto("email", "Email", $this->email, 30, 255, false);
 
 
 		// Paginador
@@ -117,10 +127,18 @@ class indice extends clsListagem
 			null,
 			null,
 			$this->nome,
+			null,
 			$this->numero,
 			null,
 			null,
-			1
+			null,
+			null,
+			1,
+			null,
+			$this->numero,
+			$this->responsavel,
+			$this->email,
+			null
 		);
 
 		$total = $obj_telefones->_total;
@@ -143,9 +161,10 @@ class indice extends clsListagem
 
 
 				$this->addLinhas( array(
-
 					"<a href=\"controlesis_telefones_det.php?cod_telefones={$registro["cod_telefones"]}\">{$registro["nome"]}</a>",
-					"<a href=\"controlesis_telefones_det.php?cod_telefones={$registro["cod_telefones"]}\">{$registro["numero"]}</a>"
+					"<a href=\"controlesis_telefones_det.php?cod_telefones={$registro["cod_telefones"]}\">{$registro["responsavel"]}</a>",
+					"<a href=\"controlesis_telefones_det.php?cod_telefones={$registro["cod_telefones"]}\">{$registro["numero"]}</a>",
+					"<a href=\"controlesis_telefones_det.php?cod_telefones={$registro["cod_telefones"]}\">{$registro["celular"]}</a>"
 				) );
 			}
 		}

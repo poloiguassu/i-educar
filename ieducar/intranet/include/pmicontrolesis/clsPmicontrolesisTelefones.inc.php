@@ -38,7 +38,13 @@ class clsPmicontrolesisTelefones
 	var $ref_funcionario_cad;
 	var $ref_funcionario_exc;
 	var $nome;
+	var $ddd_numero;
 	var $numero;
+	var $responsavel;
+	var $ddd_celular;
+	var $celular;
+	var $email;
+	var $endereco;
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
@@ -107,13 +113,13 @@ class clsPmicontrolesisTelefones
 	 *
 	 * @return object
 	 */
-	function clsPmicontrolesisTelefones( $cod_telefones = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $nome = null, $numero = null, $data_cadastro = null, $data_exclusao = null, $ativo = null )
+	function clsPmicontrolesisTelefones( $cod_telefones = null, $ref_funcionario_cad = null, $ref_funcionario_exc = null, $nome = null, $ddd_numero, $numero = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ddd_celular, $celular = null, $responsavel = null, $email = null, $endereco = null)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmicontrolesis.";
 		$this->_tabela = "{$this->_schema}telefones";
-
-		$this->_campos_lista = $this->_todos_campos = "cod_telefones, ref_funcionario_cad, ref_funcionario_exc, nome, numero, data_cadastro, data_exclusao, ativo";
+		
+		$this->_campos_lista = $this->_todos_campos = "cod_telefones, ref_funcionario_cad, ref_funcionario_exc, nome, responsavel, ddd_numero, numero, ddd_celular, celular, email, endereco, data_cadastro, data_exclusao, ativo";
 		
 		if( is_numeric( $ref_funcionario_exc ) )
 		{
@@ -172,7 +178,7 @@ class clsPmicontrolesisTelefones
 			}
 		}
 
-		
+
 		if( is_numeric( $cod_telefones ) )
 		{
 			$this->cod_telefones = $cod_telefones;
@@ -181,9 +187,33 @@ class clsPmicontrolesisTelefones
 		{
 			$this->nome = $nome;
 		}
+		if( is_numeric( $ddd_numero ) )
+		{
+			$this->ddd_numero = $ddd_numero;
+		}
 		if( is_numeric( $numero ) )
 		{
 			$this->numero = $numero;
+		}
+		if( is_numeric( $ddd_celular ) )
+		{
+			$this->ddd_celular = $ddd_celular;
+		}
+		if( is_numeric( $celular ) )
+		{
+			$this->celular = $celular;
+		}
+		if( is_string( $responsavel ) )
+		{
+			$this->responsavel = $responsavel;
+		}
+		if( is_string( $email ) )
+		{
+			$this->email = $email;
+		}
+		if( is_string( $endereco ) )
+		{
+			$this->endereco = $endereco;
 		}
 		if( is_string( $data_cadastro ) )
 		{
@@ -227,10 +257,46 @@ class clsPmicontrolesisTelefones
 				$valores .= "{$gruda}'{$this->nome}'";
 				$gruda = ", ";
 			}
+			if( is_numeric( $this->ddd_numero ) )
+			{
+				$campos .= "{$gruda}ddd_numero";
+				$valores .= "{$gruda}'{$this->ddd_numero}'";
+				$gruda = ", ";
+			}
 			if( is_numeric( $this->numero ) )
 			{
 				$campos .= "{$gruda}numero";
 				$valores .= "{$gruda}'{$this->numero}'";
+				$gruda = ", ";
+			}
+			if( is_numeric( $this->ddd_celular ) )
+			{
+				$campos .= "{$gruda}ddd_celular";
+				$valores .= "{$gruda}'{$this->ddd_celular}'";
+				$gruda = ", ";
+			}
+			if( is_numeric( $this->celular ) )
+			{
+				$campos .= "{$gruda}celular";
+				$valores .= "{$gruda}'{$this->celular}'";
+				$gruda = ", ";
+			}
+			if( is_string( $this->responsavel ) )
+			{
+				$campos .= "{$gruda}responsavel";
+				$valores .= "{$gruda}'{$this->responsavel}'";
+				$gruda = ", ";
+			}
+			if( is_string( $this->email ) )
+			{
+				$campos .= "{$gruda}email";
+				$valores .= "{$gruda}'{$this->email}'";
+				$gruda = ", ";
+			}
+			if( is_string( $this->endereco ) )
+			{
+				$campos .= "{$gruda}endereco";
+				$valores .= "{$gruda}'{$this->endereco}'";
 				$gruda = ", ";
 			}
 			$campos .= "{$gruda}data_cadastro";
@@ -275,9 +341,39 @@ class clsPmicontrolesisTelefones
 				$set .= "{$gruda}nome = '{$this->nome}'";
 				$gruda = ", ";
 			}
+			if( is_numeric( $this->ddd_numero ) )
+			{
+				$set .= "{$gruda}ddd_numero = '{$this->ddd_numero}'";
+				$gruda = ", ";
+			}
 			if( is_numeric( $this->numero ) )
 			{
 				$set .= "{$gruda}numero = '{$this->numero}'";
+				$gruda = ", ";
+			}
+			if( is_numeric( $this->ddd_celular ) )
+			{
+				$set .= "{$gruda}ddd_celular = '{$this->ddd_celular}'";
+				$gruda = ", ";
+			}
+			if( is_numeric( $this->celular ) )
+			{
+				$set .= "{$gruda}celular = '{$this->celular}'";
+				$gruda = ", ";
+			}
+			if( is_string( $this->responsavel ) )
+			{
+				$set .= "{$gruda}responsavel = '{$this->responsavel}'";
+				$gruda = ", ";
+			}
+			if( is_string( $this->email ) )
+			{
+				$set .= "{$gruda}email = '{$this->email}'";
+				$gruda = ", ";
+			}
+			if( is_string( $this->endereco ) )
+			{
+				$set .= "{$gruda}endereco = '{$this->endereco}'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->data_cadastro ) )
@@ -308,7 +404,7 @@ class clsPmicontrolesisTelefones
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_telefones = null, $int_ref_funcionario_cad = null, $int_ref_funcionario_exc = null, $str_nome = null, $int_numero = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null )
+	function lista( $int_cod_telefones = null, $int_ref_funcionario_cad = null, $int_ref_funcionario_exc = null, $str_nome = null, $int_ddd_numero = null, $int_numero = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ddd_celular = null, $int_celular = null, $str_responsavel = null, $str_email = null, $str_endereco = null )
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 		$filtros = "";
@@ -335,9 +431,39 @@ class clsPmicontrolesisTelefones
 			$filtros .= "{$whereAnd} nome LIKE '%{$str_nome}%'";
 			$whereAnd = " AND ";
 		}
+		if( is_numeric( $int_ddd_numero ) )
+		{
+			$filtros .= "{$whereAnd} ddd_numero = '{$int_ddd_numero}'";
+			$whereAnd = " AND ";
+		}
 		if( is_numeric( $int_numero ) )
 		{
 			$filtros .= "{$whereAnd} numero = '{$int_numero}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_ddd_celular ) )
+		{
+			$filtros .= "{$whereAnd} ddd_celular = '{$int_ddd_celular}'";
+			$whereAnd = " AND ";
+		}
+		if( is_numeric( $int_celular ) )
+		{
+			$filtros .= "{$whereAnd} celular = '{$int_celular}'";
+			$whereAnd = " AND ";
+		}
+		if( is_string( $str_responsavel ) )
+		{
+			$filtros .= "{$whereAnd} responsavel LIKE '%{$str_responsavel}%'";
+			$whereAnd = " AND ";
+		}
+		if( is_string( $str_email ) )
+		{
+			$filtros .= "{$whereAnd} email LIKE '%{$str_email}%'";
+			$whereAnd = " AND ";
+		}
+		if( is_string( $str_endereco ) )
+		{
+			$filtros .= "{$whereAnd} endereco LIKE '%{$str_endereco}%'";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $date_data_cadastro_ini ) )

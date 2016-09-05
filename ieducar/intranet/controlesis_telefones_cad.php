@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} Telefones" );
+		$this->SetTitulo( "{$this->_instituicao} Agenda telefonica" );
 		$this->processoAp = "611";
 	}
 }
@@ -51,7 +51,13 @@ class indice extends clsCadastro
 	var $ref_funcionario_cad;
 	var $ref_funcionario_exc;
 	var $nome;
+	var $ddd_numero;
 	var $numero;
+	var $responsavel;
+	var $ddd_celular;
+	var $celular;
+	var $email;
+	var $endereco;
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
@@ -95,11 +101,48 @@ class indice extends clsCadastro
 		// foreign keys
 
 		// text
-		$this->campoTexto( "nome", "Nome", $this->nome, 30, 255, true );
-		$this->campoNumero( "numero", "Numero", $this->numero, 15, 15, false );
+		$this->campoTexto( "nome", "Instituição", $this->nome, 30, 255, true );
+		$this->campoTexto( "responsavel", "Responsável", $this->responsavel, 30, 255, true );
+		$this->inputTelefone('numero', 'Telefone');
+		$this->inputTelefone('celular', 'Celular');
+		$this->campoTexto( "email", "Email", $this->email, 30, 255, false );
+		$this->campoTexto( "endereco", "Endereço", $this->endereco, 30, 255, false );
 
 		// data
 
+	}
+	
+	protected function inputTelefone($type, $typeLabel = '')
+	{
+		if (! $typeLabel)
+			$typeLabel = "Telefone {$type}";
+
+		// ddd
+
+		$options = array(
+			'required'    => false,
+			'label'       => "(ddd) / {$typeLabel}",
+			'placeholder' => 'ddd',
+			'value'       => $this->{"ddd_{$type}"},
+			'max_length'  => 3,
+			'size'        => 3,
+			'inline'      => true
+		);
+
+		$this->inputsHelper()->integer("ddd_{$type}", $options);
+
+
+		// telefone
+
+		$options = array(
+			'required'    => false,
+			'label'       => '',
+			'placeholder' => $typeLabel,
+			'value'       => $this->{"{$type}"},
+			'max_length'  => 11
+		);
+
+		$this->inputsHelper()->integer("{$type}", $options);
 	}
 
 	function Novo()
@@ -108,7 +151,7 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj = new clsPmicontrolesisTelefones( $this->cod_telefones, $this->pessoa_logada, null, $this->nome, $this->numero, null, null, 1 );
+		$obj = new clsPmicontrolesisTelefones( $this->cod_telefones, $this->pessoa_logada, null, $this->nome, $this->ddd_numero, $this->numero, null, null, 1, $this->ddd_celular, $this->celular, $this->responsavel, $this->email, $this->endereco);
 		$cadastrou = $obj->cadastra();
 		if( $cadastrou )
 		{
@@ -118,7 +161,7 @@ class indice extends clsCadastro
 			return true;
 		}
 
-		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+		$this->mensagem = "Cadastro não realizado.<br>";
 		echo "<!--\nErro ao cadastrar clsPmicontrolesisTelefones\nvalores obrigatorios\nis_numeric( $this->ref_funcionario_cad ) && is_string( $this->nome )\n-->";
 		return false;
 	}
@@ -129,17 +172,17 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj = new clsPmicontrolesisTelefones($this->cod_telefones, null, $this->pessoa_logada, $this->nome, $this->numero, null, null, 1);
+		$obj = new clsPmicontrolesisTelefones($this->cod_telefones, null, $this->pessoa_logada, $this->nome, $this->ddd_numero, $this->numero, null, null, 1, $this->ddd_celular, $this->celular, $this->responsavel, $this->email, $this->endereco);
 		$editou = $obj->edita();
 		if( $editou )
 		{
-			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+			$this->mensagem .= "Edição efetuada com sucesso.<br>";
 			header( "Location: controlesis_telefones_lst.php" );
 			die();
 			return true;
 		}
 
-		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+		$this->mensagem = "Edição não realizada.<br>";
 		echo "<!--\nErro ao editar clsPmicontrolesisTelefones\nvalores obrigatorios\nif( is_numeric( $this->cod_telefones ) && is_numeric( $this->ref_funcionario_exc ) )\n-->";
 		return false;
 	}
@@ -150,17 +193,17 @@ class indice extends clsCadastro
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$obj = new clsPmicontrolesisTelefones($this->cod_telefones, null, $this->pessoa_logada, $this->nome, $this->numero, null, null, 0);
+		$obj = new clsPmicontrolesisTelefones($this->cod_telefones, null, $this->pessoa_logada, $this->nome, $this->ddd_numero, $this->numero, null, null, 0, $this->ddd_celular, $this->celular, $this->responsavel, $this->email, $this->endereco);
 		$excluiu = $obj->excluir();
 		if( $excluiu )
 		{
-			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+			$this->mensagem .= "Exclusão efetuada com sucesso.<br>";
 			header( "Location: controlesis_telefones_lst.php" );
 			die();
 			return true;
 		}
 
-		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+		$this->mensagem = "Exclusão não realizada.<br>";
 		echo "<!--\nErro ao excluir clsPmicontrolesisTelefones\nvalores obrigatorios\nif( is_numeric( $this->cod_telefones ) && is_numeric( $this->ref_funcionario_exc ) )\n-->";
 		return false;
 	}
