@@ -155,7 +155,7 @@ class PictureController {
         $l = strlen($name) - $i;
         $ext = substr($name,$i+1,$l);
 
-        return $ext;
+        return strtolower($ext);
     }
 }
 
