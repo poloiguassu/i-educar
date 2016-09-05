@@ -569,10 +569,6 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Religião', $obj_religiao_det['nm_religiao']));
     }
 
-    if ($det_raca['nm_raca']) {
-      $this->addDetalhe(array('Raça', $det_raca['nm_raca']));
-    }
-
     if ($deficiencia_pessoa) {
       $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#A1B3BD" align="center"><td>Deficiências</td></tr>';
       $cor    = '#D1DADF';

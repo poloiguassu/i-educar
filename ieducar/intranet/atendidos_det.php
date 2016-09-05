@@ -103,18 +103,6 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Data de Nascimento', dataFromPgToBr($detalhe['data_nasc'])));
     }
 
-    // Cor/Raça.
-    $raca = new clsCadastroFisicaRaca($cod_pessoa);
-    $raca = $raca->detalhe();
-    if (is_array($raca)) {
-      $raca = new clsCadastroRaca($raca['ref_cod_raca']);
-      $raca = $raca->detalhe();
-
-      if (is_array($raca)) {
-        $this->addDetalhe(array('Raça', $raca['nm_raca']));
-      }
-    }
-
     if ($detalhe['logradouro']) {
       if ($detalhe['numero']) {
         $end = ' nº ' . $detalhe['numero'];
