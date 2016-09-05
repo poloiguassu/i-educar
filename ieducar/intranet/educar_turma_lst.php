@@ -113,7 +113,7 @@ class indice extends clsListagem
 		$lista_busca = array(
 			"Ano",
 			"Turma",
-      "Turno",
+			"Turno",
 			"Eixo",
 			"Projeto"
 		);
@@ -130,7 +130,9 @@ class indice extends clsListagem
 		{
 			$lista_busca[] = "Escola";
 		}
-		$lista_busca[] = "Situaï¿½ï¿½o";
+		$lista_busca[] = "Situação";
+		$lista_busca[] = "Educador Coordenador";
+		$lista_busca[] = "Alunos";
 		$this->addCabecalhos($lista_busca);
 
 		$get_escola = true;
@@ -205,40 +207,6 @@ class indice extends clsListagem
 			$nm_escola = "";
 			foreach ( $lista AS $registro )
 			{
-				// pega detalhes de foreign_keys
-			/*	if( class_exists( "clsPmieducarEscolaSerie" ) )
-				{
-					$obj_ref_ref_cod_serie = new clsPmieducarEscolaSerie( $registro["ref_ref_cod_escola"], $registro["ref_ref_cod_serie"] );
-					$det_ref_ref_cod_serie = $obj_ref_ref_cod_serie->detalhe();
-					$registro["ref_ref_cod_serie"] = $det_ref_ref_cod_serie["ref_cod_serie"];
-				}
-				else
-				{
-					$registro["ref_ref_cod_serie"] = "Erro na geracao";
-					echo "<!--\nErro\nClasse nao existente: clsPmieducarEscolaSerie\n-->";
-				}*/
-				/*if( class_exists( "clsPmieducarCurso" ) )
-				{
-					$obj_ref_cod_curso = new clsPmieducarCurso( $registro["ref_cod_curso"] );
-					$det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-					$registro["ref_cod_curso"] = $det_ref_cod_curso["nm_curso"];
-				}
-				else
-				{
-					$registro["ref_cod_curso"] = "Erro na geracao";
-					echo "<!--\nErro\nClasse nao existente: clsPmieducarCurso\n-->";
-				}
-				if( class_exists( "clsPmieducarInstituicao" ) )
-				{
-					$obj_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-					$obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-					$registro["ref_cod_instituicao"] = $obj_cod_instituicao_det["nm_instituicao"];
-				}
-				else
-				{
-					$registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
-					echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-				}*/
 				if( class_exists( "clsPmieducarEscola" ) && $registro["ref_ref_cod_escola"] != $ref_cod_escola)
 				{
 					$ref_cod_escola = $registro["ref_ref_cod_escola"];
@@ -247,14 +215,7 @@ class indice extends clsListagem
 					$ref_cod_escola = $registro["ref_ref_cod_escola"] ;
 					$nm_escola = $det_ref_cod_escola["nome"];
 				}
-
-
-				/*$obj_ser = new clsPmieducarSerie( $registro["ref_ref_cod_serie"], null, null, $this->ref_cod_curso );
-				$det_ser = $obj_ser->detalhe();
-				$obj_cur = new clsPmieducarCurso( $det_ser["ref_cod_curso"] );
-				$det_cur = $obj_cur->detalhe();*/
-
-
+				
 				$lista_busca = array(
 					"<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["ano"]}</a>",
 					"<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_turma"]}</a>"
@@ -300,6 +261,21 @@ class indice extends clsListagem
 				{
 					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">Inativo</a>";
 				}
+				
+
+				if ($registro['ref_cod_regente'])
+				{
+					$obj_pessoa = new clsPessoa_($registro['ref_cod_regente']);
+					$det = $obj_pessoa->detalhe();
+					if ($det["nome"])
+						$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$det["nome"]}</a>";
+					else
+						$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">-</a>";
+				} else {
+					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">-</a>";
+				}
+				$lista_busca[] = "<a href=\"educar_matriculas_turma_alunos_cad.php?ref_cod_turma={$registro["cod_turma"]}\">Detalhes</a>";
+							
 				$this->addLinhas($lista_busca);
 			}
 		}
@@ -315,8 +291,8 @@ class indice extends clsListagem
 
 		$localizacao = new LocalizacaoSistema();
 	    $localizacao->entradaCaminhos( array(
-	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+	         $_SERVER['SERVER_NAME']."/intranet" => "Início",
+	         "educar_index.php"                  => "Trilha Jovem - Escola",
 	         ""                                  => "Listagem de turmas"
 	    ));
 	    $this->enviaLocalizacao($localizacao->montar());

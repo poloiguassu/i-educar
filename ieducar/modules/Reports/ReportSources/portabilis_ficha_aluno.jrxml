@@ -36,7 +36,7 @@
         (CASE WHEN aluno.analfabeto = 0 THEN
                 'Sim'
               ELSE
-                'NÃ£o'
+                'Não'
         END) as alfabetizado,
 
        (select religiao.nm_religiao from pmieducar.religiao where religiao.cod_religiao = aluno.ref_cod_religiao) as religiao,

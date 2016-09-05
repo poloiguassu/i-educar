@@ -166,25 +166,25 @@ class clsCadastro extends clsCampos
           }
 
           if (!$sucesso && empty($this->erros) && empty($this->mensagem)) {
-            $this->mensagem = "N&atilde;o foi poss&iacute;vel inserir a informa&ccedil;&atilde;o. [CAD01]";
+            $this->mensagem = "Não foi possível inserir a informação. [CAD01]";
           }
       }
       elseif ($this->tipoacao == 'Editar') {
           $sucesso = $this->Editar();
           if (!$sucesso && empty($this->erros) && empty($this->mensagem)) {
-            $this->mensagem = "N&atilde;o foi poss&iacute;vel editar a informa&ccedil;&atilde;o. [CAD02]";
+            $this->mensagem = "Não foi possível editar a informação. [CAD02]";
           }
       }
       elseif ($this->tipoacao == 'Excluir') {
         $sucesso = $this->Excluir();
         if (!$sucesso && empty($this->erros) && empty($this->mensagem)) {
-          $this->mensagem = "N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD03]";
+          $this->mensagem = "Não foi possível excluir a informação. [CAD03]";
         }
       }
       elseif ($this->tipoacao == 'ExcluirImg') {
         $sucesso = $this->ExcluirImg();
         if (!$sucesso && empty( $this->erros ) && empty( $this->mensagem )) {
-          $this->mensagem = "N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD04]";
+          $this->mensagem = "Não foi possível excluir a informação. [CAD04]";
         }
       }
       if (empty($script) && $sucesso && !empty($this->url_sucesso)) {
@@ -338,7 +338,7 @@ class clsCadastro extends clsCampos
     }
 
     if (empty($this->campos)) {
-      $retorno .=  "<tr><td class='linhaSim' colspan='2'><span class='form'>N&atilde;o existe informa&ccedil;&atilde;o dispon&iacute;vel</span></td></tr>";
+      $retorno .=  "<tr><td class='linhaSim' colspan='2'><span class='form'>Não existe informação disponível</span></td></tr>";
     }
     else {
       // Verifica se houve erros no controller
