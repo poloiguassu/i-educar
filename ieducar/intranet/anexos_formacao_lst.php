@@ -34,7 +34,7 @@ class clsIndex extends clsBase
 
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} Publicações!" );
+		$this->SetTitulo( "{$this->_instituicao} Anexos" );
 		$this->processoAp = "209";
 	}
 }
@@ -43,10 +43,10 @@ class indice extends clsListagem
 {
 	function Gerar()
 	{
-		$this->titulo = "Concursos";
+		$this->titulo = "Anexos";
 		$this->addBanner( "/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
 
-		$this->addCabecalhos( array( "Concurso", "Descrição" ) );
+		$this->addCabecalhos( array( "Nome", "Descrição" ) );
 
 		$db = new clsBanco();
 		$dba = new clsBanco();
@@ -56,18 +56,19 @@ class indice extends clsListagem
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 
-		$total = $dba->UnicoCampo( "SELECT count(0) FROM portal_concurso" );
+		$total = $dba->UnicoCampo( "SELECT count(0) FROM anexos_formacao" );
 
-		$db->Consulta( "SELECT cod_portal_concurso, nm_concurso, descricao FROM portal_concurso ORDER BY data_hora DESC limit $this->limite offset $this->offset " );
+		$db->Consulta( "SELECT cod_anexos_formacao, nm_anexo, descricao FROM anexos_formacao ORDER BY data_hora DESC limit $this->limite offset $this->offset " );
+		
 		while ($db->ProximoRegistro())
 		{
 			list ( $cod, $nm_concurso, $descricao ) = $db->Tupla();
-			$this->addLinhas( array( "<a href='concursos_det.php?cod_portal_concurso={$cod}'><img src='imagens/noticia.jpg' border=0>$nm_concurso</a>", $descricao ) );
+			$this->addLinhas( array( "<a href='anexos_formacao_det.php?cod_anexos_formacao={$cod}'><img src='imagens/noticia.jpg' border=0>$nm_concurso</a>", $descricao ) );
 		}
 
-		$this->addPaginador2( "concursos_lst.php", $total, $_GET, $this->nome, $this->limite );
+		$this->addPaginador2( "anexos_formacao_lst.php", $total, $_GET, $this->nome, $this->limite );
 
-		$this->acao = "go(\"concursos_cad.php\")";
+		$this->acao = "go(\"anexos_formacao_cad.php\")";
 		$this->nome_acao = "Novo";
 
 		$this->largura = "100%";

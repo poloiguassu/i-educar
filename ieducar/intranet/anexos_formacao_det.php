@@ -46,12 +46,12 @@ class indice extends clsDetalhe
 		$this->titulo = "Detalhe de concurso";
 		$this->addBanner( "/intranet/imagens/nvp_top_intranet.jpg", "/intranet/imagens/nvp_vert_intranet.jpg", "Intranet" );
 
-		$cod_portal_concurso = @$_GET['cod_portal_concurso'];
+		$cod_anexos_formacao = @$_GET['cod_anexos_formacao'];
 
 		$objPessoa = new clsPessoaFisica();
 
 		$db = new clsBanco();
-		$db->Consulta( "SELECT nm_concurso, descricao, data_hora, ref_ref_cod_pessoa_fj, caminho, tipo_arquivo FROM portal_concurso WHERE cod_portal_concurso = '{$cod_portal_concurso}'" );
+		$db->Consulta( "SELECT nm_anexo, descricao, data_hora, ref_ref_cod_pessoa_fj, caminho, tipo_arquivo FROM anexos_formacao WHERE cod_anexos_formacao = '{$cod_anexos_formacao}'" );
 		if ($db->ProximoRegistro())
 		{
 			list ( $nome, $descricao, $data, $pessoa, $caminho, $tipo ) = $db->Tupla();
@@ -62,11 +62,11 @@ class indice extends clsDetalhe
 			$this->addDetalhe( array("Data", date( "d/m/Y H:i", strtotime(substr( $data,0,19) ) ) ) );
 			$this->addDetalhe( array("Nome", $nome) );
 			$this->addDetalhe( array("Descrição", $descricao) );
-			$this->addDetalhe( array("Arquivo", "<a href='arquivos/$caminho''><img src='/intranet/imagens/nvp_icon_{$tipo}.gif' border='0'></a>") );
+			$this->addDetalhe( array("Arquivo", "<a href='arquivos/AnexosFormacao/$caminho' target='_self' '><img src='/intranet/imagens/nvp_icon_{$tipo}.gif' border='0'></a>") );
 		}
-		$this->url_novo = "concursos_cad.php";
-		$this->url_editar = "concursos_cad.php?cod_portal_concurso=$cod_portal_concurso";
-		$this->url_cancelar = "concursos_lst.php";
+		$this->url_novo = "anexos_formacao_cad.php";
+		$this->url_editar = "anexos_formacao_cad.php?cod_anexos_formacao=$cod_anexos_formacao";
+		$this->url_cancelar = "anexos_formacao_lst.php";
 
 		$this->largura = "100%";
 	}
