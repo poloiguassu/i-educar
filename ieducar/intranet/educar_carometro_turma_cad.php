@@ -229,7 +229,7 @@ class indice extends clsCadastro
 		
 		$count = 0;
 		$campo_teste = array();
-		$teste = "<table style='border-spacing:7px;'><tr>";
+		$bloco_foto = "<table style='border-spacing:7px;'><tr>";
 
 		foreach ($this->matriculas_turma as $matricula => $campo) {
 			$obj_matricula = new clsPmieducarMatricula($matricula);
@@ -250,37 +250,26 @@ class indice extends clsCadastro
 			if($count >= 5)
 			{
 				$count = 0;
-				$teste .= "</tr><tr>";
+				$bloco_foto .= "</tr><tr>";
 			}
 
-			if ($caminhoFoto!=false)
-			{
-				$teste .= '<td>
-							<table style="background:#faf2ed; border-style:solid; border-color:#e48238; border-width:1px;">
-								<tr>
-									<td><a href=educar_aluno_det.php?cod_aluno='.$det_matricula["ref_cod_aluno"].'><img height="90" width="120" src="'.$caminhoFoto['caminho'].'"/></a></td>
-								</tr>
-								<tr>
-									<th align="cente"><a href=educar_aluno_det.php?cod_aluno='.$det_matricula["ref_cod_aluno"].'>'.$nm_aluno.'</a></th>
-								</tr>
-							</table>
-							</td>';
-			} else {
-				$teste .= '<td>
-							<table style="background:#faf2ed; border-style:solid; border-color:#e48238; border-width:1px;">
-								<tr>
-									<td><a href=educar_aluno_det.php?cod_aluno='.$det_matricula["ref_cod_aluno"].'><img height="90" width="120" src="./arquivos/fotosPessoa/default.png"/></a></td>
-								</tr>
-								<tr>
-									<th align="cente"><a href=educar_aluno_det.php?cod_aluno='.$det_matricula["ref_cod_aluno"].'>'.$nm_aluno.'</a></th>
-								</tr>
-							</table>
-							</td>';
-			}
+			if ($caminhoFoto ==false)
+				$caminhoFoto['caminho'] = "./arquivos/fotosPessoa/default.png";	
+				
+			$bloco_foto .= '<td>
+					<table style="width:120px; background:#faf2ed; border-style:solid; border-color:#e48238; border-width:1px;">
+						<tr>
+							<td><a href=educar_aluno_det.php?cod_aluno='.$det_matricula["ref_cod_aluno"].'><img height="90" width="120" src="'.$caminhoFoto['caminho'].'"/></a></td>
+						</tr>
+						<tr>
+							<th align="cente"><a href=educar_aluno_det.php?cod_aluno='.$det_matricula["ref_cod_aluno"].'>'.$nm_aluno.'</a></th>
+						</tr>
+					</table>
+					</td>';
 			$count++;
 		}
-		$teste.= '</tr></table>';
-		$campo_teste[] = $this->campoRotulo('ref_cod_matricula_' . $matricula, '', $teste);
+		$bloco_foto.= '</tr></table>';
+		$campo_teste[] = $this->campoRotulo('ref_cod_matricula_' . $matricula, '', $bloco_foto);
     }
 
     $this->campoOculto('matriculas_turma', serialize($this->matriculas_turma));
