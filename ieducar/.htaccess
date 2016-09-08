@@ -76,8 +76,6 @@ DirectoryIndex index.php index.html index.htm
 #
 # @link http://php.net/configuration.changes
 <IfModule mod_php5.c>
-  php_value memory_limit                64M
-  php_value error_reporting             1
   php_flag  display_errors              off
   php_flag  magic_quotes_gpc            off
   php_flag  register_globals            off
@@ -92,11 +90,11 @@ DirectoryIndex index.php index.html index.htm
 </IfModule>
 
 
-# Configura√ß√£o desabilitada (uma vez que o ambiente padr√£o j√° √© production), permitindo definir o ambiente via virtual host.
+# ConfiguraÁ„o desabilitada (uma vez que o ambiente padr„o j· È production), permitindo definir o ambiente via virtual host.
 
 # Configura o ambiente de execuÁ„o do i-Educar (production|development|testing).
 # Essa vari·vel define qual seÁ„o de configuraÁ„o do arquivo
 # configuration/ieducar.ini ser· carregada pelo arquivo includes/bootstrap.php
 
-# comentado defini√ß√£o (uma vez que o ambiente padr√£o j√° √© production), permitindo assim definir o ambiente via virtual host.
+# comentado definiÁ„o (uma vez que o ambiente padr„o j· È production), permitindo assim definir o ambiente via virtual host.
 #SetEnv CORE_EXT_CONFIGURATION_ENV production
