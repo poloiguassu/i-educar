@@ -206,17 +206,6 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Habilita&ccedil;&atilde;o', $tabela));
     }
 
-    if ($registro['padrao_ano_escolar']) {
-      if ($registro['padrao_ano_escolar'] == 0) {
-        $registro['padrao_ano_escolar'] = 'n&atilde;o';
-      }
-      else if ($registro['padrao_ano_escolar'] == 1) {
-        $registro['padrao_ano_escolar'] = 'sim';
-      }
-
-      $this->addDetalhe(array('Padr&atilde;o Ano Escolar', $registro['padrao_ano_escolar']));
-    }
-
     if ($registro['objetivo_curso']) {
       $this->addDetalhe( array('Objetivo Projeto', $registro['objetivo_curso']));
     }

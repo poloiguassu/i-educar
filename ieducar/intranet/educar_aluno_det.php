@@ -733,7 +733,7 @@ class indice extends clsDetalhe
     $reg               = $objUniforme->detalhe();
 
     if($reg){    
-      $this->addDetalhe(array('<span id="funiforme"></span>Recebeu uniforme escolar', ($reg['recebeu_uniforme'] == 'S' ? 'Sim': 'Não') ));       
+      $this->addDetalhe(array('<span id="funiforme"></span>Recebeu uniforme', ($reg['recebeu_uniforme'] == 'S' ? 'Sim': 'Não') ));       
       $this->addDetalhe(array('<span class="tit_uniforme">Camiseta</span>'));   
       $this->addDetalhe(array('Quantidade', $reg['quantidade_camiseta'])); 
       $this->addDetalhe(array('Tamanho', $reg['tamanho_camiseta']));  

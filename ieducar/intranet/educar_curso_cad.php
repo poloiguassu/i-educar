@@ -350,16 +350,11 @@ class indice extends clsCadastro
     $this->campoOculto('incluir', '');
     $this->campoQuebra();
 
-    // Padrï¿½o ano escolar
-    $this->campoCheck('padrao_ano_escolar', 'Padr&atilde;o Ano Escolar', $this->padrao_ano_escolar);
-
-    $this->campoCheck('multi_seriado', 'Multi seriado', $this->multi_seriado);
-
     // Objetivo do curso
     $this->campoMemo('objetivo_curso', 'Objetivo Projeto', $this->objetivo_curso,
       60, 5, FALSE);
 
-    // Pï¿½blico alvo
+    // Público alvo
     $this->campoMemo('publico_alvo', 'P&uacute;blico Alvo', $this->publico_alvo,
       60, 5, FALSE);
   }
