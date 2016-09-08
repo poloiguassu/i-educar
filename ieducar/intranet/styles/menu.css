@@ -36,7 +36,7 @@
 	background-color: #341803;
 	/*layer-background-color: #546c76;*/
 	color: #FFFFFF;
-	border-top: 1px solid #FFFFFF;
+	padding-top: 3px;
 }
 
 .clLevel0over
@@ -46,7 +46,7 @@
 	color: #DDDDDD; 
 	cursor: pointer; 
 	/*cursor: hand;*/
-	border-top: 3px solid #AAAAAA;
+	padding-top: 3px;
 }
 
 .clLevel0border

@@ -1394,7 +1394,7 @@ function setXY()
 {
 
 	document.getElementById('menu_suspenso').style.height = '20px';
-	document.getElementById('menu_suspenso').style.backgroundColor = '#E4E9ED';
+	document.getElementById('menu_suspenso').style.backgroundColor = '#351903';
 
 
 
