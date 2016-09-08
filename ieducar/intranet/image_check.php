@@ -59,7 +59,7 @@ class PictureController {
         if ($maxSize!=null)
             $this->maxSize = $maxSize;
         else
-            $this->maxSize = 2048*1024;
+            $this->maxSize = 4096*1024;
 
         if ($suportedExtensions != null)
             $this->suportedExtensions = $suportedExtensions;
@@ -119,7 +119,7 @@ class PictureController {
                     return true;   
                 }
                 else{
-                    $this->errorMessage = "Não é permitido fotos com mais de 2Mb.";
+                    $this->errorMessage = "Não é permitido fotos com mais de 4Mb.";
                     return false;
                 }
             }
