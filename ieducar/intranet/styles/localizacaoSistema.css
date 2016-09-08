@@ -36,8 +36,9 @@
 }
 
 .fundoLocalizacao {
-   background-color: #E4E9ED; 
-   height: 10px; 
+   background-color: #FAF2ED; 
+   height: 10px;
+   padding-top: 5px;
 }
 .flechinha {
   color: #000 !important;
