@@ -1,3 +1,9 @@
+desktop.ini
+ieducar/intranet/tmp/*
+ieducar/intranet/arquivos/*
 # Vagrant 
 /.vagrant
 Vagrantfile
+#composer
+vendor/*
+composer.lock
