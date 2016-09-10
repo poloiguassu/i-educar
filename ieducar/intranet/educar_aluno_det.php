@@ -379,16 +379,6 @@ class indice extends clsDetalhe
 
     $this->addDetalhe(array('Código estado', $registro['aluno_estado_id']));
 
-    if ($registro['caminho_foto']) {
-      $this->addDetalhe(array(
-        'Foto',
-        sprintf(
-          '<img src="arquivos/educar/aluno/small/%s" border="0">',
-          $registro['caminho_foto']
-        )
-      ));
-    }
-
     if ($registro['nome_aluno']) {
       if ($caminhoFoto!=null and $caminhoFoto!='')
         $this->addDetalhe(array('Nome Aluno', $registro['nome_aluno'].'<p><img height="117" src="'.$caminhoFoto.'"/></p>'));
