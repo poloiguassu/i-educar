@@ -5,6 +5,8 @@ var mae_details;
 var pessoaPaiOuMae;
 
  // before page is ready
+var firstTab = 12;
+ 
 
 var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');
@@ -63,14 +65,14 @@ var $linkToEditPessoaMae = $linkToEditPessoaPai.clone()
 // adiciona id 'stop' na linha separadora
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id','stop');
 // Adiciona abas na página
-$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab"> <span class="tabText">Uniforme escolar</span></div></li><li><div id="tab4" class="alunoTab"> <span class="tabText">Moradia</span></div></li></ul></div>');
+$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab"> <span class="tabText">Uniforme</span></div></li><li><div id="tab4" class="alunoTab"> <span class="tabText">Moradia</span></div></li></ul></div>');
 
 // Adiciona estilo de aba selecionada a primeira aba
 $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
 $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-  if (index>14){
+  if (index>firstTab){
     if (row.id!='stop')
       row.hide();
     else
@@ -131,8 +133,6 @@ resourceOptions.handleGet = function(dataResponse) {
     getPersonDetails(dataResponse.pessoa_id);
 
   $idField.val(dataResponse.id);
-  $j('#aluno_inep_id').val(dataResponse.aluno_inep_id);
-  $j('#aluno_estado_id').val(dataResponse.aluno_estado_id);
   tipo_resp = dataResponse.tipo_responsavel;  
   $j('#religiao_id').val(dataResponse.religiao_id);
   $j('#beneficio_id').val(dataResponse.beneficio_id);
@@ -140,7 +140,7 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
 
   /***********************************************
-      CAMPOS DA FICHA MÉDICA
+      CAMPOS DA FICHA M�DICA
   ************************************************/
 
   $j('#sus').val(dataResponse.sus);
@@ -736,7 +736,7 @@ function canShowParentsFields(){
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab1').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
-          if (index>14){
+          if (index>firstTab){
             if (row.id!='stop')
               row.hide();
             else
@@ -755,7 +755,7 @@ function canShowParentsFields(){
         $j('#tab2').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>14 && index<62){
+            if (index>firstTab && index<60){
               row.show();
             }else if (index>0){
               row.hide();
@@ -776,7 +776,7 @@ function canShowParentsFields(){
         $j('#tab3').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>60 && index<84){
+            if (index>59 && index<82){
               row.show();
             }else if (index>0){
               row.hide();
@@ -794,9 +794,9 @@ function canShowParentsFields(){
         $j('#tab4').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 
-          if (index<84 && index!=0){
+          if (index<82 && index!=0){
             row.hide();
-          }else if(index<111){
+		  }else if(index<109){
             row.show();
           }          
         });

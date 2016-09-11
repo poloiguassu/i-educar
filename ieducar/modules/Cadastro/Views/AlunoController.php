@@ -3,31 +3,31 @@
 #ini_set("display_errors", 1);
 
 /**
- * i-Educar - Sistema de gestÃ£o escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí­
  *           <ctima@itajai.sc.gov.br>
  *
- * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
- * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
- * qualquer versÃ£o posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
- * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
- * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
- * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas D'Avila <lucasdavila@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Avaliacao
  * @subpackage  Modules
- * @since     Arquivo disponÃ­vel desde a versÃ£o ?
+ * @since     Arquivo disponível desde a versão 1.1.0
  * @version   $Id$
  */
 
@@ -61,12 +61,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     ),
 
     'mae' => array(
-      'label'  => 'MÃ£e',
+      'label'  => 'Mãe',
       'help'   => '',
     ),
 
     'responsavel' => array(
-      'label'  => 'ResponsÃ¡vel',
+      'label'  => 'Responsável',
       'help'   => '',
     ),
 
@@ -76,97 +76,87 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     ),
 
     'transporte' => array(
-      'label'  => 'Transporte pÃºblico',
+      'label'  => 'Transporte público',
       'help'   => '',
     ),
 
     'id' => array(
-      'label'  => 'CÃ³digo aluno',
-      'help'   => '',
-    ),
-
-    'aluno_inep_id' => array(
-      'label'  => 'CÃ³digo INEP',
-      'help'   => '',
-    ),
-
-    'aluno_estado_id' => array(
-      'label'  => 'CÃ³digo rede estadual',
+      'label'  => 'Código aluno',
       'help'   => '',
     ),
 
     'deficiencias' => array(
-      'label'  => 'DeficiÃªncias / habilidades especiais',
+      'label'  => 'Deficiências / habilidades especiais',
       'help'   => '',
       ),
 
       /* *******************
-         ** Dados mÃ©dicos **
+         ** Dados médicos **
          ******************* */
 
       'altura' => array('label' => 'Altura/Metro'),
 
       'peso' => array('label' => 'Peso/Kg'),
 
-      'grupo_sanguineo' => array('label' => 'Grupo sanguÃ­neo'),
+      'grupo_sanguineo' => array('label' => 'Grupo sanguí­neo'),
 
       'fator_rh' => array('label' => 'Fator RH'),
 
-      'alergia_medicamento' => array('label' => 'O aluno Ã© alÃ©rgico a algum medicamento?'),
+      'alergia_medicamento' => array('label' => 'O aluno é alérgico a algum medicamento?'),
 
       'desc_alergia_medicamento' => array('label' => 'Quais?'),
 
-      'alergia_alimento' => array('label' => 'O aluno Ã© alÃ©rgico a algum alimento?'),
+      'alergia_alimento' => array('label' => 'O aluno é alérgico a algum alimento?'),
 
       'desc_alergia_alimento' => array('label' => 'Quais?'),
 
-      'doenca_congenita' => array('label' => 'O aluno possui doenÃ§a congÃªnita?'),
+      'doenca_congenita' => array('label' => 'O aluno possui doença congênita?'),
 
       'desc_doenca_congenita' => array('label' => 'Quais?'),
 
-      'fumante' => array('label' => 'O aluno Ã© fumante?'),
+      'fumante' => array('label' => 'O aluno é fumante?'),
 
-      'doenca_caxumba' => array('label' => 'O aluno jÃ¡ contraiu caxumba?'),
+      'doenca_caxumba' => array('label' => 'O aluno já contraiu caxumba?'),
 
-      'doenca_sarampo' => array('label' => 'O aluno jÃ¡ contraiu sarampo?'),
+      'doenca_sarampo' => array('label' => 'O aluno já contraiu sarampo?'),
 
-      'doenca_rubeola' => array('label' => 'O aluno jÃ¡ contraiu rubeola?'),
+      'doenca_rubeola' => array('label' => 'O aluno já contraiu rubeola?'),
 
-      'doenca_catapora' => array('label' => 'O aluno jÃ¡ contraiu catapora?'),
+      'doenca_catapora' => array('label' => 'O aluno já contraiu catapora?'),
 
-      'doenca_escarlatina' => array('label' => 'O aluno jÃ¡ contraiu escarlatina?'),
+      'doenca_escarlatina' => array('label' => 'O aluno já contraiu escarlatina?'),
 
-      'doenca_coqueluche' => array('label' => 'O aluno jÃ¡ contraiu coqueluche?'),
+      'doenca_coqueluche' => array('label' => 'O aluno já contraiu coqueluche?'),
 
-      'doenca_outras' => array('label' => 'Outras doenÃ§as que o aluno jÃ¡ contraiu'),
+      'doenca_outras' => array('label' => 'Outras doenças que o aluno já contraiu'),
 
-      'epiletico' => array('label' => 'O aluno Ã© epilÃ©tico?'),
+      'epiletico' => array('label' => 'O aluno é epilético?'),
 
-      'epiletico_tratamento' => array('label' => 'EstÃ¡ em tratamento?'),
+      'epiletico_tratamento' => array('label' => 'Está em tratamento?'),
 
-      'hemofilico' => array('label' => 'O aluno Ã© hemofÃ­lico?'),
+      'hemofilico' => array('label' => 'O aluno é hemofí­lico?'),
 
-      'hipertenso' => array('label' => 'O aluno tem hipertensÃ£o?'),
+      'hipertenso' => array('label' => 'O aluno tem hipertensão?'),
 
-      'asmatico' => array('label' => 'O aluno Ã© asmÃ¡tico?'),
+      'asmatico' => array('label' => 'O aluno é asmático?'),
 
-      'diabetico' => array('label' => 'O aluno Ã© diabÃ©tico?'),
+      'diabetico' => array('label' => 'O aluno é diabético?'),
 
       'insulina' => array('label' => 'Depende de insulina?'),
 
-      'tratamento_medico' => array('label' => 'O aluno faz algum tratamento mÃ©dico?'),
+      'tratamento_medico' => array('label' => 'O aluno faz algum tratamento médico?'),
 
       'desc_tratamento_medico' => array('label' => 'Qual?'),
 
-      'medicacao_especifica' => array('label' => 'O aluno estÃ¡ ingerindo medicaÃ§Ã£o especÃ­fica?'),
+      'medicacao_especifica' => array('label' => 'O aluno está ingerindo medicação especí­fica?'),
 
       'desc_medicacao_especifica' => array('label' => 'Qual?'),
 
-      'acomp_medico_psicologico' => array('label' => 'O aluno tem acompanhamento mÃ©dico ou psicolÃ³gico?'),
+      'acomp_medico_psicologico' => array('label' => 'O aluno tem acompanhamento médico ou psicológico?'),
 
       'desc_acomp_medico_psicologico' => array('label' => 'Motivo?'),
 
-      'restricao_atividade_fisica' => array('label' => 'O aluno tem restriÃ§Ã£o a alguma atividade fÃ­sica?'),
+      'restricao_atividade_fisica' => array('label' => 'O aluno tem restrição a alguma atividade fí­sica?'),
       
       'desc_restricao_atividade_fisica' => array('label' => 'Qual?'),
 
@@ -174,13 +164,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
       'desc_fratura_trauma' => array('label' => 'Qual?'),
 
-      'plano_saude' => array('label' => 'O aluno possui algum plano de saÃºde?'),
+      'plano_saude' => array('label' => 'O aluno possui algum plano de saúde?'),
 
       'desc_plano_saude' => array('label' => 'Qual?'),
 
       'hospital_clinica' => array('label' => 'Nome'),
 
-      'hospital_clinica_endereco' => array('label' => 'EndereÃ§o'),
+      'hospital_clinica_endereco' => array('label' => 'Endereço'),
 
       'hospital_clinica_telefone' => array('label' => 'Telefone'),
 
@@ -196,7 +186,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       **** UNIFORME ESCOLAR ****
       **************************/
 
-      'recebeu_uniforme' => array('label' => 'Recebeu uniforme escolar?'),
+      'recebeu_uniforme' => array('label' => 'Recebeu uniforme?'),
 
       'label_camiseta' => array('label' => 'Camiseta'),
 
@@ -216,7 +206,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
       'tamanho_bermuda' => array('label' => 'Tamanho'),      
 
-      'label_calca' => array('label' => 'CalÃ§a'),
+      'label_calca' => array('label' => 'Calça'),
 
       'quantidade_calca' => array('label' => 'Quantidade'),
 
@@ -228,7 +218,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
       'tamanho_saia' => array('label' => 'Tamanho'),
 
-      'label_calcado' => array('label' => 'CalÃ§ado'),
+      'label_calcado' => array('label' => 'Calçado'),
 
       'quantidade_calcado' => array('label' => 'Quantidade'),
 
@@ -250,21 +240,21 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
       'casa_outra' => array('label' => 'Outro'),
 
-      'moradia_situacao' => array('label' => 'SituaÃ§Ã£o'),
+      'moradia_situacao' => array('label' => 'Situação'),
 
-      'quartos' => array('label' => 'NÃºmero de quartos'),
+      'quartos' => array('label' => 'Número de quartos'),
 
-      'sala' => array('label' => 'NÃºmero de salas'),
+      'sala' => array('label' => 'Número de salas'),
 
-      'copa' => array('label' => 'NÃºmero de copas'),
+      'copa' => array('label' => 'Número de copas'),
 
-      'banheiro' => array('label' => 'NÃºmero de banheiros'),
+      'banheiro' => array('label' => 'Número de banheiros'),
 
-      'garagem' => array('label' => 'NÃºmero de garagens'),
+      'garagem' => array('label' => 'Número de garagens'),
 
-      'empregada_domestica' => array('label' => 'Possui empregada domÃ©stica?'),
+      'empregada_domestica' => array('label' => 'Possui empregada doméstica?'),
 
-      'automovel' => array('label' => 'Possui automÃ³vel?'),
+      'automovel' => array('label' => 'Possui automóvel?'),
 
       'motocicleta' => array('label' => 'Possui motocicleta?'),
 
@@ -272,15 +262,15 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
       'geladeira' => array('label' => 'Possui geladeira?'),
 
-      'fogao' => array('label' => 'Possui fogÃ£o?'),
+      'fogao' => array('label' => 'Possui fogão?'),
 
-      'maquina_lavar' => array('label' => 'Possui mÃ¡quina de lavar?'),
+      'maquina_lavar' => array('label' => 'Possui máquina de lavar?'),
 
       'microondas' => array('label' => 'Possui microondas?'),
 
-      'video_dvd' => array('label' => 'Possui vÃ­deo/DVD?'),
+      'video_dvd' => array('label' => 'Possui ví­deo/DVD?'),
 
-      'televisao' => array('label' => 'Possui televisÃ£o?'),
+      'televisao' => array('label' => 'Possui televisão?'),
 
       'celular' => array('label' => 'Possui celular?'),
 
@@ -290,9 +280,9 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
       'renda' => array('label' => 'Renda familiar em R$'),
 
-      'agua_encanada' => array('label' => 'Possui Ã¡gua encanada?'),
+      'agua_encanada' => array('label' => 'Possui água encanada?'),
 
-      'poco' => array('label' => 'Possui poÃ§o?'),
+      'poco' => array('label' => 'Possui poço?'),
 
       'energia' => array('label' => 'Possui energia?'),
 
@@ -310,7 +300,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         $_SERVER['SERVER_NAME']."/intranet" => "Início",
          "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""        => "$nomeMenu aluno"
     ));
@@ -332,18 +322,10 @@ class AlunoController extends Portabilis_Controller_Page_EditController
   {
     $this->url_cancelar = '/intranet/educar_aluno_lst.php';
 
-    // cÃ³digo aluno
+    // código aluno
     $options = array('label'    => $this->_getLabel('id'), 'disabled' => true,
                      'required' => false, 'size' => 25);
     $this->inputsHelper()->integer('id', $options);
-
-    // cÃ³digo aluno inep
-    $options = array('label' => $this->_getLabel('aluno_inep_id'), 'required' => false, 'size' => 25, 'max_length' => 14);
-    $this->inputsHelper()->integer('aluno_inep_id', $options);
-
-    // cÃ³digo aluno rede estadual
-    $options = array('label' => $this->_getLabel('aluno_estado_id'), 'required' => false, 'size' => 25, 'max_length' => 25);
-    $this->inputsHelper()->text('aluno_estado_id', $options);
 
     // nome
     $options = array('label' => $this->_getLabel('pessoa'), 'size' => 68);
@@ -365,12 +347,12 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->text('pai', $options);
 
 
-    // mÃ£e
+    // mãe
     $options = array('label' => $this->_getLabel('mae'), 'disabled' => true, 'required' => false, 'size' => 68);
     $this->inputsHelper()->text('mae', $options);*/
 
 
-    // responsÃ¡vel
+    // responsável
 
     // tipo
 
@@ -413,14 +395,14 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->select('tipo_transporte', $options);
 
 
-    // religiÃ£o
-    $this->inputsHelper()->religiao(array('required' => false, 'label' => Portabilis_String_Utils::toLatin1('ReligiÃ£o')));
+    // religião
+    $this->inputsHelper()->religiao(array('required' => false, 'label' => Portabilis_String_Utils::toLatin1('Religião')));
 
     // beneficio
-    $this->inputsHelper()->beneficio(array('required' => false, 'label' => Portabilis_String_Utils::toLatin1('BenefÃ­cio')));
+    $this->inputsHelper()->beneficio(array('required' => false, 'label' => Portabilis_String_Utils::toLatin1('Benefí­cio')));
 
 
-    // DeficiÃªncias / habilidades especiais
+    // Deficiências / habilidades especiais
     $helperOptions = array('objectName' => 'deficiencias');
     $options       = array('label' => $this->_getLabel('deficiencias'), 'size' => 50, 'required' => false,
                            'options' => array('value' => null));
@@ -434,7 +416,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
 
     /* *************************************
-       ** Dados para a Aba 'Ficha mÃ©dica' **
+       ** Dados para a Aba 'Ficha médica' **
        ************************************* */
 
     // altura
@@ -589,7 +571,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('desc_plano_saude') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
     $this->inputsHelper()->text('desc_plano_saude',$options);    
 
-    $this->campoRotulo('tit_dados_hospital',Portabilis_String_Utils::toLatin1('Em caso de emergÃªncia, levar para hospital ou clÃ­nica')); 
+    $this->campoRotulo('tit_dados_hospital',Portabilis_String_Utils::toLatin1('Em caso de emergência, levar para hospital ou clí­nica')); 
 
     // hospital_clinica
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hospital_clinica') ), 'size' => 50, 'max_length' => 100,'required' => false, 'placeholder' => '');
@@ -603,7 +585,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('hospital_clinica_telefone') ), 'size' => 20, 'max_length' => 20,'required' => false, 'placeholder' => '');
     $this->inputsHelper()->text('hospital_clinica_telefone',$options);            
 
-    $this->campoRotulo('tit_dados_responsavel',Portabilis_String_Utils::toLatin1('Em caso de emergÃªncia, caso nÃ£o seja encontrado pais ou responsÃ¡veis, avisar')); 
+    $this->campoRotulo('tit_dados_responsavel',Portabilis_String_Utils::toLatin1('Em caso de emergência, caso não seja encontrado pais ou responsáveis, avisar')); 
 
     // responsavel
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('responsavel') ), 'size' => 50, 'max_length' => 50,'required' => false, 'placeholder' => '');
@@ -723,7 +705,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $situacoes = array( null => 'Selecione',
                         '1' => 'Alugado',
-                        '2' => Portabilis_String_Utils::toLatin1('PrÃ³prio'),
+                        '2' => Portabilis_String_Utils::toLatin1('Próprio'),
                         '3' => 'Cedido',
                         '4' => 'Financiado',
                         '5' => 'Outros');
@@ -824,7 +806,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       false
     );
 
-    $options       = array('label' => Portabilis_String_Utils::toLatin1('MunicÃ­pio'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
+    $options       = array('label' => Portabilis_String_Utils::toLatin1('Municí­pio'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
 
     $helperOptions = array('objectName'         => 'municipio',
                            'hiddenInputOptions' => array('options' => array('value' => $this->municipio_id)));
@@ -833,13 +815,13 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $helperOptions = array('hiddenInputOptions' => array('options' => array('value' => $this->bairro_id)));
 
-    $options       = array( 'label' => Portabilis_String_Utils::toLatin1('Bairro / Zona de LocalizaÃ§Ã£o - <b>Buscar</b>'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
+    $options       = array( 'label' => Portabilis_String_Utils::toLatin1('Bairro / Zona de Localização - <b>Buscar</b>'), 'required'   => $enderecamentoObrigatorio, 'disabled' => $desativarCamposDefinidosViaCep);
 
 
     $this->inputsHelper()->simpleSearchBairro('bairro', $options, $helperOptions);
 
     $options = array(
-      'label'       => 'Bairro / Zona de LocalizaÃ§Ã£o - <b>Cadastrar</b>',
+      'label'       => 'Bairro / Zona de Localização - <b>Cadastrar</b>',
       'placeholder' => 'Bairro',
       'value'       => $this->bairro,
       'max_length'  => 40,
@@ -850,7 +832,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $this->inputsHelper()->text('bairro', $options);
 
-    // zona localizaÃ§Ã£o
+    // zona localização
 
     $zonas = App_Model_ZonaLocalizacao::getInstance();
     $zonas = $zonas->getEnums();
@@ -858,7 +840,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $options = array(
       'label'       => '',
-      'placeholder' => 'Zona localizaÃ§Ã£o',
+      'placeholder' => 'Zona localização',
       'value'       => $this->zona_localizacao,
       'disabled'    => $desativarCamposDefinidosViaCep,
       'resources'   => $zonas,
@@ -918,8 +900,8 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $options = array(
       'required'    => false,
-      'label'       => 'NÃºmero / Letra',
-      'placeholder' => Portabilis_String_Utils::toLatin1('NÃºmero'),
+      'label'       => 'Número / Letra',
+      'placeholder' => Portabilis_String_Utils::toLatin1('Número'),
       'value'       => '',
       'max_length'  => 6,
       'inline'      => true
@@ -946,7 +928,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
 
     $options = array(
       'required'    => false,
-      'label'       => 'NÂº apartamento / Bloco / Andar',
+      'label'       => 'Nº apartamento / Bloco / Andar',
       'placeholder' =>  'Apartamento',
       'value'       => $this->apartamento,
       'max_length'  => 6,
@@ -1019,7 +1001,7 @@ class AlunoController extends Portabilis_Controller_Page_EditController
   }
 
   protected function inputMae() {
-    $this->addParentsInput('mae', 'mÃ£e');
+    $this->addParentsInput('mae', 'mãe');
   }
 }
 ?>
