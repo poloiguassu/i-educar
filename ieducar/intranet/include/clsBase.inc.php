@@ -87,7 +87,7 @@ class clsBase extends clsConfig
   var $script_header;
   var $script_footer;
   var $prog_alert;
-
+  
   function OpenTpl($template)
   {
     $prefix = 'nvp_';
@@ -568,12 +568,6 @@ class clsBase extends clsConfig
       $this->db()->Consulta("DELETE FROM portal.notificacao WHERE visualizacoes > 10");
     }
 
-    // nome completo usuario
-    $nomePessoa       = new clsPessoaFisica();
-    list($nomePessoa) = $nomePessoa->queryRapida($this->currentUserId(), "nome");
-    $nomePessoa       = ($nomePessoa) ? $nomePessoa : "<span style='color: #DD0000; '>Convidado</span>";
-
-
     // data ultimo acesso
     $ultimoAcesso     = $this->db()->UnicoCampo("SELECT data_hora FROM acesso WHERE cod_pessoa = {$this->currentUserId()} ORDER BY data_hora DESC LIMIT 1,1");
 
@@ -584,7 +578,6 @@ class clsBase extends clsConfig
 
     // substitui valores no template
     $saida = str_replace("<!-- #&ULTIMOACESSO&# -->", $ultimoAcesso,  $saida);
-    $saida = str_replace("<!-- #&USERLOGADO&# -->",   $nomePessoa,    $saida);
     $saida = str_replace("<!-- #&CORPO&# -->",        $corpo,         $saida);
     $saida = str_replace("<!-- #&ANUNCIO&# -->",      $menu_dinamico, $saida);
 
@@ -699,11 +692,16 @@ class clsBase extends clsConfig
   function MakeAll ()
   {
     try {
+
       $cronometro = new clsCronometro();
       $cronometro->marca('inicio');
       $liberado = TRUE;
 
-      $saida_geral = '';
+	  $saida_head = '';
+	  $saida_body = '';
+	  $saida_foot = '';
+
+	  $nomePessoa = '';
 
       if ($this->convidado) {
         @session_start();
@@ -717,23 +715,28 @@ class clsBase extends clsConfig
         $this->Formular();
         $this->VerificaPermicao();
         $this->CadastraAcesso();
-        $saida_geral = $this->MakeHeadHtml();
+        $saida_head = $this->MakeHeadHtml();
+		
+		// nome completo usuario
+		$nomePessoa       = new clsPessoaFisica();
+		list($nomePessoa) = $nomePessoa->queryRapida($this->currentUserId(), "nome");
+		$nomePessoa       = ($nomePessoa) ? $nomePessoa : "Convidado";
 
         if ($this->renderMenu) {
-          $saida_geral .= $this->MakeBody();
+          $saida_body = $this->MakeBody();
         }
         else {
           foreach ($this->clsForm as $form) {
-            $saida_geral .= $form->RenderHTML();
+            $saida_body .= $form->RenderHTML();
           }
         }
 
-        $saida_geral .= $this->MakeFootHtml();
+        $saida_foot .= $this->MakeFootHtml();
 
         if ($_GET['suspenso'] == 1 || $_SESSION['suspenso'] == 1 || $_SESSION["tipo_menu"] == 1) {
           if ($this->renderMenuSuspenso) {
-            $saida_geral = str_replace("<!-- #&MENUSUSPENSO&# -->", $this->makeMenuSuspenso(), $saida_geral);
-          }
+            $saida_foot = str_replace("<!-- #&MENUSUSPENSO&# -->", $this->makeMenuSuspenso(), $saida_foot);
+		}
 
           if ($_GET['suspenso'] == 1) {
             @session_start();
@@ -743,9 +746,9 @@ class clsBase extends clsConfig
         }
       }
       elseif ((empty($_POST['login'])) || (empty($_POST['senha'])) && $liberado) {
-        $saida_geral .= $this->MakeHeadHtml();
+        $saida_head .= $this->MakeHeadHtml();
         $controlador->Logar(FALSE);
-        $saida_geral .= $this->MakeFootHtml();
+        $saida_foot .= $this->MakeFootHtml();
       }
       else {
         $controlador->Logar(TRUE);
@@ -753,18 +756,30 @@ class clsBase extends clsConfig
           $this->Formular();
           $this->VerificaPermicao();
           $this->CadastraAcesso();
-          $saida_geral = $this->MakeHeadHtml();
-          $saida_geral .= $this->MakeBody();
-          $saida_geral .= $this->MakeFootHtml();
+          $saida_head = $this->MakeHeadHtml();
+          $saida_body .= $this->MakeBody();
+          $saida_foot .= $this->MakeFootHtml();
         }
         else {
-          $saida_geral = $this->MakeHeadHtml();
+          $saida_head = $this->MakeHeadHtml();
           $controlador->Logar  (false);
-          $saida_geral .= $this->MakeFootHtml();
+          $saida_foot .= $this->MakeFootHtml();
         }
       }
 
-      echo $saida_geral;
+	$params = array(
+		'saida' => array(
+				'head' => $saida_head,
+				'body' => $saida_body,
+				'foot' => $saida_foot,
+		),
+		'usuario' => array(
+			'nome' => $nomePessoa
+		)
+	);
+	  
+	  $twig = new TemplateRenderer();
+	  echo $twig->render('base.twig.html', $params);
 
       $cronometro->marca('fim');
       $tempoTotal = $cronometro->getTempoTotal();
