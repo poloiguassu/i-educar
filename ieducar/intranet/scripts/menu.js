@@ -1227,7 +1227,7 @@ function MontaMenu()
 
 	oCMenu.useBar=0;
 	oCMenu.barWidth="760";
-	oCMenu.barHeight="16";
+	oCMenu.barHeight="22";
 	oCMenu.barClass="clBar";
 	oCMenu.barX=20;
 	oCMenu.barY=20;
@@ -1237,7 +1237,7 @@ function MontaMenu()
 
 	oCMenu.level[0]=new cm_makeLevel();
 	oCMenu.level[0].width=80;
-	oCMenu.level[0].height=17;
+	oCMenu.level[0].height=20;
 	oCMenu.level[0].regClass="clLevel0";
 	oCMenu.level[0].overClass="clLevel0over";
 	oCMenu.level[0].borderX=0;
