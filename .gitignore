@@ -4,6 +4,10 @@ ieducar/intranet/arquivos/*
 # Vagrant 
 /.vagrant
 Vagrantfile
-#composer
-vendor/*
-composer.lock
+
+#tmp
+ieducar/tmp/**
+
+# Composer
+vendor/**
+ieducar/lib/vendor/**
