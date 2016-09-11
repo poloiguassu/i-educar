@@ -26,6 +26,8 @@ require_once 'Portabilis/Messenger.php';
 require_once 'Portabilis/Mailer.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/Utils/ReCaptcha.php';
+require_once 'Portabilis/Utils/ReCaptcha.php';
+require_once 'Core/View/TemplateRenderer.php';
 
 /**
  * clsControlador class.
@@ -62,7 +64,7 @@ class clsControlador
     */
 
     @session_start();
-
+	
     if ('logado' == $_SESSION['itj_controle']) {
       $this->logado = TRUE;
     }
@@ -151,7 +153,7 @@ class clsControlador
       $user = Portabilis_Utils_User::loadUsingCredentials($username, $password);
 
       if (is_null($user)) {
-        $this->messenger->append("Usuário ou senha incorreta.", "error");
+        $this->messenger->append("Usuário ou senha incorretos, tente novamente.", "error");
         $this->incrementTentativasLogin();
       }
       else {
@@ -212,31 +214,28 @@ class clsControlador
   protected function renderLoginPage() {
     $this->destroyLoginSession();
 
-    $templateName = 'templates/nvp_htmlloginintranet.tpl';
-	// Nome padrão da template
- 	$templateName = 'templates/nvp_htmlloginintranet.tpl';
-	// Caso esteja definido no arquivo de configuração ...
+    $templateName = 'login.twig.html';
+	
 	if ($GLOBALS['coreExt']['Config']->app->template->loginpage) {
-	// ... e o arquivo existir e conseguirmos ler ...
 		if (file_exists($GLOBALS['coreExt']['Config']->app->template->loginpage) &&
 			is_readable($GLOBALS['coreExt']['Config']->app->template->loginpage)) {
-				// ... o substituímos.
 				$templateName = $GLOBALS['coreExt']['Config']->app->template->loginpage;
 		}	
 	}
 	
-    $templateFile = fopen($templateName, "r");
-    $templateText = fread($templateFile, filesize($templateName));
-    $templateText = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messenger->toHtml('p'), $templateText);
-
     $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas']) &&
                                      is_numeric($_SESSION['tentativas_login_falhas']) &&
                                      $_SESSION['tentativas_login_falhas'] >= $this->_maximoTentativasFalhas;
-
-    if ($requiresHumanAccessValidation)
-      $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", Portabilis_Utils_ReCaptcha::getWidget(), $templateText);
-
-    fclose($templateFile);
+									 
+	// TODO: reativar captcha no login
+	
+	$params = array(
+		'message' => $this->messenger->toText(),
+	);
+	
+	$twig = new TemplateRenderer();
+	$templateText = $twig->render($templateName, $params);
+	
     die($templateText);
   }
 

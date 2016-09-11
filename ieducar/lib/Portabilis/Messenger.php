@@ -81,6 +81,10 @@ class Portabilis_Messenger {
     return $msgs;
   }
 
+	public function toText() {
+		foreach($this->getMsgs() as $m)
+    		return $m['msg'];
+	}
 
   public function getMsgs() {
     $msgs = array();
