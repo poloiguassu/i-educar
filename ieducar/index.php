@@ -1,4 +1,4 @@
-<?php
+Ôªø<?php
 
 /**
  * i-Educar - Sistema de gest√£o escolar
@@ -29,18 +29,13 @@
  */
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Sistema de gest√£o Trilha Jovem</title>
-</head>
-<frameset rows="60,*" framespacing="2" border="0" frameborder="0" >
-  <frame src="intranet/topo.php"  name="superior" noresize scrolling="no">
-  <frame src="intranet/index.php" name="central" marginwidth="0" marginheight="0" noresize scrolling="yes">
-</frameset>
-<noframes>
-  <body>
-    <p>Para utilizar este sistema, um navegador com suporte a quadros (frames) È necess·rio.</p>
-  </body>
-</noframes>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="refresh" content="1;url=intranet/index.php">
+        <script type="text/javascript">
+            window.location.href = "intranet/index.php"
+        </script>
+        <title>Sistema Trilha Jovem Iguassu</title>
+    </head>
 </html>
