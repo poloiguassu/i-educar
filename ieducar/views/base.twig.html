@@ -82,6 +82,38 @@
 		  </div>
 		</div>
 		
+		{% block footer %}
+			<div class="footer-container">
+				<div class="g-container">
+					<div class="g-grid">
+						<div class="g-block size-100">
+							<div class="g-content g-content-footer">
+								<div class="credit-text">
+									<a class="link-footer" target="_blank" href="https://github.com/pensesmart/trilhajovem">Sistema TJI</a>
+									&nbsp;é um projeto open source, desenvolvido por 
+									<a class="link-footer" target="_blank" href="https://github.com/carmoIn">Helcio</a>.
+								</div>
+								<a class="footer-logo w-inline-block" href="http://trilhajovem.com.br" target="_blank">
+									<img class="footer-logo-img" src="/favico.png">
+								</a>
+								<div class="version-block">
+									<div class="version-text">
+										<strong>Versão</strong> 1.2.0
+									</div>
+									<a class="footer-button w-button" href="https://github.com/pensesmart/trilhajovem/wiki" target="_blank">
+										Manual do Usuário
+									</a>
+									<a class="footer-button w-button" href="https://github.com/pensesmart/trilhajovem/issues" target="_blank">
+										Reportar Erro
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endblock %}
+		
 		{{ saida.foot|raw }}
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript"></script>
