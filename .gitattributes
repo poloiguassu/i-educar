@@ -1,0 +1,3 @@
+# Linguist Normalizer
+*.yaml linguistic-language=PHP
+*.twig linguistic-language=PHP
