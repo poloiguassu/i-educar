@@ -38,7 +38,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Defici&ecirc;ncia" );
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Deficiência" );
 		$this->processoAp = "631";
         $this->addEstilo( "localizacaoSistema" );
 	}
@@ -83,7 +83,7 @@ class indice extends clsListagem
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
-		$this->titulo = "Defici&ecirc;ncia - Listagem";
+		$this->titulo = "Deficiência - Listagem";
 
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
@@ -91,14 +91,14 @@ class indice extends clsListagem
 		
 
 		$this->addCabecalhos( array(
-			"Defici&ecirc;ncia"
+			"Deficiência"
 		) );
 
 		// Filtros de Foreign Keys
 
 
 		// outros Filtros
-		$this->campoTexto( "nm_deficiencia", "Deficiï¿½ncia", $this->nm_deficiencia, 30, 255, false );
+		$this->campoTexto( "nm_deficiencia", "Deficiência", $this->nm_deficiencia, 30, 255, false );
 
 
 		// Paginador

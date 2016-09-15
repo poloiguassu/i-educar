@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paixï¿½o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.1.0
+ * @since       Arquivo disponï¿½vel desde a versï¿½o 1.1.0
  * @version     $Id$
  */
 
@@ -36,18 +36,18 @@ require_once 'Avaliacao/Service/Boletim.php';
 /**
  * FaltaController class.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paixï¿½o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  Modules
- * @since       Classe disponível desde a versão 1.1.0
+ * @since       Classe disponï¿½vel desde a versï¿½o 1.1.0
  * @version     @@package_version@@
  */
 class FaltaController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper        = 'Avaliacao_Model_NotaComponenteDataMapper';
-  protected $_titulo            = 'Avaliação do aluno | Falta';
+  protected $_titulo            = 'Avaliaï¿½ï¿½o do aluno | Falta';
   protected $_processoAp        = 642;
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_saveOption        = TRUE;
@@ -88,7 +88,7 @@ class FaltaController extends Core_Controller_Page_EditController
    */
   protected function _preConstruct()
   {
-    // Id do usuário na session
+    // Id do usuï¿½rio na session
     $usuario = $this->getSession()->id_pessoa;
 
     $this->_options = array(
@@ -159,10 +159,10 @@ class FaltaController extends Core_Controller_Page_EditController
     }
 
     $this->campoRotulo('1nome', 'Nome', $matricula['nome']);
-    $this->campoRotulo('2curso', 'Curso', $matricula['curso_nome']);
-    $this->campoRotulo('3serie', 'Série', $matricula['serie_nome']);
+    $this->campoRotulo('2curso', 'Projeto', $matricula['curso_nome']);
+    $this->campoRotulo('3serie', 'Sï¿½rie', $matricula['serie_nome']);
     $this->campoRotulo('4turma', 'Turma', $matricula['turma_nome']);
-    $this->campoRotulo('5etapa', 'Etapa', $this->_etapa == 'Rc' ? 'Recuperação' : $this->_etapa);
+    $this->campoRotulo('5etapa', 'Etapa', $this->_etapa == 'Rc' ? 'Recuperaï¿½ï¿½o' : $this->_etapa);
 
     if ($this->_regra->get('tipoPresenca') == RegraAvaliacao_Model_TipoPresenca::POR_COMPONENTE) {
       $componentes = $this->_service->getComponentes();
@@ -189,7 +189,8 @@ class FaltaController extends Core_Controller_Page_EditController
       $falta = new Avaliacao_Model_FaltaComponente(array(
         'componenteCurricular' => $this->getRequest()->componenteCurricular,
         'quantidade' => $quantidade,
-        'etapa' => $this->getRequest()->etapa
+        'etapa' => $this->getRequest()->etapa,
+		'data_falta' => $this->getRequest()->data_falta
       ));
       $this->_service->addFalta($falta);
     }
@@ -215,10 +216,10 @@ class FaltaController extends Core_Controller_Page_EditController
       $this->_service->save();
     }
     catch (CoreExt_Service_Exception $e) {
-      // Ok. Não pode promover por se tratar de progressão manual ou por estar em andamento
+      // Ok. Nï¿½o pode promover por se tratar de progressï¿½o manual ou por estar em andamento
     }
     catch (Exception $e) {
-      $this->mensagem = 'Erro no preenchimento do formulário. ';
+      $this->mensagem = 'Erro no preenchimento do formulï¿½rio. ';
       return FALSE;
     }
 

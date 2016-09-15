@@ -200,6 +200,7 @@
           turma_id : $('#ref_cod_turma').val(),
           ano : $('#ano').val(),
           etapa : $('#etapa').val()
+		  data_aula : $('data_aula').val()
         };
 
         return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));

@@ -1170,4 +1170,67 @@ class clsPmieducarAluno
     }
     return '';
   }
+  
+  public function getEnderecosAlunos()
+  {
+    $sql = "select *"
+         . " from cadastro.endereco_externo"
+         . " where idpes in (select ref_idpes from pmieducar.aluno);";
+
+    $db = new clsBanco();
+    $db->Consulta($sql);
+
+    while ($db->ProximoRegistro()) {
+      $enderecos[] = $db->Tupla();
+    }
+
+    return $enderecos;
+  }
+
+  public function getEnderecosComCoordenadasVazias()
+  {
+    $sql = "select *"
+         . " from cadastro.endereco_pessoa"
+         . " where idpes in (select ref_idpes from pmieducar.aluno)"
+         . " AND lat is null"
+         . " AND long is null;";
+
+    $db = new clsBanco();
+    $db->Consulta($sql);
+
+    while ($db->ProximoRegistro()) {
+      $enderecos[] = $db->Tupla();
+    }
+
+    return $enderecos;
+  }
+
+  public function updateCoordenadas($id, $geocodingResult)
+  {
+    $sql = "UPDATE cadastro.endereco_pessoa"
+         . " SET lat='" . $geocodingResult['latitude'] . "'"
+         . ", long='" . $geocodingResult['longitude'] . "'"
+         . " WHERE idpes='" . $id . "'";
+
+    $db = new clsBanco();
+    $db->Consulta($sql);
+  }
+
+  public function getEnderecosComCoordenadasPreenchidas()
+  {
+    $sql = "select *"
+         . " from cadastro.endereco_pessoa"
+         . " where idpes in (select ref_idpes from pmieducar.aluno)"
+         . " AND lat is not null"
+         . " AND long is not null;";
+
+    $db = new clsBanco();
+    $db->Consulta($sql);
+
+    while ($db->ProximoRegistro()) {
+      $enderecos[] = $db->Tupla();
+    }
+
+    return $enderecos;
+  }
 }

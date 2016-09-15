@@ -47,10 +47,12 @@ abstract class Avaliacao_Model_FaltaAbstract extends Avaliacao_Model_Etapa
   protected $_data = array(
     'faltaAluno' => NULL,
     'quantidade' => NULL,
+	'data_falta' => NULL
   );
 
   protected $_dataTypes = array(
-    'quantidade' => 'numeric'
+    'quantidade' => 'numeric',
+	'data_falta' => 'string'
   );
 
   protected $_references = array(

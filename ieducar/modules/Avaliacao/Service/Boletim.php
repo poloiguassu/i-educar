@@ -899,7 +899,7 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
 
     // Carrega as faltas já lançadas
     $faltas = $this->getFaltaAbstractDataMapper()->findAll(
-      array(), array('faltaAluno' => $faltaAluno->id), array('etapa' => 'ASC')
+      array(), array('faltaAluno' => $faltaAluno->id, 'data_falta' => $faltaAluno->data_falta), array('etapa' => 'ASC')
     );
 
     // Se a falta for do tipo geral, popula um array indexado pela etapa
@@ -2647,9 +2647,9 @@ class Avaliacao_Service_Boletim implements CoreExt_Configurable
   }
 
 
-  public function deleteFalta($etapa, $ComponenteCurricularId)
+  public function deleteFalta($etapa, $ComponenteCurricularId, $data_falta)
   {
-    $nota = $this->getFalta($etapa, $ComponenteCurricularId);
+    $nota = $this->getFalta($etapa, $ComponenteCurricularId, $data_falta);
     $this->getFaltaAbstractDataMapper()->delete($nota);
 
     return $this;

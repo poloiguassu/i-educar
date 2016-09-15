@@ -111,8 +111,8 @@ class indice extends clsListagem
 		$this->campoTexto("nome_aluno","Nome do aluno", $this->nome_aluno,50,255,false);
 		$this->campoData("data_nascimento", "Data de Nascimento", $this->data_nascimento);
 		$this->campoTexto("nome_pai", "Nome do Pai", $this->nome_pai, 50, 255);
-		$this->campoTexto("nome_mae", "Nome da Mï¿½e", $this->nome_mae, 50, 255);
-		$this->campoTexto("nome_responsavel", "Nome do Responsï¿½vel", $this->nome_responsavel, 50, 255);
+		$this->campoTexto("nome_mae", "Nome da Mãe", $this->nome_mae, 50, 255);
+		$this->campoTexto("nome_responsavel", "Nome do Responsável", $this->nome_responsavel, 50, 255);
 
 		
                 
