@@ -13,11 +13,22 @@ class TemplateRenderer
 	{
 		// Merge default options
 		// You may want to change these settings
+		
+		$cachePath = false;
+		
+		if($GLOBALS['coreExt']['Config']->app->template->twig_cache) {
+			$cacheTwigPath = PROJECT_ROOT . $GLOBALS['coreExt']['Config']->app->template->twig_cache;
+			
+			if (is_dir($cacheTwigPath) && is_writable($cacheTwigPath))
+				$cachePath = $cacheTwigPath;
+		}
+			
+		
 
 		$envOptions += array(
 			'debug' => false,
 			'charset' => 'iso-8859-1',
-			'cache' => PROJECT_ROOT . '/tmp/twig/cache', // Store cached files under cache directory
+			'cache' => $cachePath,
 			'strict_variables' => true,
 		);
 		
@@ -32,6 +43,6 @@ class TemplateRenderer
 
 	public function render($templateFile, array $variables)
 	{
-		return $this->environment->render($templateFile, $variables);
+		return $this->environment->render($templateFile . '.twig.html', $variables);
 	}
 }
