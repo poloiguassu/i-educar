@@ -72,6 +72,7 @@ require_once 'Portabilis/Assets/Version.php';
 class clsBase extends clsConfig
 {
   var $titulo     = 'Prefeitura Cobra Tecnologia';
+  var $template   = 'base';
   var $clsForm    = array();
   var $bodyscript = NULL;
   var $processoAp;
@@ -105,6 +106,11 @@ class clsBase extends clsConfig
   {
     $this->titulo = $titulo;
   }
+  
+	function SetTemplate($template)
+	{
+		$this->template = $template;
+	}
 
   function AddForm($form)
   {
@@ -779,7 +785,7 @@ class clsBase extends clsConfig
 	);
 	  
 	  $twig = new TemplateRenderer();
-	  echo $twig->render('base.twig.html', $params);
+	  echo $twig->render($this->template, $params);
 
       $cronometro->marca('fim');
       $tempoTotal = $cronometro->getTempoTotal();

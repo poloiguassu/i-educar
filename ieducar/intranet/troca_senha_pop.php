@@ -41,7 +41,8 @@ class clsIndex extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . 'Usu&aacute;rios');
+    $this->SetTitulo($this->_instituicao . 'Usuários');
+	$this->SetTemplate("baes_pop");
     $this->processoAp   = "0";
     $this->renderBanner = FALSE;
     $this->renderMenu   = FALSE;
