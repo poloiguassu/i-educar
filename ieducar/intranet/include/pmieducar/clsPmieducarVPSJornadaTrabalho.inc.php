@@ -1,12 +1,12 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
+*	@author Smart Consultoria e Desenvolvimento WEB						 *
+*	@updated 17/09/2016													 *
 *   Pacote: i-PLB Software Público Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
+*	Copyright (C) 2016	Smart Consultoria e Desenvolvimento Web			 *
+*						medaumoi@pensesmart.com					    	 *
 *																		 *
 *	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
 *	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
@@ -32,16 +32,15 @@
 
 require_once( "include/pmieducar/geral.inc.php" );
 
-class clsPmieducarAcervoIdioma
+class clsPmieducarVPSJornadaTrabalho
 {
-	var $cod_acervo_idioma;
+	var $cod_vps_jornada_trabalho;
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
-	var $nm_idioma;
+	var $nm_jornada_trabalho;
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
-	var $ref_cod_biblioteca;
 	
 	// propriedades padrao
 	
@@ -107,13 +106,13 @@ class clsPmieducarAcervoIdioma
 	 *
 	 * @return object
 	 */
-	function clsPmieducarAcervoIdioma( $cod_acervo_idioma = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_idioma = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_biblioteca = null )
+	function clsPmieducarVPSJornadaTrabalho( $cod_vps_jornada_trabalho = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_jornada_trabalho = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
-		$this->_tabela = "{$this->_schema}acervo_idioma";
+		$this->_tabela = "{$this->_schema}vps_jornada_trabalho";
 
-		$this->_campos_lista = $this->_todos_campos = "cod_acervo_idioma, ref_usuario_exc, ref_usuario_cad, nm_idioma, data_cadastro, data_exclusao, ativo, ref_cod_biblioteca";
+		$this->_campos_lista = $this->_todos_campos = "cod_vps_jornada_trabalho, ref_usuario_exc, ref_usuario_cad, nm_jornada_trabalho, data_cadastro, data_exclusao, ativo, ref_cod_instituicao";
 		
 		if( is_numeric( $ref_usuario_cad ) )
 		{
@@ -173,13 +172,13 @@ class clsPmieducarAcervoIdioma
 		}
 
 		
-		if( is_numeric( $cod_acervo_idioma ) )
+		if( is_numeric( $cod_vps_jornada_trabalho ) )
 		{
-			$this->cod_acervo_idioma = $cod_acervo_idioma;
+			$this->cod_vps_jornada_trabalho = $cod_vps_jornada_trabalho;
 		}
-		if( is_string( $nm_idioma ) )
+		if( is_string( $nm_jornada_trabalho ) )
 		{
-			$this->nm_idioma = $nm_idioma;
+			$this->nm_jornada_trabalho = $nm_jornada_trabalho;
 		}
 		if( is_string( $data_cadastro ) )
 		{
@@ -193,9 +192,9 @@ class clsPmieducarAcervoIdioma
 		{
 			$this->ativo = $ativo;
 		}
-		if(is_numeric($ref_cod_biblioteca))
+		if(is_numeric($ref_cod_instituicao))
 		{
-			$this->ref_cod_biblioteca = $ref_cod_biblioteca;
+			$this->ref_cod_instituicao = $ref_cod_instituicao;
 		}
 
 	}
@@ -207,7 +206,7 @@ class clsPmieducarAcervoIdioma
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_idioma ) &&is_numeric($this->ref_cod_biblioteca) )
+		if( is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_jornada_trabalho ) &&is_numeric($this->ref_cod_instituicao) )
 		{
 			$db = new clsBanco();
 			
@@ -221,16 +220,16 @@ class clsPmieducarAcervoIdioma
 				$valores .= "{$gruda}'{$this->ref_usuario_cad}'";
 				$gruda = ", ";
 			}
-			if( is_string( $this->nm_idioma ) )
+			if( is_string( $this->nm_jornada_trabalho ) )
 			{
-				$campos .= "{$gruda}nm_idioma";
-				$valores .= "{$gruda}'{$this->nm_idioma}'";
+				$campos .= "{$gruda}nm_jornada_trabalho";
+				$valores .= "{$gruda}'{$this->nm_jornada_trabalho}'";
 				$gruda = ", ";
 			}
-			if( is_numeric($this->ref_cod_biblioteca) )
+			if( is_numeric($this->ref_cod_instituicao) )
 			{
-				$campos .= "{$gruda}ref_cod_biblioteca";
-				$valores .= "{$gruda}'{$this->ref_cod_biblioteca}'";
+				$campos .= "{$gruda}ref_cod_instituicao";
+				$valores .= "{$gruda}'{$this->ref_cod_instituicao}'";
 				$gruda = ", ";
 			}
 			$campos .= "{$gruda}data_cadastro";
@@ -242,7 +241,7 @@ class clsPmieducarAcervoIdioma
 
 			
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-			return $db->InsertId( "{$this->_tabela}_cod_acervo_idioma_seq");
+			return $db->InsertId( "{$this->_tabela}_cod_vps_jornada_trabalho_seq");
 		}
 		return false;
 	}
@@ -254,7 +253,7 @@ class clsPmieducarAcervoIdioma
 	 */
 	function edita()
 	{
-		if( is_numeric( $this->cod_acervo_idioma ) && is_numeric( $this->ref_usuario_exc ) )
+		if( is_numeric( $this->cod_vps_jornada_trabalho ) && is_numeric( $this->ref_usuario_exc ) )
 		{
 
 			$db = new clsBanco();
@@ -270,9 +269,9 @@ class clsPmieducarAcervoIdioma
 				$set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
 				$gruda = ", ";
 			}
-			if( is_string( $this->nm_idioma ) )
+			if( is_string( $this->nm_jornada_trabalho ) )
 			{
-				$set .= "{$gruda}nm_idioma = '{$this->nm_idioma}'";
+				$set .= "{$gruda}nm_jornada_trabalho = '{$this->nm_jornada_trabalho}'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->data_cadastro ) )
@@ -280,9 +279,9 @@ class clsPmieducarAcervoIdioma
 				$set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
 				$gruda = ", ";
 			}
-			if( is_numeric($this->ref_cod_biblioteca) )
+			if( is_numeric($this->ref_cod_instituicao) )
 			{
-				$set .= "{$gruda}ref_cod_biblioteca = '{$this->ref_cod_biblioteca}'";
+				$set .= "{$gruda}ref_cod_instituicao = '{$this->ref_cod_instituicao}'";
 				$gruda = ", ";
 			}
 			$set .= "{$gruda}data_exclusao = NOW()";
@@ -296,7 +295,7 @@ class clsPmieducarAcervoIdioma
 
 			if( $set )
 			{
-				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_acervo_idioma = '{$this->cod_acervo_idioma}'" );
+				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_vps_jornada_trabalho = '{$this->cod_vps_jornada_trabalho}'" );
 				return true;
 			}
 		}
@@ -308,16 +307,16 @@ class clsPmieducarAcervoIdioma
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_acervo_idioma = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_idioma = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_biblioteca = null )
+	function lista( $int_cod_vps_jornada_trabalho = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_jornada_trabalho = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null )
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 		$filtros = "";
 		
 		$whereAnd = " WHERE ";
 		
-		if( is_numeric( $int_cod_acervo_idioma ) )
+		if( is_numeric( $int_cod_vps_jornada_trabalho ) )
 		{
-			$filtros .= "{$whereAnd} cod_acervo_idioma = '{$int_cod_acervo_idioma}'";
+			$filtros .= "{$whereAnd} cod_vps_jornada_trabalho = '{$int_cod_vps_jornada_trabalho}'";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_ref_usuario_exc ) )
@@ -330,9 +329,9 @@ class clsPmieducarAcervoIdioma
 			$filtros .= "{$whereAnd} ref_usuario_cad = '{$int_ref_usuario_cad}'";
 			$whereAnd = " AND ";
 		}
-		if( is_string( $str_nm_idioma ) )
+		if( is_string( $str_nm_jornada_trabalho ) )
 		{
-			$filtros .= "{$whereAnd} nm_idioma LIKE '%{$str_nm_idioma}%'";
+			$filtros .= "{$whereAnd} nm_jornada_trabalho LIKE '%{$str_nm_jornada_trabalho}%'";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $date_data_cadastro_ini ) )
@@ -365,15 +364,15 @@ class clsPmieducarAcervoIdioma
 			$filtros .= "{$whereAnd} ativo = '0'";
 			$whereAnd = " AND ";
 		}
-		if(is_array($int_ref_cod_biblioteca))
+		if(is_array($int_ref_cod_instituicao))
 		{
-			$bibs = implode(", ", $int_ref_cod_biblioteca);
-			$filtros .= "{$whereAnd} (ref_cod_biblioteca IN ($bibs) OR ref_cod_biblioteca IS NULL)";
+			$bibs = implode(", ", $int_ref_cod_instituicao);
+			$filtros .= "{$whereAnd} (ref_cod_instituicao IN ($bibs) OR ref_cod_instituicao IS NULL)";
 			$whereAnd = " AND ";
 		}
-		elseif (is_numeric($int_ref_cod_biblioteca))
+		elseif (is_numeric($int_ref_cod_instituicao))
 		{
-			$filtros .= "{$whereAnd} ref_cod_biblioteca = '{$int_ref_cod_biblioteca}'";
+			$filtros .= "{$whereAnd} ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
 			$whereAnd = " AND ";
 		}
 		
@@ -419,11 +418,11 @@ class clsPmieducarAcervoIdioma
 	 */
 	function detalhe()
 	{
-		if( is_numeric( $this->cod_acervo_idioma ) )
+		if( is_numeric( $this->cod_vps_jornada_trabalho ) )
 		{
 
 		$db = new clsBanco();
-		$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_acervo_idioma = '{$this->cod_acervo_idioma}'" );
+		$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_vps_jornada_trabalho = '{$this->cod_vps_jornada_trabalho}'" );
 		$db->ProximoRegistro();
 		return $db->Tupla();
 		}
@@ -437,11 +436,11 @@ class clsPmieducarAcervoIdioma
 	 */
 	function existe()
 	{
-		if( is_numeric( $this->cod_acervo_idioma ) )
+		if( is_numeric( $this->cod_vps_jornada_trabalho ) )
 		{
 
 		$db = new clsBanco();
-		$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_acervo_idioma = '{$this->cod_acervo_idioma}'" );
+		$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_vps_jornada_trabalho = '{$this->cod_vps_jornada_trabalho}'" );
 		$db->ProximoRegistro();
 		return $db->Tupla();
 		}
@@ -455,13 +454,13 @@ class clsPmieducarAcervoIdioma
 	 */
 	function excluir()
 	{
-		if( is_numeric( $this->cod_acervo_idioma ) && is_numeric( $this->ref_usuario_exc ) )
+		if( is_numeric( $this->cod_vps_jornada_trabalho ) && is_numeric( $this->ref_usuario_exc ) )
 		{
 
 		/*
 			delete
 		$db = new clsBanco();
-		$db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_acervo_idioma = '{$this->cod_acervo_idioma}'" );
+		$db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_vps_jornada_trabalho = '{$this->cod_vps_jornada_trabalho}'" );
 		return true;
 		*/
 

@@ -135,9 +135,11 @@ require_once 'include/pmieducar/clsPmieducarNivel.inc.php';
 require_once 'include/pmieducar/clsPmieducarSubnivel.inc.php';
 require_once 'include/pmieducar/clsPmieducarServidorCursoMinistra.inc.php';
 
+//VPS
+require_once 'include/pmieducar/clsPmieducarVPSJornadaTrabalho.inc.php';
+
 //Biblioteca
 require_once 'include/pmieducar/clsPmieducarBiblioteca.inc.php';
-require_once 'include/pmieducar/clsPmieducarAcervoIdioma.inc.php';
 require_once 'include/pmieducar/clsPmieducarAcervoColecao.inc.php';
 require_once 'include/pmieducar/clsPmieducarAcervoAssunto.inc.php';
 require_once 'include/pmieducar/clsPmieducarAcervoAutor.inc.php';
