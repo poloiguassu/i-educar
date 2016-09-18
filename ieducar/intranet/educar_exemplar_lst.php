@@ -525,7 +525,7 @@ document.getElementById('ref_cod_biblioteca').onchange = function()
 	campoColecao.disabled = true;
 	campoColecao.options[0].text = 'Carregando cole��o';
 	var xml_acervo_colecao = new ajax(getAcervoColecao);
-	xml_acervo_colecao.envia("educar_acervo_colecao_xml.php?bib="+campoBiblioteca);
+	xml_acervo_colecao.envia("educar_vps_funcao_xml.php?esc="+campoBiblioteca);
 
 	var campoEditora = document.getElementById('ref_cod_acervo_editora');
 	campoEditora.length = 1;

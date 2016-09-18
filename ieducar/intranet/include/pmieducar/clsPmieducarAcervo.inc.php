@@ -274,9 +274,9 @@ class clsPmieducarAcervo
 		}
 		if( is_numeric( $ref_cod_acervo_colecao ) )
 		{
-			if( class_exists( "clsPmieducarAcervoColecao" ) )
+			if( class_exists( "clsPmieducarVPSFuncao" ) )
 			{
-				$tmp_obj = new clsPmieducarAcervoColecao( $ref_cod_acervo_colecao );
+				$tmp_obj = new clsPmieducarVPSFuncao( $ref_cod_acervo_colecao );
 				if( method_exists( $tmp_obj, "existe") )
 				{
 					if( $tmp_obj->existe() )
@@ -302,9 +302,9 @@ class clsPmieducarAcervo
 		}
 		if( is_numeric( $ref_cod_acervo_idioma ) )
 		{
-			if( class_exists( "clsPmieducarAcervoIdioma" ) )
+			if( class_exists( "clsPmieducarVPSJornadaTrabalho" ) )
 			{
-				$tmp_obj = new clsPmieducarAcervoIdioma( $ref_cod_acervo_idioma );
+				$tmp_obj = new clsPmieducarVPSJornadaTrabalho( $ref_cod_acervo_idioma );
 				if( method_exists( $tmp_obj, "existe") )
 				{
 					if( $tmp_obj->existe() )

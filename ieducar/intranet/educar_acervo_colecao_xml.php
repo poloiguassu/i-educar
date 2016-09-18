@@ -24,25 +24,25 @@
 	*	02111-1307, USA.													 *
 	*																		 *
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	header( 'Content-type: text/xml' );
+	header('Content-type: text/xml');
 
-	require_once( "include/clsBanco.inc.php" );
-	require_once( "include/funcoes.inc.php" );
+	require_once("include/clsBanco.inc.php");
+	require_once("include/funcoes.inc.php");
+	require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 
-  require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
-  Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+	Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"sugestoes\">\n";
 
-	if( is_numeric( $_GET["bib"] ) )
+	if(is_numeric($_GET["esc"]))
 	{
 		$db = new clsBanco();
 		$sql = "SELECT
-					cod_acervo_colecao, nm_colecao
+					cod_vps_funcao, nm_funcao
 				FROM
-					pmieducar.acervo_colecao
+					pmieducar.vps_funcao
 				WHERE
-					ref_cod_biblioteca = {$_GET["bib"]}
+					ref_cod_escola = {$_GET["esc"]}
 				AND
 					ativo = 1";
 		$db->Consulta($sql);
@@ -50,8 +50,8 @@
 		{
 			while ($db->ProximoRegistro())
 			{
-				list($cod_acervo_colecao, $nm_colecao) = $db->Tupla();
-				echo "<acervo_colecao cod_acervo_colecao=\"{$cod_acervo_colecao}\">{$nm_colecao}</acervo_colecao>\n";
+				list($cod_vps_funcao, $nm_funcao) = $db->Tupla();
+				echo "<vps_funcao cod_vps_funcao=\"{$cod_vps_funcao}\">{$nm_funcao}</vps_funcao>\n";
 			}
 		}
 	}

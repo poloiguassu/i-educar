@@ -1,12 +1,12 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*																	     *
-*	@author Prefeitura Municipal de Itajaí								 *
-*	@updated 29/03/2007													 *
+*																		 *
+*	@author Smart Consultoria e Desenvolvimento WEB						 *
+*	@updated 17/09/2016													 *
 *   Pacote: i-PLB Software Público Livre e Brasileiro					 *
 *																		 *
-*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-*						ctima@itajai.sc.gov.br					    	 *
+*	Copyright (C) 2016	Smart Consultoria e Desenvolvimento Web			 *
+*						medaumoi@pensesmart.com							 *
 *																		 *
 *	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
 *	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
@@ -32,17 +32,17 @@
 
 require_once( "include/pmieducar/geral.inc.php" );
 
-class clsPmieducarAcervoColecao
+class clsPmieducarVPSFuncao
 {
-	var $cod_acervo_colecao;
+	var $cod_vps_funcao;
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
-	var $nm_colecao;
+	var $nm_funcao;
 	var $descricao;
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
-	var $ref_cod_biblioteca;
+	var $ref_cod_escola;
 	// propriedades padrao
 	
 	/**
@@ -107,13 +107,13 @@ class clsPmieducarAcervoColecao
 	 *
 	 * @return object
 	 */
-	function clsPmieducarAcervoColecao( $cod_acervo_colecao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_colecao = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_biblioteca = null )
+	function clsPmieducarVPSFuncao( $cod_vps_funcao = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_funcao = null, $descricao = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_escola = null )
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
-		$this->_tabela = "{$this->_schema}acervo_colecao";
+		$this->_tabela = "{$this->_schema}vps_funcao";
 
-		$this->_campos_lista = $this->_todos_campos = "cod_acervo_colecao, ref_usuario_exc, ref_usuario_cad, nm_colecao, descricao, data_cadastro, data_exclusao, ativo, ref_cod_biblioteca";
+		$this->_campos_lista = $this->_todos_campos = "cod_vps_funcao, ref_usuario_exc, ref_usuario_cad, nm_funcao, descricao, data_cadastro, data_exclusao, ativo, ref_cod_escola";
 		
 		if( is_numeric( $ref_usuario_cad ) )
 		{
@@ -172,18 +172,18 @@ class clsPmieducarAcervoColecao
 			}
 		}
 
-		if(is_numeric($ref_cod_biblioteca))
+		if(is_numeric($ref_cod_escola))
 		{
-			$this->ref_cod_biblioteca = $ref_cod_biblioteca;
+			$this->ref_cod_escola = $ref_cod_escola;
 		}
 		
-		if( is_numeric( $cod_acervo_colecao ) )
+		if( is_numeric( $cod_vps_funcao ) )
 		{
-			$this->cod_acervo_colecao = $cod_acervo_colecao;
+			$this->cod_vps_funcao = $cod_vps_funcao;
 		}
-		if( is_string( $nm_colecao ) )
+		if( is_string( $nm_funcao ) )
 		{
-			$this->nm_colecao = $nm_colecao;
+			$this->nm_funcao = $nm_funcao;
 		}
 		if( is_string( $descricao ) )
 		{
@@ -211,7 +211,7 @@ class clsPmieducarAcervoColecao
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_colecao ) && is_numeric($this->ref_cod_biblioteca) )
+		if( is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_funcao ) && is_numeric($this->ref_cod_escola) )
 		{
 			$db = new clsBanco();
 			
@@ -219,10 +219,10 @@ class clsPmieducarAcervoColecao
 			$valores = "";
 			$gruda = "";
 			
-			if(is_numeric($this->ref_cod_biblioteca))
+			if(is_numeric($this->ref_cod_escola))
 			{
-				$campos .= "{$gruda}ref_cod_biblioteca";
-				$valores .= "{$gruda}'{$this->ref_cod_biblioteca}'";
+				$campos .= "{$gruda}ref_cod_escola";
+				$valores .= "{$gruda}'{$this->ref_cod_escola}'";
 				$gruda = ", ";
 			}
 			
@@ -232,10 +232,10 @@ class clsPmieducarAcervoColecao
 				$valores .= "{$gruda}'{$this->ref_usuario_cad}'";
 				$gruda = ", ";
 			}
-			if( is_string( $this->nm_colecao ) )
+			if( is_string( $this->nm_funcao ) )
 			{
-				$campos .= "{$gruda}nm_colecao";
-				$valores .= "{$gruda}'{$this->nm_colecao}'";
+				$campos .= "{$gruda}nm_funcao";
+				$valores .= "{$gruda}'{$this->nm_funcao}'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->descricao ) )
@@ -253,7 +253,7 @@ class clsPmieducarAcervoColecao
 
 			
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-			return $db->InsertId( "{$this->_tabela}_cod_acervo_colecao_seq");
+			return $db->InsertId( "{$this->_tabela}_cod_vps_funcao_seq");
 		}
 		return false;
 	}
@@ -265,7 +265,7 @@ class clsPmieducarAcervoColecao
 	 */
 	function edita()
 	{
-		if( is_numeric( $this->cod_acervo_colecao ) && is_numeric( $this->ref_usuario_exc ) )
+		if( is_numeric( $this->cod_vps_funcao ) && is_numeric( $this->ref_usuario_exc ) )
 		{
 
 			$db = new clsBanco();
@@ -281,9 +281,9 @@ class clsPmieducarAcervoColecao
 				$set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
 				$gruda = ", ";
 			}
-			if( is_string( $this->nm_colecao ) )
+			if( is_string( $this->nm_funcao ) )
 			{
-				$set .= "{$gruda}nm_colecao = '{$this->nm_colecao}'";
+				$set .= "{$gruda}nm_funcao = '{$this->nm_funcao}'";
 				$gruda = ", ";
 			}
 			if( is_string( $this->descricao ) )
@@ -296,9 +296,9 @@ class clsPmieducarAcervoColecao
 				$set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
 				$gruda = ", ";
 			}
-			if( is_numeric($this->ref_cod_biblioteca))
+			if( is_numeric($this->ref_cod_escola))
 			{
-				$set .= "{$gruda}ref_cod_biblioteca = '{$this->ref_cod_biblioteca}'";
+				$set .= "{$gruda}ref_cod_escola = '{$this->ref_cod_escola}'";
 				$gruda = ", ";
 			}
 			$set .= "{$gruda}data_exclusao = NOW()";
@@ -312,7 +312,7 @@ class clsPmieducarAcervoColecao
 
 			if( $set )
 			{
-				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_acervo_colecao = '{$this->cod_acervo_colecao}'" );
+				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_vps_funcao = '{$this->cod_vps_funcao}'" );
 				return true;
 			}
 		}
@@ -324,16 +324,16 @@ class clsPmieducarAcervoColecao
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_acervo_colecao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_colecao = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_biblioteca = null )
+	function lista( $int_cod_vps_funcao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_funcao = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_escola = null )
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 		$filtros = "";
 		
 		$whereAnd = " WHERE ";
 		
-		if( is_numeric( $int_cod_acervo_colecao ) )
+		if( is_numeric( $int_cod_vps_funcao ) )
 		{
-			$filtros .= "{$whereAnd} cod_acervo_colecao = '{$int_cod_acervo_colecao}'";
+			$filtros .= "{$whereAnd} cod_vps_funcao = '{$int_cod_vps_funcao}'";
 			$whereAnd = " AND ";
 		}
 		if( is_numeric( $int_ref_usuario_exc ) )
@@ -346,9 +346,9 @@ class clsPmieducarAcervoColecao
 			$filtros .= "{$whereAnd} ref_usuario_cad = '{$int_ref_usuario_cad}'";
 			$whereAnd = " AND ";
 		}
-		if( is_string( $str_nm_colecao ) )
+		if( is_string( $str_nm_funcao ) )
 		{
-			$filtros .= "{$whereAnd} nm_colecao LIKE '%{$str_nm_colecao}%'";
+			$filtros .= "{$whereAnd} nm_funcao LIKE '%{$str_nm_funcao}%'";
 			$whereAnd = " AND ";
 		}
 		if( is_string( $str_descricao ) )
@@ -376,15 +376,15 @@ class clsPmieducarAcervoColecao
 			$filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
 			$whereAnd = " AND ";
 		}
-		if(is_array($int_ref_cod_biblioteca))
+		if(is_array($int_ref_cod_escola))
 		{
-			$bibs = implode(", ", $int_ref_cod_biblioteca);
-			$filtros .= "{$whereAnd} (ref_cod_biblioteca IN ($bibs) OR ref_cod_biblioteca IS NULL)";
+			$bibs = implode(", ", $int_ref_cod_escola);
+			$filtros .= "{$whereAnd} (ref_cod_escola IN ($bibs) OR ref_cod_escola IS NULL)";
 			$whereAnd = " AND ";
 		}
-		elseif (is_numeric($int_ref_cod_biblioteca))
+		elseif (is_numeric($int_ref_cod_escola))
 		{
-			$filtros .= "{$whereAnd} ref_cod_biblioteca = '{$int_ref_cod_biblioteca}'";
+			$filtros .= "{$whereAnd} ref_cod_escola = '{$int_ref_cod_escola}'";
 			$whereAnd = " AND ";
 		}
 		if( is_null( $int_ativo ) || $int_ativo )
@@ -440,11 +440,11 @@ class clsPmieducarAcervoColecao
 	 */
 	function detalhe()
 	{
-		if( is_numeric( $this->cod_acervo_colecao ) )
+		if( is_numeric( $this->cod_vps_funcao ) )
 		{
 
 		$db = new clsBanco();
-		$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_acervo_colecao = '{$this->cod_acervo_colecao}'" );
+		$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_vps_funcao = '{$this->cod_vps_funcao}'" );
 		$db->ProximoRegistro();
 		return $db->Tupla();
 		}
@@ -458,11 +458,11 @@ class clsPmieducarAcervoColecao
 	 */
 	function existe()
 	{
-		if( is_numeric( $this->cod_acervo_colecao ) )
+		if( is_numeric( $this->cod_vps_funcao ) )
 		{
 
 		$db = new clsBanco();
-		$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_acervo_colecao = '{$this->cod_acervo_colecao}'" );
+		$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_vps_funcao = '{$this->cod_vps_funcao}'" );
 		$db->ProximoRegistro();
 		return $db->Tupla();
 		}
@@ -476,13 +476,13 @@ class clsPmieducarAcervoColecao
 	 */
 	function excluir()
 	{
-		if( is_numeric( $this->cod_acervo_colecao ) && is_numeric( $this->ref_usuario_exc ) )
+		if( is_numeric( $this->cod_vps_funcao ) && is_numeric( $this->ref_usuario_exc ) )
 		{
 
 		/*
 			delete
 		$db = new clsBanco();
-		$db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_acervo_colecao = '{$this->cod_acervo_colecao}'" );
+		$db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_vps_funcao = '{$this->cod_vps_funcao}'" );
 		return true;
 		*/
 
