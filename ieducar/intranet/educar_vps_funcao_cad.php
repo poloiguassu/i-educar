@@ -128,8 +128,7 @@ class indice extends clsCadastro
 		// foreign keys
 		
 		$get_escola = true;
-		$escola_obrigatorio = false;
-		$get_biblioteca = false;
+		$escola_obrigatorio = true;
 		$instituicao_obrigatorio = true;
 		include("include/pmieducar/educar_campo_lista.php");
 
