@@ -21,6 +21,17 @@ CREATE SEQUENCE pmieducar.vps_funcao_cod_vps_funcao_seq
 	CACHE 1;
 
 --
+-- Name: vps_idioma_cod_vps_idioma_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
+--
+
+CREATE SEQUENCE pmieducar.vps_idioma_cod_vps_idioma_seq
+	START WITH 1
+	INCREMENT BY 1
+	NO MAXVALUE
+	MINVALUE 0
+	CACHE 1;
+
+--
 -- Name: pmieducar.vps_jornada_trabalho; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
@@ -52,6 +63,21 @@ CREATE TABLE pmieducar.vps_funcao (
 );
 
 --
+-- Name: pmieducar.vps_idioma; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+--
+
+CREATE TABLE pmieducar.vps_idioma (
+	cod_vps_idioma integer DEFAULT nextval('vps_idioma_cod_vps_idioma_seq'::regclass) NOT NULL,
+	ref_usuario_exc integer,
+	ref_usuario_cad integer NOT NULL,
+	nm_idioma character varying(255) NOT NULL,
+	data_cadastro timestamp without time zone NOT NULL,
+	data_exclusao timestamp without time zone,
+	ativo smallint DEFAULT (1)::smallint NOT NULL,
+	ref_cod_instituicao integer
+);
+
+--
 -- Name: vps_jornada_trabalho_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
@@ -64,6 +90,13 @@ ALTER TABLE ONLY pmieducar.vps_jornada_trabalho
 
 ALTER TABLE ONLY pmieducar.vps_funcao
 	ADD CONSTRAINT vps_funcao_pkey PRIMARY KEY (cod_vps_funcao);
+
+--
+-- Name: vps_idioma_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pmieducar.vps_idioma
+	ADD CONSTRAINT vps_idioma_pkey PRIMARY KEY (cod_vps_idioma);
 
 --
 -- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
@@ -80,6 +113,15 @@ CREATE TRIGGER fcn_aft_update
 
 CREATE TRIGGER fcn_aft_update
 	AFTER INSERT OR UPDATE ON pmieducar.vps_funcao
+	FOR EACH ROW
+	EXECUTE PROCEDURE fcn_aft_update();
+
+--
+-- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
+--
+
+CREATE TRIGGER fcn_aft_update
+	AFTER INSERT OR UPDATE ON pmieducar.vps_idioma
 	FOR EACH ROW
 	EXECUTE PROCEDURE fcn_aft_update();
 		
@@ -126,6 +168,28 @@ ALTER TABLE ONLY pmieducar.vps_funcao
 	ADD CONSTRAINT vps_funcao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
+--
+-- Name: vps_idioma_ref_cod_instituicao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+--
+
+ALTER TABLE ONLY pmieducar.vps_idioma
+	ADD CONSTRAINT vps_idioma_ref_cod_instituicao_fkey FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+--
+-- Name: vps_idioma_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+--
+
+ALTER TABLE ONLY pmieducar.vps_idioma
+	ADD CONSTRAINT vps_idioma_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+--
+-- Name: vps_idioma_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+--
+
+ALTER TABLE ONLY pmieducar.vps_idioma
+	ADD CONSTRAINT vps_idioma_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
 ALTER SEQUENCE pmieducar.vps_jornada_trabalho_cod_vps_jornada_trabalho_seq
 	MINVALUE 0;
 SELECT setval('pmieducar.vps_jornada_trabalho_cod_vps_jornada_trabalho_seq', 1, false);
@@ -133,3 +197,7 @@ SELECT setval('pmieducar.vps_jornada_trabalho_cod_vps_jornada_trabalho_seq', 1, 
 ALTER SEQUENCE pmieducar.vps_funcao_cod_vps_funcao_seq
 	MINVALUE 0;
 SELECT setval('pmieducar.vps_funcao_cod_vps_funcao_seq', 1, false);
+
+ALTER SEQUENCE pmieducar.vps_idioma_cod_vps_idioma_seq
+	MINVALUE 0;
+SELECT setval('pmieducar.vps_idioma_cod_vps_idioma_seq', 1, false);

@@ -35,39 +35,36 @@
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
-require_once 'intranet/include/pmieducar/clsPmieducarAcervoAssunto.inc.php';
+require_once 'intranet/include/pmieducar/clsPmieducarVPSIdioma.inc.php';
 
 class AssuntoController extends ApiCoreController
 {
-  // search options
+	// search options
+	protected function searchOptions() {
+		return array('namespace' => 'pmieducar', 'labelAttr' => 'nm_idioma', 'idAttr' => 'cod_vps_idioma');
+	}
 
-  protected function searchOptions() {
-    return array('namespace' => 'pmieducar', 'labelAttr' => 'nm_assunto', 'idAttr' => 'cod_acervo_assunto');
-  }
+	protected function formatResourceValue($resource) {
+		return $this->toUtf8($resource['name'], array('transform' => true));
+	}
 
-  protected function formatResourceValue($resource) {
-    return $this->toUtf8($resource['name'], array('transform' => true));
-  }
+	protected function getAssunto() {
+		$obj = new clsPmieducarVPSIdioma();
+		$arrayAssuntos;
 
-  protected function getAssunto() {
-    
-    $obj = new clsPmieducarAcervoAssunto();
-    $arrayAssuntos;
-    
-    foreach ($obj->listaAssuntosPorObra($this->getRequest()->id) as $reg) {
-      $arrayAssuntos[] = $reg['ref_cod_acervo_assunto'];
-    }    
+		foreach ($obj->listaAssuntosPorObra($this->getRequest()->id) as $reg) {
+			$arrayAssuntos[] = $reg['ref_cod_vps_idioma'];
+		}
 
-    
-    return array('assuntos' => $arrayAssuntos);
-  }
+		return array('idiomas' => $arrayAssuntos);
+	}
 
-  public function Gerar() {
-    if ($this->isRequestFor('get', 'assunto-search'))
-      $this->appendResponse($this->search());
-    elseif ($this->isRequestFor('get', 'assunto'))
-      $this->appendResponse($this->getAssunto());
-    else
-      $this->notImplementedOperationError();
-  }
+	public function Gerar() {
+		if ($this->isRequestFor('get', 'assunto-search'))
+			$this->appendResponse($this->search());
+		elseif ($this->isRequestFor('get', 'assunto'))
+			$this->appendResponse($this->getAssunto());
+		else
+			$this->notImplementedOperationError();
+	}
 }
