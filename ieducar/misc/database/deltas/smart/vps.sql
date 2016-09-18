@@ -43,6 +43,17 @@ CREATE SEQUENCE pmieducar.vps_responsavel_entrevista_cod_vps_responsavel_entrevi
 	CACHE 1;
 
 --
+-- Name: vps_tipo_contratacao_cod_vps_tipo_contratacao_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
+--
+
+CREATE SEQUENCE pmieducar.vps_tipo_contratacao_cod_vps_tipo_contratacao_seq
+	START WITH 1
+	INCREMENT BY 1
+	NO MAXVALUE
+	MINVALUE 0
+	CACHE 1;
+
+--
 -- Name: pmieducar.vps_jornada_trabalho; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
@@ -111,6 +122,22 @@ CREATE TABLE pmieducar.vps_responsavel_entrevista (
 );
 
 --
+-- Name: pmieducar.vps_tipo_contratacao; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace: 
+--
+
+CREATE TABLE pmieducar.vps_tipo_contratacao (
+	cod_vps_tipo_contratacao integer DEFAULT nextval('vps_tipo_contratacao_cod_vps_tipo_contratacao_seq'::regclass) NOT NULL,
+	ref_usuario_exc integer,
+	ref_usuario_cad integer NOT NULL,
+	nm_tipo character varying(255) NOT NULL,
+	descricao text,
+	data_cadastro timestamp without time zone NOT NULL,
+	data_exclusao timestamp without time zone,
+	ativo smallint DEFAULT (1)::smallint NOT NULL,
+	ref_cod_instituicao integer NOT NULL
+);
+
+--
 -- Name: i_responsavel_entrevista_ref_idpes; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace: 
 --
 
@@ -143,6 +170,13 @@ ALTER TABLE ONLY pmieducar.vps_idioma
 
 ALTER TABLE ONLY pmieducar.vps_responsavel_entrevista
 	ADD CONSTRAINT vps_responsavel_entrevista_pkey PRIMARY KEY (cod_vps_responsavel_entrevista);
+
+--
+-- Name: vps_tipo_contratacao_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY pmieducar.vps_tipo_contratacao
+	ADD CONSTRAINT vps_tipo_contratacao_pkey PRIMARY KEY (cod_vps_tipo_contratacao);
 
 --
 -- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
@@ -179,7 +213,16 @@ CREATE TRIGGER fcn_aft_update
 	AFTER INSERT OR UPDATE ON pmieducar.vps_responsavel_entrevista
 	FOR EACH ROW
 	EXECUTE PROCEDURE fcn_aft_update();	
-	
+
+--
+-- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
+--
+
+CREATE TRIGGER fcn_aft_update
+	AFTER INSERT OR UPDATE ON pmieducar.vps_tipo_contratacao
+	FOR EACH ROW
+	EXECUTE PROCEDURE fcn_aft_update();
+
 --
 -- Name: vps_jornada_trabalho_ref_cod_instituicao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
 --
@@ -272,6 +315,28 @@ ALTER TABLE ONLY pmieducar.vps_responsavel_entrevista
 ALTER TABLE ONLY pmieducar.vps_responsavel_entrevista
 	ADD CONSTRAINT vps_responsavel_entrevista_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
+--
+-- Name: vps_tipo_contratacao_ref_cod_instituicao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+--
+
+ALTER TABLE ONLY pmieducar.vps_tipo_contratacao
+	ADD CONSTRAINT vps_tipo_contratacao_ref_cod_instituicao_fkey FOREIGN KEY (ref_cod_instituicao) REFERENCES pmieducar.instituicao(cod_instituicao) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+--
+-- Name: vps_tipo_contratacao_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+--
+
+ALTER TABLE ONLY pmieducar.vps_tipo_contratacao
+	ADD CONSTRAINT vps_tipo_contratacao_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+--
+-- Name: vps_tipo_contratacao_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+--
+
+ALTER TABLE ONLY pmieducar.vps_tipo_contratacao
+	ADD CONSTRAINT vps_tipo_contratacao_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
 ALTER SEQUENCE pmieducar.vps_jornada_trabalho_cod_vps_jornada_trabalho_seq
 	MINVALUE 0;
 SELECT setval('pmieducar.vps_jornada_trabalho_cod_vps_jornada_trabalho_seq', 1, false);
@@ -287,3 +352,7 @@ SELECT setval('pmieducar.vps_idioma_cod_vps_idioma_seq', 1, false);
 ALTER SEQUENCE pmieducar.vps_responsavel_entrevista_cod_vps_responsavel_entrevista_seq
 	MINVALUE 0;
 SELECT setval('pmieducar.vps_responsavel_entrevista_cod_vps_responsavel_entrevista_seq', 1, false);
+
+ALTER SEQUENCE pmieducar.vps_tipo_contratacao_cod_vps_tipo_contratacao_seq
+	MINVALUE 0;
+SELECT setval('pmieducar.vps_tipo_contratacao_cod_vps_tipo_contratacao_seq', 1, false);

@@ -140,12 +140,12 @@ require_once 'include/pmieducar/clsPmieducarVPSJornadaTrabalho.inc.php';
 require_once 'include/pmieducar/clsPmieducarVPSFuncao.inc.php';
 require_once 'include/pmieducar/clsPmieducarVPSIdioma.inc.php';
 require_once 'include/pmieducar/clsPmieducarVPSResponsavelEntrevista.inc.php';
+require_once 'include/pmieducar/clsPmieducarVPSContratacaoTipo.inc.php';
 
 //Biblioteca
 require_once 'include/pmieducar/clsPmieducarBiblioteca.inc.php';
 require_once 'include/pmieducar/clsPmieducarClienteTipo.inc.php';
 require_once 'include/pmieducar/clsPmieducarAcervoEditora.inc.php';
-require_once 'include/pmieducar/clsPmieducarExemplarTipo.inc.php';
 require_once 'include/pmieducar/clsPmieducarAcervo.inc.php';
 require_once 'include/pmieducar/clsPmieducarMotivoBaixa.inc.php';
 require_once 'include/pmieducar/clsPmieducarSituacao.inc.php';
