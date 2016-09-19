@@ -94,6 +94,8 @@ class indice extends clsListagem
 
 		$this->addCabecalhos( array(
 			"Jornada de Trabalho",
+			"Carga Semanal",
+			"Carga Diaria",
 			"Instituição"
 		) );
 
@@ -145,8 +147,17 @@ class indice extends clsListagem
 				$obj_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
 				$det_instituicao = $obj_instituicao->detalhe();
 				$registro['ref_cod_instituicao'] = $det_instituicao['nm_instituicao'];
+				
+				if($registro["carga_horaria_semana"])
+					$registro["carga_horaria_semana"] .= " horas";
+
+				if($registro["carga_horaria_diaria"])
+					$registro["carga_horaria_diaria"] .= " horas";
+
 				$this->addLinhas( array(
 					"<a href=\"educar_vps_jornada_trabalho_det.php?cod_vps_jornada_trabalho={$registro["cod_vps_jornada_trabalho"]}\">{$registro["nm_jornada_trabalho"]}</a>",
+					"<a href=\"educar_vps_jornada_trabalho_det.php?cod_vps_jornada_trabalho={$registro["cod_vps_jornada_trabalho"]}\">{$registro["carga_horaria_semana"]}</a>",
+					"<a href=\"educar_vps_jornada_trabalho_det.php?cod_vps_jornada_trabalho={$registro["cod_vps_jornada_trabalho"]}\">{$registro["carga_horaria_diaria"]}</a>",
 					"<a href=\"educar_vps_jornada_trabalho_det.php?cod_vps_jornada_trabalho={$registro["cod_vps_jornada_trabalho"]}\">{$registro["ref_cod_instituicao"]}</a>"
 				) );
 			}

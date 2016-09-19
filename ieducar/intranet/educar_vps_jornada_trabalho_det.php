@@ -27,13 +27,13 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+require_once("include/pmieducar/geral.inc.php");
 
 class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} - Jornada de Trabalho" );
+		$this->SetTitulo("{$this->_instituicao} - Jornada de Trabalho");
 		$this->processoAp = "590";
 		$this->addEstilo('localizacaoSistema');
 	}
@@ -67,26 +67,34 @@ class indice extends clsDetalhe
 
 		$this->cod_vps_jornada_trabalho = $_GET["cod_vps_jornada_trabalho"];
 
-		$tmp_obj = new clsPmieducarVPSJornadaTrabalho( $this->cod_vps_jornada_trabalho );
+		$tmp_obj = new clsPmieducarVPSJornadaTrabalho($this->cod_vps_jornada_trabalho);
 		$registro = $tmp_obj->detalhe();
 
-		if( ! $registro )
+		if(! $registro)
 		{
-			header( "location: educar_vps_jornada_trabalho_lst.php" );
+			header("location: educar_vps_jornada_trabalho_lst.php");
 			die();
 		}
 
-		if( $registro["cod_vps_jornada_trabalho"] )
+		if($registro["cod_vps_jornada_trabalho"])
 		{
-			$this->addDetalhe( array( "Código Jornada de Trabalho", "{$registro["cod_vps_jornada_trabalho"]}") );
+			$this->addDetalhe(array("Código Jornada de Trabalho", "{$registro["cod_vps_jornada_trabalho"]}"));
 		}
-		if( $registro["nm_jornada_trabalho"] )
+		if($registro["nm_jornada_trabalho"])
 		{
-			$this->addDetalhe( array( "Jornada de Trabalho", "{$registro["nm_jornada_trabalho"]}") );
+			$this->addDetalhe(array("Jornada de Trabalho", "{$registro["nm_jornada_trabalho"]}"));
+		}
+		if($registro["carga_horaria_semana"])
+		{
+			$this->addDetalhe(array("Carga Horária Semanal", "{$registro["carga_horaria_semana"]} horas"));
+		}
+		if($registro["carga_horaria_diaria"])
+		{
+			$this->addDetalhe(array("Carga Horária Diária", "{$registro["nm_jornada_trabalho"]} horas"));
 		}
 
 		$obj_permissoes = new clsPermissoes();
-		if( $obj_permissoes->permissao_cadastra( 590, $this->pessoa_logada, 11 ) )
+		if($obj_permissoes->permissao_cadastra(590, $this->pessoa_logada, 11))
 		{
 		$this->url_novo = "educar_vps_jornada_trabalho_cad.php";
 		$this->url_editar = "educar_vps_jornada_trabalho_cad.php?cod_vps_jornada_trabalho={$registro["cod_vps_jornada_trabalho"]}";
@@ -96,7 +104,7 @@ class indice extends clsDetalhe
 		$this->largura = "100%";
 
 		$localizacao = new LocalizacaoSistema();
-		$localizacao->entradaCaminhos( array(
+		$localizacao->entradaCaminhos(array(
 			$_SERVER['SERVER_NAME'] . "/intranet" => "Início",
 			"educar_vps_index.php"                => "Trilha Jovem - Jornada de Trabalho",
 			""                                    => "Detalhe da Jornada de Trabalho"
@@ -111,7 +119,7 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>

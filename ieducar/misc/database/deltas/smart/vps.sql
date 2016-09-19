@@ -62,6 +62,8 @@ CREATE TABLE pmieducar.vps_jornada_trabalho (
 	ref_usuario_exc integer,
 	ref_usuario_cad integer NOT NULL,
 	nm_jornada_trabalho character varying(255) NOT NULL,
+	carga_horaria_semana double precision,
+	carga_horaria_diaria double precision,
 	data_cadastro timestamp without time zone NOT NULL,
 	data_exclusao timestamp without time zone,
 	ativo smallint DEFAULT (1)::smallint NOT NULL,

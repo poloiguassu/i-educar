@@ -30,7 +30,7 @@
 * Criado em 13/07/2006 17:24 pelo gerador automatico de classes
 */
 
-require_once( "include/pmieducar/geral.inc.php" );
+require_once("include/pmieducar/geral.inc.php");
 
 class clsPmieducarVPSJornadaTrabalho
 {
@@ -38,6 +38,8 @@ class clsPmieducarVPSJornadaTrabalho
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
 	var $nm_jornada_trabalho;
+	var $carga_horaria_semana;
+	var $carga_horaria_diaria;
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
@@ -106,29 +108,29 @@ class clsPmieducarVPSJornadaTrabalho
 	 *
 	 * @return object
 	 */
-	function clsPmieducarVPSJornadaTrabalho( $cod_vps_jornada_trabalho = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_jornada_trabalho = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null )
+	function clsPmieducarVPSJornadaTrabalho($cod_vps_jornada_trabalho = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $nm_jornada_trabalho = null, $carga_horaria_semana = null, $carga_horaria_diaria = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_instituicao = null)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}vps_jornada_trabalho";
 
-		$this->_campos_lista = $this->_todos_campos = "cod_vps_jornada_trabalho, ref_usuario_exc, ref_usuario_cad, nm_jornada_trabalho, data_cadastro, data_exclusao, ativo, ref_cod_instituicao";
+		$this->_campos_lista = $this->_todos_campos = "cod_vps_jornada_trabalho, ref_usuario_exc, ref_usuario_cad, nm_jornada_trabalho, carga_horaria_semana, carga_horaria_diaria, data_cadastro, data_exclusao, ativo, ref_cod_instituicao";
 		
-		if( is_numeric( $ref_usuario_cad ) )
+		if(is_numeric($ref_usuario_cad))
 		{
-			if( class_exists( "clsPmieducarUsuario" ) )
+			if(class_exists("clsPmieducarUsuario"))
 			{
-				$tmp_obj = new clsPmieducarUsuario( $ref_usuario_cad );
-				if( method_exists( $tmp_obj, "existe") )
+				$tmp_obj = new clsPmieducarUsuario($ref_usuario_cad);
+				if(method_exists($tmp_obj, "existe"))
 				{
-					if( $tmp_obj->existe() )
+					if($tmp_obj->existe())
 					{
 						$this->ref_usuario_cad = $ref_usuario_cad;
 					}
 				}
-				else if( method_exists( $tmp_obj, "detalhe") )
+				else if(method_exists($tmp_obj, "detalhe"))
 				{
-					if( $tmp_obj->detalhe() )
+					if($tmp_obj->detalhe())
 					{
 						$this->ref_usuario_cad = $ref_usuario_cad;
 					}
@@ -136,27 +138,27 @@ class clsPmieducarVPSJornadaTrabalho
 			}
 			else
 			{
-				if( $db->CampoUnico( "SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'" ) )
+				if($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_cad}'"))
 				{
 					$this->ref_usuario_cad = $ref_usuario_cad;
 				}
 			}
 		}
-		if( is_numeric( $ref_usuario_exc ) )
+		if(is_numeric($ref_usuario_exc))
 		{
-			if( class_exists( "clsPmieducarUsuario" ) )
+			if(class_exists("clsPmieducarUsuario"))
 			{
-				$tmp_obj = new clsPmieducarUsuario( $ref_usuario_exc );
-				if( method_exists( $tmp_obj, "existe") )
+				$tmp_obj = new clsPmieducarUsuario($ref_usuario_exc);
+				if(method_exists($tmp_obj, "existe"))
 				{
-					if( $tmp_obj->existe() )
+					if($tmp_obj->existe())
 					{
 						$this->ref_usuario_exc = $ref_usuario_exc;
 					}
 				}
-				else if( method_exists( $tmp_obj, "detalhe") )
+				else if(method_exists($tmp_obj, "detalhe"))
 				{
-					if( $tmp_obj->detalhe() )
+					if($tmp_obj->detalhe())
 					{
 						$this->ref_usuario_exc = $ref_usuario_exc;
 					}
@@ -164,7 +166,7 @@ class clsPmieducarVPSJornadaTrabalho
 			}
 			else
 			{
-				if( $db->CampoUnico( "SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'" ) )
+				if($db->CampoUnico("SELECT 1 FROM pmieducar.usuario WHERE cod_usuario = '{$ref_usuario_exc}'"))
 				{
 					$this->ref_usuario_exc = $ref_usuario_exc;
 				}
@@ -172,23 +174,32 @@ class clsPmieducarVPSJornadaTrabalho
 		}
 
 		
-		if( is_numeric( $cod_vps_jornada_trabalho ) )
+		if(is_numeric($cod_vps_jornada_trabalho))
 		{
 			$this->cod_vps_jornada_trabalho = $cod_vps_jornada_trabalho;
 		}
-		if( is_string( $nm_jornada_trabalho ) )
+		if(is_string($nm_jornada_trabalho))
 		{
 			$this->nm_jornada_trabalho = $nm_jornada_trabalho;
 		}
-		if( is_string( $data_cadastro ) )
+		if(is_numeric($carga_horaria_semana))
+		{
+			print("VAMOS LA" . $carga_horaria_semana);
+			$this->carga_horaria_semana = $carga_horaria_semana;
+		}
+		if(is_numeric($carga_horaria_diaria))
+		{
+			$this->carga_horaria_diaria = $carga_horaria_diaria;
+		}
+		if(is_string($data_cadastro))
 		{
 			$this->data_cadastro = $data_cadastro;
 		}
-		if( is_string( $data_exclusao ) )
+		if(is_string($data_exclusao))
 		{
 			$this->data_exclusao = $data_exclusao;
 		}
-		if( is_numeric( $ativo ) )
+		if(is_numeric($ativo))
 		{
 			$this->ativo = $ativo;
 		}
@@ -206,7 +217,7 @@ class clsPmieducarVPSJornadaTrabalho
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_usuario_cad ) && is_string( $this->nm_jornada_trabalho ) &&is_numeric($this->ref_cod_instituicao) )
+		if(is_numeric($this->ref_usuario_cad) && is_string($this->nm_jornada_trabalho) &&is_numeric($this->ref_cod_instituicao))
 		{
 			$db = new clsBanco();
 			
@@ -214,19 +225,31 @@ class clsPmieducarVPSJornadaTrabalho
 			$valores = "";
 			$gruda = "";
 			
-			if( is_numeric( $this->ref_usuario_cad ) )
+			if(is_numeric($this->ref_usuario_cad))
 			{
 				$campos .= "{$gruda}ref_usuario_cad";
 				$valores .= "{$gruda}'{$this->ref_usuario_cad}'";
 				$gruda = ", ";
 			}
-			if( is_string( $this->nm_jornada_trabalho ) )
+			if(is_string($this->nm_jornada_trabalho))
 			{
 				$campos .= "{$gruda}nm_jornada_trabalho";
 				$valores .= "{$gruda}'{$this->nm_jornada_trabalho}'";
 				$gruda = ", ";
 			}
-			if( is_numeric($this->ref_cod_instituicao) )
+			if(is_numeric($this->carga_horaria_semana))
+			{
+				$campos .= "{$gruda}carga_horaria_semana";
+				$valores .= "{$gruda}'{$this->carga_horaria_semana}'";
+				$gruda = ", ";
+			}
+			if(is_numeric($this->carga_horaria_diaria))
+			{
+				$campos .= "{$gruda}carga_horaria_diaria";
+				$valores .= "{$gruda}'{$this->carga_horaria_diaria}'";
+				$gruda = ", ";
+			}
+			if(is_numeric($this->ref_cod_instituicao))
 			{
 				$campos .= "{$gruda}ref_cod_instituicao";
 				$valores .= "{$gruda}'{$this->ref_cod_instituicao}'";
@@ -240,8 +263,8 @@ class clsPmieducarVPSJornadaTrabalho
 			$gruda = ", ";
 
 			
-			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-			return $db->InsertId( "{$this->_tabela}_cod_vps_jornada_trabalho_seq");
+			$db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES($valores)");
+			return $db->InsertId("{$this->_tabela}_cod_vps_jornada_trabalho_seq");
 		}
 		return false;
 	}
@@ -253,49 +276,60 @@ class clsPmieducarVPSJornadaTrabalho
 	 */
 	function edita()
 	{
-		if( is_numeric( $this->cod_vps_jornada_trabalho ) && is_numeric( $this->ref_usuario_exc ) )
+		if(is_numeric($this->cod_vps_jornada_trabalho) && is_numeric($this->ref_usuario_exc))
 		{
 
 			$db = new clsBanco();
 			$set = "";
 
-			if( is_numeric( $this->ref_usuario_exc ) )
+			if(is_numeric($this->ref_usuario_exc))
 			{
 				$set .= "{$gruda}ref_usuario_exc = '{$this->ref_usuario_exc}'";
 				$gruda = ", ";
 			}
-			if( is_numeric( $this->ref_usuario_cad ) )
+			if(is_numeric($this->ref_usuario_cad))
 			{
 				$set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
 				$gruda = ", ";
 			}
-			if( is_string( $this->nm_jornada_trabalho ) )
+			if(is_string($this->nm_jornada_trabalho))
 			{
 				$set .= "{$gruda}nm_jornada_trabalho = '{$this->nm_jornada_trabalho}'";
 				$gruda = ", ";
 			}
-			if( is_string( $this->data_cadastro ) )
+			if(is_numeric($this->carga_horaria_semana))
+			{
+				print("tste");
+				$set .= "{$gruda}carga_horaria_semana = '{$this->carga_horaria_semana}'";
+				$gruda = ", ";
+			}
+			if(is_numeric($this->carga_horaria_diaria))
+			{
+				$set .= "{$gruda}carga_horaria_diaria = '{$this->carga_horaria_diaria}'";
+				$gruda = ", ";
+			}
+			if(is_string($this->data_cadastro))
 			{
 				$set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
 				$gruda = ", ";
 			}
-			if( is_numeric($this->ref_cod_instituicao) )
+			if(is_numeric($this->ref_cod_instituicao))
 			{
 				$set .= "{$gruda}ref_cod_instituicao = '{$this->ref_cod_instituicao}'";
 				$gruda = ", ";
 			}
 			$set .= "{$gruda}data_exclusao = NOW()";
 			$gruda = ", ";
-			if( is_numeric( $this->ativo ) )
+			if(is_numeric($this->ativo))
 			{
 				$set .= "{$gruda}ativo = '{$this->ativo}'";
 				$gruda = ", ";
 			}
 
 
-			if( $set )
+			if($set)
 			{
-				$db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE cod_vps_jornada_trabalho = '{$this->cod_vps_jornada_trabalho}'" );
+				$db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_vps_jornada_trabalho = '{$this->cod_vps_jornada_trabalho}'");
 				return true;
 			}
 		}
@@ -307,54 +341,54 @@ class clsPmieducarVPSJornadaTrabalho
 	 *
 	 * @return array
 	 */
-	function lista( $int_cod_vps_jornada_trabalho = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_jornada_trabalho = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null )
+	function lista($int_cod_vps_jornada_trabalho = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_jornada_trabalho = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_instituicao = null)
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 		$filtros = "";
 		
 		$whereAnd = " WHERE ";
 		
-		if( is_numeric( $int_cod_vps_jornada_trabalho ) )
+		if(is_numeric($int_cod_vps_jornada_trabalho))
 		{
 			$filtros .= "{$whereAnd} cod_vps_jornada_trabalho = '{$int_cod_vps_jornada_trabalho}'";
 			$whereAnd = " AND ";
 		}
-		if( is_numeric( $int_ref_usuario_exc ) )
+		if(is_numeric($int_ref_usuario_exc))
 		{
 			$filtros .= "{$whereAnd} ref_usuario_exc = '{$int_ref_usuario_exc}'";
 			$whereAnd = " AND ";
 		}
-		if( is_numeric( $int_ref_usuario_cad ) )
+		if(is_numeric($int_ref_usuario_cad))
 		{
 			$filtros .= "{$whereAnd} ref_usuario_cad = '{$int_ref_usuario_cad}'";
 			$whereAnd = " AND ";
 		}
-		if( is_string( $str_nm_jornada_trabalho ) )
+		if(is_string($str_nm_jornada_trabalho))
 		{
 			$filtros .= "{$whereAnd} nm_jornada_trabalho LIKE '%{$str_nm_jornada_trabalho}%'";
 			$whereAnd = " AND ";
 		}
-		if( is_string( $date_data_cadastro_ini ) )
+		if(is_string($date_data_cadastro_ini))
 		{
 			$filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
 			$whereAnd = " AND ";
 		}
-		if( is_string( $date_data_cadastro_fim ) )
+		if(is_string($date_data_cadastro_fim))
 		{
 			$filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
 			$whereAnd = " AND ";
 		}
-		if( is_string( $date_data_exclusao_ini ) )
+		if(is_string($date_data_exclusao_ini))
 		{
 			$filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
 			$whereAnd = " AND ";
 		}
-		if( is_string( $date_data_exclusao_fim ) )
+		if(is_string($date_data_exclusao_fim))
 		{
 			$filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
 			$whereAnd = " AND ";
 		}
-		if( is_null( $int_ativo ) || $int_ativo )
+		if(is_null($int_ativo) || $int_ativo)
 		{
 			$filtros .= "{$whereAnd} ativo = '1'";
 			$whereAnd = " AND ";
@@ -377,18 +411,18 @@ class clsPmieducarVPSJornadaTrabalho
 		}
 		
 		$db = new clsBanco();
-		$countCampos = count( explode( ",", $this->_campos_lista ) );
+		$countCampos = count(explode(",", $this->_campos_lista));
 		$resultado = array();
 		
 		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
 		
-		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+		$this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
 		
-		$db->Consulta( $sql );
+		$db->Consulta($sql);
 		
-		if( $countCampos > 1 )
+		if($countCampos > 1)
 		{
-			while ( $db->ProximoRegistro() ) 
+			while ($db->ProximoRegistro()) 
 			{
 				$tupla = $db->Tupla();
 			
@@ -398,13 +432,13 @@ class clsPmieducarVPSJornadaTrabalho
 		}
 		else 
 		{
-			while ( $db->ProximoRegistro() ) 
+			while ($db->ProximoRegistro()) 
 			{
 				$tupla = $db->Tupla();
 				$resultado[] = $tupla[$this->_campos_lista];
 			}
 		}
-		if( count( $resultado ) )
+		if(count($resultado))
 		{
 			return $resultado;
 		}
@@ -418,11 +452,11 @@ class clsPmieducarVPSJornadaTrabalho
 	 */
 	function detalhe()
 	{
-		if( is_numeric( $this->cod_vps_jornada_trabalho ) )
+		if(is_numeric($this->cod_vps_jornada_trabalho))
 		{
 
 		$db = new clsBanco();
-		$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_vps_jornada_trabalho = '{$this->cod_vps_jornada_trabalho}'" );
+		$db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_vps_jornada_trabalho = '{$this->cod_vps_jornada_trabalho}'");
 		$db->ProximoRegistro();
 		return $db->Tupla();
 		}
@@ -436,11 +470,11 @@ class clsPmieducarVPSJornadaTrabalho
 	 */
 	function existe()
 	{
-		if( is_numeric( $this->cod_vps_jornada_trabalho ) )
+		if(is_numeric($this->cod_vps_jornada_trabalho))
 		{
 
 		$db = new clsBanco();
-		$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_vps_jornada_trabalho = '{$this->cod_vps_jornada_trabalho}'" );
+		$db->Consulta("SELECT 1 FROM {$this->_tabela} WHERE cod_vps_jornada_trabalho = '{$this->cod_vps_jornada_trabalho}'");
 		$db->ProximoRegistro();
 		return $db->Tupla();
 		}
@@ -454,13 +488,13 @@ class clsPmieducarVPSJornadaTrabalho
 	 */
 	function excluir()
 	{
-		if( is_numeric( $this->cod_vps_jornada_trabalho ) && is_numeric( $this->ref_usuario_exc ) )
+		if(is_numeric($this->cod_vps_jornada_trabalho) && is_numeric($this->ref_usuario_exc))
 		{
 
 		/*
 			delete
 		$db = new clsBanco();
-		$db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_vps_jornada_trabalho = '{$this->cod_vps_jornada_trabalho}'" );
+		$db->Consulta("DELETE FROM {$this->_tabela} WHERE cod_vps_jornada_trabalho = '{$this->cod_vps_jornada_trabalho}'");
 		return true;
 		*/
 
@@ -475,7 +509,7 @@ class clsPmieducarVPSJornadaTrabalho
 	 *
 	 * @return null
 	 */
-	function setCamposLista( $str_campos )
+	function setCamposLista($str_campos)
 	{
 		$this->_campos_lista = $str_campos;
 	}
@@ -495,7 +529,7 @@ class clsPmieducarVPSJornadaTrabalho
 	 *
 	 * @return null
 	 */
-	function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+	function setLimite($intLimiteQtd, $intLimiteOffset = null)
 	{
 		$this->_limite_quantidade = $intLimiteQtd;
 		$this->_limite_offset = $intLimiteOffset;
@@ -508,10 +542,10 @@ class clsPmieducarVPSJornadaTrabalho
 	 */
 	function getLimite()
 	{
-		if( is_numeric( $this->_limite_quantidade ) )
+		if(is_numeric($this->_limite_quantidade))
 		{
 			$retorno = " LIMIT {$this->_limite_quantidade}";
-			if( is_numeric( $this->_limite_offset ) )
+			if(is_numeric($this->_limite_offset))
 			{
 				$retorno .= " OFFSET {$this->_limite_offset} ";
 			}
@@ -525,12 +559,12 @@ class clsPmieducarVPSJornadaTrabalho
 	 *
 	 * @return null
 	 */
-	function setOrderby( $strNomeCampo )
+	function setOrderby($strNomeCampo)
 	{
 		// limpa a string de possiveis erros (delete, insert, etc)
 		//$strNomeCampo = eregi_replace();
 		
-		if( is_string( $strNomeCampo ) && $strNomeCampo )
+		if(is_string($strNomeCampo) && $strNomeCampo)
 		{
 			$this->_campo_order_by = $strNomeCampo;
 		}
@@ -543,7 +577,7 @@ class clsPmieducarVPSJornadaTrabalho
 	 */
 	function getOrderby()
 	{
-		if( is_string( $this->_campo_order_by ) )
+		if(is_string($this->_campo_order_by))
 		{
 			return " ORDER BY {$this->_campo_order_by} ";
 		}
