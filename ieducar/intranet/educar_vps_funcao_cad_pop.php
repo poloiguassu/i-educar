@@ -34,7 +34,7 @@ class clsIndexBase extends clsBase
 	function Formular()
 	{
 		$this->SetTitulo("{$this->_instituicao} - Funcao");
-		$this->SetTemplate("baes_pop");
+		$this->SetTemplate("base_pop");
 		$this->processoAp = "593";
 		$this->renderMenu = false;
 		$this->renderMenuSuspenso = false;

@@ -34,6 +34,7 @@ class clsIndexBase extends clsBase
 	function Formular()
 	{
 		$this->SetTitulo("{$this->_instituicao} - Jornada de Trabalho");
+		$this->SetTemplate("base_pop");
 		$this->processoAp = "590";
 		$this->renderMenu = false;
 		$this->renderMenuSuspenso = false;
