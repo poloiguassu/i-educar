@@ -1,39 +1,39 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
-	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once ("include/clsBase.inc.php");
-require_once ("include/clsListagem.inc.php");
-require_once ("include/clsBanco.inc.php");
-require_once( "include/pmieducar/geral.inc.php" );
+*																		 *
+*	@author Smart Consultoria e Desenvolvimento WEB						 *
+*	@updated 17/09/2016													 *
+*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*																		 *
+*	Copyright (C) 2016	Smart Consultoria e Desenvolvimento Web			 *
+*						medaumoi@pensesmart.com							 *
+*																		 *
+*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
+*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
+*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*																		 *
+*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
+*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
+*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*																		 *
+*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
+*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
+*	02111-1307, USA.													 *
+*																		 *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+require_once("include/clsBase.inc.php");
+require_once("include/clsListagem.inc.php");
+require_once("include/clsBanco.inc.php");
+require_once("include/pmieducar/geral.inc.php");
 
 class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Obras" );
+		$this->SetTitulo("{$this->_instituicao} - Entrevistas");
 		$this->processoAp = "598";
 		$this->renderMenu = false;
 		$this->renderMenuSuspenso = false;
@@ -71,22 +71,16 @@ class indice extends clsListagem
 	var $offset;
 
 	var $cod_acervo;
-	var $ref_cod_exemplar_tipo;
+	var $ref_cod_vps_tipo_contratacao;
 	var $ref_cod_acervo;
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
-	var $ref_cod_acervo_colecao;
-	var $ref_cod_acervo_idioma;
-	var $ref_cod_acervo_editora;
-	var $titulo_livro;
-	var $sub_titulo;
-	var $cdu;
-	var $cutter;
-	var $volume;
-	var $num_edicao;
+	var $ref_cod_vps_funcao;
+	var $ref_cod_vps_jornada_trabalho;
+	var $ref_idpes;
+	var $nm_entrevista;
+	var $descricao;
 	var $ano;
-	var $num_paginas;
-	var $isbn;
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
@@ -106,26 +100,26 @@ class indice extends clsListagem
 
 		//
 
-		$this->addCabecalhos( array(
+		$this->addCabecalhos(array(
 			"Obra",
 			"Biblioteca"
-		) );
+		));
 
 		// outros Filtros
 		//$get_escola     = 1;
 		//$get_biblioteca = 1;
 		//$obrigatorio    = false;
 		//include("include/pmieducar/educar_campo_lista.php");
-		$this->campoTexto( "titulo_livro", "Titulo", $this->titulo_livro, 30, 255, false );
+		$this->campoTexto("nm_entrevista", "Titulo", $this->nm_entrevista, 30, 255, false);
 		$this->campoOculto("ref_cod_biblioteca",$this->ref_cod_biblioteca);
 
 		// Paginador
 		$this->limite = 20;
-		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+		$this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		$obj_acervo = new clsPmieducarAcervo();
-		$obj_acervo->setOrderby( "titulo ASC" );
-		$obj_acervo->setLimite( $this->limite, $this->offset );
+		$obj_acervo->setOrderby("titulo ASC");
+		$obj_acervo->setLimite($this->limite, $this->offset);
 
 		$lista = $obj_acervo->lista(
 			null,
@@ -136,7 +130,7 @@ class indice extends clsListagem
 			null,
 			null,
 			null,
-			$this->titulo_livro,
+			$this->nm_entrevista,
 			null,
 			null,
 			null,
@@ -158,9 +152,9 @@ class indice extends clsListagem
 		$total = $obj_acervo->_total;
 
 		// monta a lista
-		if( is_array( $lista ) && count( $lista ) )
+		if(is_array($lista) && count($lista))
 		{
-			foreach ( $lista AS $registro )
+			foreach ($lista AS $registro)
 			{
 				$obj_biblioteca = new clsPmieducarBiblioteca($registro["ref_cod_biblioteca"]);
 				$obj_det = $obj_biblioteca->detalhe();
@@ -169,13 +163,13 @@ class indice extends clsListagem
 
 
 				$script = " onclick=\"addSel1('{$_SESSION['campo1']}','{$registro['cod_acervo']}','{$registro['titulo']}'); fecha();\"";
-				$this->addLinhas( array(
+				$this->addLinhas(array(
 					"<a href=\"javascript:void(0);\" {$script}>{$registro["titulo"]}</a>",
 					"<a href=\"javascript:void(0);\" {$script}>{$registro["ref_cod_biblioteca"]}</a>"
-				) );
+				));
 			}
 		}
-		$this->addPaginador2( "educar_pesquisa_acervo_lst.php", $total, $_GET, $this->nome, $this->limite );
+		$this->addPaginador2("educar_pesquisa_acervo_lst.php", $total, $_GET, $this->nome, $this->limite);
 		$obj_permissoes = new clsPermissoes();
 
 		$this->largura = "100%";
@@ -186,26 +180,26 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>
 <script>
-function addSel1( campo, valor, texto )
+function addSel1(campo, valor, texto)
 {
-	obj = window.parent.document.getElementById( campo );
+	obj = window.parent.document.getElementById(campo);
 	novoIndice = obj.options.length;
-	obj.options[novoIndice] = new Option( texto );
+	obj.options[novoIndice] = new Option(texto);
 	opcao = obj.options[novoIndice];
 	opcao.value = valor;
 	opcao.selected = true;
-	setTimeout( "obj.onchange", 100 );
+	setTimeout("obj.onchange", 100);
 }
 
-function addVal1( campo,valor )
+function addVal1(campo,valor)
 {
 
-	obj =  window.parent.document.getElementById( campo );
+	obj =  window.parent.document.getElementById(campo);
 	obj.value = valor;
 }
 

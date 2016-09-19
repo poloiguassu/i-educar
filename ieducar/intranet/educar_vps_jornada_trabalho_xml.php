@@ -30,24 +30,24 @@
 	require_once( "include/funcoes.inc.php" );
 
 	require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
-	Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn($xmlns = 'colecoes');
+	Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"colecoes\">\n";
 
-	if( is_numeric( $_GET["bib"] ) )
+	if( is_numeric( $_GET["inst"] ) )
 	{
 		$db = new clsBanco();
 		$db->Consulta( "
-		SELECT
-			cod_acervo_colecao
-			, nm_colecao
-		FROM
-			pmieducar.acervo_colecao
-		WHERE
-			ativo = 1
-			AND ref_cod_biblioteca = '{$_GET["bib"]}'
-		ORDER BY
-			nm_colecao ASC
+			SELECT
+				cod_vps_jornada_trabalho,
+				nm_jornada_trabalho
+			FROM
+				pmieducar.vps_jornada_trabalho
+			WHERE
+				ativo = 1
+				AND ref_cod_instituicao = '{$_GET["inst"]}'
+			ORDER BY
+				nm_jornada_trabalho ASC
 		");
 
 		if ($db->numLinhas())
@@ -56,7 +56,7 @@
 			{
 				list( $cod, $nome) = $db->Tupla();
 				$nome = str_replace('&', 'e', $nome);
-				echo "	<acervo_colecao cod_colecao=\"{$cod}\" >{$nome}</acervo_colecao>\n";
+				echo "	<vps_jornada_trabalho cod_jornada_trabalho=\"{$cod}\" >{$nome}</vps_jornada_trabalho>\n";
 			}
 		}
 	}

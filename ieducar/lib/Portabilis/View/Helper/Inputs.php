@@ -224,8 +224,8 @@ class Portabilis_View_Helper_Inputs {
     $this->multipleSearchResourceInput('multipleSearchDeficiencias', $attrName, $inputOptions, $helperOptions);
   }
 
-  public function multipleSearchAssuntos($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->multipleSearchResourceInput('multipleSearchAssuntos', $attrName, $inputOptions, $helperOptions);
+  public function multipleSearchIdiomas($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchIdiomas', $attrName, $inputOptions, $helperOptions);
   }  
 
   // resource input helpers

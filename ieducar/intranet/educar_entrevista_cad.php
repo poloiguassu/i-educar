@@ -1,40 +1,41 @@
 <?php
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaï¿½								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Pï¿½blico Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaï¿½			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  ï¿½  software livre, vocï¿½ pode redistribuï¿½-lo e/ou	 *
-	*	modificï¿½-lo sob os termos da Licenï¿½a Pï¿½blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versï¿½o 2 da	 *
-	*	Licenï¿½a   como  (a  seu  critï¿½rio)  qualquer  versï¿½o  mais  nova.	 *
-	*																		 *
-	*	Este programa  ï¿½ distribuï¿½do na expectativa de ser ï¿½til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implï¿½cita de COMERCIALI-	 *
-	*	ZAï¿½ï¿½O  ou  de ADEQUAï¿½ï¿½O A QUALQUER PROPï¿½SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licenï¿½a  Pï¿½blica  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Vocï¿½  deve  ter  recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU	 *
-	*	junto  com  este  programa. Se nï¿½o, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-require_once "include/clsBase.inc.php";
-require_once "include/clsCadastro.inc.php";
-require_once "include/clsBanco.inc.php";
-require_once "include/pmieducar/geral.inc.php";
+*																		 *
+*	@author Smart Consultoria e Desenvolvimento WEB						 *
+*	@updated 17/09/2016													 *
+*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*																		 *
+*	Copyright (C) 2016	Smart Consultoria e Desenvolvimento Web			 *
+*						medaumoi@pensesmart.com							 *
+*																		 *
+*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
+*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
+*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*																		 *
+*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
+*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
+*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*																		 *
+*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
+*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
+*	02111-1307, USA.													 *
+*																		 *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+require_once 'Portabilis/String/Utils.php';
+require_once 'lib/Portabilis/Date/Utils.php';
 
 class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Obras" );
+		$this->SetTitulo("{$this->_instituicao} - Entrevistas");
 		$this->processoAp = "598";
 		$this->addEstilo('localizacaoSistema');
 	}
@@ -49,27 +50,20 @@ class indice extends clsCadastro
 	 */
 	var $pessoa_logada;
 
-	var $cod_acervo;
+	var $cod_vps_entrevista;
 	var $ref_cod_exemplar_tipo;
-	var $ref_cod_acervo;
+	var $ref_cod_vps_entrevista;
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
-	var $ref_cod_acervo_colecao;
-	var $ref_cod_acervo_idioma;
-	var $ref_cod_acervo_editora;
-	var $titulo_livro;
-	var $sub_titulo;
-	var $cdu;
-	var $cutter;
-	var $volume;
-	var $num_edicao;
+	var $ref_cod_vps_funcao;
+	var $ref_cod_vps_jornada_trabalho;
+	var $empresa_id;
+	var $nm_entrevista;
+	var $descricao;
 	var $ano;
-	var $num_paginas;
-	var $isbn;
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
-	var $ref_cod_biblioteca;
 
 	var $ref_cod_instituicao;
 	var $ref_cod_escola;
@@ -77,52 +71,52 @@ class indice extends clsCadastro
 	var $checked;
 
 	var $acervo_autor;
-	var $ref_cod_acervo_autor;
+	var $ref_cod_vps_entrevista_autor;
 	var $principal;
 	var $incluir_autor;
 	var $excluir_autor;
 
-	var $colecao;
-	var $editora;
-	var $idioma;
+	var $funcao;
+	var $jornada_trabalho;
 	var $autor;
 
-  protected function setSelectionFields()
-  {
+	protected function setSelectionFields()
+	{
 
-  }
+	}
 
 	function Inicializar()
 	{
 		$retorno = "Novo";
+		
 		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
+			$this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$this->cod_acervo=$_GET["cod_acervo"];
+		$this->cod_vps_entrevista = $_GET["cod_vps_entrevista"];
 
 		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
+		$obj_permissoes->permissao_cadastra(598, $this->pessoa_logada, 11,  "educar_entrevista_lst.php");
 
-		if( is_numeric( $this->cod_acervo ) )
+		if(is_numeric($this->cod_vps_entrevista))
 		{
-
-			$obj = new clsPmieducarAcervo( $this->cod_acervo );
+			$obj = new clsPmieducarVPSEntrevista($this->cod_vps_entrevista);
 			$registro  = $obj->detalhe();
-			if( $registro )
+
+			if($registro)
 			{
-				foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
+				foreach($registro AS $campo => $val)	// passa todos os valores obtidos no registro para atributos do objeto
 					$this->$campo = $val;
 
-				$obj_biblioteca = new clsPmieducarBiblioteca($this->ref_cod_biblioteca);
-				$obj_det = $obj_biblioteca->detalhe();
+				$obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
+				$obj_det = $obj_escola->detalhe();
 
 				$this->ref_cod_instituicao = $obj_det["ref_cod_instituicao"];
-				$this->ref_cod_escola = $obj_det["ref_cod_escola"];
-
+				$this->ref_cod_escola = $obj_det["cod_escola"];
 
 				$obj_permissoes = new clsPermissoes();
-				if( $obj_permissoes->permissao_excluir( 598, $this->pessoa_logada, 11 ) )
+
+				if($obj_permissoes->permissao_excluir(598, $this->pessoa_logada, 11))
 				{
 					$this->fexcluir = true;
 				}
@@ -130,159 +124,190 @@ class indice extends clsCadastro
 				$retorno = "Editar";
 			}
 		}
-		$this->url_cancelar = ($retorno == "Editar") ? "educar_acervo_det.php?cod_acervo={$registro["cod_acervo"]}" : "educar_acervo_lst.php";
+
+		$this->url_cancelar = ($retorno == "Editar") ? "educar_entrevista_det.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}" : "educar_entrevista_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
 
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Trilha Jovem Iguassu - Biblioteca",
-         ""        => "{$nomeMenu} obra"             
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+		$localizacao = new LocalizacaoSistema();
+		$localizacao->entradaCaminhos(array(
+			$_SERVER['SERVER_NAME'] . "/intranet" => "Início",
+			"educar_vps_index.php"                => "Trilha Jovem - VPS",
+			""                                    => "{$nomeMenu} entrevista"
+		));
+
+		$this->enviaLocalizacao($localizacao->montar());
 
 		return $retorno;
 	}
 
 	function Gerar()
 	{
-		if( $_POST )
+		if($_POST)
 		{
-			foreach( $_POST AS $campo => $val )
-				$this->$campo = ( $this->$campo ) ? $this->$campo : $val;
+			foreach($_POST AS $campo => $val)
+				$this->$campo = ($this->$campo) ? $this->$campo : $val;
 		}
-		if(is_numeric($this->colecao))
+		if(is_numeric($this->funcao))
 		{
-			$this->ref_cod_acervo_colecao = $this->colecao;
+			$this->ref_cod_vps_funcao = $this->funcao;
 		}
-		if(is_numeric($this->editora))
+		if(is_numeric($this->jornada_trabalho))
 		{
-			$this->ref_cod_acervo_editora = $this->editora;
-		}
-		if(is_numeric($this->idioma))
-		{
-			$this->ref_cod_acervo_idioma = $this->idioma;
+			$this->ref_cod_vps_jornada_trabalho = $this->jornada_trabalho;
 		}
 		if(is_numeric($this->autor))
 		{
-			$this->ref_cod_acervo_autor = $this->autor;
+			$this->ref_cod_vps_entrevista_autor = $this->autor;
 		}
+
+		// foreign keys
+		$obrigatorio              = false;
+		$instituicao_obrigatorio  = true;
+		$escola_curso_obrigatorio = true;
+		$curso_obrigatorio        = true;
+		$get_escola               = true;
+		$get_escola_curso_serie   = false;
+		$sem_padrao               = true;
+		$get_curso                = true;
+
+		$bloqueia = false;
+		
+		if (isset($this->ano) || !is_numeric($this->ref_cod_escola)){
+			$anoVisivel = true;
+		}
+
+		$desabilitado = $bloqueia;
+
+		include 'include/pmieducar/educar_campo_lista.php';
 
 		// primary keys
-		$this->campoOculto( "cod_acervo", $this->cod_acervo );
-		$this->campoOculto( "colecao", "" );
-		$this->campoOculto( "editora", "" );
-		$this->campoOculto( "idioma", "" );
-		$this->campoOculto( "autor", "" );
+		$this->campoOculto("cod_vps_entrevista", $this->cod_vps_entrevista);
+		$this->campoOculto("funcao", "");
+		$this->campoOculto("jornada_trabalho", "");
+		$this->campoOculto("autor", "");
 
-    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca', 'bibliotecaTipoExemplar'));
-
-    // Obra referï¿½ncia
-		$opcoes = array( "NULL" => "Selecione" );
-
-		if( $this->ref_cod_acervo && $this->ref_cod_acervo != "NULL")
+		if ( $this->ref_cod_escola )
 		{
-			$objTemp = new clsPmieducarAcervo($this->ref_cod_acervo);
+			$this->ref_ref_cod_escola = $this->ref_cod_escola;
+		}
+
+		if ($anoVisivel)
+		{
+			$helperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
+			$this->inputsHelper()->dynamic('anoLetivo', array('disabled' => $bloqueia), $helperOptions);
+			if($bloqueia)
+				$this->inputsHelper()->hidden('ano_hidden', array('value' => $this->ano));
+		}
+		
+		$options = array('label' => "Empresa", 'required' => true, 'size' => 30);
+		
+		$helperOptions = array(
+			'objectName'         => 'empresa',
+			'hiddenInputOptions' => array('options' => array('value' => $this->empresa_id))
+		);
+		
+		$this->inputsHelper()->simpleSearchPessoaj('nome', $options, $helperOptions);
+
+		$opcoes = array("NULL" => "Selecione");
+
+		if($this->ref_cod_vps_entrevista && $this->ref_cod_vps_entrevista != "NULL")
+		{
+			$objTemp = new clsPmieducarVPSEntrevista($this->ref_cod_vps_entrevista);
 			$detalhe = $objTemp->detalhe();
-			if ( $detalhe )
+			if ($detalhe)
 			{
-				$opcoes["{$detalhe['cod_acervo']}"] = "{$detalhe['titulo']}";
+				$opcoes["{$detalhe['cod_vps_entrevista']}"] = "{$detalhe['nm_entrevista']}";
 			}
 		}
 
-		$this->campoLista("ref_cod_acervo","Obra Refer&ecirc;ncia",$opcoes,$this->ref_cod_acervo,"",false,"","<img border=\"0\" onclick=\"pesquisa();\" id=\"ref_cod_acervo_lupa\" name=\"ref_cod_acervo_lupa\" src=\"imagens/lupa.png\"\/>",false,false);
+		$this->campoLista("ref_cod_vps_entrevista", "Entrevista de Referência", $opcoes,$this->ref_cod_vps_entrevista, "", false, "", "<img border=\"0\" onclick=\"pesquisa();\" id=\"ref_cod_vps_entrevista_lupa\" name=\"ref_cod_vps_entrevista_lupa\" src=\"imagens/lupa.png\"\/>", false, false);
 
-    // Coleï¿½ï¿½o
-		$opcoes = array( "" => "Selecione" );
-		if( class_exists( "clsPmieducarAcervoColecao" ) )
+		// Coleção
+		$opcoes = array("" => "Selecione");
+
+		if(class_exists("clsPmieducarVPSFuncao"))
 		{
-			$objTemp = new clsPmieducarAcervoColecao();
+			$objTemp = new clsPmieducarVPSFuncao();
 			$lista = $objTemp->lista();
-			if ( is_array( $lista ) && count( $lista ) )
+
+			if (is_array($lista) && count($lista))
 			{
-				foreach ( $lista as $registro )
+				foreach ($lista as $registro)
 				{
-					$opcoes["{$registro['cod_acervo_colecao']}"] = "{$registro['nm_colecao']}";
+					$opcoes["{$registro['cod_vps_funcao']}"] = "{$registro['nm_funcao']}";
 				}
 			}
 		}
 		else
 		{
-			echo "<!--\nErro\nClasse clsPmieducarAcervoColecao nao encontrada\n-->";
-			$opcoes = array( "" => "Erro na geracao" );
+			echo "<!--\nErro\nClasse clsPmieducarVPSFuncao nao encontrada\n-->";
+			$opcoes = array("" => "Erro na geracao");
 		}
-		$this->campoLista( "ref_cod_acervo_colecao", "Cole&ccedil;&atilde;o", $opcoes, $this->ref_cod_acervo_colecao,"",false,"","<img id='img_colecao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 200,'educar_acervo_colecao_cad_pop.php',[], 'Coleï¿½ï¿½o')\" />",false,false );
 
-    // Idioma
-		$opcoes = array( "" => "Selecione" );
-		if( class_exists( "clsPmieducarAcervoIdioma" ) )
+		// Idioma
+		$opcoes = array("" => "Selecione");
+		if(class_exists("clsPmieducarVPSJornadaTrabalho"))
 		{
-			$objTemp = new clsPmieducarAcervoIdioma();
+			$objTemp = new clsPmieducarVPSJornadaTrabalho();
 			$lista = $objTemp->lista();
-			if ( is_array( $lista ) && count( $lista ) )
+
+			if (is_array($lista) && count($lista))
 			{
-				foreach ( $lista as $registro )
+				foreach ($lista as $registro)
 				{
-					$opcoes["{$registro['cod_acervo_idioma']}"] = "{$registro['nm_idioma']}";
+					$opcoes["{$registro['cod_vps_jornada_trabalho']}"] = "{$registro['nm_jornada_trabalho']}";
 				}
 			}
 		}
 		else
 		{
-			echo "<!--\nErro\nClasse clsPmieducarAcervoIdioma nao encontrada\n-->";
-			$opcoes = array( "" => "Erro na geracao" );
+			echo "<!--\nErro\nClasse clsPmieducarVPSJornadaTrabalho nao encontrada\n-->";
+			$opcoes = array("" => "Erro na geracao");
 		}
-		$this->campoLista( "ref_cod_acervo_idioma", "Idioma", $opcoes, $this->ref_cod_acervo_idioma, "", false, "", "<img id='img_idioma' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(400, 150,'educar_acervo_idioma_cad_pop.php',[], 'Idioma')\" />" );
+		
+		$this->campoLista("ref_cod_vps_jornada_trabalho", "Jornada de Trabalho", $opcoes, $this->ref_cod_vps_jornada_trabalho, "", false, "", "<img id='img_jornada_trabalho' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(400, 150,'educar_vps_jornada_trabalho_cad_pop.php',[], 'Jornada de Trabalho')\" />");
 
-		$opcoes = array( "" => "Selecione" );
-		if( class_exists( "clsPmieducarAcervoEditora" ) )
-		{
-			$objTemp = new clsPmieducarAcervoEditora();
-			$lista = $objTemp->lista();
-			if ( is_array( $lista ) && count( $lista ) )
-			{
-				foreach ( $lista as $registro )
-				{
-					$opcoes["{$registro['cod_acervo_editora']}"] = "{$registro['nm_editora']}";
-				}
-			}
-		}
-		else
-		{
-			echo "<!--\nErro\nClasse clsPmieducarAcervoEditora nao encontrada\n-->";
-			$opcoes = array( "" => "Erro na geracao" );
-		}
-		$this->campoLista( "ref_cod_acervo_editora", "Editora", $opcoes, $this->ref_cod_acervo_editora, "", false, "", "<img id='img_editora' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(400, 320,'educar_acervo_editora_cad_pop.php',[], 'Editora')\" />" );
+		$this->campoLista("ref_cod_vps_funcao", "Função/Cargo", $opcoes, $this->ref_cod_vps_funcao, "", false, "", "<img id='img_funcao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 200,'educar_vps_funcao_cad_pop.php',[], 'Função/Cargo')\" />", false, false);
 
+		$helperOptions = array('objectName' => 'idiomas');
 
-		//-----------------------INCLUI AUTOR------------------------//
+		$options = array(
+			'label' => 'Idiomas',
+			'size' => 150,
+			'required' => false,
+			'options' => array('value' => null)
+		);
+
+ 		$this->inputsHelper()->multipleSearchIdiomas('', $options, $helperOptions);	
+
 		$this->campoQuebra();
 
-		if ( $_POST["acervo_autor"] )
-			$this->acervo_autor = unserialize( urldecode( $_POST["acervo_autor"] ) );
-		if( is_numeric( $this->cod_acervo ) && !$_POST )
+		if ($_POST["acervo_autor"])
+			$this->acervo_autor = unserialize(urldecode($_POST["acervo_autor"]));
+
+		if(is_numeric($this->cod_vps_entrevista) && !$_POST)
 		{
 			$obj = new clsPmieducarAcervoAcervoAutor();
-			$registros = $obj->lista( null, $this->cod_acervo );
-			if( $registros )
+			$registros = $obj->lista(null, $this->cod_vps_entrevista);
+			if($registros)
 			{
-				foreach ( $registros AS $campo )
+				foreach ($registros AS $campo)
 				{
-					$aux["ref_cod_acervo_autor_"]= $campo["ref_cod_acervo_autor"];
+					$aux["ref_cod_vps_entrevista_autor_"] = $campo["ref_cod_vps_entrevista_autor"];
 					$aux["principal_"]= $campo["principal"];
 					$this->acervo_autor[] = $aux;
 				}
 
 				// verifica se ja existe um autor principal
-				if ( is_array($this->acervo_autor) )
+				if (is_array($this->acervo_autor))
 				{
 					foreach ($this->acervo_autor AS $autores)
 					{
 						if ($autores["principal_"] == 1)
 						{
 							$this->checked = 1;
-							$this->campoOculto( "checked", $this->checked );
+							$this->campoOculto("checked", $this->checked);
 						}
 					}
 				}
@@ -291,70 +316,70 @@ class indice extends clsCadastro
 
 		unset($aux);
 
-		if ( $_POST["ref_cod_acervo_autor"] )
+		if ($_POST["ref_cod_vps_entrevista_autor"])
 		{
-			if ( $_POST["principal"] )
+			if ($_POST["principal"])
 			{
 				$this->checked = 1;
-				$this->campoOculto( "checked", $this->checked );
+				$this->campoOculto("checked", $this->checked);
 			}
-			$aux["ref_cod_acervo_autor_"] = $_POST["ref_cod_acervo_autor"];
+			$aux["ref_cod_vps_entrevista_autor_"] = $_POST["ref_cod_vps_entrevista_autor"];
 			$aux["principal_"] = $_POST["principal"];
 			$this->acervo_autor[] = $aux;
 
 //			echo "<pre>";print_r($this->acervo_autor);
 
 			// verifica se ja existe um autor principal
-			if ( is_array($this->acervo_autor) )
+			if (is_array($this->acervo_autor))
 			{
 				foreach ($this->acervo_autor AS $autores)
 				{
 					if ($autores["principal_"] == 'on')
 					{
 						$this->checked = 1;
-						$this->campoOculto( "checked", $this->checked );
+						$this->campoOculto("checked", $this->checked);
 					}
 				}
 			}
-			unset( $this->ref_cod_acervo_autor );
-			unset( $this->principal );
+			unset($this->ref_cod_vps_entrevista_autor);
+			unset($this->principal);
 		}
 
-		$this->campoOculto( "excluir_autor", "" );
+		$this->campoOculto("excluir_autor", "");
 		unset($aux);
 
-		if ( $this->acervo_autor )
+		if ($this->acervo_autor)
 		{
-			foreach ( $this->acervo_autor as $key => $autor)
+			foreach ($this->acervo_autor as $key => $autor)
 			{
-				if ( $this->excluir_autor == $autor["ref_cod_acervo_autor_"] )
+				if ($this->excluir_autor == $autor["ref_cod_vps_entrevista_autor_"])
 				{
 					unset($this->acervo_autor[$key]);
 					unset($this->excluir_autor);
 				}
 				else
 				{
-					$obj_acervo_autor = new clsPmieducarAcervoAutor($autor["ref_cod_acervo_autor_"]);
+					$obj_acervo_autor = new clsPmieducarAcervoAutor($autor["ref_cod_vps_entrevista_autor_"]);
 					$det_acervo_autor = $obj_acervo_autor->detalhe();
 					$nm_autor = $det_acervo_autor["nm_autor"];
-					$this->campoTextoInv( "ref_cod_exemplar_tipo_{$autor["ref_cod_acervo_autor_"]}", "", $nm_autor, 30, 255, false, false, true );
-					$this->campoCheck( "principal_{$autor["ref_cod_acervo_autor_"]}", "", $autor['principal_'], "<a href='#' onclick=\"getElementById('excluir_autor').value = '{$autor["ref_cod_acervo_autor_"]}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>", false, false, false );
-					$aux["ref_cod_acervo_autor_"] = $autor["ref_cod_acervo_autor_"];
+					$this->campoTextoInv("ref_cod_exemplar_tipo_{$autor["ref_cod_vps_entrevista_autor_"]}", "", $nm_autor, 30, 255, false, false, true);
+					$this->campoCheck("principal_{$autor["ref_cod_vps_entrevista_autor_"]}", "", $autor['principal_'], "<a href='#' onclick=\"getElementById('excluir_autor').value = '{$autor["ref_cod_vps_entrevista_autor_"]}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>", false, false, false);
+					$aux["ref_cod_vps_entrevista_autor_"] = $autor["ref_cod_vps_entrevista_autor_"];
 					$aux["principal_"] = $autor['principal_'];
 				}
 			}
 		}
-		$this->campoOculto( "acervo_autor", serialize( $this->acervo_autor ) );
+		$this->campoOculto("acervo_autor", serialize($this->acervo_autor));
 
-		if( class_exists( "clsPmieducarAcervoAutor" ) )
+		if(class_exists("clsPmieducarAcervoAutor"))
 		{
-			$opcoes = array( "" => "Selecione" );
+			$opcoes = array("" => "Selecione");
 			$objTemp = new clsPmieducarAcervoAutor();
 			$objTemp->setOrderby("nm_autor ASC");
 			$lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,1);
-			if ( is_array( $lista ) && count( $lista ) )
+			if (is_array($lista) && count($lista))
 			{
-				foreach ( $lista as $registro )
+				foreach ($lista as $registro)
 				{
 					$opcoes["{$registro['cod_acervo_autor']}"] = "{$registro['nm_autor']}";
 				}
@@ -362,193 +387,209 @@ class indice extends clsCadastro
 		}
 		else
 		{
-			echo "<!--\nErro\nClasse clsPmieducarAcervoAutor n&atilde;o encontrada\n-->";
-			$opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
+			echo "<!--\nErro\nClasse clsPmieducarAcervoAutor não encontrada\n-->";
+			$opcoes = array("" => "Erro na geração");
 		}
-		if ( is_array($this->acervo_autor) )
+		if (is_array($this->acervo_autor))
 		{
 			$qtd_autor = count($this->acervo_autor);
 		}
 		// nï¿½o existe um autor principal nem autor
-		if ( ($this->checked != 1) && ( !$qtd_autor || ($qtd_autor == 0) ) )
+		if (($this->checked != 1) && (!$qtd_autor || ($qtd_autor == 0)))
 		{
 //			die("1");
-			$this->campoLista( "ref_cod_acervo_autor", "Autor", $opcoes, $this->ref_cod_acervo_autor,null,true,"","",false,true );
+			$this->campoLista("ref_cod_vps_entrevista_autor", "Autor", $opcoes, $this->ref_cod_vps_entrevista_autor,null,true,"","",false,true);
 
-		 	$this->campoCheck( "principal", "&nbsp;&nbsp;<img id='img_autor' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 250,'educar_acervo_autor_cad_pop.php',[], 'Autor')\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>" );
+		 	$this->campoCheck("principal", "&nbsp;&nbsp;<img id='img_autor' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 250,'educar_vps_responsavel_entrevista_cad_pop.php',[], 'Autor')\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
 		}
 		// nï¿½o existe um autor principal, mas existe um autor
-		else if ( ($this->checked != 1) && ($qtd_autor > 0) )
+		else if (($this->checked != 1) && ($qtd_autor > 0))
 		{
-			$this->campoLista( "ref_cod_acervo_autor", "Autor", $opcoes, $this->ref_cod_acervo_autor,null,true,null, null,null,false);
-		 	$this->campoCheck( "principal", "&nbsp;&nbsp;<img src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"pesquisa_valores_popless( 'educar_acervo_autor_cad_pop.php' )\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>" );
+			$this->campoLista("ref_cod_vps_entrevista_autor", "Autor", $opcoes, $this->ref_cod_vps_entrevista_autor,null,true,null, null,null,false);
+		 	$this->campoCheck("principal", "&nbsp;&nbsp;<img src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"pesquisa_valores_popless('educar_vps_responsavel_entrevista_cad_pop.php')\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
 		}
 		// existe um autor principal
 		else
 		{
-//			die("3");
-			$this->campoLista( "ref_cod_acervo_autor", "Autor", $opcoes, $this->ref_cod_acervo_autor,"",false,"","<img src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"pesquisa_valores_popless( 'educar_acervo_autor_cad_pop.php' )\" />&nbsp;&nbsp;<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>",false,false);
+			$this->campoLista("ref_cod_vps_entrevista_autor", "Autor", $opcoes, $this->ref_cod_vps_entrevista_autor,"",false,"","<img src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"pesquisa_valores_popless('educar_vps_responsavel_entrevista_cad_pop.php')\" />&nbsp;&nbsp;<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>",false,false);
 		}
 
-		$this->campoOculto( "incluir_autor", "" );
+		$this->campoOculto("incluir_autor", "");
 
 		$this->campoQuebra();
 		//-----------------------FIM AUTOR------------------------//
 
 		// text
-		$this->campoTexto( "titulo", "T&iacute;tulo", $this->titulo, 40, 255, true );
-		$this->campoTexto( "sub_titulo", "Subt&iacute;tulo", $this->sub_titulo, 40, 255, false );
-		$this->campoTexto( "estante", "Estante", $this->estante, 20, 15, false );
- 		$helperOptions = array('objectName' => 'assuntos');
-  	$options       = array('label' => 'Assuntos', 'size' => 50, 'required' => false,
-                           'options' => array('value' => null));
+		$this->campoTexto("nm_entrevista", "Entrevista", $this->nm_entrevista, 30, 255, true);
 
- 		$this->inputsHelper()->multipleSearchAssuntos('', $options, $helperOptions);		
-		$this->campoTexto( "cdd", "CDD", $this->cdd, 20, 15, false );
-		$this->campoTexto( "cdu", "CDU", $this->cdu, 20, 15, false );
-		$this->campoTexto( "cutter", "Cutter", $this->cutter, 20, 15, false );
-		$this->campoNumero( "volume", "Volume", $this->volume, 20, 255, true );
-		$this->campoNumero( "num_edicao", "N&uacute;mero Edic&atilde;o", $this->num_edicao, 20, 255, true );
-		$this->campoNumero( "ano", "Ano", $this->ano, 5, 4, true );
-		$this->campoNumero( "num_paginas", "N&uacute;mero P&aacute;ginas", $this->num_paginas, 5, 255, true );
-		$this->campoNumero( "isbn", "ISBN", $this->isbn, 20, 13, false );
+		$this->campoMonetario('salario', 'Salário', $this->salario, 7, 7, false);
+
+		$options = array(
+			'required'    => true,
+			'label'       => 'Data Entrevista',
+			'placeholder' => '',
+			'value'       => Portabilis_Date_Utils::pgSQLToBr($this->data_entrevista),
+			'size'        => 7,
+		);
+
+		$this->inputsHelper()->date('data_entrevista', $options);
+
+		$this->campoHora('hora_entrevista', 'Hora entrevista', $this->hora_entrevista, false);
+
+		$options = array(
+			'required'    => false,
+			'label'       => 'Descrição',
+			'value'       => $this->descricao,
+			'cols'        => 30,
+			'max_length'  => 150
+		);
+
+		$this->inputsHelper()->textArea('descricao', $options);
+		
+ 		$helperOptions = array('objectName' => 'assuntos');
 	}
 
 	function Novo()
 	{
-		@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
+		/*@session_start();
+			$this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
-		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
 
-		$this->acervo_autor = unserialize( urldecode( $this->acervo_autor ) );
+		$obj_permissoes = new clsPermissoes();
+		$obj_permissoes->permissao_cadastra(598, $this->pessoa_logada, 11,  "educar_entrevista_lst.php");
+
+		$this->acervo_autor = unserialize(urldecode($this->acervo_autor));
 		if ($this->acervo_autor)
 		{
-			$obj = new clsPmieducarAcervo( null, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, null, $this->pessoa_logada, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante );
+			$obj = new clsPmieducarAcervo(null, $this->ref_cod_exemplar_tipo, $this->ref_cod_vps_entrevista, null, $this->pessoa_logada, $this->ref_cod_vps_funcao, $this->ref_cod_vps_jornada_trabalho, $this->empresa_id, $this->nm_entrevista, $this->descricao, $this->ano, null, null, 1, $this->ref_cod_escola);
 			$cadastrou = $obj->cadastra();
-			if( $cadastrou )
+			if($cadastrou)
 			{
 				$this->gravaAssuntos($cadastrou);
 			//-----------------------CADASTRA AUTOR------------------------//
-				foreach ( $this->acervo_autor AS $autor )
+				foreach ($this->acervo_autor AS $autor)
 				{
-          $autorPrincipal = $_POST["principal_{$autor['ref_cod_acervo_autor_']}"];
-          $autor["principal_"] = is_null($autorPrincipal) ? 0 : 1;
+					$autorPrincipal = $_POST["principal_{$autor['ref_cod_vps_entrevista_autor_']}"];
+					$autor["principal_"] = is_null($autorPrincipal) ? 0 : 1;
 
-					$obj = new clsPmieducarAcervoAcervoAutor( $autor["ref_cod_acervo_autor_"], $cadastrou, $autor["principal_"] );
+					$obj = new clsPmieducarAcervoAcervoAutor($autor["ref_cod_vps_entrevista_autor_"], $cadastrou, $autor["principal_"]);
 					$cadastrou2  = $obj->cadastra();
-					if ( !$cadastrou2 )
+					if (!$cadastrou2)
 					{
-						$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-						echo "<!--\nErro ao cadastrar clsPmieducarAcervoAcervoAutor\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$autor["ref_cod_acervo_autor_"]} ) && is_numeric( {$autor["principal_"]} )\n-->";
+						$this->mensagem = "Cadastro não realizado.<br>";
+						echo "<!--\nErro ao cadastrar clsPmieducarAcervoAcervoAutor\nvalores obrigat&oacute;rios\nis_numeric($cadastrou) && is_numeric({$autor["ref_cod_vps_entrevista_autor_"]}) && is_numeric({$autor["principal_"]})\n-->";
 						return false;
 					}
 				}
 				$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-				header( "Location: educar_acervo_lst.php" );
+				header("Location: educar_entrevista_lst.php");
 				die();
 				return true;
 			//-----------------------FIM CADASTRA AUTOR------------------------//
 			}
-			$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-			echo "<!--\nErro ao cadastrar clsPmieducarAcervo\nvalores obrigatorios\nis_numeric( $this->ref_cod_exemplar_tipo ) && is_numeric( $this->ref_usuario_cad ) && is_numeric( $this->ref_cod_acervo_colecao ) && is_numeric( $this->ref_cod_acervo_idioma ) && is_numeric( $this->ref_cod_acervo_editora ) && is_string( $this->titulo ) && is_numeric( $this->volume ) && is_numeric( $this->num_edicao ) && is_numeric( $this->ano ) && is_numeric( $this->num_paginas ) && is_numeric( $this->isbn )\n-->";
+			$this->mensagem = "Cadastro não realizado.<br>";
+			echo "<!--\nErro ao cadastrar clsPmieducarAcervo\nvalores obrigatorios\nis_numeric($this->ref_cod_exemplar_tipo) && is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_vps_funcao) && is_numeric($this->ref_cod_vps_jornada_trabalho) && is_numeric($this->empresa_id) && is_string($this->nm_entrevista) && is_numeric($this->ano)\n-->";
 			return false;
 		}
 		echo "<script> alert('ï¿½ necessï¿½rio adicionar pelo menos 1 Autor') </script>";
-		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-		return false;
+		$this->mensagem = "Cadastro não realizado.<br>";
+		return false;*/
 	}
 
 	function Editar()
 	{
-		@session_start();
+		/*@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
 		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
+		$obj_permissoes->permissao_cadastra(598, $this->pessoa_logada, 11,  "educar_entrevista_lst.php");
 
-		$this->acervo_autor = unserialize( urldecode( $this->acervo_autor ) );
+		$this->acervo_autor = unserialize(urldecode($this->acervo_autor));
 		if ($this->acervo_autor)
 		{
-			$obj = new clsPmieducarAcervo($this->cod_acervo, $this->ref_cod_exemplar_tipo, $this->ref_cod_acervo, $this->pessoa_logada, null, $this->ref_cod_acervo_colecao, $this->ref_cod_acervo_idioma, $this->ref_cod_acervo_editora, $this->titulo, $this->sub_titulo, $this->cdu, $this->cutter, $this->volume, $this->num_edicao, $this->ano, $this->num_paginas, $this->isbn, null, null, 1, $this->ref_cod_biblioteca, $this->cdd, $this->estante);
+			$obj = new clsPmieducarAcervo($this->cod_vps_entrevista, $this->ref_cod_exemplar_tipo, $this->ref_cod_vps_entrevista, $this->pessoa_logada, null, $this->ref_cod_vps_funcao, $this->ref_cod_vps_jornada_trabalho, $this->empresa_id, $this->nm_entrevista, $this->descricao, $this->ano, null, null, 1, $this->ref_cod_escola);
 			$editou = $obj->edita();
-			if( $editou )
+			if($editou)
 			{
 
-			$this->gravaAssuntos($this->cod_acervo);
+			$this->gravaAssuntos($this->cod_vps_entrevista);
 			//-----------------------EDITA AUTOR------------------------//
 
-				$obj  = new clsPmieducarAcervoAcervoAutor( null, $this->cod_acervo );
+				$obj  = new clsPmieducarAcervoAcervoAutor(null, $this->cod_vps_entrevista);
 				$excluiu = $obj->excluirTodos();
-				if ( $excluiu )
+				if ($excluiu)
 				{
-					foreach ( $this->acervo_autor AS $autor )
+					foreach ($this->acervo_autor AS $autor)
 					{
-            $autorPrincipal = $_POST["principal_{$autor['ref_cod_acervo_autor_']}"];
-            $autor["principal_"] = is_null($autorPrincipal) ? 0 : 1;
+						$autorPrincipal = $_POST["principal_{$autor['ref_cod_vps_entrevista_autor_']}"];
+						$autor["principal_"] = is_null($autorPrincipal) ? 0 : 1;
 
-						$obj = new clsPmieducarAcervoAcervoAutor( $autor["ref_cod_acervo_autor_"], $this->cod_acervo, $autor["principal_"] );
+						$obj = new clsPmieducarAcervoAcervoAutor($autor["ref_cod_vps_entrevista_autor_"], $this->cod_vps_entrevista, $autor["principal_"]);
 						$cadastrou2  = $obj->cadastra();
-						if ( !$cadastrou2 )
+						if (!$cadastrou2)
 						{
-							$this->mensagem = "Editar n&atilde;o realizado.<br>";
-							echo "<!--\nErro ao editar clsPmieducarAcervoAcervoAutor\nvalores obrigat&oacute;rios\nis_numeric( $cadastrou ) && is_numeric( {$autor["ref_cod_acervo_autor_"]} ) && is_numeric( {$autor["principal_"]} )\n-->";
+							$this->mensagem = "Editar não realizado.<br>";
+							echo "<!--\nErro ao editar clsPmieducarAcervoAcervoAutor\nvalores obrigat&oacute;rios\nis_numeric($cadastrou) && is_numeric({$autor["ref_cod_vps_entrevista_autor_"]}) && is_numeric({$autor["principal_"]})\n-->";
 							return false;
 						}
 					}
-					$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-					header( "Location: educar_acervo_lst.php" );
+					$this->mensagem .= "Edição efetuada com sucesso.<br>";
+					header("Location: educar_entrevista_lst.php");
 					die();
 					return true;
 				}
 			//-----------------------FIM EDITA AUTOR------------------------//
 			}
-			$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-			echo "<!--\nErro ao editar clsPmieducarAcervo\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+			$this->mensagem = "Edição não realizada.<br>";
+			echo "<!--\nErro ao editar clsPmieducarAcervo\nvalores obrigatorios\nif(is_numeric($this->cod_vps_entrevista) && is_numeric($this->ref_usuario_exc))\n-->";
 			return false;
 		}
-		echo "<script> alert('ï¿½ necessï¿½rio adicionar pelo menos 1 Autor') </script>";
-		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-		return false;
+		
+		echo "<script>
+				alert(É necessário adicionar pelo menos 1 responsável')
+			</script>";
+
+		$this->mensagem = "Edição não realizada.<br>";
+
+		return false;*/
 	}
 
 	function Excluir()
 	{
-		@session_start();
+		/*@session_start();
 		 $this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
 		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_excluir( 598, $this->pessoa_logada, 11,  "educar_acervo_lst.php" );
+		$obj_permissoes->permissao_excluir(598, $this->pessoa_logada, 11,  "educar_entrevista_lst.php");
 
 
-		$obj = new clsPmieducarAcervo($this->cod_acervo, null, null, $this->pessoa_logada, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0, $this->ref_cod_biblioteca);
+		$obj = new clsPmieducarAcervo($this->cod_vps_entrevista, null, null, $this->pessoa_logada, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0, $this->ref_cod_escola);
 		$excluiu = $obj->excluir();
-		if( $excluiu )
+		if($excluiu)
 		{
-			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-			header( "Location: educar_acervo_lst.php" );
+			$this->mensagem .= "Exclusão efetuada com sucesso.<br>";
+			header("Location: educar_entrevista_lst.php");
 			die();
 			return true;
 		}
 
-		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao excluir clsPmieducarAcervo\nvalores obrigatorios\nif( is_numeric( $this->cod_acervo ) && is_numeric( $this->pessoa_logada ) )\n-->";
-		return false;
+		$this->mensagem = "Exclusão não realizada.<br>";
+		echo "<!--\nErro ao excluir clsPmieducarAcervo\nvalores obrigatorios\nif(is_numeric($this->cod_vps_entrevista) && is_numeric($this->pessoa_logada))\n-->";
+		return false;*/
 	}
 
-	function gravaAssuntos($cod_acervo){
+	/*function gravaAssuntos($cod_vps_entrevista){
 		$objAssunto = new clsPmieducarAcervoAssunto();
-		$objAssunto->deletaAssuntosDaObra($cod_acervo);
+		$objAssunto->deletaAssuntosDaObra($cod_vps_entrevista);
 		foreach ($this->getRequest()->assuntos as $assuntoId) {
 			if (! empty($assuntoId)) {
 				$objAssunto = new clsPmieducarAcervoAssunto();
-				$objAssunto->cadastraAssuntoParaObra($cod_acervo, $assuntoId);
+				$objAssunto->cadastraAssuntoParaObra($cod_vps_entrevista, $assuntoId);
 			}
 		}
-	}	
+	}*/
 }
 
 // cria uma extensao da classe base
@@ -556,266 +597,231 @@ $pagina = new clsIndexBase();
 // cria o conteudo
 $miolo = new indice();
 // adiciona o conteudo na clsBase
-$pagina->addForm( $miolo );
+$pagina->addForm($miolo);
 // gera o html
 $pagina->MakeAll();
 ?>
 
 <script>
+	document.getElementById('ref_cod_vps_funcao').disabled = true;
+	document.getElementById('ref_cod_vps_funcao').options[0].text = 'Selecione uma escola';
 
-document.getElementById('ref_cod_acervo_colecao').disabled = true;
-document.getElementById('ref_cod_acervo_colecao').options[0].text = 'Selecione uma biblioteca';
+	document.getElementById('ref_cod_vps_jornada_trabalho').disabled = true;
+	document.getElementById('ref_cod_vps_jornada_trabalho').options[0].text = 'Selecione uma instituição';
 
-document.getElementById('ref_cod_acervo_editora').disabled = true;
-document.getElementById('ref_cod_acervo_editora').options[0].text = 'Selecione uma biblioteca';
+	var tempExemplarTipo;
+	var tempFuncao;
+	var tempJornadaTrabalho;
 
-document.getElementById('ref_cod_acervo_idioma').disabled = true;
-document.getElementById('ref_cod_acervo_idioma').options[0].text = 'Selecione uma biblioteca';
-
-var tempExemplarTipo;
-var tempColecao;
-var tempIdioma;
-var tempEditora;
-
-if(document.getElementById('ref_cod_biblioteca').value == "")
-{
-	setVisibility(document.getElementById('img_colecao'), false);
-	setVisibility(document.getElementById('img_editora'), false);
-	setVisibility(document.getElementById('img_idioma'), false);
-	setVisibility(document.getElementById('img_autor'), false);
-	//tempExemplarTipo = null;
-	tempColecao = null;
-	tempIdioma = null;
-	tempEditora = null;
-}
-else
-{
-	ajaxBiblioteca('novo');
-}
-
-function getColecao( xml_acervo_colecao )
-{
-	var campoColecao = document.getElementById('ref_cod_acervo_colecao');
-	var DOM_array = xml_acervo_colecao.getElementsByTagName( "acervo_colecao" );
-
-	if(DOM_array.length)
+	if(document.getElementById('ref_cod_escola').value == "")
 	{
-		campoColecao.length = 1;
-		campoColecao.options[0].text = 'Selecione uma coleï¿½ï¿½o';
-		campoColecao.disabled = false;
+		setVisibility(document.getElementById('img_funcao'), false);
+		setVisibility(document.getElementById('img_jornada_trabalho'), false);
 
-		for( var i=0; i<DOM_array.length; i++)
-		{
-			campoColecao.options[campoColecao.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_colecao"), false, false);
-		}
-		setVisibility(document.getElementById('img_colecao'), true);
-		if(tempColecao != null)
-			campoColecao.value = tempColecao;
+		/*setVisibility(document.getElementById('img_autor'), false);*/
+		tempFuncao = null;
+	} else {
+		ajaxEscola('novo');
 	}
-	else
-	{
-		if(document.getElementById('ref_cod_biblioteca').value == "")
-		{
-			campoColecao.options[0].text = 'Selecione uma biblioteca';
-			setVisibility(document.getElementById('img_colecao'), false);
-		}
-		else
-		{
-			campoColecao.options[0].text = 'A biblioteca nï¿½o possui coleï¿½ï¿½es';
-			setVisibility(document.getElementById('img_colecao'), true);
-		}
-	}
-}
-
-function getEditora( xml_acervo_editora )
-{
-	var campoEditora = document.getElementById('ref_cod_acervo_editora');
-	var DOM_array = xml_acervo_editora.getElementsByTagName( "acervo_editora" );
-
-	if(DOM_array.length)
-	{
-		campoEditora.length = 1;
-		campoEditora.options[0].text = 'Selecione uma editora';
-		campoEditora.disabled = false;
-
-		for( var i=0; i<DOM_array.length; i++)
-		{
-			campoEditora.options[campoEditora.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_editora"), false, false);
-		}
-		setVisibility(document.getElementById('img_editora'), true);
-		if(tempEditora != null)
-			campoEditora.value = tempEditora;
-	}
-	else
-	{
-		if(document.getElementById('ref_cod_biblioteca').value == "")
-		{
-			campoEditora.options[0].text = 'Selecione uma biblioteca';
-			setVisibility(document.getElementById('img_editora'), false);
-		}
-		else
-		{
-			campoEditora.options[0].text = 'A biblioteca nï¿½o possui editoras';
-			setVisibility(document.getElementById('img_editora'), true);
-		}
-	}
-}
-
-function getIdioma( xml_acervo_idioma )
-{
-	var campoIdioma = document.getElementById('ref_cod_acervo_idioma');
-	var DOM_array = xml_acervo_idioma.getElementsByTagName( "acervo_idioma" );
-
-	if(DOM_array.length)
-	{
-		campoIdioma.length = 1;
-		campoIdioma.options[0].text = 'Selecione uma idioma';
-		campoIdioma.disabled = false;
-
-		for( var i=0; i<DOM_array.length; i++)
-		{
-			campoIdioma.options[campoIdioma.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_idioma"), false, false);
-		}
-		setVisibility(document.getElementById('img_idioma'), true);
-		if(tempIdioma != null)
-			campoIdioma.value = tempIdioma;
-	}
-	else
-	{
-		if(document.getElementById('ref_cod_biblioteca').value == "")
-		{
-			campoIdioma.options[0].text = 'Selecione uma biblioteca';
-			setVisibility(document.getElementById('img_idioma'), false);
-		}
-		else
-		{
-			campoIdioma.options[0].text = 'A biblioteca nï¿½o possui idiomas';
-			setVisibility(document.getElementById('img_idioma'), true);
-		}
-	}
-}
-
-document.getElementById('ref_cod_biblioteca').onchange = function()
-{
-	ajaxBiblioteca();
-	if(document.getElementById('ref_cod_biblioteca').value != '')
-		setVisibility(document.getElementById('img_autor'), true);
-	else
-		setVisibility(document.getElementById('img_autor'), false);
-};
-
-function ajaxBiblioteca(acao)
-{
-	var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
-
-	var campoExemplarTipo = document.getElementById('ref_cod_exemplar_tipo');
-
-	var campoColecao = document.getElementById('ref_cod_acervo_colecao');
-	if(acao == 'novo')
-	{
-		tempColecao = campoColecao.value;
-	}
-	campoColecao.length = 1;
-	campoColecao.disabled = true;
-	campoColecao.options[0].text = 'Carregando coleï¿½ï¿½es';
-
-	var xml_colecao = new ajax( getColecao );
-	xml_colecao.envia( "educar_colecao_xml.php?bib="+campoBiblioteca );
-
-	var campoEditora = document.getElementById('ref_cod_acervo_editora');
-	if(acao == 'novo')
-	{
-		tempEditora = campoEditora.value;
-	}
-	campoEditora.length = 1;
-	campoEditora.disabled = true;
-	campoEditora.options[0].text = 'Carregando editoras';
-
-	var xml_editora = new ajax( getEditora );
-	xml_editora.envia( "educar_editora_xml.php?bib="+campoBiblioteca );
-
-	var campoIdioma = document.getElementById('ref_cod_acervo_idioma');
-	if(acao == 'novo')
-	{
-		tempIdioma = campoIdioma.value;
-	}
-	campoIdioma.length = 1;
-	campoIdioma.disabled = true;
-	campoIdioma.options[0].text = 'Carregando idiomas';
-
-	var xml_idioma = new ajax( getIdioma );
-	xml_idioma.envia( "educar_idioma_xml.php?bib="+campoBiblioteca );
-
-}
-
-function pesquisa()
-{
-	var biblioteca = document.getElementById('ref_cod_biblioteca').value;
-	if(!biblioteca)
-	{
-		alert('Por favor,\nselecione uma biblioteca!');
-		return;
-	}
-	pesquisa_valores_popless('educar_pesquisa_acervo_lst.php?campo1=ref_cod_acervo&ref_cod_biblioteca=' + biblioteca , 'ref_cod_acervo')
-}
-
-
-function fixupPrincipalCheckboxes() {
-  $j('#principal').hide();
-
-  var $checkboxes = $j("input[type='checkbox']").filter("input[id^='principal_']");
-
-  $checkboxes.change(function(){
-    $checkboxes.not(this).removeAttr('checked');
-  });
-}
-
-fixupPrincipalCheckboxes();
-function fixupAssuntosSize(){
-
-	$j('#assuntos_chzn ul').css('width', '307px');	
 	
-}
+	if(document.getElementById('ref_cod_instituicao').value == "")
+	{
+		setVisibility(document.getElementById('img_jornada_trabalho'), false);
 
-fixupAssuntosSize();
+		tempJornadaTrabalho = null;
+	} else {
+		ajaxInstituicao('novo');
+	}
 
-  $assuntos = $j('#assuntos');
+	function getFuncao(xml_vps_funcao)
+	{
+		var campoFuncao = document.getElementById('ref_cod_vps_funcao');
+		var DOM_array = xml_vps_funcao.getElementsByTagName("vps_funcao");
 
-  $assuntos.trigger('liszt:updated');
-  var testezin;
+		if(DOM_array.length)
+		{
+			campoFuncao.length = 1;
+			campoFuncao.options[0].text = 'Selecione uma Função/Cargo';
+			campoFuncao.disabled = false;
 
-var handleGetAssuntos = function(dataResponse) {
-  testezin = dataResponse['assuntos'];
-  
-  $j.each(dataResponse['assuntos'], function(id, value) {
-  	
-    $assuntos.children("[value=" + value + "]").attr('selected', '');
-  });
+			for(var i=0; i<DOM_array.length; i++)
+			{
+				campoFuncao.options[campoFuncao.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_funcao"), false, false);
+			}
+			setVisibility(document.getElementById('img_funcao'), true);
+			if(tempFuncao != null)
+				campoFuncao.value = tempFuncao;
+		}
+		else
+		{
+			if(document.getElementById('ref_cod_escola').value == "")
+			{
+				campoFuncao.options[0].text = 'Selecione uma escola';
+				setVisibility(document.getElementById('img_funcao'), false);
+			}
+			else
+			{
+				campoFuncao.options[0].text = 'A Escola não possui função/cargo';
+				setVisibility(document.getElementById('img_funcao'), true);
+			}
+		}
+	}
 
-  $assuntos.trigger('liszt:updated');
-}
+	function getJornadaTrabalho(xml_vps_jornada_trabalho)
+	{
+		var campoJornadaTrabalho = document.getElementById('ref_cod_vps_jornada_trabalho');
+		var DOM_array = xml_vps_jornada_trabalho.getElementsByTagName("vps_jornada_trabalho");
 
-var getAssuntos = function() {
-	    
-  var $cod_acervo = $j('#cod_acervo').val();
-  
-  if ($j('#cod_acervo').val()!='') {    
+		if(DOM_array.length)
+		{
+			campoJornadaTrabalho.length = 1;
+			campoJornadaTrabalho.options[0].text = 'Selecione uma Jornada de Trabalho';
+			campoJornadaTrabalho.disabled = false;
 
-    var additionalVars = {
-      id : $j('#cod_acervo').val(),
-    };
+			for(var i=0; i<DOM_array.length; i++)
+			{
+				campoJornadaTrabalho.options[campoJornadaTrabalho.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_jornada_trabalho"), false, false);
+			}
+			setVisibility(document.getElementById('img_jornada_trabalho'), true);
+			if(tempJornadaTrabalho != null)
+				campoJornadaTrabalho.value = tempJornadaTrabalho;
+		}
+		else
+		{
+			if(document.getElementById('ref_cod_instituicao').value == "")
+			{
+				campoJornadaTrabalho.options[0].text = 'Selecione uma instituição';
+				setVisibility(document.getElementById('img_jornada_trabalho'), false);
+			}
+			else
+			{
+				campoJornadaTrabalho.options[0].text = 'A instituição não possui jornadas de trabalhos';
+				setVisibility(document.getElementById('img_jornada_trabalho'), true);
+			}
+		}
+	}
 
-    var options = {
-      url      : getResourceUrlBuilder.buildUrl('/module/Api/assunto', 'assunto', additionalVars),
-      dataType : 'json',
-      data     : {},
-      success  : handleGetAssuntos,
-    };
+	jQuery(document).ready(function () {
+		jQuery("#ref_cod_instituicao").change(function() {
+			ajaxInstituicao();
+		});
 
-    getResource(options);
-  }
-}
+		jQuery("#ref_cod_escola").change(function() {
+			ajaxEscola();
 
-getAssuntos();
+			if(document.getElementById('ref_cod_escola').value != '')
+				setVisibility(document.getElementById('img_autor'), true);
+			else
+				setVisibility(document.getElementById('img_autor'), false);
+		});
+		jQuery(".chosen-container").width(jQuery("#idiomas").width() + 14); 
+	});
+	
+	function ajaxEscola(acao)
+	{
+		var campoEscola = document.getElementById('ref_cod_escola').value;
+
+		var campoExemplarTipo = document.getElementById('ref_cod_exemplar_tipo');
+
+		var campoFuncao = document.getElementById('ref_cod_vps_funcao');
+
+		if(acao == 'novo')
+		{
+			tempFuncao = campoFuncao.value;
+		}
+
+		campoFuncao.length = 1;
+		campoFuncao.disabled = true;
+		campoFuncao.options[0].text = 'Carregando coleï¿½ï¿½es';
+
+		var xml_funcao = new ajax(getFuncao);
+		xml_funcao.envia("educar_vps_funcao_xml.php?esc="+campoEscola);
+	}
+
+	function ajaxInstituicao(acao)
+	{
+		var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
+
+		var campoJornadaTrabalho = document.getElementById('ref_cod_vps_jornada_trabalho');
+
+		if(acao == 'novo')
+		{
+			tempJornadaTrabalho = campoJornadaTrabalho.value;
+		}
+
+		campoJornadaTrabalho.length = 1;
+		campoJornadaTrabalho.disabled = true;
+		campoJornadaTrabalho.options[0].text = 'Carregando Jornada de Trabalho';
+
+		var xml_jornada_trabalho = new ajax(getJornadaTrabalho);
+		xml_jornada_trabalho.envia("educar_vps_jornada_trabalho_xml.php?inst="+campoInstituicao);
+	}
+
+	function pesquisa()
+	{
+		var escola = document.getElementById('ref_cod_escola').value;
+		if(!escola)
+		{
+			alert('Por favor,\nselecione uma escola!');
+			return;
+		}
+		pesquisa_valores_popless('educar_pesquisa_acervo_lst.php?campo1=ref_cod_vps_entrevista&ref_cod_escola=' + biblioteca , 'ref_cod_vps_entrevista')
+	}
+
+
+	function fixupPrincipalCheckboxes() {
+		$j('#principal').hide();
+
+		var $checkboxes = $j("input[type='checkbox']").filter("input[id^='principal_']");
+
+		$checkboxes.change(function(){
+			$checkboxes.not(this).removeAttr('checked');
+		});
+	}
+
+	fixupPrincipalCheckboxes();
+	function fixupAssuntosSize(){
+
+		$j('#assuntos_chzn ul').css('width', '307px');	
+		
+	}
+
+	fixupAssuntosSize();
+
+	$assuntos = $j('#assuntos');
+
+	$assuntos.trigger('liszt:updated');
+	var testezin;
+
+	var handleGetAssuntos = function(dataResponse) {
+		testezin = dataResponse['assuntos'];
+
+		$j.each(dataResponse['assuntos'], function(id, value) {
+			$assuntos.children("[value=" + value + "]").attr('selected', '');
+		});
+
+		$assuntos.trigger('liszt:updated');
+	}
+
+	var getAssuntos = function() {
+		var $cod_vps_entrevista = $j('#cod_vps_entrevista').val();
+
+		if ($j('#cod_vps_entrevista').val()!='') {    
+			var additionalVars = {
+				id : $j('#cod_vps_entrevista').val(),
+			};
+
+			var options = {
+				url      : getResourceUrlBuilder.buildUrl('/module/Api/assunto', 'assunto', additionalVars),
+				dataType : 'json',
+				data     : {},
+				success  : handleGetAssuntos,
+			};
+
+			getResource(options);
+		}
+	}
+
+	getAssuntos();
 
 </script>
