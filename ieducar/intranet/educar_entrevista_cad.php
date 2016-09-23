@@ -70,11 +70,11 @@ class indice extends clsCadastro
 
 	var $checked;
 
-	var $acervo_autor;
-	var $ref_cod_vps_entrevista_autor;
+	var $vps_entrevista_responsavel;
+	var $ref_cod_vps_entrevista_responsavel;
 	var $principal;
 	var $incluir_autor;
-	var $excluir_autor;
+	var $excluir_responsavel;
 
 	var $funcao;
 	var $jornada_trabalho;
@@ -158,7 +158,7 @@ class indice extends clsCadastro
 		}
 		if(is_numeric($this->autor))
 		{
-			$this->ref_cod_vps_entrevista_autor = $this->autor;
+			$this->ref_cod_vps_entrevista_responsavel = $this->autor;
 		}
 
 		// foreign keys
@@ -238,9 +238,7 @@ class indice extends clsCadastro
 					$opcoes["{$registro['cod_vps_funcao']}"] = "{$registro['nm_funcao']}";
 				}
 			}
-		}
-		else
-		{
+		} else {
 			echo "<!--\nErro\nClasse clsPmieducarVPSFuncao nao encontrada\n-->";
 			$opcoes = array("" => "Erro na geracao");
 		}
@@ -259,9 +257,7 @@ class indice extends clsCadastro
 					$opcoes["{$registro['cod_vps_jornada_trabalho']}"] = "{$registro['nm_jornada_trabalho']}";
 				}
 			}
-		}
-		else
-		{
+		} else {
 			echo "<!--\nErro\nClasse clsPmieducarVPSJornadaTrabalho nao encontrada\n-->";
 			$opcoes = array("" => "Erro na geracao");
 		}
@@ -283,28 +279,29 @@ class indice extends clsCadastro
 
 		$this->campoQuebra();
 
-		if ($_POST["acervo_autor"])
-			$this->acervo_autor = unserialize(urldecode($_POST["acervo_autor"]));
+		if ($_POST["vps_entrevista_responsavel"])
+			$this->vps_entrevista_responsavel = unserialize(urldecode($_POST["vps_entrevista_responsavel"]));
 
-		if(is_numeric($this->cod_vps_entrevista) && !$_POST)
+		if(is_numeric($this->cod_vps_entrevista) && is_numeric($this->empresa_id) && !$_POST)
 		{
-			$obj = new clsPmieducarAcervoAcervoAutor();
-			$registros = $obj->lista(null, $this->cod_vps_entrevista);
+			$obj = new clsPmieducarVPSEntrevistaResponsavel();
+			$registros = $obj->lista($this->empresa_id, $this->cod_vps_entrevista);
+
 			if($registros)
 			{
 				foreach ($registros AS $campo)
 				{
-					$aux["ref_cod_vps_entrevista_autor_"] = $campo["ref_cod_vps_entrevista_autor"];
+					$aux["ref_cod_vps_entrevista_responsavel_"] = $campo["ref_cod_vps_entrevista_responsavel"];
 					$aux["principal_"]= $campo["principal"];
-					$this->acervo_autor[] = $aux;
+					$this->vps_entrevista_responsavel[] = $aux;
 				}
 
 				// verifica se ja existe um autor principal
-				if (is_array($this->acervo_autor))
+				if (is_array($this->vps_entrevista_responsavel))
 				{
-					foreach ($this->acervo_autor AS $autores)
+					foreach ($this->vps_entrevista_responsavel AS $entrevistadores)
 					{
-						if ($autores["principal_"] == 1)
+						if ($entrevistadores["principal_"] == 1)
 						{
 							$this->checked = 1;
 							$this->campoOculto("checked", $this->checked);
@@ -316,108 +313,107 @@ class indice extends clsCadastro
 
 		unset($aux);
 
-		if ($_POST["ref_cod_vps_entrevista_autor"])
+		if ($_POST["ref_cod_vps_entrevista_responsavel"])
 		{
 			if ($_POST["principal"])
 			{
 				$this->checked = 1;
 				$this->campoOculto("checked", $this->checked);
 			}
-			$aux["ref_cod_vps_entrevista_autor_"] = $_POST["ref_cod_vps_entrevista_autor"];
+
+			$aux["ref_cod_vps_entrevista_responsavel_"] = $_POST["ref_cod_vps_entrevista_responsavel"];
 			$aux["principal_"] = $_POST["principal"];
-			$this->acervo_autor[] = $aux;
+			$this->vps_entrevista_responsavel[] = $aux;
 
-//			echo "<pre>";print_r($this->acervo_autor);
-
-			// verifica se ja existe um autor principal
-			if (is_array($this->acervo_autor))
+			if (is_array($this->vps_entrevista_responsavel))
 			{
-				foreach ($this->acervo_autor AS $autores)
+				foreach ($this->vps_entrevista_responsavel AS $responsaveis)
 				{
-					if ($autores["principal_"] == 'on')
+					if ($responsaveis["principal_"] == 'on')
 					{
 						$this->checked = 1;
 						$this->campoOculto("checked", $this->checked);
 					}
 				}
 			}
-			unset($this->ref_cod_vps_entrevista_autor);
+			unset($this->ref_cod_vps_entrevista_responsavel);
 			unset($this->principal);
 		}
 
-		$this->campoOculto("excluir_autor", "");
+		$this->campoOculto("excluir_responsavel", "");
 		unset($aux);
 
-		if ($this->acervo_autor)
+		if ($this->vps_entrevista_responsavel)
 		{
-			foreach ($this->acervo_autor as $key => $autor)
+			foreach ($this->vps_entrevista_responsavel as $key => $responsavel)
 			{
-				if ($this->excluir_autor == $autor["ref_cod_vps_entrevista_autor_"])
+				if ($this->excluir_responsavel == $responsavel["ref_cod_vps_entrevista_responsavel_"])
 				{
-					unset($this->acervo_autor[$key]);
-					unset($this->excluir_autor);
+					unset($this->vps_entrevista_responsavel[$key]);
+					unset($this->excluir_responsavel);
 				}
 				else
 				{
-					$obj_acervo_autor = new clsPmieducarAcervoAutor($autor["ref_cod_vps_entrevista_autor_"]);
-					$det_acervo_autor = $obj_acervo_autor->detalhe();
-					$nm_autor = $det_acervo_autor["nm_autor"];
-					$this->campoTextoInv("ref_cod_exemplar_tipo_{$autor["ref_cod_vps_entrevista_autor_"]}", "", $nm_autor, 30, 255, false, false, true);
-					$this->campoCheck("principal_{$autor["ref_cod_vps_entrevista_autor_"]}", "", $autor['principal_'], "<a href='#' onclick=\"getElementById('excluir_autor').value = '{$autor["ref_cod_vps_entrevista_autor_"]}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>", false, false, false);
-					$aux["ref_cod_vps_entrevista_autor_"] = $autor["ref_cod_vps_entrevista_autor_"];
-					$aux["principal_"] = $autor['principal_'];
+					$obj_vps_entrevista_responsavel = new clsPmieducarVPSResponsavelEntrevista($responsavel["ref_cod_vps_entrevista_responsavel_"]);
+					$det_vps_entrevista_responsavel = $obj_vps_entrevista_responsavel->detalhe();
+					$nm_responsavel = $det_vps_entrevista_responsavel["nm_responsavel"];
+					$this->campoTextoInv("ref_cod_exemplar_tipo_{$responsavel["ref_cod_vps_entrevista_responsavel_"]}", "", $nm_responsavel, 30, 255, false, false, true);
+					$this->campoCheck("principal_{$responsavel["ref_cod_vps_entrevista_responsavel_"]}", "", $responsavel['principal_'], "<a href='#' onclick=\"getElementById('excluir_responsavel').value = '{$responsavel["ref_cod_vps_entrevista_responsavel_"]}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>", false, false, false);
+					$aux["ref_cod_vps_entrevista_responsavel_"] = $responsavel["ref_cod_vps_entrevista_responsavel_"];
+					$aux["principal_"] = $responsavel['principal_'];
 				}
 			}
 		}
-		$this->campoOculto("acervo_autor", serialize($this->acervo_autor));
+		$this->campoOculto("vps_entrevista_responsavel", serialize($this->vps_entrevista_responsavel));
 
-		if(class_exists("clsPmieducarAcervoAutor"))
+		if(class_exists("clsPmieducarVPSResponsavelEntrevista"))
 		{
 			$opcoes = array("" => "Selecione");
-			$objTemp = new clsPmieducarAcervoAutor();
-			$objTemp->setOrderby("nm_autor ASC");
+			$objTemp = new clsPmieducarVPSResponsavelEntrevista();
+			$objTemp->setOrderby("nm_responsavel ASC");
 			$lista = $objTemp->lista(null,null,null,null,null,null,null,null,null,1);
+
 			if (is_array($lista) && count($lista))
 			{
 				foreach ($lista as $registro)
 				{
-					$opcoes["{$registro['cod_acervo_autor']}"] = "{$registro['nm_autor']}";
+					$opcoes["{$registro['cod_vps_entrevista_responsavel']}"] = "{$registro['nm_responsavel']}";
 				}
 			}
 		}
 		else
 		{
-			echo "<!--\nErro\nClasse clsPmieducarAcervoAutor não encontrada\n-->";
+			echo "<!--\nErro\nClasse clsPmieducarVPSResponsavelEntrevista não encontrada\n-->";
 			$opcoes = array("" => "Erro na geração");
 		}
-		if (is_array($this->acervo_autor))
+		if (is_array($this->vps_entrevista_responsavel))
 		{
-			$qtd_autor = count($this->acervo_autor);
+			$qtd_responsavel = count($this->vps_entrevista_responsavel);
 		}
-		// nï¿½o existe um autor principal nem autor
-		if (($this->checked != 1) && (!$qtd_autor || ($qtd_autor == 0)))
-		{
-//			die("1");
-			$this->campoLista("ref_cod_vps_entrevista_autor", "Autor", $opcoes, $this->ref_cod_vps_entrevista_autor,null,true,"","",false,true);
 
-		 	$this->campoCheck("principal", "&nbsp;&nbsp;<img id='img_autor' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 250,'educar_vps_responsavel_entrevista_cad_pop.php',[], 'Autor')\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
-		}
-		// nï¿½o existe um autor principal, mas existe um autor
-		else if (($this->checked != 1) && ($qtd_autor > 0))
+		// não existe um responsavel principal nem responsavel
+		if (($this->checked != 1) && (!$qtd_responsavel || ($qtd_responsavel == 0)))
 		{
-			$this->campoLista("ref_cod_vps_entrevista_autor", "Autor", $opcoes, $this->ref_cod_vps_entrevista_autor,null,true,null, null,null,false);
-		 	$this->campoCheck("principal", "&nbsp;&nbsp;<img src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"pesquisa_valores_popless('educar_vps_responsavel_entrevista_cad_pop.php')\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
+			$this->campoLista("ref_cod_vps_entrevista_responsavel", "Responsável", $opcoes, $this->ref_cod_vps_entrevista_responsavel,null,true,"","",false,true);
+
+		 	$this->campoCheck("principal", "&nbsp;&nbsp;<img id='img_responsavel' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 250,'educar_vps_responsavel_entrevista_cad_pop.php',[], 'Autor')\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
 		}
-		// existe um autor principal
+		// não existe um responsavel principal, mas existe um responsavel
+		else if (($this->checked != 1) && ($qtd_responsavel > 0))
+		{
+			$this->campoLista("ref_cod_vps_entrevista_responsavel", "Responsável", $opcoes, $this->ref_cod_vps_entrevista_responsavel,null,true,null, null,null,false);
+		 	$this->campoCheck("principal", "&nbsp;&nbsp;<img src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"pesquisa_valores_popless('educar_vps_responsavel_entrevista_cad_pop.php')\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_responsavel').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
+		}
+		// existe um responsavel principal
 		else
 		{
-			$this->campoLista("ref_cod_vps_entrevista_autor", "Autor", $opcoes, $this->ref_cod_vps_entrevista_autor,"",false,"","<img src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"pesquisa_valores_popless('educar_vps_responsavel_entrevista_cad_pop.php')\" />&nbsp;&nbsp;<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>",false,false);
+			$this->campoLista("ref_cod_vps_entrevista_responsavel", "Responsável", $opcoes, $this->ref_cod_vps_entrevista_responsavel,"",false,"","<img src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"pesquisa_valores_popless('educar_vps_responsavel_entrevista_cad_pop.php')\" />&nbsp;&nbsp;<a href='#' onclick=\"getElementById('incluir_autor').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>",false,false);
 		}
 
-		$this->campoOculto("incluir_autor", "");
+		$this->campoOculto("incluir_responsavel", "");
 
 		$this->campoQuebra();
-		//-----------------------FIM AUTOR------------------------//
+		//-----------------------FIM RESPONSAVEL------------------------//
 
 		// text
 		$this->campoTexto("nm_entrevista", "Entrevista", $this->nm_entrevista, 30, 255, true);
@@ -458,8 +454,8 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra(598, $this->pessoa_logada, 11,  "educar_entrevista_lst.php");
 
-		$this->acervo_autor = unserialize(urldecode($this->acervo_autor));
-		if ($this->acervo_autor)
+		$this->vps_entrevista_responsavel = unserialize(urldecode($this->vps_entrevista_responsavel));
+		if ($this->vps_entrevista_responsavel)
 		{
 			$obj = new clsPmieducarAcervo(null, $this->ref_cod_exemplar_tipo, $this->ref_cod_vps_entrevista, null, $this->pessoa_logada, $this->ref_cod_vps_funcao, $this->ref_cod_vps_jornada_trabalho, $this->empresa_id, $this->nm_entrevista, $this->descricao, $this->ano, null, null, 1, $this->ref_cod_escola);
 			$cadastrou = $obj->cadastra();
@@ -467,17 +463,17 @@ class indice extends clsCadastro
 			{
 				$this->gravaAssuntos($cadastrou);
 			//-----------------------CADASTRA AUTOR------------------------//
-				foreach ($this->acervo_autor AS $autor)
+				foreach ($this->vps_entrevista_responsavel AS $autor)
 				{
-					$autorPrincipal = $_POST["principal_{$autor['ref_cod_vps_entrevista_autor_']}"];
+					$autorPrincipal = $_POST["principal_{$autor['ref_cod_vps_entrevista_responsavel_']}"];
 					$autor["principal_"] = is_null($autorPrincipal) ? 0 : 1;
 
-					$obj = new clsPmieducarAcervoAcervoAutor($autor["ref_cod_vps_entrevista_autor_"], $cadastrou, $autor["principal_"]);
+					$obj = new clsPmieducarAcervoAcervoAutor($autor["ref_cod_vps_entrevista_responsavel_"], $cadastrou, $autor["principal_"]);
 					$cadastrou2  = $obj->cadastra();
 					if (!$cadastrou2)
 					{
 						$this->mensagem = "Cadastro não realizado.<br>";
-						echo "<!--\nErro ao cadastrar clsPmieducarAcervoAcervoAutor\nvalores obrigat&oacute;rios\nis_numeric($cadastrou) && is_numeric({$autor["ref_cod_vps_entrevista_autor_"]}) && is_numeric({$autor["principal_"]})\n-->";
+						echo "<!--\nErro ao cadastrar clsPmieducarAcervoAcervoAutor\nvalores obrigat&oacute;rios\nis_numeric($cadastrou) && is_numeric({$autor["ref_cod_vps_entrevista_responsavel_"]}) && is_numeric({$autor["principal_"]})\n-->";
 						return false;
 					}
 				}
@@ -505,8 +501,8 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra(598, $this->pessoa_logada, 11,  "educar_entrevista_lst.php");
 
-		$this->acervo_autor = unserialize(urldecode($this->acervo_autor));
-		if ($this->acervo_autor)
+		$this->vps_entrevista_responsavel = unserialize(urldecode($this->vps_entrevista_responsavel));
+		if ($this->vps_entrevista_responsavel)
 		{
 			$obj = new clsPmieducarAcervo($this->cod_vps_entrevista, $this->ref_cod_exemplar_tipo, $this->ref_cod_vps_entrevista, $this->pessoa_logada, null, $this->ref_cod_vps_funcao, $this->ref_cod_vps_jornada_trabalho, $this->empresa_id, $this->nm_entrevista, $this->descricao, $this->ano, null, null, 1, $this->ref_cod_escola);
 			$editou = $obj->edita();
@@ -520,17 +516,17 @@ class indice extends clsCadastro
 				$excluiu = $obj->excluirTodos();
 				if ($excluiu)
 				{
-					foreach ($this->acervo_autor AS $autor)
+					foreach ($this->vps_entrevista_responsavel AS $autor)
 					{
-						$autorPrincipal = $_POST["principal_{$autor['ref_cod_vps_entrevista_autor_']}"];
+						$autorPrincipal = $_POST["principal_{$autor['ref_cod_vps_entrevista_responsavel_']}"];
 						$autor["principal_"] = is_null($autorPrincipal) ? 0 : 1;
 
-						$obj = new clsPmieducarAcervoAcervoAutor($autor["ref_cod_vps_entrevista_autor_"], $this->cod_vps_entrevista, $autor["principal_"]);
+						$obj = new clsPmieducarAcervoAcervoAutor($autor["ref_cod_vps_entrevista_responsavel_"], $this->cod_vps_entrevista, $autor["principal_"]);
 						$cadastrou2  = $obj->cadastra();
 						if (!$cadastrou2)
 						{
 							$this->mensagem = "Editar não realizado.<br>";
-							echo "<!--\nErro ao editar clsPmieducarAcervoAcervoAutor\nvalores obrigat&oacute;rios\nis_numeric($cadastrou) && is_numeric({$autor["ref_cod_vps_entrevista_autor_"]}) && is_numeric({$autor["principal_"]})\n-->";
+							echo "<!--\nErro ao editar clsPmieducarAcervoAcervoAutor\nvalores obrigat&oacute;rios\nis_numeric($cadastrou) && is_numeric({$autor["ref_cod_vps_entrevista_responsavel_"]}) && is_numeric({$autor["principal_"]})\n-->";
 							return false;
 						}
 					}
@@ -609,16 +605,19 @@ $pagina->MakeAll();
 	document.getElementById('ref_cod_vps_jornada_trabalho').disabled = true;
 	document.getElementById('ref_cod_vps_jornada_trabalho').options[0].text = 'Selecione uma instituição';
 
+	document.getElementById('ref_cod_vps_jornada_trabalho').disabled = true;
+	document.getElementById('ref_cod_vps_jornada_trabalho').options[0].text = 'Selecione uma empresa';
+
 	var tempExemplarTipo;
 	var tempFuncao;
 	var tempJornadaTrabalho;
+	var tempResponsavel;
 
 	if(document.getElementById('ref_cod_escola').value == "")
 	{
 		setVisibility(document.getElementById('img_funcao'), false);
 		setVisibility(document.getElementById('img_jornada_trabalho'), false);
 
-		/*setVisibility(document.getElementById('img_autor'), false);*/
 		tempFuncao = null;
 	} else {
 		ajaxEscola('novo');
@@ -631,6 +630,15 @@ $pagina->MakeAll();
 		tempJornadaTrabalho = null;
 	} else {
 		ajaxInstituicao('novo');
+	}
+	
+	if(document.getElementById('empresa_nome').value == "")
+	{
+		setVisibility(document.getElementById('img_responsavel'), false);
+
+		tempResponsavel = null;
+	} else {
+		ajaxResponsavel('novo');
 	}
 
 	function getFuncao(xml_vps_funcao)
@@ -700,6 +708,42 @@ $pagina->MakeAll();
 			}
 		}
 	}
+	
+	function getResponsavelEntrevista(xml_vps_responsavel_entrevista)
+	{
+		var campoResponsavelEntrevista = document.getElementById('ref_cod_vps_responsavel_entrevista');
+		var DOM_array = xml_vps_responsavel_entrevista.getElementsByTagName("vps_responsavel_entrevista");
+
+		if(DOM_array.length)
+		{
+			campoResponsavelEntrevista.length = 1;
+			campoResponsavelEntrevista.options[0].text = 'Selecione uma Jornada de Trabalho';
+			campoResponsavelEntrevista.disabled = false;
+
+			for(var i=0; i<DOM_array.length; i++)
+			{
+				campoResponsavelEntrevista.options[campoResponsavelEntrevista.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_responsavel_entrevista"), false, false);
+			}
+			
+			setVisibility(document.getElementById('img_responsavel'), true);
+			
+			if(tempReponsavel != null)
+				campoResponsavelEntrevista.value = tempReponsavel;
+		}
+		else
+		{
+			if(document.getElementById('empresa_nome').value == "")
+			{
+				campoResponsavelEntrevista.options[0].text = 'Selecione uma empresa';
+				setVisibility(document.getElementById('img_responsavel'), false);
+			}
+			else
+			{
+				campoResponsavelEntrevista.options[0].text = 'A instituição não possui jornadas de trabalhos';
+				setVisibility(document.getElementById('img_responsavel'), true);
+			}
+		}
+	}
 
 	jQuery(document).ready(function () {
 		jQuery("#ref_cod_instituicao").change(function() {
@@ -710,10 +754,11 @@ $pagina->MakeAll();
 			ajaxEscola();
 
 			if(document.getElementById('ref_cod_escola').value != '')
-				setVisibility(document.getElementById('img_autor'), true);
+				setVisibility(document.getElementById('img_responsavel'), true);
 			else
-				setVisibility(document.getElementById('img_autor'), false);
+				setVisibility(document.getElementById('img_responsavel'), false);
 		});
+
 		jQuery(".chosen-container").width(jQuery("#idiomas").width() + 14); 
 	});
 	

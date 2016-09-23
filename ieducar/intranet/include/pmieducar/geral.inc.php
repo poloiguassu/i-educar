@@ -142,6 +142,7 @@ require_once 'include/pmieducar/clsPmieducarVPSIdioma.inc.php';
 require_once 'include/pmieducar/clsPmieducarVPSResponsavelEntrevista.inc.php';
 require_once 'include/pmieducar/clsPmieducarVPSContratacaoTipo.inc.php';
 require_once 'include/pmieducar/clsPmieducarVPSEntrevista.inc.php';
+require_once 'include/pmieducar/clsPmieducarVPSEntrevistaResponsavel.inc.php';
 
 //Biblioteca
 require_once 'include/pmieducar/clsPmieducarBiblioteca.inc.php';
@@ -160,7 +161,6 @@ require_once 'include/pmieducar/clsPmieducarClienteTipoCliente.inc.php';
 require_once 'include/pmieducar/clsPmieducarPagamentoMulta.inc.php';
 require_once 'include/pmieducar/clsPmieducarBibliotecaUsuario.inc.php';
 require_once 'include/pmieducar/clsPmieducarClienteSuspensao.inc.php';
-require_once 'include/pmieducar/clsPmieducarAcervoAcervoAutor.inc.php';
 require_once 'include/pmieducar/clsPmieducarBibliotecaDia.inc.php';
 require_once 'include/pmieducar/clsPmieducarBibliotecaFeriados.inc.php';
 
