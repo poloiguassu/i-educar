@@ -435,22 +435,26 @@ class clsPmieducarVPSIdioma
 	/**
 	 * Deleta todos assuntos de uma determinada obra.
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	function deletaAssuntosDaObra($acervoId){
+	function deletaIdiomasEntrevista($entrevistaId)
+	{
 		$db = new clsBanco();
-		$db->Consulta("DELETE FROM pmieducar.acervo_vps_idioma WHERE ref_cod_acervo = {$acervoId}");
+		$db->Consulta("DELETE FROM pmieducar.vps_entrevista_idioma WHERE ref_cod_vps_entrevista = {$entrevistaId}");
+		
 		return true;
 	}
 
 	/**
 	 * Cadastra um determinado assunto para uma determinada obra.
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	function cadastraAssuntoParaObra($acervoId, $assuntoId){
+	function cadastraIdiomaEntrevista($entrevistaId, $idiomaId)
+	{
 		$db = new clsBanco();
-		$db->Consulta("INSERT INTO pmieducar.acervo_vps_idioma (ref_cod_acervo, ref_cod_vps_idioma) VALUES ({$acervoId},{$assuntoId})");
+		$db->Consulta("INSERT INTO pmieducar.vps_entrevista_idioma (ref_cod_vps_entrevista, ref_cod_vps_idioma) VALUES ({$entrevistaId},{$idiomaId})");
+
 		return true;
 	}	
 
@@ -459,9 +463,10 @@ class clsPmieducarVPSIdioma
 	 *
 	 * @return array
 	 */
-	function listaAssuntosPorObra($acervoId){
+	function listaIdiomasEntrevista($entrevistaId)
+	{
 		$db = new clsBanco();
-		$db->Consulta("SELECT aas.*, (SELECT nm_idioma FROM pmieducar.vps_idioma WHERE cod_vps_idioma = aas.ref_cod_vps_idioma) as nome FROM pmieducar.acervo_vps_idioma aas WHERE ref_cod_acervo = {$acervoId} ");
+		$db->Consulta("SELECT aas.*, (SELECT nm_idioma FROM pmieducar.vps_idioma WHERE cod_vps_idioma = aas.ref_cod_vps_idioma) as nome FROM pmieducar.vps_entrevista_idioma aas WHERE ref_cod_vps_entrevista = {$entrevistaId} ");
 		
 		while ($db->ProximoRegistro()) 
 		{

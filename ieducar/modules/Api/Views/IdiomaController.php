@@ -37,7 +37,7 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'intranet/include/pmieducar/clsPmieducarVPSIdioma.inc.php';
 
-class AssuntoController extends ApiCoreController
+class IdiomaController extends ApiCoreController
 {
 	// search options
 	protected function searchOptions() {
@@ -48,22 +48,21 @@ class AssuntoController extends ApiCoreController
 		return $this->toUtf8($resource['name'], array('transform' => true));
 	}
 
-	protected function getAssunto() {
+	protected function getIdioma() {
 		$obj = new clsPmieducarVPSIdioma();
-		$arrayAssuntos;
+		$arrayIdiomas;
 
-		foreach ($obj->listaAssuntosPorObra($this->getRequest()->id) as $reg) {
-			$arrayAssuntos[] = $reg['ref_cod_vps_idioma'];
+		foreach ($obj->listaIdiomasEntrevista($this->getRequest()->id) as $reg) {
+			$arrayIdiomas[] = $reg['ref_cod_vps_idioma'];
 		}
-
-		return array('idiomas' => $arrayAssuntos);
+		return array('idiomas' => $arrayIdiomas);
 	}
 
 	public function Gerar() {
-		if ($this->isRequestFor('get', 'assunto-search'))
+		if ($this->isRequestFor('get', 'idioma-search'))
 			$this->appendResponse($this->search());
-		elseif ($this->isRequestFor('get', 'assunto'))
-			$this->appendResponse($this->getAssunto());
+		elseif ($this->isRequestFor('get', 'idioma'))
+			$this->appendResponse($this->getIdioma());
 		else
 			$this->notImplementedOperationError();
 	}

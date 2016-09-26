@@ -91,12 +91,7 @@ class indice extends clsCadastro
 
 		$this->campoOculto("ref_cod_escola", $this->ref_cod_escola);
 		
-		$helperOptions = array(
-			'objectName'         => 'empresa',
-			'hiddenInputOptions' => array('options' => array('value' => $this->empresa_id))
-		);
-		
-		$this->inputsHelper()->simpleSearchPessoaj('nome', $options, $helperOptions);
+		$this->campoOculto("empresa_id", $this->empresa_id);
 
 		// text
 		$this->campoTexto("nm_responsavel", "Responsável Entrevista", $this->nm_responsavel, 30, 255, true);
@@ -127,7 +122,7 @@ class indice extends clsCadastro
 		{
 			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
 			echo "<script>
-					parent.document.getElementById('autor').value = '$cadastrou';
+					parent.document.getElementById('responsavel').value = '$cadastrou';
 					parent.document.getElementById('tipoacao').value = '';
 					parent.document.getElementById('formcadastro').submit();
 				</script>";
@@ -137,7 +132,7 @@ class indice extends clsCadastro
 		}
 
 		$this->mensagem  = "Cadastro não realizado.<br>";
-		$this->mensagem .= "<!--\nErro ao cadastrar clsPmieducarVPSResponsavelEntrevista\nvalores obrigat&oacute;rios\nis_numeric($this->pessoa_logada) && is_string($this->nm_responsavel)\n-->";
+		$this->mensagem .= "<!--\nErro ao cadastrar clsPmieducarVPSResponsavelEntrevista\nvalores obrigatórios\nis_numeric($this->pessoa_logada) && is_string($this->nm_responsavel)\n-->";
 
 		return false;
 	}
@@ -193,4 +188,5 @@ $pagina->MakeAll();
 ?>
 <script>
 	document.getElementById('ref_cod_escola').value = parent.document.getElementById('ref_cod_escola').value;
+	document.getElementById('empresa_id').value = parent.document.getElementById('empresa_id').value;
 </script>

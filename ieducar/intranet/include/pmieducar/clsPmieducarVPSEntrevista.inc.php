@@ -26,6 +26,7 @@
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 require_once("include/pmieducar/geral.inc.php");
+require_once('lib/Portabilis/Date/Utils.php');
 
 class clsPmieducarVPSEntrevista
 {
@@ -38,12 +39,16 @@ class clsPmieducarVPSEntrevista
 	var $ref_cod_vps_jornada_trabalho;
 	var $ref_idpes;
 	var $nm_entrevista;
+	var $salario;
+	var $data_entrevista;
+	var $hora_entrevista;	
 	var $descricao;
 	var $ano;
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
 	var $ref_cod_escola;
+	var $ref_cod_curso;
 
 	// propriedades padrao
 
@@ -109,13 +114,13 @@ class clsPmieducarVPSEntrevista
 	 *
 	 * @return object
 	 */
-	function clsPmieducarVPSEntrevista($cod_vps_entrevista = null, $ref_cod_vps_tipo_contratacao = null, $ref_cod_vps_entrevista = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_vps_funcao = null, $ref_cod_vps_jornada_trabalho = null, $ref_idpes = null, $nm_entrevista = null, $descricao = null, $ano = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_escola = null)
+	function clsPmieducarVPSEntrevista($cod_vps_entrevista = null, $ref_cod_vps_tipo_contratacao = null, $ref_cod_vps_entrevista = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_vps_funcao = null, $ref_cod_vps_jornada_trabalho = null, $ref_idpes = null, $nm_entrevista = null, $descricao = null, $ano = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_escola = null, $ref_cod_curso = null, $salario = null, $data_entrevista = null, $hora_entrevista = null)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}vps_entrevista";
 
-		$this->_campos_lista = $this->_todos_campos = "a.cod_vps_entrevista, a.ref_cod_vps_tipo_contratacao, a.ref_cod_vps_entrevista, a.ref_usuario_exc, a.ref_usuario_cad, a.ref_cod_vps_funcao, a.ref_cod_vps_jornada_trabalho, a.ref_idpes, a.nm_entrevista, a.descricao, a.ano, a.data_cadastro, a.data_exclusao, a.ativo, a.ref_cod_escola";
+		$this->_campos_lista = $this->_todos_campos = "a.cod_vps_entrevista, a.ref_cod_vps_tipo_contratacao, a.ref_cod_vps_entrevista, a.ref_usuario_exc, a.ref_usuario_cad, a.ref_cod_vps_funcao, a.ref_cod_vps_jornada_trabalho, a.ref_idpes, a.nm_entrevista, a.salario, a.data_entrevista, a.hora_entrevista, a.descricao, a.ano, a.data_cadastro, a.data_exclusao, a.ativo, a.ref_cod_escola, a.ref_cod_curso";
 
 		if(is_numeric($ref_cod_escola))
 		{
@@ -142,6 +147,34 @@ class clsPmieducarVPSEntrevista
 				if($db->CampoUnico("SELECT 1 FROM pmieducar.escola WHERE cod_escola = '{$ref_cod_escola}'"))
 				{
 					$this->ref_cod_escola = $ref_cod_escola;
+				}
+			}
+		}
+		if(is_numeric($ref_cod_curso))
+		{
+			if(class_exists("clsPmieducarCurso"))
+			{
+				$tmp_obj = new clsPmieducarCurso($ref_cod_curso);
+				if(method_exists($tmp_obj, "existe"))
+				{
+					if($tmp_obj->existe())
+					{
+						$this->ref_cod_curso = $ref_cod_curso;
+					}
+				}
+				else if(method_exists($tmp_obj, "detalhe"))
+				{
+					if($tmp_obj->detalhe())
+					{
+						$this->ref_cod_curso = $ref_cod_curso;
+					}
+				}
+			}
+			else
+			{
+				if($db->CampoUnico("SELECT 1 FROM pmieducar.curso WHERE cod_curso = '{$ref_cod_curso}'"))
+				{
+					$this->ref_cod_curso = $ref_cod_curso;
 				}
 			}
 		}
@@ -356,6 +389,18 @@ class clsPmieducarVPSEntrevista
 		{
 			$this->nm_entrevista = $nm_entrevista;
 		}
+		if(is_numeric($salario))
+		{
+			$this->salario = $salario;
+		}
+		if(is_string($data_entrevista))
+		{
+			$this->data_entrevista = $data_entrevista;
+		}
+		if(is_string($hora_entrevista))
+		{
+			$this->hora_entrevista = $hora_entrevista;
+		}
 		if(is_string($descricao))
 		{
 			$this->descricao = $descricao;
@@ -385,7 +430,7 @@ class clsPmieducarVPSEntrevista
 	 */
 	function cadastra()
 	{
-		if(is_numeric($this->ref_cod_vps_tipo_contratacao) && is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_vps_jornada_trabalho) && is_numeric($this->ref_idpes) && is_string($this->nm_entrevista) && is_numeric($this->ano) && is_numeric($this->ref_cod_escola))
+		if(is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_vps_jornada_trabalho) && is_numeric($this->ref_idpes) && is_string($this->nm_entrevista) && is_numeric($this->ano) && is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_curso))
 		{
 			$db = new clsBanco();
 
@@ -435,6 +480,24 @@ class clsPmieducarVPSEntrevista
 				$valores .= "{$gruda}'{$this->nm_entrevista}'";
 				$gruda = ", ";
 			}
+			if(is_numeric($this->salario))
+			{
+				$campos .= "{$gruda}salario";
+				$valores .= "{$gruda}'{$this->salario}'";
+				$gruda = ", ";
+			}
+			if(is_string($this->data_entrevista))
+			{
+				$campos .= "{$gruda}data_entrevista";
+				$valores .= "{$gruda}'{$this->data_entrevista}'";
+				$gruda = ", ";
+			}
+			if(is_string($this->hora_entrevista))
+			{
+				$campos .= "{$gruda}hora_entrevista";
+				$valores .= "{$gruda}'{$this->hora_entrevista}'";
+				$gruda = ", ";
+			}
 			if(is_string($this->descricao))
 			{
 				$campos .= "{$gruda}descricao";
@@ -447,12 +510,20 @@ class clsPmieducarVPSEntrevista
 				$valores .= "{$gruda}'{$this->ano}'";
 				$gruda = ", ";
 			}
+			
 			$campos .= "{$gruda}data_cadastro";
 			$valores .= "{$gruda}NOW()";
 			$gruda = ", ";
 			$campos .= "{$gruda}ativo";
 			$valores .= "{$gruda}'1'";
 			$gruda = ", ";
+
+			if(is_numeric($this->ref_cod_curso))
+			{
+				$campos .= "{$gruda}ref_cod_curso";
+				$valores .= "{$gruda}'{$this->ref_cod_curso}'";
+				$gruda = ", ";
+			}
 
 			if(is_numeric($this->ref_cod_escola))
 			{
@@ -518,6 +589,21 @@ class clsPmieducarVPSEntrevista
 			if(is_string($this->nm_entrevista))
 			{
 				$set .= "{$gruda}nm_entrevista = '{$this->nm_entrevista}'";
+				$gruda = ", ";
+			}
+			if(is_numeric($this->salario))
+			{
+				$set .= "{$gruda}salario = '{$this->salario}'";
+				$gruda = ", ";
+			}
+			if(is_string($this->data_entrevista))
+			{
+				$set .= "{$gruda}data_entrevista = '{$this->data_entrevista}'";
+				$gruda = ", ";
+			}
+			if(is_string($this->hora_entrevista))
+			{
+				$set .= "{$gruda}hora_entrevista = '{$this->hora_entrevista}'";
 				$gruda = ", ";
 			}
 			if(is_string($this->descricao))

@@ -65,7 +65,7 @@ class indice extends clsCadastro
 		$this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$this->cod_vps_funcao=$_GET["cod_vps_funcao"];
+		$this->cod_vps_funcao = $_GET["cod_vps_funcao"];
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 593, $this->pessoa_logada, 11,  "educar_vps_funcao_lst.php" );
@@ -74,19 +74,16 @@ class indice extends clsCadastro
 		{
 
 			$obj = new clsPmieducarVPSFuncao( $this->cod_vps_funcao );
-			$registro  = $obj->detalhe();
+			$registro = $obj->detalhe();
 			
 			if( $registro )
 			{
 				foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
 					$this->$campo = $val;
 
-				$obj_obra = new clsPmieducarVPSFuncao($this->cod_vps_funcao);
-				$det_obra = $obj_obra->detalhe();
-
-				$obj_escola = new clsPmieducarEscola($det_obra["ref_cod_escola"]);
+				$obj_escola = new clsPmieducarEscola($registro["ref_cod_escola"]);
 				$obj_det = $obj_escola->detalhe();
-
+				
 				$this->ref_cod_instituicao = $obj_det["ref_cod_instituicao"];
 				$this->ref_cod_escola = $obj_det["cod_escola"];
 
@@ -100,6 +97,7 @@ class indice extends clsCadastro
 				$retorno = "Editar";
 			}
 		}
+		
 		$this->url_cancelar = ($retorno == "Editar") ? "educar_vps_funcao_det.php?cod_vps_funcao={$registro["cod_vps_funcao"]}" : "educar_vps_funcao_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
 

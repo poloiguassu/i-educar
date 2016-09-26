@@ -24,39 +24,40 @@
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	header( 'Content-type: text/xml' );
+	header('Content-type: text/xml');
 
-	require_once( "include/clsBanco.inc.php" );
-	require_once( "include/funcoes.inc.php" );
+	require_once("include/clsBanco.inc.php");
+	require_once("include/funcoes.inc.php");
 
 	require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 	Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
 	echo "<?xml version=\"1.0\" encoding=\"ISO-8859-15\"?>\n<query xmlns=\"colecoes\">\n";
 
-	if( is_numeric( $_GET["inst"] ) )
+	if(is_numeric($_GET["esc"]) && is_numeric($_GET["idpes"]))
 	{
 		$db = new clsBanco();
-		$db->Consulta( "
+		$db->Consulta("
 			SELECT
-				cod_vps_jornada_trabalho,
-				nm_jornada_trabalho
+				cod_vps_responsavel_entrevista,
+				nm_responsavel
 			FROM
-				pmieducar.vps_jornada_trabalho
+				pmieducar.vps_responsavel_entrevista
 			WHERE
 				ativo = 1
-				AND ref_cod_instituicao = '{$_GET["inst"]}'
+				AND ref_cod_escola = '{$_GET["esc"]}'
+				AND ref_idpes = '{$_GET["idpes"]}'
 			ORDER BY
-				nm_jornada_trabalho ASC
+				nm_responsavel ASC
 		");
 
 		if ($db->numLinhas())
 		{
-			while ( $db->ProximoRegistro() )
+			while ($db->ProximoRegistro())
 			{
-				list( $cod, $nome) = $db->Tupla();
+				list($cod, $nome) = $db->Tupla();
 				$nome = str_replace('&', 'e', $nome);
-				echo "	<vps_jornada_trabalho cod_jornada_trabalho=\"{$cod}\" >{$nome}</vps_jornada_trabalho>\n";
+				echo "	<vps_responsavel_entrevista cod_vps_responsavel_entrevista=\"{$cod}\" >{$nome}</vps_responsavel_entrevista>\n";
 			}
 		}
 	}
