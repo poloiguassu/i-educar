@@ -5,7 +5,7 @@ var mae_details;
 var pessoaPaiOuMae;
 
  // before page is ready
-var firstTab = 12;
+var firstTab = 11;
  
 
 var $idField        = $j('#id');
@@ -83,7 +83,7 @@ $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 // Adiciona classe para que os campos de descrição possam ser desativados (checkboxs)
 $j('#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude').addClass('temDescricao');
 
-$j('#quantidade_camiseta, #tamanho_camiseta, #quantidade_calca, #tamanho_calca, #quantidade_calcado, #tamanho_calcado, #quantidade_bermuda, #tamanho_bermuda, #quantidade_saia, #tamanho_saia, #quantidade_meia, #tamanho_meia, #tamanho_blusa_jaqueta, #quantidade_blusa_jaqueta').addClass('uniforme');
+$j('#quantidade_camiseta, #tamanho_camiseta').addClass('uniforme');
 
 // ajax
 
@@ -291,20 +291,7 @@ resourceOptions.handleGet = function(dataResponse) {
     $j('#recebeu_uniforme').val('on');   
   }   
   $j('#tamanho_camiseta').val(dataResponse.tamanho_camiseta);
-  $j('#tamanho_calcado').val(dataResponse.tamanho_calcado);
-  $j('#tamanho_saia').val(dataResponse.tamanho_saia);
-  $j('#tamanho_calca').val(dataResponse.tamanho_calca);
-  $j('#tamanho_meia').val(dataResponse.tamanho_meia);
-  $j('#tamanho_bermuda').val(dataResponse.tamanho_bermuda);
-  $j('#tamanho_blusa_jaqueta').val(dataResponse.tamanho_blusa_jaqueta);
   $j('#quantidade_camiseta').val(dataResponse.quantidade_camiseta);
-  $j('#quantidade_calcado').val(dataResponse.quantidade_calcado);
-  $j('#quantidade_saia').val(dataResponse.quantidade_saia);
-  $j('#quantidade_calca').val(dataResponse.quantidade_calca);
-  $j('#quantidade_calcado').val(dataResponse.quantidade_calcado);
-  $j('#quantidade_bermuda').val(dataResponse.quantidade_bermuda);
-  $j('#quantidade_meia').val(dataResponse.quantidade_meia);  
-  $j('#quantidade_blusa_jaqueta').val(dataResponse.quantidade_blusa_jaqueta); 
 
     /***********************************************
       CAMPOS DA MORADIA
@@ -755,7 +742,7 @@ function canShowParentsFields(){
         $j('#tab2').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>firstTab && index<60){
+            if (index>firstTab && index<59){
               row.show();
             }else if (index>0){
               row.hide();
@@ -776,7 +763,7 @@ function canShowParentsFields(){
         $j('#tab3').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
           if (row.id!='stop'){
-            if (index>59 && index<82){
+            if (index>58 && index<63){
               row.show();
             }else if (index>0){
               row.hide();
@@ -794,7 +781,7 @@ function canShowParentsFields(){
         $j('#tab4').toggleClass('alunoTab alunoTab-active')
         $j('.tablecadastro >tbody  > tr').each(function(index, row) {
 
-          if (index<82 && index!=0){
+          if (index<64 && index!=0){
             row.hide();
 		  }else if(index<109){
             row.show();
