@@ -70,11 +70,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
 
-    'alfabetizado' => array(
-      'label'  => 'Alfabetizado',
-      'help'   => '',
-    ),
-
     'transporte' => array(
       'label'  => 'Transporte público',
       'help'   => '',
@@ -408,11 +403,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                            'options' => array('value' => null));
 
     $this->inputsHelper()->multipleSearchDeficiencias('', $options, $helperOptions);
-
-
-    // alfabetizado
-    $options = array('label' => $this->_getLabel('alfabetizado'), 'value' => 'checked');
-    $this->inputsHelper()->checkbox('alfabetizado', $options);
 
 
     /* *************************************

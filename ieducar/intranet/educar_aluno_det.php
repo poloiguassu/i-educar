@@ -396,11 +396,6 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Data de Nascimento', $registro['data_nasc']));
     }
 
-    /**
-     * Analfabeto.
-     */
-    $this->addDetalhe(array('Analfabeto', $registro['analfabeto'] == 0 ? 'Não' : 'Sim'));
-
     if ($registro['sexo']) {
       $this->addDetalhe(array('Sexo', $registro['sexo']));
     }

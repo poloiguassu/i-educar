@@ -586,7 +586,7 @@ class clsPmieducarMatricula
     $date_data_exclusao_fim = NULL, $int_ativo = NULL, $int_ano = NULL,
     $int_ref_cod_curso2 = NULL, $int_ref_cod_instituicao = NULL,
     $int_ultima_matricula = NULL, $int_modulo = NULL,
-    $int_padrao_ano_escolar = NULL, $int_analfabeto = NULL, $int_formando = NULL,
+    $int_padrao_ano_escolar = NULL, $int_formando = NULL,
     $str_descricao_reclassificacao = NULL, $int_matricula_reclassificacao = NULL,
     $boo_com_deficiencia = NULL, $int_ref_cod_curso = NULL, $bool_curso_sem_avaliacao = NULL,
     $arr_int_cod_matricula = NULL, $int_mes_defasado = NULL, $boo_data_nasc = NULL,
@@ -705,11 +705,6 @@ class clsPmieducarMatricula
 
     if (is_numeric($int_modulo)) {
       $filtros .= "{$whereAnd} m.modulo = '{$int_modulo}'";
-      $whereAnd = " AND ";
-    }
-
-    if (is_numeric($int_analfabeto)) {
-      $filtros .= "{$whereAnd} a.analfabeto = '{$int_analfabeto}'";
       $whereAnd = " AND ";
     }
 
