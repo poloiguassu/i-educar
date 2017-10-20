@@ -68,6 +68,9 @@ class indice extends clsCadastro
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
+	var $salario;
+	var $numero_vagas;
+	var $numero_jovens;
 
 	var $ref_cod_instituicao;
 	var $ref_cod_escola;
@@ -92,7 +95,7 @@ class indice extends clsCadastro
 	function Inicializar()
 	{
 		$retorno = "Novo";
-		
+
 		@session_start();
 			$this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
@@ -101,7 +104,7 @@ class indice extends clsCadastro
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra(598, $this->pessoa_logada, 11,  "educar_entrevista_lst.php");
-		
+
 		if(is_numeric($this->cod_vps_entrevista))
 		{
 			$obj = new clsPmieducarVPSEntrevista($this->cod_vps_entrevista);
@@ -120,9 +123,9 @@ class indice extends clsCadastro
 
 				$obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
 				$obj_det = $obj_curso->detalhe();
-				
+
 				$this->ref_cod_curso = $obj_det["cod_curso"];
-				
+
 				$this->empresa_id = $this->ref_idpes;
 
 				$obj_permissoes = new clsPermissoes();
@@ -140,7 +143,7 @@ class indice extends clsCadastro
 		$this->nome_url_cancelar = "Cancelar";
 
 		$nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
-		
+
 		$localizacao = new LocalizacaoSistema();
 		$localizacao->entradaCaminhos(array(
 			$_SERVER['SERVER_NAME'] . "/intranet" => "Início",
@@ -174,24 +177,12 @@ class indice extends clsCadastro
 		}
 
 		// foreign keys
-		$obrigatorio              = false;
-		$instituicao_obrigatorio  = true;
-		$escola_curso_obrigatorio = true;
-		$curso_obrigatorio        = true;
-		$get_escola               = true;
-		$get_escola_curso_serie   = false;
-		$sem_padrao               = true;
-		$get_curso                = true;
+		$get_escola = true;
+		$escola_obrigatorio = true;
+		$instituicao_obrigatorio = true;
+		include("include/pmieducar/educar_campo_lista.php");
 
-		$bloqueia = false;
-		
-		if (isset($this->ano) || !is_numeric($this->ref_cod_escola)){
-			$anoVisivel = true;
-		}
-
-		$desabilitado = $bloqueia;
-
-		include 'include/pmieducar/educar_campo_lista.php';
+		$anoVisivel = true;
 
 		// primary keys
 		$this->campoOculto("cod_vps_entrevista", $this->cod_vps_entrevista);
@@ -206,19 +197,19 @@ class indice extends clsCadastro
 
 		if ($anoVisivel)
 		{
-			$helperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
+			$helperOptions = array('situacoes' => array('em_andamento'));
 			$this->inputsHelper()->dynamic('anoLetivo', array('disabled' => $bloqueia), $helperOptions);
 			if($bloqueia)
 				$this->inputsHelper()->hidden('ano_hidden', array('value' => $this->ano));
 		}
-		
+
 		$options = array('label' => "Empresa", 'required' => true, 'size' => 30);
-		
+
 		$helperOptions = array(
 			'objectName'         => 'empresa',
 			'hiddenInputOptions' => array('options' => array('value' => $this->empresa_id))
 		);
-		
+
 		$this->inputsHelper()->simpleSearchPessoaj('nome', $options, $helperOptions);
 
 		$opcoes = array("NULL" => "Selecione");
@@ -273,7 +264,7 @@ class indice extends clsCadastro
 			echo "<!--\nErro\nClasse clsPmieducarVPSJornadaTrabalho nao encontrada\n-->";
 			$opcoes = array("" => "Erro na geracao");
 		}
-		
+
 		$this->campoLista("ref_cod_vps_jornada_trabalho", "Jornada de Trabalho", $opcoes, $this->ref_cod_vps_jornada_trabalho, "", false, "", "<img id='img_jornada_trabalho' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(400, 150,'educar_vps_jornada_trabalho_cad_pop.php',[], 'Jornada de Trabalho')\" />");
 
 		$this->campoLista("ref_cod_vps_funcao", "Função/Cargo", $opcoes, $this->ref_cod_vps_funcao, "", false, "", "<img id='img_funcao' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 200,'educar_vps_funcao_cad_pop.php',[], 'Função/Cargo')\" />", false, false);
@@ -287,10 +278,10 @@ class indice extends clsCadastro
 			'options' => array('value' => null)
 		);
 
- 		$this->inputsHelper()->multipleSearchIdiomas('', $options, $helperOptions);	
-		
+ 		$this->inputsHelper()->multipleSearchIdiomas('', $options, $helperOptions);
+
 		$this->campoQuebra();
-		
+
 		if ($_POST["vps_entrevista_responsavel"])
 			$this->vps_entrevista_responsavel = unserialize(urldecode($_POST["vps_entrevista_responsavel"]));
 
@@ -298,7 +289,7 @@ class indice extends clsCadastro
 		{
 			$obj = new clsPmieducarVPSEntrevistaResponsavel();
 			$registros = $obj->lista(null, $this->cod_vps_entrevista);
-			
+
 			if($registros)
 			{
 				foreach ($registros AS $campo)
@@ -439,12 +430,36 @@ class indice extends clsCadastro
 
 		$options = array(
 			'required'    => true,
+			'label'       => 'Número de Vagas',
+			'placeholder' => '',
+			'value'       => $this->numero_vagas,
+			'max_length'  => 2,
+			'inline'      => false,
+			'size'        => 7
+		);
+
+		$this->inputsHelper()->integer('numero_vagas', $options);
+
+		$options = array(
+			'required'    => true,
+			'label'       => 'Número de Jovens por vaga',
+			'placeholder' => '',
+			'value'       => $this->numero_jovens,
+			'max_length'  => 2,
+			'inline'      => false,
+			'size'        => 7
+		);
+
+		$this->inputsHelper()->integer('numero_jovens', $options);
+
+		$options = array(
+			'required'    => true,
 			'label'       => 'Data Entrevista',
 			'placeholder' => '',
 			'value'       => Portabilis_Date_Utils::pgSQLToBr($this->data_entrevista),
 			'size'        => 7,
 		);
-		
+
 		$this->inputsHelper()->date('data_entrevista', $options);
 
 		$this->campoHora('hora_entrevista', 'Hora entrevista', $this->hora_entrevista, false);
@@ -471,11 +486,12 @@ class indice extends clsCadastro
 
 		$data_entrevista = Portabilis_Date_Utils::brToPgSQL($this->data_entrevista);
 		$salario = Portabilis_Utils_Float::brToPgSQL($this->salario);
-		
+
 		$obj = new clsPmieducarVPSEntrevista(null, $this->ref_cod_tipo_contratacao, $this->ref_cod_vps_entrevista, null,
-			$this->pessoa_logada, $this->ref_cod_vps_funcao, $this->ref_cod_vps_jornada_trabalho, 
+			$this->pessoa_logada, $this->ref_cod_vps_funcao, $this->ref_cod_vps_jornada_trabalho,
 			$this->empresa_id, $this->nm_entrevista, $this->descricao, $this->ano, null, null, 1,
-			$this->ref_cod_escola, $this->ref_cod_curso, $salario, $data_entrevista, $this->hora_entrevista
+			$this->ref_cod_escola, $this->ref_cod_curso, $salario, $data_entrevista, $this->hora_entrevista,
+			$this->numero_vagas, $this->numero_jovens
 		);
 
 		$cadastrou = $obj->cadastra();
@@ -531,7 +547,7 @@ class indice extends clsCadastro
 			$this->pessoa_logada, null, $this->ref_cod_vps_funcao, $this->ref_cod_vps_jornada_trabalho,
 			$this->empresa_id, $this->nm_entrevista, $this->descricao, $this->ano, null, null, 1,
 			$this->ref_cod_escola, $this->ref_cod_curso, $salario, $this->data_entrevista,
-			$this->hora_entrevista);
+			$this->hora_entrevista, $this->numero_vagas, $this->numero_jovens);
 
 		$editou = $obj->edita();
 
@@ -569,7 +585,7 @@ class indice extends clsCadastro
 
 			return false;
 		}
-		
+
 		$this->mensagem = "Edição não realizada.<br>";
 		echo "<!--\nErro ao editar clsPmieducarAcervo\nvalores obrigatorios\nif(is_numeric($this->cod_vps_entrevista) && is_numeric($this->ref_usuario_exc))\n-->";
 
@@ -650,7 +666,7 @@ $pagina->MakeAll();
 	} else {
 		ajaxEscola('novo');
 	}
-	
+
 	if(document.getElementById('ref_cod_instituicao').value == "")
 	{
 		setVisibility(document.getElementById('img_jornada_trabalho'), false);
@@ -659,7 +675,7 @@ $pagina->MakeAll();
 	} else {
 		ajaxInstituicao('novo');
 	}
-	
+
 	if(document.getElementById('empresa_id').value == "")
 	{
 		setVisibility(document.getElementById('img_responsavel'), false);
@@ -736,7 +752,7 @@ $pagina->MakeAll();
 			}
 		}
 	}
-	
+
 	function getResponsavelEntrevista(xml_vps_responsavel_entrevista)
 	{
 		var campoResponsavelEntrevista = document.getElementById('ref_cod_vps_responsavel_entrevista');
@@ -752,9 +768,9 @@ $pagina->MakeAll();
 			{
 				campoResponsavelEntrevista.options[campoResponsavelEntrevista.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_vps_responsavel_entrevista"), false, false);
 			}
-			
+
 			setVisibility(document.getElementById('img_responsavel'), true);
-			
+
 			if(tempResponsavel != null)
 				campoResponsavelEntrevista.value = tempResponsavel;
 		}
@@ -779,7 +795,7 @@ $pagina->MakeAll();
 		jQuery("#ref_cod_instituicao").change(function() {
 			ajaxInstituicao();
 		});
-		
+
 		jQuery("#ref_cod_escola").change(function() {
 			ajaxEscola();
 			ajaxResponsavel();
@@ -797,9 +813,9 @@ $pagina->MakeAll();
 			}, 300);
 		});
 
-		jQuery(".chosen-container").width(jQuery("#idiomas").width() + 14); 
+		jQuery(".chosen-container").width(jQuery("#idiomas").width() + 14);
 	});
-	
+
 	function ajaxEscola(acao)
 	{
 		var campoEscola = document.getElementById('ref_cod_escola').value;
@@ -839,7 +855,7 @@ $pagina->MakeAll();
 		var xml_jornada_trabalho = new ajax(getJornadaTrabalho);
 		xml_jornada_trabalho.envia("educar_vps_jornada_trabalho_xml.php?inst="+campoInstituicao);
 	}
-	
+
 	function ajaxResponsavel(acao)
 	{
 		var campoEscola = document.getElementById('ref_cod_escola').value;
@@ -889,8 +905,8 @@ $pagina->MakeAll();
 	fixupPrincipalCheckboxes();
 	function fixupIdiomasSize(){
 
-		$j('#idiomas_chzn ul').css('width', '307px');	
-		
+		$j('#idiomas_chzn ul').css('width', '307px');
+
 	}
 
 	fixupIdiomasSize();
@@ -902,7 +918,7 @@ $pagina->MakeAll();
 
 	var handleGetIdiomas = function(dataResponse) {
 		testezin = dataResponse['idiomas'];
-		
+
 		console.log(testezin);
 
 		$j.each(dataResponse['idiomas'], function(id, value) {

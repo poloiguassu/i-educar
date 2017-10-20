@@ -106,6 +106,7 @@ class indice extends clsListagem
 		$this->addCabecalhos( array(
 			"Entrevista",
 			"Ano",
+			"Número de vagas",
 			"Data Entrevista",
 			"Horário",
 			"Escola"
@@ -122,13 +123,13 @@ class indice extends clsListagem
 		// Paginador
 		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
-		
+
 		$obj_entrevista = new clsPmieducarVPSEntrevista();
 		$obj_entrevista->setOrderby( "nm_entrevista ASC" );
 		$obj_entrevista->setLimite( $this->limite, $this->offset );
 
 		$lista = $obj_entrevista->listaEntrevista($this->ref_cod_escola, $this->nm_entrevista, 1, null, null, null);
-		
+
 		$total = $obj_entrevista->_total;
 
 		// monta a lista
@@ -155,6 +156,7 @@ class indice extends clsListagem
 				$lista_busca = array(
 					"<a href=\"educar_entrevista_det.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["nm_entrevista"]}</a>",
 					"<a href=\"educar_entrevista_det.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["ano"]}</a>",
+					"<a href=\"educar_entrevista_det.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["numero_vagas"]}</a>",
 					"<a href=\"educar_entrevista_det.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["data_entrevista"]}</a>",
 					"<a href=\"educar_entrevista_det.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["hora_entrevista"]}</a>",
 					"<a href=\"educar_entrevista_det.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["ref_cod_escola"]}</a>"
@@ -163,10 +165,10 @@ class indice extends clsListagem
 				$this->addLinhas($lista_busca);
 			}
 		}
-		
+
 		$this->addPaginador2( "educar_entrevista_lst.php", $total, $_GET, $this->nome, $this->limite );
 		$obj_permissoes = new clsPermissoes();
-		
+
 		if( $obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11 ) )
 		{
 			$this->acao = "go(\"educar_entrevista_cad.php\")";

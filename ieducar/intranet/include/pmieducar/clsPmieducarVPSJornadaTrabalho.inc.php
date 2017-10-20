@@ -43,66 +43,66 @@ class clsPmieducarVPSJornadaTrabalho
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
-	
+
 	// propriedades padrao
-	
+
 	/**
 	 * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
 	 *
 	 * @var int
 	 */
 	var $_total;
-	
+
 	/**
 	 * Nome do schema
 	 *
 	 * @var string
 	 */
 	var $_schema;
-	
+
 	/**
 	 * Nome da tabela
 	 *
 	 * @var string
 	 */
 	var $_tabela;
-	
+
 	/**
 	 * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
 	 *
 	 * @var string
 	 */
 	var $_campos_lista;
-	
+
 	/**
 	 * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
 	 *
 	 * @var string
 	 */
 	var $_todos_campos;
-	
+
 	/**
 	 * Valor que define a quantidade de registros a ser retornada pelo metodo lista
 	 *
 	 * @var int
 	 */
 	var $_limite_quantidade;
-	
+
 	/**
 	 * Define o valor de offset no retorno dos registros no metodo lista
 	 *
 	 * @var int
 	 */
 	var $_limite_offset;
-	
+
 	/**
 	 * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
 	 *
 	 * @var string
 	 */
 	var $_campo_order_by;
-	
-	
+
+
 	/**
 	 * Construtor (PHP 4)
 	 *
@@ -115,7 +115,7 @@ class clsPmieducarVPSJornadaTrabalho
 		$this->_tabela = "{$this->_schema}vps_jornada_trabalho";
 
 		$this->_campos_lista = $this->_todos_campos = "cod_vps_jornada_trabalho, ref_usuario_exc, ref_usuario_cad, nm_jornada_trabalho, carga_horaria_semana, carga_horaria_diaria, data_cadastro, data_exclusao, ativo, ref_cod_instituicao";
-		
+
 		if(is_numeric($ref_usuario_cad))
 		{
 			if(class_exists("clsPmieducarUsuario"))
@@ -173,7 +173,7 @@ class clsPmieducarVPSJornadaTrabalho
 			}
 		}
 
-		
+
 		if(is_numeric($cod_vps_jornada_trabalho))
 		{
 			$this->cod_vps_jornada_trabalho = $cod_vps_jornada_trabalho;
@@ -184,7 +184,6 @@ class clsPmieducarVPSJornadaTrabalho
 		}
 		if(is_numeric($carga_horaria_semana))
 		{
-			print("VAMOS LA" . $carga_horaria_semana);
 			$this->carga_horaria_semana = $carga_horaria_semana;
 		}
 		if(is_numeric($carga_horaria_diaria))
@@ -220,11 +219,11 @@ class clsPmieducarVPSJornadaTrabalho
 		if(is_numeric($this->ref_usuario_cad) && is_string($this->nm_jornada_trabalho) &&is_numeric($this->ref_cod_instituicao))
 		{
 			$db = new clsBanco();
-			
+
 			$campos = "";
 			$valores = "";
 			$gruda = "";
-			
+
 			if(is_numeric($this->ref_usuario_cad))
 			{
 				$campos .= "{$gruda}ref_usuario_cad";
@@ -262,13 +261,13 @@ class clsPmieducarVPSJornadaTrabalho
 			$valores .= "{$gruda}'1'";
 			$gruda = ", ";
 
-			
+
 			$db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES($valores)");
 			return $db->InsertId("{$this->_tabela}_cod_vps_jornada_trabalho_seq");
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Edita os dados de um registro
 	 *
@@ -335,7 +334,7 @@ class clsPmieducarVPSJornadaTrabalho
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Retorna uma lista filtrados de acordo com os parametros
 	 *
@@ -345,9 +344,9 @@ class clsPmieducarVPSJornadaTrabalho
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
 		$filtros = "";
-		
+
 		$whereAnd = " WHERE ";
-		
+
 		if(is_numeric($int_cod_vps_jornada_trabalho))
 		{
 			$filtros .= "{$whereAnd} cod_vps_jornada_trabalho = '{$int_cod_vps_jornada_trabalho}'";
@@ -409,30 +408,30 @@ class clsPmieducarVPSJornadaTrabalho
 			$filtros .= "{$whereAnd} ref_cod_instituicao = '{$int_ref_cod_instituicao}'";
 			$whereAnd = " AND ";
 		}
-		
+
 		$db = new clsBanco();
 		$countCampos = count(explode(",", $this->_campos_lista));
 		$resultado = array();
-		
+
 		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
-		
+
 		$this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
-		
+
 		$db->Consulta($sql);
-		
+
 		if($countCampos > 1)
 		{
-			while ($db->ProximoRegistro()) 
+			while ($db->ProximoRegistro())
 			{
 				$tupla = $db->Tupla();
-			
+
 				$tupla["_total"] = $this->_total;
 				$resultado[] = $tupla;
 			}
 		}
-		else 
+		else
 		{
-			while ($db->ProximoRegistro()) 
+			while ($db->ProximoRegistro())
 			{
 				$tupla = $db->Tupla();
 				$resultado[] = $tupla[$this->_campos_lista];
@@ -444,7 +443,7 @@ class clsPmieducarVPSJornadaTrabalho
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Retorna um array com os dados de um registro
 	 *
@@ -462,7 +461,7 @@ class clsPmieducarVPSJornadaTrabalho
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Retorna um array com os dados de um registro
 	 *
@@ -480,7 +479,7 @@ class clsPmieducarVPSJornadaTrabalho
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Exclui um registro
 	 *
@@ -503,7 +502,7 @@ class clsPmieducarVPSJornadaTrabalho
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Define quais campos da tabela serao selecionados na invocacao do metodo lista
 	 *
@@ -513,7 +512,7 @@ class clsPmieducarVPSJornadaTrabalho
 	{
 		$this->_campos_lista = $str_campos;
 	}
-	
+
 	/**
 	 * Define que o metodo Lista devera retornoar todos os campos da tabela
 	 *
@@ -523,7 +522,7 @@ class clsPmieducarVPSJornadaTrabalho
 	{
 		$this->_campos_lista = $this->_todos_campos;
 	}
-	
+
 	/**
 	 * Define limites de retorno para o metodo lista
 	 *
@@ -534,7 +533,7 @@ class clsPmieducarVPSJornadaTrabalho
 		$this->_limite_quantidade = $intLimiteQtd;
 		$this->_limite_offset = $intLimiteOffset;
 	}
-	
+
 	/**
 	 * Retorna a string com o trecho da query resposavel pelo Limite de registros
 	 *
@@ -553,7 +552,7 @@ class clsPmieducarVPSJornadaTrabalho
 		}
 		return "";
 	}
-	
+
 	/**
 	 * Define campo para ser utilizado como ordenacao no metolo lista
 	 *
@@ -563,13 +562,13 @@ class clsPmieducarVPSJornadaTrabalho
 	{
 		// limpa a string de possiveis erros (delete, insert, etc)
 		//$strNomeCampo = eregi_replace();
-		
+
 		if(is_string($strNomeCampo) && $strNomeCampo)
 		{
 			$this->_campo_order_by = $strNomeCampo;
 		}
 	}
-	
+
 	/**
 	 * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
 	 *
@@ -583,6 +582,6 @@ class clsPmieducarVPSJornadaTrabalho
 		}
 		return "";
 	}
-	
+
 }
 ?>

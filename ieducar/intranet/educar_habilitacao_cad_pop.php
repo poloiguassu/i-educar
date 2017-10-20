@@ -33,7 +33,7 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} - Habilitaï¿½ï¿½o" );
+		$this->SetTitulo( "{$this->_instituicao} - Habilitação" );
 		$this->SetTemplate("base_pop");
 		$this->processoAp = "573";
 		$this->renderBanner = false;
@@ -74,23 +74,6 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra( 573, $this->pessoa_logada,3, "educar_habilitacao_lst.php" );
 
-		/*if( is_numeric( $this->cod_habilitacao ) )
-		{
-
-			$obj = new clsPmieducarHabilitacao( $this->cod_habilitacao );
-			$registro  = $obj->detalhe();
-			if( $registro )
-			{
-				foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
-					$this->$campo = $val;
-				$this->data_cadastro = dataFromPgToBr( $this->data_cadastro );
-				$this->data_exclusao = dataFromPgToBr( $this->data_exclusao );
-
-				$this->fexcluir = $obj_permissoes->permissao_excluir( 573, $this->pessoa_logada,3 );
-				$retorno = "Editar";
-			}
-		}*/
-//		$this->url_cancelar = ($retorno == "Editar") ? "educar_habilitacao_det.php?cod_habilitacao={$registro["cod_habilitacao"]}" : "educar_habilitacao_lst.php";
 		$this->nome_url_cancelar = "Cancelar";
 		$this->script_cancelar = "window.parent.fechaExpansivel(\"div_dinamico_\"+(parent.DOM_divs.length-1));";
 		return $retorno;
@@ -112,8 +95,8 @@ class indice extends clsCadastro
 			$this->campoOculto("ref_cod_instituicao", $this->ref_cod_instituicao);
 		}
 		// text
-		$this->campoTexto( "nm_tipo", "Habilita&ccedil;&atilde;o", $this->nm_tipo, 30, 255, true );
-		$this->campoMemo( "descricao", "Descri&ccedil;&atilde;o", $this->descricao, 60, 5, false );
+		$this->campoTexto( "nm_tipo", "Habilitação", $this->nm_tipo, 30, 255, true );
+		$this->campoMemo( "descricao", "Descrição", $this->descricao, 60, 5, false );
 	}
 
 	function Novo()
@@ -147,44 +130,12 @@ class indice extends clsCadastro
 
 	function Editar()
 	{
-		/*@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
 
-		$obj = new clsPmieducarHabilitacao($this->cod_habilitacao, $this->pessoa_logada, null, $this->nm_tipo, $this->descricao, null, null, 1,$this->ref_cod_instituicao);
-		$editou = $obj->edita();
-		if( $editou )
-		{
-			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-			header( "Location: educar_habilitacao_lst.php" );
-			die();
-			return true;
-		}
-
-		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao editar clsPmieducarHabilitacao\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_habilitacao ) && is_numeric( $this->pessoa_logada ) )\n-->";
-		return false;*/
 	}
 
 	function Excluir()
 	{
-		/*@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
 
-		$obj = new clsPmieducarHabilitacao($this->cod_habilitacao, $this->pessoa_logada, null, null, null, null, null, 0,$this->ref_cod_instituicao);
-		$excluiu = $obj->excluir();
-		if( $excluiu )
-		{
-			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-			header( "Location: educar_habilitacao_lst.php" );
-			die();
-			return true;
-		}
-
-		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao excluir clsPmieducarHabilitacao\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_habilitacao ) && is_numeric( $this->pessoa_logada ) )\n-->";
-		return false;*/
 	}
 }
 

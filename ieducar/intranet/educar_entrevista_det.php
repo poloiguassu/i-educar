@@ -81,7 +81,7 @@ class indice extends clsDetalhe
 		session_write_close();
 
 		$this->titulo = "Entrevistas - Detalhe";
-		
+
 
 		$this->cod_vps_entrevista=$_GET["cod_vps_entrevista"];
 
@@ -235,6 +235,16 @@ class indice extends clsDetalhe
 			$valor = "R$ " . number_format($registro["salario"], 2, ",", ".");
 			$this->addDetalhe(array("Salário", "{$valor}"));
 		}
+		if($registro["numero_vagas"])
+		{
+			$valor = $registro["numero_vagas"];
+			$this->addDetalhe(array("Número de vagas", "{$valor} vagas"));
+		}
+		if($registro["numero_jovens"])
+		{
+			$valor = $registro["numero_jovens"];
+			$this->addDetalhe(array("Número de jovens por vaga", "{$valor} jovens"));
+		}
 		if($registro["data_entrevista"])
 		{
 			$data = Portabilis_Date_Utils::pgSQLToBr($registro["data_entrevista"]);
@@ -303,6 +313,52 @@ class indice extends clsDetalhe
 				$this->addDetalhe(array("Idiomas necessários", "{$assuntos}"));
 		}
 
+		$entrevistas = new clsPmieducarVPSEntrevistaJovem(null, $this->cod_vps_entrevista);
+		$todasEntrevistas = $entrevistas->lista();
+
+		if (count($todasEntrevistas))
+		{
+			$assuntos = "";
+
+			$tabela =	"<TABLE>
+							<TR align=center>
+							<TD bgcolor=#A1B3BD><B>Nome</B></TD>
+						</TR>";
+			$cont = 0;
+
+			foreach ($todasEntrevistas AS $valor)
+			{
+				$nm_jovem = strtoupper($valor["nome"]);
+				$id_jovem = $valor["ref_cod_aluno"];
+
+				$tabela .= "<TR>
+								<TD {$color} align=left><a href='/intranet/educar_aluno_det.php?cod_aluno={$id_jovem}' target ='_blank'>{$nm_jovem}</a></TD>
+							</TR>";
+				$cont++;
+			}
+
+			$tabela .= "</TABLE>";
+
+			if($tabela)
+			{
+				$this->addDetalhe(array("Entrevistados", "{$tabela}"));
+			}
+			if(!empty($assuntos))
+				$this->addDetalhe(array("Jovens entrevistados", "{$assuntos}"));
+
+		}
+
+		if($todasEntrevistas)
+		{
+			$index = 1;
+
+			foreach($todasEntrevistas AS $campo => $val)
+			{
+				$this->{"aluno" . $index . "_id"} = $val['ref_cod_aluno'];
+				$index++;
+			}
+		}
+
 		$obj_permissoes = new clsPermissoes();
 		if($obj_permissoes->permissao_cadastra(598, $this->pessoa_logada, 11))
 		{
@@ -319,7 +375,7 @@ class indice extends clsDetalhe
 			"educar_vps_index.php"                => "Trilha Jovem Iguassu - VPS",
 			""                                    => "Detalhe da entrevista"
 		));
-		
+
 		$this->enviaLocalizacao($localizacao->montar());
 	}
 }
