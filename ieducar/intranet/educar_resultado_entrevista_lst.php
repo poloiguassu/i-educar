@@ -29,6 +29,7 @@ require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/geral.inc.php");
 require_once ("include/localizacaoSistema.php");
+require_once ("lib/App/Model/EntrevistaResultado.php");
 
 class clsIndexBase extends clsBase
 {
@@ -106,11 +107,11 @@ class indice extends clsListagem
 		$this->addCabecalhos( array(
 			"Entrevista",
 			"Ano",
-			"Nï¿½mero de vagas",
-			"Situaï¿½ï¿½o",
-			"Nï¿½mero de contratados",
+			"Número de vagas",
+			"Situação",
+			"Número de contratados",
 			"Data Entrevista",
-			"Horï¿½rio",
+			"Horário",
 			"Escola"
 		) );
 
@@ -155,23 +156,17 @@ class indice extends clsListagem
 				if($registro["data_entrevista"])
 					$registro["data_entrevista"] = Portabilis_Date_Utils::pgSQLToBr($registro["data_entrevista"]);
 
-				$sql     = "select COUNT(ref_cod_aluno) from pmieducar.vps_aluno_entrevista where ref_cod_vps_entrevista = $1 AND resultado_entrevista = 4";
-				$options = array('params' => $registro["cod_vps_entrevista"], 'return_only' => 'first-field');
+				$sql     = "select COUNT(ref_cod_aluno) from pmieducar.vps_aluno_entrevista where ref_cod_vps_entrevista = $1 AND resultado_entrevista >= $2";
+				$options = array('params' => array('$1' => $registro["cod_vps_entrevista"], '$2' => App_Model_EntrevistaResultado::APROVADO_EXTRA), 'return_only' => 'first-field');
 				$numero_jovens    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
-				$opcoesSituacao = array(
-					'' => 'Informe a situaï¿½ï¿½o desta entrevista',
-					0  => 'Aguardando entrevista',
-					1  => 'Nenhum jovem selecionado',
-					2  => 'Entrevista Cancelada',
-					3  => 'Jovens Contratados'
-				);
+				$situacao = App_Model_EntrevistaResultado::getInstance()->getValue($registro["situacao_entrevista"]);
 
 				$lista_busca = array(
 					"<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["nm_entrevista"]}</a>",
 					"<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["ano"]}</a>",
 					"<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["numero_vagas"]}</a>",
-					"<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$opcoesSituacao[$registro["situacao_entrevista"]]}</a>",
+					"<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$situacao}</a>",
 					"<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$numero_jovens}</a>",
 					"<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["data_entrevista"]}</a>",
 					"<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["hora_entrevista"]}</a>",
@@ -195,7 +190,7 @@ class indice extends clsListagem
 
 		$localizacao = new LocalizacaoSistema();
 		$localizacao->entradaCaminhos( array(
-			$_SERVER['SERVER_NAME'] . "/intranet" => "Inï¿½cio",
+			$_SERVER['SERVER_NAME'] . "/intranet" => "Início",
 			"educar_vps_index.php"                => "Trilha Jovem Iguassu - VPS",
 			""                                    => "Listagem de entrevistas"
 		));
