@@ -76,6 +76,17 @@ CREATE SEQUENCE pmieducar.vps_aluno_entrevista_cod_vps_aluno_entrevista_seq
 	CACHE 1;
 
 --
+-- Name: aluno_vps_cod_aluno_vps_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
+--
+
+CREATE SEQUENCE pmieducar.aluno_vps_cod_aluno_vps_seq
+	START WITH 1
+	INCREMENT BY 1
+	NO MAXVALUE
+	MINVALUE 0
+	CACHE 1;
+
+--
 -- Name: pmieducar.vps_jornada_trabalho; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
@@ -222,8 +233,24 @@ CREATE TABLE pmieducar.vps_aluno_entrevista (
 	resultado_entrevista integer DEFAULT 0,
 	inicio_vps date,
 	termino_vps date,
+	insercao_vps date
 );
 
+--
+-- Name: pmieducar.aluno_vps; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
+--
+
+CREATE TABLE pmieducar.aluno_vps (
+	cod_aluno_vps integer NOT NULL DEFAULT nextval('aluno_vps_cod_aluno_vps_seq'::regclass),
+	ref_usuario_exc integer,
+	ref_usuario_cad integer NOT NULL,
+	data_cadastro timestamp without time zone NOT NULL,
+	data_exclusao timestamp without time zone,
+	ativo smallint DEFAULT (1)::smallint NOT NULL,
+	ref_cod_aluno integer NOT NULL,
+	situacao_vps integer DEFAULT 0,
+	ref_cod_vps_aluno_entrevista integer NOT NULL
+);
 
 --
 -- Name: i_responsavel_entrevista_ref_idpes; Type: INDEX; Schema: pmieducar; Owner: -; Tablespace:
@@ -293,6 +320,13 @@ ALTER TABLE ONLY pmieducar.vps_entrevista_idioma
 
 ALTER TABLE ONLY pmieducar.vps_aluno_entrevista
 	ADD CONSTRAINT vps_aluno_entrevista_pkey PRIMARY KEY (cod_vps_aluno_entrevista);
+
+--
+-- Name: aluno_vps_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY pmieducar.aluno_vps
+	ADD CONSTRAINT aluno_vps_pkey PRIMARY KEY (cod_aluno_vps);
 
 --
 -- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
@@ -375,6 +409,14 @@ CREATE TRIGGER fcn_aft_update
 	FOR EACH ROW
 	EXECUTE PROCEDURE fcn_aft_update();
 
+--
+-- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
+--
+
+CREATE TRIGGER fcn_aft_update
+	AFTER INSERT OR UPDATE ON pmieducar.aluno_vps
+	FOR EACH ROW
+	EXECUTE PROCEDURE fcn_aft_update();
 
 --
 -- Name: vps_jornada_trabalho_ref_cod_instituicao_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
@@ -609,6 +651,33 @@ ALTER TABLE ONLY pmieducar.vps_aluno_entrevista
 ALTER TABLE ONLY pmieducar.vps_aluno_entrevista
 	ADD CONSTRAINT vps_aluno_entrevista_ref_cod_vps_entrevista_fkey FOREIGN KEY (ref_cod_vps_entrevista) REFERENCES pmieducar.vps_entrevista(cod_vps_entrevista) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
+--
+-- Name: aluno_vps_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+--
+
+ALTER TABLE ONLY pmieducar.aluno_vps
+	ADD CONSTRAINT aluno_vps_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+--
+-- Name: aluno_vps_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+--
+
+ALTER TABLE ONLY pmieducar.aluno_vps
+	ADD CONSTRAINT aluno_vps_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+--
+-- Name: aluno_vps_ref_cod_aluno_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+--
+
+ALTER TABLE ONLY pmieducar.aluno_vps
+	ADD CONSTRAINT aluno_vps_ref_cod_aluno_fkey FOREIGN KEY (ref_cod_aluno) REFERENCES pmieducar.aluno(cod_aluno) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+--
+-- Name: aluno_vps_ref_cod_vps_entrevista_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+--
+
+ALTER TABLE ONLY pmieducar.aluno_vps
+	ADD CONSTRAINT aluno_vps_ref_cod_vps_entrevista_fkey FOREIGN KEY (ref_cod_vps_aluno_entrevista) REFERENCES pmieducar.vps_aluno_entrevista(cod_vps_aluno_entrevista) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 ALTER SEQUENCE pmieducar.vps_jornada_trabalho_cod_vps_jornada_trabalho_seq
 	MINVALUE 0;
@@ -637,3 +706,7 @@ SELECT setval('pmieducar.vps_entrevista_cod_vps_entrevista_seq', 1, false);
 ALTER SEQUENCE pmieducar.vps_aluno_entrevista_cod_vps_aluno_entrevista_seq
 	MINVALUE 0;
 SELECT setval('pmieducar.vps_aluno_entrevista_cod_vps_aluno_entrevista_seq', 1, false);
+
+ALTER SEQUENCE pmieducar.aluno_vps_cod_aluno_vps_seq
+	MINVALUE 0;
+SELECT setval('pmieducar.aluno_vps_cod_aluno_vps_seq', 1, false);

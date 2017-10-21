@@ -31,6 +31,9 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 require_once 'lib/Portabilis/Utils/Float.php';
+require_once 'lib/App/Model/EntrevistaSituacao.php';
+require_once 'lib/App/Model/EntrevistaResultado.php';
+require_once 'lib/App/Model/VivenciaProfissionalSituacao.php';
 
 class clsIndexBase extends clsBase
 {
@@ -210,7 +213,7 @@ class indice extends clsCadastro
 
 		$this->inputsHelper()->simpleSearchPessoaj('nome', $options, $helperOptions);
 
-		// Coleção
+		// Coleï¿½ï¿½o
 		$opcoes = array("" => "Selecione");
 
 		if(class_exists("clsPmieducarVPSFuncao"))
@@ -257,15 +260,23 @@ class indice extends clsCadastro
 
 		$this->campoQuebra();
 
-		$opcoesSituacao = array(
-			'' => 'Informe a situação desta entrevista',
-			0  => 'Aguardando entrevista',
-			1  => 'Nenhum jovem selecionado',
-			2  => 'Entrevista Cancelada',
-			3  => 'Jovens Contratados'
-		);
+		$entrevistas = new clsPmieducarVPSAlunoEntrevista(null, null, $this->cod_vps_entrevista);
+		$todasEntrevistas = $entrevistas->lista();
+		$situacao_desabilitado = false;
 
-		$this->campoLista('situacao_entrevista', 'Situacao Entrevista', $opcoesSituacao, $this->situacao_entrevista, '', FALSE, '', '', FALSE, TRUE);
+		if($todasEntrevistas)
+		{
+			foreach($todasEntrevistas AS $campo => $entrevista)
+			{
+				if($entrevista['resultado_entrevista'] >= App_Model_EntrevistaResultado::APROVADO_EXTRA)
+				{
+					$situacao_desabilitado = true;
+					break;
+				}
+			}
+		}
+
+		$this->campoLista('situacao_entrevista', 'Situacao Entrevista', App_Model_EntrevistaSituacao::getInstance()->getValues(), $this->situacao_entrevista, '', FALSE, '', '', $situacao_desabilitado, TRUE);
 
 		$options = array(
 			'required'    => false,
@@ -289,24 +300,15 @@ class indice extends clsCadastro
 
 		$this->campoQuebra();
 
-		$entrevistas = new clsPmieducarVPSEntrevistaJovem(null, $this->cod_vps_entrevista);
-		$todasEntrevistas = $entrevistas->lista();
-
 		if($todasEntrevistas)
 		{
+			$listaResultado = App_Model_EntrevistaResultado::getInstance()->getValues();
 
-			foreach($todasEntrevistas AS $campo => $val)
+			foreach($todasEntrevistas AS $campo => $entrevista)
 			{
-				$opcoesSituacao = array(
-					'' => 'Informe a situação desta entrevista',
-					0  => 'Aguardando entrevista',
-					1  => 'Não compareceu',
-					2  => 'Não contratado',
-					3  => 'Extra',
-					4  => 'Contratado'
-				);
-
-				$this->campoLista("resultado_jovens[{$val['ref_cod_aluno']}]", $val['nome'], $opcoesSituacao, $val['resultado_entrevista'], '', FALSE, '', '', FALSE, TRUE);
+				$entrevistaResultado = $entrevista['resultado_entrevista'];
+				$desabilitado = $entrevistaResultado >= App_Model_EntrevistaResultado::APROVADO_EXTRA;
+				$this->campoLista("resultado_jovens[{$entrevista['ref_cod_aluno']}]", $entrevista['nome'], $listaResultado, $entrevistaResultado, '', FALSE, '', '', $desabilitado, TRUE);
 			}
 		}
 
@@ -392,16 +394,31 @@ class indice extends clsCadastro
 
 			foreach($this->resultado_jovens as $aluno => $resultado)
 			{
-				$jovemEntrevista = new clsPmieducarVPSEntrevistaJovem($this->cod_vps_entrevista, $aluno);
-				if($jovemEntrevista && $jovemEntrevista->existe())
+				$alunoEntrevista = new clsPmieducarVPSAlunoEntrevista(null, $this->cod_vps_entrevista, $aluno);
+
+				if($alunoEntrevista && $alunoEntrevista->existe())
 				{
-					$jovemEntrevista->resultado_entrevista = $resultado;
-					if($resultado == 4 && !empty($str_inicio_vps) && !empty($str_termino_vps))
+					$alunoEntrevista->resultado_entrevista = $resultado;
+					if($resultado >= App_Model_EntrevistaResultado::APROVADO_EXTRA
+						&& !empty($str_inicio_vps) && !empty($str_termino_vps))
 					{
-						$jovemEntrevista->inicio_vps = $str_inicio_vps;
-						$jovemEntrevista->termino_vps = $str_termino_vps;
+						$alunoEntrevista->inicio_vps = $str_inicio_vps;
+						$alunoEntrevista->termino_vps = $str_termino_vps;
+
+						$detalheAlunoEntrevista = $alunoEntrevista->detalhe();
+
+						$alunoVPS = new clsPmieducarAlunoVPS($aluno, null, $detalheAlunoEntrevista['cod_vps_aluno_entrevista']);
+						$alunoVPS->situacao_vps = App_Model_VivenciaProfissionalSituacao::EM_CUMPRIMENTO;
+
+						if($alunoVPS && $alunoVPS->existe())
+						{
+							$alunoVPS->edita();
+						} else {
+							$alunoVPS->ref_usuario_cad = $this->pessoa_logada;
+							$alunoVPS->cadastra();
+						}
 					}
-					$cadastrou = $jovemEntrevista->edita();
+					$cadastrou = $alunoEntrevista->edita();
 				}
 			}
 
@@ -617,7 +634,7 @@ $pagina->MakeAll();
 
 		campoFuncao.length = 1;
 		campoFuncao.disabled = true;
-		campoFuncao.options[0].text = 'Carregando coleï¿½ï¿½es';
+		campoFuncao.options[0].text = 'Carregando coleções';
 
 		var xml_funcao = new ajax(getFuncao);
 		xml_funcao.envia("educar_vps_funcao_xml.php?esc="+campoEscola);
