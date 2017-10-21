@@ -115,7 +115,7 @@ class indice extends clsCadastro
 				foreach($registro AS $campo => $val)	// passa todos os valores obtidos no registro para atributos do objeto
 					$this->$campo = $val;
 
-				$entrevistas = new clsPmieducarVPSEntrevistaJovem(null, $this->cod_vps_entrevista);
+				$entrevistas = new clsPmieducarVPSAlunoEntrevista(null, null, $this->cod_vps_entrevista);
 				$todasEntrevistas = $entrevistas->lista();
 
 				if($todasEntrevistas)
@@ -347,13 +347,13 @@ class indice extends clsCadastro
 
 		if($this->cod_vps_entrevista && $entrevista->existe())
 		{
-			$todasEntrevistas = new clsPmieducarVPSEntrevistaJovem($this->cod_vps_entrevista);
+			$todasEntrevistas = new clsPmieducarVPSAlunoEntrevista(null, $this->cod_vps_entrevista);
 			$todasEntrevistas->excluirTodos();
 
 			for($i = 1; $i <= $this->total_jovens; $i++)
 			{
 				$aluno = $this->{'aluno' . $i . '_id'};
-				$jovemEntrevista = new clsPmieducarVPSEntrevistaJovem($this->cod_vps_entrevista, $aluno, 0, 1, null, null, null, $this->pessoa_logada);
+				$jovemEntrevista = new clsPmieducarVPSAlunoEntrevista(null, $this->cod_vps_entrevista, $aluno, 0, 1, null, null, null, null, $this->pessoa_logada);
 				$cadastrou = $jovemEntrevista->cadastra();
 			}
 

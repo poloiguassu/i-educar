@@ -27,7 +27,7 @@
 
 require_once( "include/pmieducar/geral.inc.php" );
 
-class clsPmieducarVPSEntrevistaJovem
+class clsPmieducarVPSAlunoEntrevista
 {
 	var $cod_vps_aluno_entrevista;
 	var $ref_cod_vps_entrevista;
@@ -36,6 +36,7 @@ class clsPmieducarVPSEntrevistaJovem
 	var $ativo;
 	var $inicio_vps;
 	var $termino_vps;
+	var $insercao_vps;
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
 
@@ -106,13 +107,18 @@ class clsPmieducarVPSEntrevistaJovem
 	 *
 	 * @return object
 	 */
-	function clsPmieducarVPSEntrevistaJovem($ref_cod_vps_entrevista = null, $ref_cod_aluno = null, $resultado_entrevista = null, $ativo = null, $inicio_vps = null, $termino_vps = null, $ref_usuario_exc = null, $ref_usuario_cad = null)
+	function clsPmieducarVPSAlunoEntrevista($cod_vps_aluno_entrevista = null, $ref_cod_vps_entrevista = null, $ref_cod_aluno = null, $resultado_entrevista = null, $ativo = null, $inicio_vps = null, $termino_vps = null, $insercao_vps = null, $ref_usuario_exc = null, $ref_usuario_cad = null)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}vps_aluno_entrevista";
 
-		$this->_campos_lista = $this->_todos_campos = "ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, ativo, ref_cod_aluno, ref_cod_vps_entrevista, resultado_entrevista, inicio_vps, termino_vps";
+		$this->_campos_lista = $this->_todos_campos = "cod_vps_aluno_entrevista, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, ativo, ref_cod_aluno, ref_cod_vps_entrevista, resultado_entrevista, inicio_vps, termino_vps, insercao_vps";
+
+		if(is_numeric($cod_vps_aluno_entrevista))
+		{
+			$this->cod_vps_aluno_entrevista = $cod_vps_aluno_entrevista;
+		}
 
 		if( is_numeric( $ref_cod_vps_entrevista ) )
 		{
@@ -191,6 +197,11 @@ class clsPmieducarVPSEntrevistaJovem
 			$this->termino_vps = $termino_vps;
 		}
 
+		if(is_string($insercao_vps))
+		{
+			$this->insercao_vps = $insercao_vps;
+		}
+
 		if(is_numeric($ref_usuario_exc))
 		{
 			$this->ref_usuario_exc = $ref_usuario_exc;
@@ -213,7 +224,7 @@ class clsPmieducarVPSEntrevistaJovem
 
 	function edita()
 	{
-		if( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->ref_cod_vps_entrevista ))
+		if(is_numeric($this->ref_cod_aluno) && is_numeric($this->ref_cod_vps_entrevista))
 		{
 
 			$db = new clsBanco();
@@ -244,7 +255,11 @@ class clsPmieducarVPSEntrevistaJovem
 				$set .= "{$gruda}termino_vps = '{$this->termino_vps}'";
 				$gruda = ", ";
 			}
-
+			if(is_string($this->insercao_vps))
+			{
+				$set .= "{$gruda}insercao_vps = '{$this->insercao_vps}'";
+				$gruda = ", ";
+			}
 			if(is_string($this->data_cadastro))
 			{
 				$set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
@@ -276,7 +291,7 @@ class clsPmieducarVPSEntrevistaJovem
 	 */
 	function cadastra()
 	{
-		if( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->ref_cod_vps_entrevista ))
+		if(is_numeric($this->ref_cod_aluno) && is_numeric($this->ref_cod_vps_entrevista))
 		{
 			$db = new clsBanco();
 
@@ -318,6 +333,13 @@ class clsPmieducarVPSEntrevistaJovem
 				$gruda = ", ";
 			}
 
+			if(is_string($this->insercao_vps))
+			{
+				$campos .= "{$gruda}insercao_vps";
+				$valores .= "{$gruda}'{$this->insercao_vps}'";
+				$gruda = ", ";
+			}
+
 			if(is_numeric($this->ref_usuario_cad))
 			{
 				$campos .= "{$gruda}ref_usuario_cad";
@@ -344,7 +366,7 @@ class clsPmieducarVPSEntrevistaJovem
 	 *
 	 * @return array
 	 */
-	function lista( $int_ref_cod_aluno = null, $int_ref_cod_vps_entrevista = null )
+	function lista($int_ref_cod_aluno = null, $int_ref_cod_vps_entrevista = null, $int_cod_vps_aluno_entrevista = null)
 	{
 		$filtros = '';
 		$this->resetCamposLista();
@@ -374,7 +396,69 @@ class clsPmieducarVPSEntrevistaJovem
 			$filtros .= "{$whereAnd} ref_cod_vps_entrevista = '{$int_ref_cod_vps_entrevista}'";
 			$whereAnd = " AND ";
 		}
+		if(is_numeric($int_cod_vps_aluno_entrevista))
+		{
+			$filtros .= "{$whereAnd} cod_vps_aluno_entrevista = '{$int_cod_vps_aluno_entrevista}'";
+			$whereAnd = " AND ";
+		}
 
+		$db = new clsBanco();
+		$countCampos = count( explode( ",", $this->_campos_lista ) );
+		$resultado = array();
+
+		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+
+		$db->Consulta( $sql );
+
+		if( $countCampos > 1 )
+		{
+			while ( $db->ProximoRegistro() )
+			{
+				$tupla = $db->Tupla();
+
+				$tupla["_total"] = $this->_total;
+				$resultado[] = $tupla;
+			}
+		}
+		else
+		{
+			while ( $db->ProximoRegistro() )
+			{
+				$tupla = $db->Tupla();
+				$resultado[] = $tupla[$this->_campos_lista];
+			}
+		}
+		if( count( $resultado ) )
+		{
+			return $resultado;
+		}
+		return false;
+	}
+
+	/**
+	 * Retorna uma lista filtrados de acordo com os parametros
+	 *
+	 * @return array
+	 */
+	function listaJovens()
+	{
+		$filtros = '';
+		$this->resetCamposLista();
+
+		$this->_campos_lista = "
+			(
+				SELECT
+					nome
+				FROM
+					cadastro.pessoa, pmieducar.aluno
+				WHERE
+					idpes = ref_idpes and cod_aluno = ref_cod_aluno
+			) AS nome";
+
+		$sql = "SELECT DISTINCT(ref_cod_aluno), {$this->_campos_lista} FROM {$this->_tabela}";
+		$filtros = "";
 
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
@@ -418,14 +502,29 @@ class clsPmieducarVPSEntrevistaJovem
 	 */
 	function detalhe()
 	{
-		if( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->ref_cod_vps_entrevista ) )
+		$filtros = "";
+
+		$whereAnd = " WHERE ";
+		if(is_numeric($this->cod_vps_aluno_entrevista))
 		{
-			$db = new clsBanco();
-			$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_aluno = '{$this->ref_cod_aluno}' AND ref_cod_vps_entrevista = '{$this->ref_cod_vps_entrevista}'" );
-			$db->ProximoRegistro();
-			return $db->Tupla();
+				$filtros .= "{$whereAnd} cod_vps_aluno_entrevista = '{$this->cod_vps_aluno_entrevista}'";
+				$whereAnd = " AND ";
 		}
-		return false;
+		else if(is_numeric($this->ref_cod_aluno) && is_numeric($this->ref_cod_vps_entrevista))
+		{
+			$filtros .= "{$whereAnd} ref_cod_aluno = '{$this->ref_cod_aluno}'";
+			$whereAnd = " AND ";
+
+			$filtros .= "{$whereAnd} ref_cod_vps_entrevista = '{$this->ref_cod_vps_entrevista}'";
+			$whereAnd = " AND ";
+		} else {
+			return false;
+		}
+
+		$db = new clsBanco();
+		$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} {$filtros}" );
+		$db->ProximoRegistro();
+		return $db->Tupla();
 	}
 
 	/**
@@ -435,14 +534,29 @@ class clsPmieducarVPSEntrevistaJovem
 	 */
 	function existe()
 	{
-		if( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->ref_cod_vps_entrevista ) )
+		$filtros = "";
+
+		$whereAnd = " WHERE ";
+		if(is_numeric($this->cod_vps_aluno_entrevista))
 		{
-			$db = new clsBanco();
-			$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_aluno = '{$this->ref_cod_aluno}' AND ref_cod_vps_entrevista = '{$this->ref_cod_vps_entrevista}'" );
-			$db->ProximoRegistro();
-			return $db->Tupla();
+				$filtros .= "{$whereAnd} cod_vps_aluno_entrevista = '{$this->cod_vps_aluno_entrevista}'";
+				$whereAnd = " AND ";
 		}
-		return false;
+		else if(is_numeric($this->ref_cod_aluno) && is_numeric($this->ref_cod_vps_entrevista))
+		{
+			$filtros .= "{$whereAnd} ref_cod_aluno = '{$this->ref_cod_aluno}'";
+			$whereAnd = " AND ";
+
+			$filtros .= "{$whereAnd} ref_cod_vps_entrevista = '{$this->ref_cod_vps_entrevista}'";
+			$whereAnd = " AND ";
+		} else {
+			return false;
+		}
+
+		$db = new clsBanco();
+		$db->Consulta( "SELECT 1 FROM {$this->_tabela} {$filtros}" );
+		$db->ProximoRegistro();
+		return $db->Tupla();
 	}
 
 	/**

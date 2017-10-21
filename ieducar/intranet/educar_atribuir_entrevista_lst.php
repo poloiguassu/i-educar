@@ -106,10 +106,10 @@ class indice extends clsListagem
 		$this->addCabecalhos( array(
 			"Entrevista",
 			"Ano",
-			"Nï¿½mero de vagas",
+			"Número de vagas",
 			"Vagas Preenchidas",
 			"Data Entrevista",
-			"Horï¿½rio",
+			"Horário",
 			"Escola"
 		) );
 
@@ -185,7 +185,7 @@ class indice extends clsListagem
 
 		$localizacao = new LocalizacaoSistema();
 		$localizacao->entradaCaminhos( array(
-			$_SERVER['SERVER_NAME'] . "/intranet" => "Inï¿½cio",
+			$_SERVER['SERVER_NAME'] . "/intranet" => "Início",
 			"educar_vps_index.php"                => "Trilha Jovem Iguassu - VPS",
 			""                                    => "Listagem de entrevistas"
 		));
