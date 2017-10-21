@@ -211,7 +211,7 @@ CREATE TABLE pmieducar.vps_entrevista_responsavel (
 --
 
 CREATE TABLE pmieducar.vps_aluno_entrevista (
-	cod_vps_aluno_entrevista integer NOT NULL,
+	cod_vps_aluno_entrevista integer NOT NULL DEFAULT nextval('vps_aluno_entrevista_cod_vps_aluno_entrevista_seq'::regclass),
 	ref_usuario_exc integer,
 	ref_usuario_cad integer NOT NULL,
 	data_cadastro timestamp without time zone NOT NULL,
@@ -219,9 +219,9 @@ CREATE TABLE pmieducar.vps_aluno_entrevista (
 	ativo smallint DEFAULT (1)::smallint NOT NULL,
 	ref_cod_aluno integer NOT NULL,
 	ref_cod_vps_entrevista integer NOT NULL,
-	situacao_vps integer DEFAULT 0,
+	resultado_entrevista integer DEFAULT 0,
 	inicio_vps date,
-	termino_vps date
+	termino_vps date,
 );
 
 
