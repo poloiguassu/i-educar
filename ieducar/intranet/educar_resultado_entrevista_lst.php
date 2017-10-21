@@ -3,23 +3,23 @@
 *																		 *
 *	@author Smart Consultoria e Desenvolvimento WEB						 *
 *	@updated 17/09/2016													 *
-*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*   Pacote: i-PLB Software Pï¿½blico Livre e Brasileiro					 *
 *																		 *
 *	Copyright (C) 2016	Smart Consultoria e Desenvolvimento Web			 *
 *						medaumoi@pensesmart.com							 *
 *																		 *
-*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*	Este  programa  ï¿½  software livre, vocï¿½ pode redistribuï¿½-lo e/ou	 *
+*	modificï¿½-lo sob os termos da Licenï¿½a Pï¿½blica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versï¿½o 2 da	 *
+*	Licenï¿½a   como  (a  seu  critï¿½rio)  qualquer  versï¿½o  mais  nova.	 *
 *																		 *
-*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*	Este programa  ï¿½ distribuï¿½do na expectativa de ser ï¿½til, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implï¿½cita de COMERCIALI-	 *
+*	ZAï¿½ï¿½O  ou  de ADEQUAï¿½ï¿½O A QUALQUER PROPï¿½SITO EM PARTICULAR. Con-	 *
+*	sulte  a  Licenï¿½a  Pï¿½blica  Geral  GNU para obter mais detalhes.	 *
 *																		 *
-*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	Vocï¿½  deve  ter  recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU	 *
+*	junto  com  este  programa. Se nï¿½o, escreva para a Free Software	 *
 *	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 *	02111-1307, USA.													 *
 *																		 *
@@ -106,11 +106,11 @@ class indice extends clsListagem
 		$this->addCabecalhos( array(
 			"Entrevista",
 			"Ano",
-			"Número de vagas",
-			"Situação",
-			"Número de contratados",
+			"Nï¿½mero de vagas",
+			"Situaï¿½ï¿½o",
+			"Nï¿½mero de contratados",
 			"Data Entrevista",
-			"Horário",
+			"Horï¿½rio",
 			"Escola"
 		) );
 
@@ -155,12 +155,12 @@ class indice extends clsListagem
 				if($registro["data_entrevista"])
 					$registro["data_entrevista"] = Portabilis_Date_Utils::pgSQLToBr($registro["data_entrevista"]);
 
-				$sql     = "select COUNT(ref_cod_aluno) from pmieducar.vps_jovem_entrevista where ref_cod_vps_entrevista = $1 AND resultado_entrevista = 4";
+				$sql     = "select COUNT(ref_cod_aluno) from pmieducar.vps_aluno_entrevista where ref_cod_vps_entrevista = $1 AND resultado_entrevista = 4";
 				$options = array('params' => $registro["cod_vps_entrevista"], 'return_only' => 'first-field');
 				$numero_jovens    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
 				$opcoesSituacao = array(
-					'' => 'Informe a situação desta entrevista',
+					'' => 'Informe a situaï¿½ï¿½o desta entrevista',
 					0  => 'Aguardando entrevista',
 					1  => 'Nenhum jovem selecionado',
 					2  => 'Entrevista Cancelada',
@@ -195,7 +195,7 @@ class indice extends clsListagem
 
 		$localizacao = new LocalizacaoSistema();
 		$localizacao->entradaCaminhos( array(
-			$_SERVER['SERVER_NAME'] . "/intranet" => "Início",
+			$_SERVER['SERVER_NAME'] . "/intranet" => "Inï¿½cio",
 			"educar_vps_index.php"                => "Trilha Jovem Iguassu - VPS",
 			""                                    => "Listagem de entrevistas"
 		));

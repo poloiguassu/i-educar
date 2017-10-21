@@ -29,7 +29,7 @@ require_once( "include/pmieducar/geral.inc.php" );
 
 class clsPmieducarVPSEntrevistaJovem
 {
-	var $cod_vps_jovem_entrevista;
+	var $cod_vps_aluno_entrevista;
 	var $ref_cod_vps_entrevista;
 	var $ref_cod_aluno;
 	var $resultado_entrevista;
@@ -110,7 +110,7 @@ class clsPmieducarVPSEntrevistaJovem
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
-		$this->_tabela = "{$this->_schema}vps_jovem_entrevista";
+		$this->_tabela = "{$this->_schema}vps_aluno_entrevista";
 
 		$this->_campos_lista = $this->_todos_campos = "ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, ativo, ref_cod_aluno, ref_cod_vps_entrevista, resultado_entrevista, inicio_vps, termino_vps";
 

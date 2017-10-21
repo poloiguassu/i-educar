@@ -65,10 +65,10 @@ CREATE SEQUENCE pmieducar.vps_entrevista_cod_vps_entrevista_seq
 	CACHE 1;
 
 --
--- Name: vps_jovem_entrevista_cod_vps_jovem_entrevista_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
+-- Name: vps_aluno_entrevista_cod_vps_aluno_entrevista_seq; Type: SEQUENCE; Schema: pmieducar; Owner: -
 --
 
-CREATE SEQUENCE pmieducar.vps_jovem_entrevista_cod_vps_jovem_entrevista_seq
+CREATE SEQUENCE pmieducar.vps_aluno_entrevista_cod_vps_aluno_entrevista_seq
 	START WITH 1
 	INCREMENT BY 1
 	NO MAXVALUE
@@ -207,11 +207,11 @@ CREATE TABLE pmieducar.vps_entrevista_responsavel (
 );
 
 --
--- Name: pmieducar.vps_jovem_entrevista; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
+-- Name: pmieducar.vps_aluno_entrevista; Type: TABLE; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-CREATE TABLE pmieducar.vps_jovem_entrevista (
-	cod_vps_jovem_entrevista integer NOT NULL,
+CREATE TABLE pmieducar.vps_aluno_entrevista (
+	cod_vps_aluno_entrevista integer NOT NULL,
 	ref_usuario_exc integer,
 	ref_usuario_cad integer NOT NULL,
 	data_cadastro timestamp without time zone NOT NULL,
@@ -288,11 +288,11 @@ ALTER TABLE ONLY pmieducar.vps_entrevista_idioma
 	ADD CONSTRAINT vps_entrevista_idioma_pkey PRIMARY KEY (ref_cod_vps_entrevista, ref_cod_vps_idioma);
 
 --
--- Name: vps_jovem_entrevista_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
+-- Name: vps_aluno_entrevista_pkey; Type: CONSTRAINT; Schema: pmieducar; Owner: -; Tablespace:
 --
 
-ALTER TABLE ONLY pmieducar.vps_jovem_entrevista
-	ADD CONSTRAINT vps_jovem_entrevista_pkey PRIMARY KEY (cod_vps_jovem_entrevista);
+ALTER TABLE ONLY pmieducar.vps_aluno_entrevista
+	ADD CONSTRAINT vps_aluno_entrevista_pkey PRIMARY KEY (cod_vps_aluno_entrevista);
 
 --
 -- Name: fcn_aft_update; Type: TRIGGER; Schema: pmieducar; Owner: -
@@ -371,7 +371,7 @@ CREATE TRIGGER fcn_aft_update
 --
 
 CREATE TRIGGER fcn_aft_update
-	AFTER INSERT OR UPDATE ON pmieducar.vps_jovem_entrevista
+	AFTER INSERT OR UPDATE ON pmieducar.vps_aluno_entrevista
 	FOR EACH ROW
 	EXECUTE PROCEDURE fcn_aft_update();
 
@@ -582,32 +582,32 @@ ALTER TABLE ONLY pmieducar.vps_entrevista_idioma
 	ADD CONSTRAINT vps_entrevista_idioma_ref_cod_vps_idioma_fkey FOREIGN KEY (ref_cod_vps_idioma) REFERENCES pmieducar.vps_idioma(cod_vps_idioma) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 --
--- Name: vps_jovem_entrevista_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+-- Name: vps_aluno_entrevista_ref_usuario_cad_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
 --
 
-ALTER TABLE ONLY pmieducar.vps_jovem_entrevista
-	ADD CONSTRAINT vps_jovem_entrevista_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY pmieducar.vps_aluno_entrevista
+	ADD CONSTRAINT vps_aluno_entrevista_ref_usuario_cad_fkey FOREIGN KEY (ref_usuario_cad) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 --
--- Name: vps_jovem_entrevista_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+-- Name: vps_aluno_entrevista_ref_usuario_exc_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
 --
 
-ALTER TABLE ONLY pmieducar.vps_jovem_entrevista
-	ADD CONSTRAINT vps_jovem_entrevista_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY pmieducar.vps_aluno_entrevista
+	ADD CONSTRAINT vps_aluno_entrevista_ref_usuario_exc_fkey FOREIGN KEY (ref_usuario_exc) REFERENCES pmieducar.usuario(cod_usuario) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 --
--- Name: vps_jovem_entrevista_ref_cod_aluno_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+-- Name: vps_aluno_entrevista_ref_cod_aluno_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
 --
 
-ALTER TABLE ONLY pmieducar.vps_jovem_entrevista
-	ADD CONSTRAINT vps_jovem_entrevista_ref_cod_aluno_fkey FOREIGN KEY (ref_cod_aluno) REFERENCES pmieducar.aluno(cod_aluno) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY pmieducar.vps_aluno_entrevista
+	ADD CONSTRAINT vps_aluno_entrevista_ref_cod_aluno_fkey FOREIGN KEY (ref_cod_aluno) REFERENCES pmieducar.aluno(cod_aluno) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 --
--- Name: vps_jovem_entrevista_ref_cod_vps_entrevista_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
+-- Name: vps_aluno_entrevista_ref_cod_vps_entrevista_fkey; Type: FK CONSTRAINT; Schema: pmieducar; Owner: -
 --
 
-ALTER TABLE ONLY pmieducar.vps_jovem_entrevista
-    ADD CONSTRAINT vps_jovem_entrevista_ref_cod_vps_entrevista_fkey FOREIGN KEY (ref_cod_vps_entrevista) REFERENCES pmieducar.vps_entrevista(cod_vps_entrevista) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY pmieducar.vps_aluno_entrevista
+	ADD CONSTRAINT vps_aluno_entrevista_ref_cod_vps_entrevista_fkey FOREIGN KEY (ref_cod_vps_entrevista) REFERENCES pmieducar.vps_entrevista(cod_vps_entrevista) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 ALTER SEQUENCE pmieducar.vps_jornada_trabalho_cod_vps_jornada_trabalho_seq
@@ -634,6 +634,6 @@ ALTER SEQUENCE pmieducar.vps_entrevista_cod_vps_entrevista_seq
 	MINVALUE 0;
 SELECT setval('pmieducar.vps_entrevista_cod_vps_entrevista_seq', 1, false);
 
-ALTER SEQUENCE pmieducar.vps_jovem_entrevista_cod_vps_jovem_entrevista_seq
+ALTER SEQUENCE pmieducar.vps_aluno_entrevista_cod_vps_aluno_entrevista_seq
 	MINVALUE 0;
-SELECT setval('pmieducar.vps_jovem_entrevista_cod_vps_jovem_entrevista_seq', 1, false);
+SELECT setval('pmieducar.vps_aluno_entrevista_cod_vps_aluno_entrevista_seq', 1, false);
