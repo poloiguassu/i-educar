@@ -27,7 +27,8 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
-require_once 'include/localizacaoSistema.php';
+require_once ("include/localizacaoSistema.php");
+require_once ("lib/App/Model/AtivoInativo.php");
 
 class clsIndex extends clsBase
 {
@@ -42,23 +43,35 @@ class clsIndex extends clsBase
 
 class indice extends clsListagem
 {
+	var $funcionario_ativo;
+
 	function Gerar()
 	{
-		$this->titulo = "Usu&aacute;rios";
-		$this->addCabecalhos( array( "Nome","Matrícula", "Matrícula Interna" ,"Status") );
+		$this->titulo = "Usuários";
+		$this->addCabecalhos( array( "Nome", "Status") );
 
 		// Filtros de Busca
 		$this->campoTexto("nm_pessoa", "Nome", "", 50, 255);
 		$this->campoTexto("matricula", "Matricula", "", 10, 15);
+
+		if(!is_numeric($_GET['funcionario_ativo']))
+			$this->funcionario_ativo = App_Model_AtivoInativo::ATIVO;
+		else
+			$this->funcionario_ativo = $_GET['funcionario_ativo'];
+
+		print($_GET['funcionario_ativo']);
+
+		$this->campoLista('funcionario_ativo', 'Usuário ativo', App_Model_AtivoInativo::getInstance()->getValues(), $this->funcionario_ativo, '', FALSE, '', '', FALSE, FALSE);
 
 		// Paginador
 		$limite = 10;
 		$iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
 
 		$obj_func = new clsFuncionario();
-		$obj_func->setOrderby("to_ascii(nome) ASC");
+		$obj_func->setOrderby("ativo='1' DESC, to_ascii(nome) ASC");
 		$obj_func->setLimite($limite, $iniciolimit);
-		$lst_func = $obj_func->lista($_GET["matricula"], $_GET['nm_pessoa']);
+
+		$lst_func = $obj_func->lista($_GET["matricula"],  $_GET['nm_pessoa'], $this->funcionario_ativo);
 
 		if($lst_func)
 		{
