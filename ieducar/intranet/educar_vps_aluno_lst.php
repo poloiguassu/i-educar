@@ -29,12 +29,13 @@ require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/geral.inc.php");
 require_once ("include/localizacaoSistema.php");
+require_once ("lib/App/Model/VivenciaProfissionalSituacao.php");
 
 class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} - Atribuir Entrevistas" );
+		$this->SetTitulo( "{$this->_instituicao} - Jovens em VPS" );
 		$this->processoAp = "598";
 		$this->addEstilo('localizacaoSistema');
 	}
@@ -104,13 +105,13 @@ class indice extends clsListagem
 			$this->$var = ( $val === "" ) ? null: $val;
 
 		$this->addCabecalhos( array(
-			"Entrevista",
-			"Ano",
-			"Número de vagas",
-			"Vagas Preenchidas",
-			"Data Entrevista",
-			"Horário",
-			"Escola"
+			"Nome",
+			"Número de entrevistas",
+			"Situação VPS",
+			"Entrevista incio VPS",
+			"Início VPS",
+			"Conclusão VPS",
+			"Inserção"
 		) );
 
 		// Filtros de Foreign Keys
@@ -125,11 +126,10 @@ class indice extends clsListagem
 		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-		$obj_entrevista = new clsPmieducarVPSEntrevista();
-		$obj_entrevista->setOrderby( "nm_entrevista ASC" );
+		$obj_entrevista = new clsPmieducarVPSAlunoEntrevista();
 		$obj_entrevista->setLimite( $this->limite, $this->offset );
 
-		$lista = $obj_entrevista->listaEntrevista($this->ref_cod_escola, $this->nm_entrevista, 1, null, null, null);
+		$lista = $obj_entrevista->listaJovens();
 
 		$total = $obj_entrevista->_total;
 
@@ -138,41 +138,67 @@ class indice extends clsListagem
 		{
 			foreach ( $lista AS $registro )
 			{
-				// pega detalhes de foreign_keys
-				if( class_exists( "clsPmieducarEscola" ) )
+				$ref_cod_vps_entrevista = null;
+				$registroVPS	= array();
+				$situacaoVPS	= "";
+				$inicioVPS		= "";
+				$terminoVPS		= "";
+				$insercaoVPS	= "";
+				$nm_entrevista	= "";
+
+				$ref_cod_aluno = $registro["ref_cod_aluno"];
+
+				$alunoVPS = new clsPmieducarAlunoVPS($ref_cod_aluno);
+
+				if($alunoVPS && $alunoVPS->existe())
+					$registroVPS = $alunoVPS->detalhe();
+
+				if($registroVPS["situacao_vps"])
+					$situacaoVPS = App_Model_VivenciaProfissionalSituacao::getInstance()->getValue($registroVPS["situacao_vps"]);
+
+				if($registroVPS["ref_cod_vps_aluno_entrevista"])
 				{
-					$obj_ref_cod_escola = new clsPmieducarEscola();
-					$det_ref_cod_escola = array_shift($obj_ref_cod_escola->lista($registro["ref_cod_escola"]));
-					$registro["ref_cod_escola"] = $det_ref_cod_escola["nome"];
-				}
-				else
-				{
-					$registro["ref_cod_escola"] = "Erro na geracao";
-					echo "<!--\nErro\nClasse nao existente: clsPmieducarEscola\n-->";
+					$alunoEntrevista = new clsPmieducarVPSAlunoEntrevista($registroVPS["ref_cod_vps_aluno_entrevista"]);
+					$registroAlunoEntrevista = $alunoEntrevista->detalhe();
+
+					$ref_cod_vps_entrevista = $registroAlunoEntrevista["ref_cod_vps_entrevista"];
+
+					if($ref_cod_vps_entrevista)
+					{
+						$entrevista = new clsPmieducarVPSEntrevista($ref_cod_vps_entrevista);
+						$registroEntrevista = $entrevista->detalhe();
+						$nm_entrevista = $registroEntrevista["nm_entrevista"];
+					}
+
+					if($registroAlunoEntrevista["inicio_vps"])
+						$inicioVPS = Portabilis_Date_Utils::pgSQLToBr($registroAlunoEntrevista["inicio_vps"]);
+
+					if($registroAlunoEntrevista["termino_vps"])
+						$terminoVPS = Portabilis_Date_Utils::pgSQLToBr($registroAlunoEntrevista["termino_vps"]);
+
+					if($registroAlunoEntrevista["insercao_vps"])
+						$insercaoVPS = Portabilis_Date_Utils::pgSQLToBr($registroAlunoEntrevista["insercao_vps"]);
 				}
 
-				if($registro["data_entrevista"])
-					$registro["data_entrevista"] = Portabilis_Date_Utils::pgSQLToBr($registro["data_entrevista"]);
-
-				$sql     = "select COUNT(ref_cod_aluno) from pmieducar.vps_aluno_entrevista where ref_cod_vps_entrevista = $1";
-				$options = array('params' => $registro["cod_vps_entrevista"], 'return_only' => 'first-field');
-				$numero_jovens    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+				$sql     = "select COUNT(ref_cod_aluno) from pmieducar.vps_aluno_entrevista where ref_cod_aluno = $1";
+				$options = array('params' => $ref_cod_aluno, 'return_only' => 'first-field');
+				$numero_entrevistas    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
 				$lista_busca = array(
-					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["nm_entrevista"]}</a>",
-					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["ano"]}</a>",
-					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["numero_vagas"]}</a>",
-					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$numero_jovens}</a>",
-					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["data_entrevista"]}</a>",
-					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["hora_entrevista"]}</a>",
-					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["ref_cod_escola"]}</a>"
+					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$registro["nome"]}</a>",
+					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$numero_entrevistas}</a>",
+					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$situacaoVPS}</a>",
+					"<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$ref_cod_vps_entrevista}\" target=\"_blank\">{$nm_entrevista}</a>",
+					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$inicioVPS}</a>",
+					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$terminoVPS}</a>",
+					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$insercaoVPS}</a>",
 				);
 
 				$this->addLinhas($lista_busca);
 			}
 		}
 
-		$this->addPaginador2( "educar_atribuir_entrevista_lst.php", $total, $_GET, $this->nome, $this->limite );
+		$this->addPaginador2( "educar_vps_aluno_lst.php", $total, $_GET, $this->nome, $this->limite );
 		$obj_permissoes = new clsPermissoes();
 
 		if( $obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11 ) )
@@ -187,7 +213,7 @@ class indice extends clsListagem
 		$localizacao->entradaCaminhos( array(
 			$_SERVER['SERVER_NAME'] . "/intranet" => "Início",
 			"educar_vps_index.php"                => "Trilha Jovem Iguassu - VPS",
-			""                                    => "Listagem de entrevistas"
+			""                                    => "Listagem de jovens em Entrevista"
 		));
 
 		$this->enviaLocalizacao($localizacao->montar());

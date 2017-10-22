@@ -381,10 +381,10 @@ class clsPmieducarAlunoVPS
 	 */
 	function detalhe()
 	{
-		if( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->ref_cod_vps_aluno_entrevista ) )
+		if(is_numeric($this->ref_cod_aluno))
 		{
 			$db = new clsBanco();
-			$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_aluno = '{$this->ref_cod_aluno}' AND ref_cod_vps_aluno_entrevista = '{$this->ref_cod_vps_aluno_entrevista}'" );
+			$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_aluno = '{$this->ref_cod_aluno}'" );
 			$db->ProximoRegistro();
 			return $db->Tupla();
 		}
@@ -398,10 +398,10 @@ class clsPmieducarAlunoVPS
 	 */
 	function existe()
 	{
-		if( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->ref_cod_vps_aluno_entrevista ) )
+		if(is_numeric($this->ref_cod_aluno ))
 		{
 			$db = new clsBanco();
-			$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_aluno = '{$this->ref_cod_aluno}' AND ref_cod_vps_aluno_entrevista = '{$this->ref_cod_vps_aluno_entrevista}'" );
+			$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_aluno = '{$this->ref_cod_aluno}'" );
 			$db->ProximoRegistro();
 			return $db->Tupla();
 		}
@@ -415,7 +415,7 @@ class clsPmieducarAlunoVPS
 	 */
 	function excluir()
 	{
-		if( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->ref_cod_vps_aluno_entrevista ) )
+		if(is_numeric($this->ref_cod_aluno))
 		{
 			/*
 			delete
@@ -432,7 +432,7 @@ class clsPmieducarAlunoVPS
 	 */
 	function  excluirTodos()
 	{
-		if (is_numeric( $this->ref_cod_vps_aluno_entrevista))
+		if(is_numeric($this->ref_cod_vps_aluno_entrevista))
 		{
 			$db = new clsBanco();
 			$db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_cod_vps_aluno_entrevista = '{$this->ref_cod_vps_aluno_entrevista}'" );
