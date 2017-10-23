@@ -122,7 +122,7 @@ class indice extends clsListagem
 		$get_cabecalho = "lista_busca";
 		include("include/pmieducar/educar_campo_lista.php");
 
-		$this->campoTexto( "nm_entrevista", "Entrevista", $this->nm_entrevista, 30, 255, false );
+		//$this->campoTexto( "nm_entrevista", "Entrevista", $this->nm_entrevista, 30, 255, false );
 
 		if(!is_numeric($_GET['situacao_vps']))
 			$this->situacao_vps = App_Model_VivenciaProfissionalSituacao::APTO;
@@ -149,12 +149,14 @@ class indice extends clsListagem
 		if($this->situacao_vps > App_Model_VivenciaProfissionalSituacao::INSERIDO)
 		{
 			$obj_entrevista = new clsPmieducarVPSAlunoEntrevista();
-			$obj_entrevista->setLimite( $this->limite, $this->offset );
+			$obj_entrevista->setLimite($this->limite, $this->offset);
+			$obj_entrevista->setOrderBy("nome ASC");
 
 			$lista = $obj_entrevista->listaJovens();
 		} else {
 			$obj_entrevista = new clsPmieducarAlunoVPS();
 			$obj_entrevista->setLimite($this->limite, $this->offset);
+			$obj_entrevista->setOrderBy("nome ASC");
 
 			$lista = $obj_entrevista->lista(null, null, $this->situacao_vps);
 		}
