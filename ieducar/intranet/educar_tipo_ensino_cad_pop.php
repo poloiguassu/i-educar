@@ -33,7 +33,8 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Tipo Ensino" );
+		$this->SetTitulo( "{$this->_instituicao} - Tipo Ensino" );
+		$this->SetTemplate("base_pop");
 		$this->processoAp = "558";
 		$this->renderBanner = false;
 		$this->renderMenu = false;

@@ -43,41 +43,42 @@
 
 class Portabilis_Date_Utils
 {
-  /**
-   * Recebe uma data no formato dd/mm/yyyy e retorna no formato postgres yyyy-mm-dd.
-   * @param string $date
-   */
-  public static function brToPgSQL($date) {
-    if (! $date)
-      return $date;
+	/**
+	* Recebe uma data no formato dd/mm/yyyy e retorna no formato postgres yyyy-mm-dd.
+	* @param string $date
+	*/
+	public static function brToPgSQL($date) {
+		if (! $date)
+			return $date;
 
-    // #TODO usar classe nativa datetime http://www.phptherightway.com/#date_and_time ?
-    list($dia, $mes, $ano) = explode("/", $date);
-    return "$ano-$mes-$dia";
-  }
+		// #TODO usar classe nativa datetime http://www.phptherightway.com/#date_and_time ?
+		list($dia, $mes, $ano) = explode("/", $date);
+		return "$ano-$mes-$dia";
+	}
 
-  /**
-   * Recebe uma data no formato postgres yyyy-mm-dd hh:mm:ss.uuuu e retorna no formato br dd/mm/yyyy hh:mm:ss.
-   * @param string $timestamp
-   */
-  public static function pgSQLToBr($timestamp) {
-    $pgFormat = 'Y-m-d';
-    $brFormat = 'd/m/Y';
+	/**
+	* Recebe uma data no formato postgres yyyy-mm-dd hh:mm:ss.uuuu e retorna no formato br dd/mm/yyyy hh:mm:ss.
+	* @param string $timestamp
+	*/
+	public static function pgSQLToBr($timestamp) {
+		$pgFormat = 'Y-m-d';
+		$brFormat = 'd/m/Y';
 
-    $hasTime  = strpos($timestamp, ':') > -1;
+		$hasTime  = strpos($timestamp, ':') > -1;
 
-    if ($hasTime) {
-      $pgFormat .= ' H:i:s';
-      $brFormat .= ' H:i:s';
+		if ($hasTime)
+		{
+			$pgFormat .= ' H:i:s';
+			$brFormat .= ' H:i:s';
 
-      $hasMicroseconds = strpos($timestamp, '.') > -1;
+			$hasMicroseconds = strpos($timestamp, '.') > -1;
 
-      if ($hasMicroseconds)
-        $pgFormat .= '.u';
-    }
+			if ($hasMicroseconds)
+				$pgFormat .= '.u';
+		}
 
-    $d = DateTime::createFromFormat($pgFormat, $timestamp);
+		$d = DateTime::createFromFormat($pgFormat, $timestamp);
 
-    return ($d ? $d->format($brFormat) : null);
-  }
+		return ($d ? $d->format($brFormat) : null);
+	}
 }

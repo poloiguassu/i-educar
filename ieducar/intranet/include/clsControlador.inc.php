@@ -214,13 +214,13 @@ class clsControlador
   protected function renderLoginPage() {
     $this->destroyLoginSession();
 
-    $templateName = 'login.twig.html';
+    $templateName = 'login';
 	
 	if ($GLOBALS['coreExt']['Config']->app->template->loginpage) {
-		if (file_exists($GLOBALS['coreExt']['Config']->app->template->loginpage) &&
-			is_readable($GLOBALS['coreExt']['Config']->app->template->loginpage)) {
-				$templateName = $GLOBALS['coreExt']['Config']->app->template->loginpage;
-		}	
+		$templateNamePath = PROJECT_ROOT . '/views/' . $GLOBALS['coreExt']['Config']->app->template->loginpage;
+		
+		if (file_exists($templateNamePath) && is_readable($templateNamePath))
+			$templateName = basename($templateNamePath, '.twig.html');
 	}
 	
     $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas']) &&

@@ -172,17 +172,14 @@ class indice extends clsCadastro
 			$this->campoTexto( "razao_social", "Raz&atilde;o Social",  $this->razao_social, "50", "255", true );
 			$this->campoTexto( "capital_social", "Capital Social",  $this->capital_social, "50", "255" );
 			
-			if($this->cnpj)
+			if($this->cnpj != int2CNPJ(0))
 			{
 				$this->campoRotulo("cnpj_","CNPJ", $this->cnpj);	
 				$this->campoOculto("cnpj", $this->cnpj);
 			}else 
 			{
-				$this->campoCnpj( "cnpj", "CNPJ",  $this->cnpj, true );	
+				$this->campoCnpj( "cnpj", "CNPJ",  $this->cnpj, false );	
 			}
-		
-			
-
 
 			// Detalhes do Endereço da empresa
 			$objTipoLog = new clsTipoLogradouro();
