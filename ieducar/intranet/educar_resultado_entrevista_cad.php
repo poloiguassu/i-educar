@@ -298,6 +298,16 @@ class indice extends clsCadastro
 
 		$this->inputsHelper()->date('termino_vps', $options);
 
+		$options = array(
+			'required'    => false,
+			'label'       => 'Data Inserção Profissional',
+			'placeholder' => '',
+			'value'       => Portabilis_Date_Utils::pgSQLToBr($this->insercao_vps),
+			'size'        => 7,
+		);
+
+		$this->inputsHelper()->date('insercao_vps', $options);
+
 		$this->campoQuebra();
 
 		if($todasEntrevistas)
@@ -383,12 +393,14 @@ class indice extends clsCadastro
 		{
 			$str_inicio_vps = Portabilis_Date_Utils::brToPgSQL($this->inicio_vps);
 			$str_termino_vps = Portabilis_Date_Utils::brToPgSQL($this->termino_vps);
+			$str_insercao_vps = Portabilis_Date_Utils::brToPgSQL($this->insercao_vps);
 
 			$entrevista->situacao_entrevista = $this->situacao_entrevista;
 			if(!empty($str_inicio_vps) && !empty($str_termino_vps))
 			{
 				$entrevista->inicio_vps = $str_inicio_vps;
 				$entrevista->termino_vps = $str_termino_vps;
+				$entrevista->insercao_vps = $str_insercao_vps;
 			}
 			$entrevista->edita();
 
@@ -404,6 +416,7 @@ class indice extends clsCadastro
 					{
 						$alunoEntrevista->inicio_vps = $str_inicio_vps;
 						$alunoEntrevista->termino_vps = $str_termino_vps;
+						$alunoEntrevista->insercao_vps = $str_insercao_vps;
 
 						$detalheAlunoEntrevista = $alunoEntrevista->detalhe();
 
