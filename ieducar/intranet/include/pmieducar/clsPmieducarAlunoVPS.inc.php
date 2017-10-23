@@ -307,7 +307,7 @@ class clsPmieducarAlunoVPS
 	 *
 	 * @return array
 	 */
-	function lista( $int_ref_cod_aluno = null, $int_ref_cod_vps_aluno_entrevista = null )
+	function lista($int_ref_cod_aluno = null, $int_ref_cod_vps_aluno_entrevista = null, $int_situacao_vps = null)
 	{
 		$filtros = '';
 		$this->resetCamposLista();
@@ -335,6 +335,11 @@ class clsPmieducarAlunoVPS
 		if( is_numeric( $int_ref_cod_vps_aluno_entrevista ) )
 		{
 			$filtros .= "{$whereAnd} ref_cod_vps_aluno_entrevista = '{$int_ref_cod_vps_aluno_entrevista}'";
+			$whereAnd = " AND ";
+		}
+		if(is_numeric($int_situacao_vps))
+		{
+			$filtros .= "{$whereAnd} situacao_vps = '{$int_situacao_vps}'";
 			$whereAnd = " AND ";
 		}
 

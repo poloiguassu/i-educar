@@ -93,6 +93,8 @@ class indice extends clsListagem
 	var $ativo;
 	var $ref_cod_escola;
 
+	var $situacao_vps;
+
 	function Gerar()
 	{
 		@session_start();
@@ -122,14 +124,40 @@ class indice extends clsListagem
 
 		$this->campoTexto( "nm_entrevista", "Entrevista", $this->nm_entrevista, 30, 255, false );
 
+		if(!is_numeric($_GET['situacao_vps']))
+			$this->situacao_vps = App_Model_VivenciaProfissionalSituacao::APTO;
+		else
+			$this->situacao_vps = $_GET['situacao_vps'];
+
+		$filtrosSituacao = array(
+			'0' => 'Evadido',
+			'1' => 'Desistente',
+			'2' => 'Desligado',
+			'3' => 'Apto a VPS',
+			'4' => 'Em cumprimento',
+			'5' => 'Concluído (Avaliado)',
+			'6' => 'Inserido',
+			'7' => 'Jovens com Entrevista Agendada'
+		);
+
+		$this->campoLista('situacao_vps', 'Situação VPS', $filtrosSituacao, $this->situacao_vps, '', FALSE, '', '', FALSE, FALSE);
+
 		// Paginador
 		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-		$obj_entrevista = new clsPmieducarVPSAlunoEntrevista();
-		$obj_entrevista->setLimite( $this->limite, $this->offset );
+		if($this->situacao_vps > App_Model_VivenciaProfissionalSituacao::INSERIDO)
+		{
+			$obj_entrevista = new clsPmieducarVPSAlunoEntrevista();
+			$obj_entrevista->setLimite( $this->limite, $this->offset );
 
-		$lista = $obj_entrevista->listaJovens();
+			$lista = $obj_entrevista->listaJovens();
+		} else {
+			$obj_entrevista = new clsPmieducarAlunoVPS();
+			$obj_entrevista->setLimite($this->limite, $this->offset);
+
+			$lista = $obj_entrevista->lista(null, null, $this->situacao_vps);
+		}
 
 		$total = $obj_entrevista->_total;
 
@@ -146,7 +174,7 @@ class indice extends clsListagem
 				$insercaoVPS	= "";
 				$nm_entrevista	= "";
 
-				$ref_cod_aluno = $registro["ref_cod_aluno"];
+				$ref_cod_aluno =  $registro["ref_cod_aluno"];
 
 				$alunoVPS = new clsPmieducarAlunoVPS($ref_cod_aluno);
 
@@ -180,7 +208,7 @@ class indice extends clsListagem
 						$insercaoVPS = Portabilis_Date_Utils::pgSQLToBr($registroAlunoEntrevista["insercao_vps"]);
 				}
 
-				$sql     = "select COUNT(ref_cod_aluno) from pmieducar.vps_aluno_entrevista where ref_cod_aluno = $1";
+				$sql     = "SELECT COUNT(ref_cod_aluno) from pmieducar.vps_aluno_entrevista where ref_cod_aluno = $1";
 				$options = array('params' => $ref_cod_aluno, 'return_only' => 'first-field');
 				$numero_entrevistas    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 

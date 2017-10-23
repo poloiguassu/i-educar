@@ -59,8 +59,6 @@ class indice extends clsListagem
 		else
 			$this->funcionario_ativo = $_GET['funcionario_ativo'];
 
-		print($_GET['funcionario_ativo']);
-
 		$this->campoLista('funcionario_ativo', 'Usuário ativo', App_Model_AtivoInativo::getInstance()->getValues(), $this->funcionario_ativo, '', FALSE, '', '', FALSE, FALSE);
 
 		// Paginador
