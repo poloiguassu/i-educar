@@ -96,12 +96,12 @@ class indice extends clsListagem
 		$this->addCabecalhos(
 			array(
 				"Função",
-				"Escola"
+				"Instituição"
 			)
 		);
 
 		// Filtros de Foreign Keys
-		$get_escola = true;
+		$get_escola = false;
 		$get_cabecalho = "lista_busca";
 		include("include/pmieducar/educar_campo_lista.php");
 
@@ -140,7 +140,7 @@ class indice extends clsListagem
 				$obj_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
 				$det_escola = $obj_escola->detalhe();
 				$idpes = $det_escola["ref_idpes"];
-				
+
 				if ($idpes)
 				{
 					$obj_escola = new clsPessoaJuridica($idpes);
