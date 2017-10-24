@@ -74,6 +74,8 @@ class indice extends clsListagem
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
 	var $nm_responsavel;
+	var $email;
+	var $telefone;
 	var $observacao;
 	var $data_cadastro;
 	var $data_exclusao;
@@ -96,30 +98,17 @@ class indice extends clsListagem
 			$this->$var = ($val === "") ? null: $val;
 
 		// Filtros de Foreign Keys
-		$get_escola = true;
+		$get_escola = false;
 		$get_cabecalho = "lista_busca";
 		include("include/pmieducar/educar_campo_lista.php");
 
-
-		switch ($nivel_usuario){
-			case 1:
-			case 2:
-				$this->addCabecalhos(array(
-					"Responsável",
-					"Empresa",
-					"Telefone",
-					"Escola",
-				));
-			break;
-			case 4:
-			default:
-				$this->addCabecalhos(array(
-					"Responsável",
-					"Empresa",
-					"Telefone"
-				));
-			break;
-		}
+		$this->addCabecalhos(array(
+			"Responsável",
+			"Empresa",
+			"Telefone Comercial",
+			"Telefone Celular",
+			"E-mail",
+		));
 
 		$helperOptions = array(
 			'objectName'         => 'empresa',
@@ -129,8 +118,12 @@ class indice extends clsListagem
 		$options = array('label' => "Empresa", 'required' => true, 'size' => 30);
 
 		$this->inputsHelper()->simpleSearchPessoaj('nome', $options, $helperOptions);
-		
+
 		$this->campoTexto("nm_responsavel", "Responsável", $this->nm_responsavel, 30, 255, false);
+
+		$this->campoTexto("email", "E-mail", $this->email, 30, 255, false);
+
+		$this->campoTexto("telefone", "Telefone s/ ddd", $this->telefone, 30, 255, false);
 
 		// Paginador
 		$this->limite = 20;
@@ -154,7 +147,9 @@ class indice extends clsListagem
 			1,
 			$this->ref_cod_biblioteca,
 			$this->empresa_id,
-			$this->ref_cod_instituicao
+			$this->ref_cod_instituicao,
+			$this->email,
+			$this->telefone
 		);
 
 
@@ -183,37 +178,27 @@ class indice extends clsListagem
 
 				if($registro["ddd_telefone_com"] && $registro["telefone_com"])
 				{
-					$registro["telefone"] = "{$registro["ddd_telefone_com"]}) {$registro["telefone_com"]}";
+					$registro["telefone_com"] = "{$registro["ddd_telefone_com"]}) {$registro["telefone_com"]}";
 				}
-				else if($registro["ddd_telefone_cel"] && $registro["telefone_cel"])
+				if($registro["ddd_telefone_cel"] && $registro["telefone_cel"])
 				{
-					$registro["telefone"] = "({$registro["ddd_telefone_cel"]}) {$registro["telefone_cel"]}";
+					$registro["telefone_cel"] = "({$registro["ddd_telefone_cel"]}) {$registro["telefone_cel"]}";
+				}
+				if($registro["email"] && $registro["email"])
+				{
+					$registro["email"] = "{$registro["email"]}";
 				}
 
-				switch ($nivel_usuario){
-					case 1:
-					case 2:
-						$this->addLinhas(array(
-							"<a href=\"educar_vps_responsavel_entrevista_det.php?cod_vps_responsavel_entrevista={$registro["cod_vps_responsavel_entrevista"]}\">{$registro["nm_responsavel"]}</a>",
-							"<a href=\"educar_vps_responsavel_entrevista_det.php?cod_vps_responsavel_entrevista={$registro["cod_vps_responsavel_entrevista"]}\">{$registro["ref_idpes"]}</a>",
-							"<a href=\"educar_vps_responsavel_entrevista_det.php?cod_vps_responsavel_entrevista={$registro["cod_vps_responsavel_entrevista"]}\">{$registro["telefone"]}</a>",
-							"<a href=\"educar_vps_responsavel_entrevista_det.php?cod_vps_responsavel_entrevista={$registro["cod_vps_responsavel_entrevista"]}\">{$registro["ref_cod_escola"]}</a>"
-						));
-					break;
-					
-					case 4:
-					default:
-						$this->addLinhas(array(
-							"<a href=\"educar_vps_responsavel_entrevista_det.php?cod_vps_responsavel_entrevista={$registro["cod_vps_responsavel_entrevista"]}\">{$registro["nm_responsavel"]}</a>",
-							"<a href=\"educar_vps_responsavel_entrevista_det.php?cod_vps_responsavel_entrevista={$registro["cod_vps_responsavel_entrevista"]}\">{$registro["ref_idpes"]}</a>",
-							"<a href=\"educar_vps_responsavel_entrevista_det.php?cod_vps_responsavel_entrevista={$registro["cod_vps_responsavel_entrevista"]}\">{$registro["telefone"]}</a>"
-						));
-					break;
-
-				}
+				$this->addLinhas(array(
+					"<a href=\"educar_vps_responsavel_entrevista_det.php?cod_vps_responsavel_entrevista={$registro["cod_vps_responsavel_entrevista"]}\">{$registro["nm_responsavel"]}</a>",
+					"<a href=\"educar_vps_responsavel_entrevista_det.php?cod_vps_responsavel_entrevista={$registro["cod_vps_responsavel_entrevista"]}\">{$registro["ref_idpes"]}</a>",
+					"<a href=\"educar_vps_responsavel_entrevista_det.php?cod_vps_responsavel_entrevista={$registro["cod_vps_responsavel_entrevista"]}\">{$registro["telefone_com"]}</a>",
+					"<a href=\"educar_vps_responsavel_entrevista_det.php?cod_vps_responsavel_entrevista={$registro["cod_vps_responsavel_entrevista"]}\">{$registro["telefone_cel"]}</a>",
+					"<a href=\"educar_vps_responsavel_entrevista_det.php?cod_vps_responsavel_entrevista={$registro["cod_vps_responsavel_entrevista"]}\">{$registro["email"]}</a>"
+				));
 			}
 		}
-		
+
 		$this->addPaginador2("educar_vps_responsavel_entrevista_lst.php", $total, $_GET, $this->nome, $this->limite);
 
 		if($obj_permissoes->permissao_cadastra(594, $this->pessoa_logada, 11))
@@ -230,7 +215,7 @@ class indice extends clsListagem
 			"educar_vps_index.php"                => "Trilha Jovem Iguassu - Biblioteca",
 			""                                    => "Listagem de responsáveis"
 		));
-		
+
 		$this->enviaLocalizacao($localizacao->montar());
 	}
 }
