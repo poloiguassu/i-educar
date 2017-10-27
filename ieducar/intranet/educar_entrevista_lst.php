@@ -105,7 +105,20 @@ class indice extends clsListagem
 
 		$this->titulo = "Entrevistas - Listagem";
 
-		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
+		$filtros = $_GET;
+
+		if(empty($filtros))
+		{
+			// HACK: Criar método para cada usuário definir seus filtros defaults
+			$filtros = array(
+				'busca'					=> 'S',
+				'ref_cod_instituicao'	=> 1,
+				'ref_cod_escola'		=> 2,
+				'ref_cod_curso'			=> 2
+			);
+		}
+
+		foreach($filtros AS $var => $val) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
 		$this->addCabecalhos( array(
