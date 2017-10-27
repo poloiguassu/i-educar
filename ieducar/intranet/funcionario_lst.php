@@ -77,7 +77,9 @@ class indice extends clsListagem
 			{
 				$ativo = ($pessoa['ativo'] == '1') ? "Ativo" : "Inativo";
 				$total = $pessoa['_total'];
+
 				$pessoa['nome']  = minimiza_capitaliza($pessoa['nome']);
+
 				$this->addLinhas( array("<a href='funcionario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'><img src='imagens/noticia.jpg' border=0>{$pessoa['nome']}</a>", $ativo) );
 			}
 		}
@@ -88,13 +90,13 @@ class indice extends clsListagem
 
 		$this->largura = "100%";
 
-	    $localizacao = new LocalizacaoSistema();
+		$localizacao = new LocalizacaoSistema();
 
-	    $localizacao->entradaCaminhos( array(
-	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         ""                                  => "Listagem de funcion&aacute;rios"
-	    ));
-	    $this->enviaLocalizacao($localizacao->montar());
+		$localizacao->entradaCaminhos( array(
+			$_SERVER['SERVER_NAME']."/intranet" => "Início",
+			""                                  => "Listagem de funcion&aacute;rios"
+		));
+		$this->enviaLocalizacao($localizacao->montar());
 	}
 }
 
