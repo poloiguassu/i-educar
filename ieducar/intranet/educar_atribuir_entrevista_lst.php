@@ -29,6 +29,7 @@ require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/geral.inc.php");
 require_once ("include/localizacaoSistema.php");
+require_once ("lib/App/Model/EntrevistaSituacao.php");
 
 class clsIndexBase extends clsBase
 {
@@ -71,26 +72,18 @@ class indice extends clsListagem
 	var $offset;
 
 	var $cod_vps_entrevista;
-	var $ref_cod_exemplar_tipo;
 	var $ref_cod_vps_entrevista;
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
-	var $ref_cod_vps_entrevista_colecao;
 	var $ref_cod_vps_entrevista_idioma;
-	var $ref_cod_vps_entrevista_editora;
 	var $nm_entrevista;
-	var $sub_titulo;
-	var $cdu;
-	var $cutter;
-	var $volume;
-	var $num_edicao;
 	var $ano;
-	var $num_paginas;
-	var $isbn;
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
 	var $ref_cod_escola;
+	var $situacao_entrevista;
+	var $empresa_id;
 
 	function Gerar()
 	{
@@ -105,12 +98,14 @@ class indice extends clsListagem
 
 		$this->addCabecalhos( array(
 			"Entrevista",
+			"Empresa",
 			"Ano",
 			"Número de vagas",
 			"Vagas Preenchidas",
 			"Data Entrevista",
-			"Horário",
-			"Escola"
+			"Função",
+			"Jornada de Trabalho",
+			"Situação"
 		) );
 
 		// Filtros de Foreign Keys
@@ -119,17 +114,52 @@ class indice extends clsListagem
 		$get_cabecalho = "lista_busca";
 		include("include/pmieducar/educar_campo_lista.php");
 
-		$this->campoTexto( "nm_entrevista", "Entrevista", $this->nm_entrevista, 30, 255, false );
+		if(!$this->ano && $this->ref_cod_escola)
+		{
+			$obj_ano_letivo = new clsPmieducarEscolaAnoLetivo();
+			$ano_andamento = $obj_ano_letivo->lista($this->ref_cod_escola, null, null, null, 1, null, null, null, null, 1);
+			$ano_andamento = reset($ano_andamento);
+
+			if($ano_andamento)
+				$this->ano = $ano_andamento['ano'];
+		}
+
+		$this->inputsHelper()->dynamic('anoLetivo');
+
+		$filtrosSituacao = array(
+			'0'		=> 'Todas',
+			'1'		=> 'Aguardando entrevista',
+			'2'		=> 'Nenhum jovem selecionado',
+			'3'		=> 'Jovens Contratados',
+		);
+
+		$this->campoLista('situacao_entrevista', 'Situação Entrevista', $filtrosSituacao, $this->situacao_entrevista, '', FALSE, '', '', FALSE, FALSE);
+
+		$helperOptions = array(
+			'objectName'         => 'empresa',
+			'hiddenInputOptions' => array('options' => array('value' => $this->empresa_id))
+		);
+
+		$options = array('label' => "Empresa", 'required' => false, 'size' => 30);
+
+		$this->inputsHelper()->simpleSearchPessoaj('nome', $options, $helperOptions);
+
+		$this->campoTexto("nm_entrevista", "Entrevista", $this->nm_entrevista, 30, 255, false);
 
 		// Paginador
 		$this->limite = 20;
 		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
+		if($this->situacao_entrevista < App_Model_EntrevistaSituacao::EM_ANDAMENTO)
+			$this->situacao_entrevista = null;
+
 		$obj_entrevista = new clsPmieducarVPSEntrevista();
 		$obj_entrevista->setOrderby( "nm_entrevista ASC" );
 		$obj_entrevista->setLimite( $this->limite, $this->offset );
 
-		$lista = $obj_entrevista->listaEntrevista($this->ref_cod_escola, $this->nm_entrevista, 1, null, null, null);
+		$lista = $obj_entrevista->listaEntrevista($this->ref_cod_escola, $this->nm_entrevista, 1, null, null,
+			$this->empresa_id, $this->ref_cod_curso, $this->ano, $this->situacao_entrevista
+		);
 
 		$total = $obj_entrevista->_total;
 
@@ -138,6 +168,8 @@ class indice extends clsListagem
 		{
 			foreach ( $lista AS $registro )
 			{
+				$total_jovens = "";
+
 				// pega detalhes de foreign_keys
 				if( class_exists( "clsPmieducarEscola" ) )
 				{
@@ -151,21 +183,72 @@ class indice extends clsListagem
 					echo "<!--\nErro\nClasse nao existente: clsPmieducarEscola\n-->";
 				}
 
+				if(class_exists("clsPessoaFj"))
+				{
+					$obj_ref_idpes = new clsPessoaFj($registro["ref_idpes"]);
+					$det_ref_idpes = $obj_ref_idpes->detalhe();
+					$registro["ref_idpes"] = $det_ref_idpes["nome"];
+				}
+				else
+				{
+					$registro["ref_idpes"] = "Erro na geracao";
+					echo "<!--\nErro\nClasse nao existente: clsPessoaFj\n-->";
+				}
+
+				if(class_exists("clsPmieducarVPSFuncao"))
+				{
+					$obj_ref_cod_vps_funcao = new clsPmieducarVPSFuncao($registro["ref_cod_vps_funcao"]);
+					$det_ref_cod_vps_funcao = $obj_ref_cod_vps_funcao->detalhe();
+					$registro["ref_cod_vps_funcao"] = $det_ref_cod_vps_funcao["nm_funcao"];
+				}
+				else
+				{
+					$registro["ref_cod_vps_funcao"] = "Erro na geracao";
+					echo "<!--\nErro\nClasse nao existente: clsPmieducarVPSFuncao\n-->";
+				}
+
+				if(class_exists("clsPmieducarVPSJornadaTrabalho"))
+				{
+					$obj_ref_cod_vps_jornada_trabalho = new clsPmieducarVPSJornadaTrabalho($registro["ref_cod_vps_jornada_trabalho"]);
+					$det_ref_cod_vps_jornada_trabalho = $obj_ref_cod_vps_jornada_trabalho->detalhe();
+					$registro["ref_cod_vps_jornada_trabalho"] = $det_ref_cod_vps_jornada_trabalho["nm_jornada_trabalho"];
+				}
+				else
+				{
+					$registro["ref_cod_vps_jornada_trabalho"] = "Erro na geracao";
+					echo "<!--\nErro\nClasse nao existente: clsPmieducarVPSJornadaTrabalho\n-->";
+				}
+
 				if($registro["data_entrevista"])
+				{
 					$registro["data_entrevista"] = Portabilis_Date_Utils::pgSQLToBr($registro["data_entrevista"]);
+
+					if($registro["hora_entrevista"])
+						$registro["data_entrevista"] = "{$registro["data_entrevista"]} às {$registro["hora_entrevista"]}";
+				}
+
+				if($registro["numero_vagas"] && $registro["numero_jovens"])
+				{
+					$numero_total = $registro["numero_vagas"] * $registro["numero_jovens"];
+					$total_jovens = "{$registro["numero_vagas"]} vagas / $numero_total jovens";
+				}
 
 				$sql     = "select COUNT(ref_cod_aluno) from pmieducar.vps_aluno_entrevista where ref_cod_vps_entrevista = $1";
 				$options = array('params' => $registro["cod_vps_entrevista"], 'return_only' => 'first-field');
 				$numero_jovens    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
+				$registro["situacao_entrevista"] = App_Model_EntrevistaSituacao::getInstance()->getValue($registro["situacao_entrevista"]);
+
 				$lista_busca = array(
 					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["nm_entrevista"]}</a>",
+					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["ref_idpes"]}</a>",
 					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["ano"]}</a>",
-					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["numero_vagas"]}</a>",
+					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$total_jovens}</a>",
 					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$numero_jovens}</a>",
 					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["data_entrevista"]}</a>",
-					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["hora_entrevista"]}</a>",
-					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["ref_cod_escola"]}</a>"
+					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["ref_cod_vps_funcao"]}</a>",
+					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["ref_cod_vps_jornada_trabalho"]}</a>",
+					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}\">{$registro["situacao_entrevista"]}</a>"
 				);
 
 				$this->addLinhas($lista_busca);
@@ -187,7 +270,7 @@ class indice extends clsListagem
 		$localizacao->entradaCaminhos( array(
 			$_SERVER['SERVER_NAME'] . "/intranet" => "Início",
 			"educar_vps_index.php"                => "Trilha Jovem Iguassu - VPS",
-			""                                    => "Listagem de entrevistas"
+			""                                    => "Atribuir Jovens a Entrevista"
 		));
 
 		$this->enviaLocalizacao($localizacao->montar());

@@ -902,7 +902,8 @@ class clsPmieducarVPSEntrevista
 	}
 
 
-	function listaEntrevista($int_ref_cod_escola = null, $str_nm_entrevista = null, $ativo = null, $int_ref_cod_vps_funcao = null,  $int_ref_cod_vps_tipo_contratacao = null, $int_ref_idpes = null, $int_ref_cod_curso = null, $int_ano)
+	function listaEntrevista($int_ref_cod_escola = null, $str_nm_entrevista = null, $ativo = null, $int_ref_cod_vps_funcao = null,
+		$int_ref_cod_vps_tipo_contratacao = null, $int_ref_idpes = null, $int_ref_cod_curso = null, $int_ano = null, $int_situacao_entrevista = null)
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} a";
 
@@ -958,6 +959,11 @@ class clsPmieducarVPSEntrevista
 		if (is_numeric($int_ano))
 		{
 			$filtros .= "{$whereAnd} ano = {$int_ano}";
+			$whereAnd = " AND ";
+		}
+		if (is_numeric($int_situacao_entrevista))
+		{
+			$filtros .= "{$whereAnd} situacao_entrevista = {$int_situacao_entrevista}";
 			$whereAnd = " AND ";
 		}
 
