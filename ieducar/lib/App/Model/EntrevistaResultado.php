@@ -31,18 +31,20 @@ require_once 'CoreExt/Enum.php';
 
 class App_Model_EntrevistaResultado extends CoreExt_Enum
 {
-	const EM_ANDAMENTO			= 0;
-	const ABANDONO				= 1;
-	const REPROVADO				= 2;
-	const APROVADO_EXTRA		= 3;
-	const APROVADO_ESTAGIO		= 4;
-	const APROVADO_CONTRATADO	= 4;
+	const EM_ANDAMENTO			= 1;
+	const ABANDONO				= 2;
+	const REPROVADO				= 3;
+	const APROVADO_ETAPA		= 4;
+	const APROVADO_EXTRA		= 5;
+	const APROVADO_ESTAGIO		= 6;
+	const APROVADO_CONTRATADO	= 7;
 
 	protected $_data = array(
 		''							=> 'Informe a situação desta entrevista',
 		self::EM_ANDAMENTO			=> 'Aguardando entrevista',
 		self::ABANDONO				=> 'Não compareceu',
 		self::REPROVADO				=> 'Não contratado',
+		self::APROVADO_ETAPA		=> 'Avançou próxima etapa',
 		self::APROVADO_EXTRA		=> 'Extra',
 		self::APROVADO_ESTAGIO		=> 'Estágio',
 		self::APROVADO_CONTRATADO	=> 'Aprovado'
