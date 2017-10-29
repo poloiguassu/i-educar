@@ -31,11 +31,12 @@
 require_once 'include/clsCampos.inc.php';
 
 if (class_exists('clsPmiajudaPagina')) {
-  require_once 'include/pmiajuda/clsPmiajudaPagina.inc.php';
+	require_once 'include/pmiajuda/clsPmiajudaPagina.inc.php';
 }
 
 require_once 'Portabilis/View/Helper/Application.php';
 require_once 'Portabilis/View/Helper/Inputs.php';
+require_once 'Core/View/TemplateRenderer.php';
 
 require_once 'include/localizacaoSistema.php';
 
@@ -263,7 +264,7 @@ class clsListagem extends clsCampos
       'pos_atual', -1, TRUE);
 
     return NULL;
-  } 
+  }
 
   function RenderHTML()
   {
@@ -298,7 +299,7 @@ class clsListagem extends clsCampos
                     </tr>";
 
       $retorno .= "</table>";
-    }    
+    }
 
     if ($this->campos) {
       $width = empty($this->largura) ? '' : "width='$this->largura'";
@@ -321,7 +322,7 @@ class clsListagem extends clsCampos
       else {
         $tipo = 'cad';
       }
-      
+
       $server = $_SERVER['SERVER_NAME'];
       $endereco = $_SERVER ['REQUEST_URI'];
       $enderecoPagina = $_SERVER['PHP_SELF'];
@@ -500,7 +501,7 @@ class clsListagem extends clsCampos
                     </tr>";
 
       $retorno .= "</table>";
-    }   
+    }
 
     $retorno .=  "
         <form name=\"form_resultado\" id=\"form_resultado\" method=\"POST\" action=\"\">
@@ -510,108 +511,18 @@ class clsListagem extends clsCampos
               <td colspan='$ncols'>{$this->__titulo}</td>
             </tr>";
 
-    $ncols = count( $this->cabecalho );
 
-    // Cabeçalho
-    if (!empty($this->cabecalho)) {
-      reset($this->cabecalho);
+	$twig = new TemplateRenderer();
+	$templateText = $twig->render("listagem", array('cabecalho' => $this->cabecalho, 'linhas' => $this->linhas));
 
-      $ncols = count($this->cabecalho);
+	$retorno .= $templateText;
 
-      if (!empty($this->colunas)) {
-        reset( $this->colunas );
-      }
-
-      $retorno .= "<input type='hidden' id='ordenacao' name='ordenacao' value='{$_POST['ordenacao']}'>";
-      $retorno .= "<input type='hidden' id='fonte' name='fonte' value='{$_POST['fonte']}'>";
-      $retorno .=  "
-            <tr>";
-
-      while (list($i, $texto) = each($this->cabecalho)) {
-        if (!empty( $this->colunas )) {
-          list($i, $fmt) = each($this->colunas);
-        }
-        else {
-          $fmt = alTopLeft;
-        }
-
-        if ($texto) {
-          $inicio = $fim = '';
-
-          if ($this->campos_ordenacao[$i] != '') {
-            $_POST['fonte']  = empty($_POST['fonte']) ? "imagens/nvp_setinha_down.gif" : $_POST['fonte'];
-            $inicio = "<img name='seta' src='{$_POST['fonte']}' border='0' /> <a href='#' onclick='definirOrdenacao(\"{$this->campos_ordenacao[$i]}\");document.getElementById(\"form_resultado\").submit();'>";
-            $fim = "</a>";
-          }
-
-          $retorno .=  "
-              <td class='formdktd' $fmt style=\"font-weight:bold;\" valign='middle'>{$inicio}$texto{$fim}</td>";
-        }
-      }
-
-      $retorno .=  "
-            </tr>";
-    }
-
-    // Lista
-    if (empty($this->linhas)) {
-      $retorno .=  "
-            <tr>
-              <td class='formlttd' colspan='$ncols' align='center'>N&atilde;o h&aacute; informa&ccedil;&atilde;o para ser apresentada</td>
-            </tr>";
-    }
-    else {
-      reset($this->linhas);
-
-      while (list($i, $linha) = each($this->linhas)) {
-        $classe = ($i % 2) ? 'formmdtd' : 'formlttd';
-        $retorno .=  "
-            <tr>";
-
-        if (is_array($linha)) {
-          reset($linha);
-
-          if (!empty($this->colunas)) {
-            reset( $this->colunas );
-          }
-
-          while (list($i, $celula) = each($linha)) {
-            if (!empty( $this->colunas)) {
-              list($i, $fmt) = each($this->colunas);
-            }
-            else {
-              $fmt = alTopLeft;
-            }
-
-            if (strpos($celula, "<img src='imagens/noticia.jpg' border=0>" ) !== FALSE) {
-              $celula = str_replace("<img src='imagens/noticia.jpg' border=0>", "<img src='imagens/noticia.jpg' border=0 alt=''>", $celula);
-            }
-
-            $retorno .=  "
-              <td class='$classe' $fmt>$celula</td>";
-          }
-        }
-        else {
-          $retorno .=  "
-              <td class='formdktd' $fmt colspan='$ncols'>$linha</td>";
-        }
-
-        $retorno .=  "
-            </tr>";
-      }
-    }
-
-    $retorno .=  "
-            <tr>
-              <td class='formdktd' colspan=\"{$ncols}\">&nbsp;</td>
-            </tr>";
-
-    if (!empty($this->paginador2)) {
-      $retorno .= "
-            <tr>
-              <td align=\"center\" colspan=\"$ncols\">{$this->paginador2}</td>
-            </tr>";
-    }
+	if (!empty($this->paginador2)) {
+		$retorno .= "
+			<tr>
+				<td align=\"center\" colspan=\"$ncols\">{$this->paginador2}</td>
+			</tr>";
+		}
 
     if (!empty($this->paginador)) {
       $ua = 0;

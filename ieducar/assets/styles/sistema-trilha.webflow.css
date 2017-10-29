@@ -12,6 +12,8 @@ body {
 	flex-direction: column;
 }
 
+div.floatright { display:inline, float:right, padding-left:5px; }
+
 .main {
 	flex: 1;
 }
