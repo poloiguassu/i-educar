@@ -201,7 +201,7 @@ class clsPmieducarAlunoVPS
 
 	function edita()
 	{
-		if( is_numeric( $this->ref_cod_aluno ) && is_numeric( $this->ref_cod_vps_aluno_entrevista ))
+		if(is_numeric( $this->ref_cod_aluno))
 		{
 
 			$db = new clsBanco();
@@ -222,6 +222,11 @@ class clsPmieducarAlunoVPS
 				$set .= "{$gruda}situacao_vps = '{$this->situacao_vps}'";
 				$gruda = ", ";
 			}
+			if(is_numeric($this->ref_cod_vps_aluno_entrevista))
+			{
+				$set .= "{$gruda}ref_cod_vps_aluno_entrevista = '{$this->ref_cod_vps_aluno_entrevista}'";
+				$gruda = ", ";
+			}
 			if(is_string($this->data_cadastro))
 			{
 				$set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
@@ -239,7 +244,7 @@ class clsPmieducarAlunoVPS
 
 			if($set)
 			{
-				$db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_vps_aluno_entrevista = '{$this->ref_cod_vps_aluno_entrevista}' AND ref_cod_aluno = '{$this->ref_cod_aluno}'");
+				$db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_aluno = '{$this->ref_cod_aluno}'");
 				return true;
 			}
 		}
