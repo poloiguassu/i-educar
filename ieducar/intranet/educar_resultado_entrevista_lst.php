@@ -159,16 +159,11 @@ class indice extends clsListagem
 
 		$this->campoTexto("nm_entrevista", "Entrevista", $this->nm_entrevista, 30, 255, false);
 
-		// Paginador
-		$this->limite = 20;
-		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
-
 		if($this->situacao_entrevista < App_Model_EntrevistaSituacao::EM_ANDAMENTO)
 			$this->situacao_entrevista = null;
 
 		$obj_entrevista = new clsPmieducarVPSEntrevista();
 		$obj_entrevista->setOrderby( "nm_entrevista ASC" );
-		$obj_entrevista->setLimite( $this->limite, $this->offset );
 
 		$lista = $obj_entrevista->listaEntrevista($this->ref_cod_escola, $this->nm_entrevista, 1, null, null,
 			$this->empresa_id, $this->ref_cod_curso, $this->ano, $this->situacao_entrevista
@@ -268,7 +263,6 @@ class indice extends clsListagem
 			}
 		}
 
-		$this->addPaginador2( "educar_resultado_entrevista_lst.php", $total, $_GET, $this->nome, $this->limite );
 		$obj_permissoes = new clsPermissoes();
 
 		if( $obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11 ) )

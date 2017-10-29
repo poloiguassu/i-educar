@@ -122,10 +122,8 @@ class indice extends clsListagem
 		$get_cabecalho = "lista_busca";
 		include("include/pmieducar/educar_campo_lista.php");
 
-		//$this->campoTexto( "nm_entrevista", "Entrevista", $this->nm_entrevista, 30, 255, false );
-
 		if(!is_numeric($_GET['situacao_vps']))
-			$this->situacao_vps = App_Model_VivenciaProfissionalSituacao::APTO;
+			$this->situacao_vps = null;
 		else
 			$this->situacao_vps = $_GET['situacao_vps'];
 
@@ -141,10 +139,6 @@ class indice extends clsListagem
 		);
 
 		$this->campoLista('situacao_vps', 'Situação VPS', $filtrosSituacao, $this->situacao_vps, '', FALSE, '', '', FALSE, FALSE);
-
-		// Paginador
-		$this->limite = 20;
-		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
 		if($this->situacao_vps > App_Model_VivenciaProfissionalSituacao::INSERIDO)
 		{
@@ -228,7 +222,6 @@ class indice extends clsListagem
 			}
 		}
 
-		$this->addPaginador2( "educar_vps_aluno_lst.php", $total, $_GET, $this->nome, $this->limite );
 		$obj_permissoes = new clsPermissoes();
 
 		if( $obj_permissoes->permissao_cadastra( 598, $this->pessoa_logada, 11 ) )
