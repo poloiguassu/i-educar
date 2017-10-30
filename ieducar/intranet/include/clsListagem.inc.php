@@ -64,90 +64,95 @@ define('alBottomRight', 'valign=bottom align=right');
  */
 class clsListagem extends clsCampos
 {
-  var $nome = 'formulario';
-  var $__titulo;
-  var $titulo;
-  var $banner = FALSE;
-  var $bannerLateral = FALSE;
-  var $titulo_barra;
-  var $bannerClose = FALSE;
-  var $largura;
-  var $linhas;
-  var $colunas;
-  var $cabecalho;
-  var $paginacao;
-  var $tabulacao;
-  var $method = 'GET';
-  var $camposResultado;
-  var $tituloFormResultado;
-  var $funcAcao = '';
-  var $funcAcaoNome = '';
-  var $rotulo_anterior;
-  var $locale = null;
-  var $appendInTop = false;
+	var $nome = 'formulario';
+	var $__titulo;
+	var $titulo;
+	var $banner = FALSE;
+	var $bannerLateral = FALSE;
+	var $titulo_barra;
+	var $bannerClose = FALSE;
+	var $largura;
+	var $linhas;
+	var $colunas;
+	var $cabecalho;
+	var $paginacao;
+	var $tabulacao;
+	var $method = 'GET';
+	var $camposResultado;
+	var $tituloFormResultado;
+	var $funcAcao = '';
+	var $funcAcaoNome = '';
+	var $rotulo_anterior;
+	var $locale = null;
+	var $appendInTop = false;
 
-  var $array_botao;
-  var $array_botao_url;
-  var $array_botao_script;
-  var $show_botao_novo = TRUE;
-  var $acao_imprimir = FALSE;
-  var $valor_imprimir = 'Imprimir Arquivo';
+	var $array_botao;
+	var $array_botao_url;
+	var $array_botao_script;
+	var $show_botao_novo = TRUE;
+	var $acao_imprimir = FALSE;
+	var $valor_imprimir = 'Imprimir Arquivo';
 
-  var $paginador = array();
-  var $numeropaginador = 0;
-  var $paginador2;
-  var $busca_janela = 0;
+	var $paginador = array();
+	var $numeropaginador = 0;
+	var $paginador2;
+	var $busca_janela = 0;
 
-  var $rodape = '';
+	var $rodape = '';
 
-  var $ordenacao;
-  var $campos_ordenacao;
-  var $fonte;
+	var $ordenacao;
+	var $campos_ordenacao;
+	var $fonte;
 
-  var $exibirBotaoSubmit = true;
+	var $exibirBotaoSubmit = true;
 
-  function Gerar()
-  {
-    return FALSE;
-  }
+	var $template = "listagem";
 
-  function addBanner($strBannerUrl = '', $strBannerLateralUrl = '',
-    $strBannerTitulo = '', $boolFechaBanner = TRUE)
-  {
-    if ($strBannerUrl != '') {
-      $this->banner = $strBannerUrl;
-    }
-    if ($strBannerLateralUrl != '') {
-      $this->bannerLateral = $strBannerLateralUrl;
-    }
-    if ($strBannerTitulo != '') {
-      $this->titulo_barra = $strBannerTitulo;
-    }
+	function Gerar()
+	{
+		return FALSE;
+	}
 
-    $this->bannerClose = $boolFechaBanner;
-  }
+	function addBanner($strBannerUrl = '', $strBannerLateralUrl = '',
+		$strBannerTitulo = '', $boolFechaBanner = TRUE)
+	{
+		if ($strBannerUrl != '') {
+			$this->banner = $strBannerUrl;
+		}
+		if ($strBannerLateralUrl != '') {
+			$this->bannerLateral = $strBannerLateralUrl;
+		}
+		if ($strBannerTitulo != '') {
+			$this->titulo_barra = $strBannerTitulo;
+		}
+		$this->bannerClose = $boolFechaBanner;
+	}
 
-  function enviaLocalizacao($localizao, $appendInTop = FALSE){
-    if($localizao)
-      $this->locale = $localizao;
+	function enviaLocalizacao($localizao, $appendInTop = FALSE){
+		if($localizao)
+		$this->locale = $localizao;
+		$this->appendInTop = $appendInTop;
+	}
 
-    $this->appendInTop = $appendInTop;
-  }
+	function setTemplate($template)
+	{
+		$this->template = $template;
+	}
 
-  function addCabecalhos($coluna)
-  {
-    $this->cabecalho = $coluna;
-  }
+	function addCabecalhos($coluna)
+	{
+		$this->cabecalho = $coluna;
+	}
 
-  function addCabecalho($coluna)
-  {
-    $this->cabecalho[] = $coluna;
-  }
+	function addCabecalho($coluna)
+	{
+		$this->cabecalho[] = $coluna;
+	}
 
-  function addLinhas($linha)
-  {
-    $this->linhas[] = $linha;
-  }
+	function addLinhas($linha)
+	{
+		$this->linhas[] = $linha;
+	}
 
   function addPaginador2($strUrl, $intTotalRegistros, $mixVariaveisMantidas = '',
     $nome = 'formulario', $intResultadosPorPagina = 20, $intPaginasExibidas = 3,
@@ -513,7 +518,7 @@ class clsListagem extends clsCampos
 
 
 	$twig = new TemplateRenderer();
-	$templateText = $twig->render("listagem", array('cabecalho' => $this->cabecalho, 'linhas' => $this->linhas));
+	$templateText = $twig->render($this->template, array('cabecalho' => $this->cabecalho, 'linhas' => $this->linhas));
 
 	$retorno .= $templateText;
 

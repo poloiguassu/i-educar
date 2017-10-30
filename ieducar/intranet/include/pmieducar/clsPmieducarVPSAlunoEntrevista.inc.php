@@ -37,6 +37,7 @@ class clsPmieducarVPSAlunoEntrevista
 	var $inicio_vps;
 	var $termino_vps;
 	var $insercao_vps;
+	var $motivo_termino;
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
 
@@ -107,13 +108,14 @@ class clsPmieducarVPSAlunoEntrevista
 	 *
 	 * @return object
 	 */
-	function clsPmieducarVPSAlunoEntrevista($cod_vps_aluno_entrevista = null, $ref_cod_vps_entrevista = null, $ref_cod_aluno = null, $resultado_entrevista = null, $ativo = null, $inicio_vps = null, $termino_vps = null, $insercao_vps = null, $ref_usuario_exc = null, $ref_usuario_cad = null)
+	function clsPmieducarVPSAlunoEntrevista($cod_vps_aluno_entrevista = null, $ref_cod_vps_entrevista = null, $ref_cod_aluno = null, $resultado_entrevista = null, $ativo = null,
+		$inicio_vps = null, $termino_vps = null, $insercao_vps = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $motivo_termino = null)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}vps_aluno_entrevista";
 
-		$this->_campos_lista = $this->_todos_campos = "cod_vps_aluno_entrevista, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, ativo, ref_cod_aluno, ref_cod_vps_entrevista, resultado_entrevista, inicio_vps, termino_vps, insercao_vps";
+		$this->_campos_lista = $this->_todos_campos = "cod_vps_aluno_entrevista, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, ativo, ref_cod_aluno, ref_cod_vps_entrevista, resultado_entrevista, inicio_vps, termino_vps, insercao_vps, motivo_termino";
 
 		if(is_numeric($cod_vps_aluno_entrevista))
 		{
@@ -202,6 +204,11 @@ class clsPmieducarVPSAlunoEntrevista
 			$this->insercao_vps = $insercao_vps;
 		}
 
+		if(is_string($motivo_termino))
+		{
+			$this->motivo_termino = $motivo_termino;
+		}
+
 		if(is_numeric($ref_usuario_exc))
 		{
 			$this->ref_usuario_exc = $ref_usuario_exc;
@@ -216,6 +223,7 @@ class clsPmieducarVPSAlunoEntrevista
 		{
 			$this->data_cadastro = $data_cadastro;
 		}
+
 		if(is_string($data_exclusao))
 		{
 			$this->data_exclusao = $data_exclusao;
@@ -224,9 +232,8 @@ class clsPmieducarVPSAlunoEntrevista
 
 	function edita()
 	{
-		if(is_numeric($this->ref_cod_aluno) && is_numeric($this->ref_cod_vps_entrevista))
+		if((is_numeric($this->ref_cod_aluno) && is_numeric($this->ref_cod_vps_entrevista)) || is_numeric($this->cod_vps_aluno_entrevista))
 		{
-
 			$db = new clsBanco();
 			$set = "";
 
@@ -260,6 +267,11 @@ class clsPmieducarVPSAlunoEntrevista
 				$set .= "{$gruda}insercao_vps = '{$this->insercao_vps}'";
 				$gruda = ", ";
 			}
+			if(is_string($this->motivo_termino))
+			{
+				$set .= "{$gruda}motivo_termino = '{$this->motivo_termino}'";
+				$gruda = ", ";
+			}
 			if(is_string($this->data_cadastro))
 			{
 				$set .= "{$gruda}data_cadastro = '{$this->data_cadastro}'";
@@ -274,10 +286,12 @@ class clsPmieducarVPSAlunoEntrevista
 				$set .= "{$gruda}ativo = '{$this->ativo}'";
 				$gruda = ", ";
 			}
-
 			if($set)
 			{
-				$db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_vps_entrevista = '{$this->ref_cod_vps_entrevista}' AND ref_cod_aluno = '{$this->ref_cod_aluno}'");
+				if(is_numeric($this->ref_cod_aluno) && is_numeric($this->ref_cod_vps_entrevista))
+					$db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_vps_entrevista = '{$this->ref_cod_vps_entrevista}' AND ref_cod_aluno = '{$this->ref_cod_aluno}'");
+				else if(is_numeric($this->cod_vps_aluno_entrevista))
+					$db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_vps_aluno_entrevista = '{$this->cod_vps_aluno_entrevista}'");
 				return true;
 			}
 		}
@@ -337,6 +351,13 @@ class clsPmieducarVPSAlunoEntrevista
 			{
 				$campos .= "{$gruda}insercao_vps";
 				$valores .= "{$gruda}'{$this->insercao_vps}'";
+				$gruda = ", ";
+			}
+
+			if(is_string($this->motivo_termino))
+			{
+				$campos .= "{$gruda}motivo_termino";
+				$valores .= "{$gruda}'{$this->motivo_termino}'";
 				$gruda = ", ";
 			}
 

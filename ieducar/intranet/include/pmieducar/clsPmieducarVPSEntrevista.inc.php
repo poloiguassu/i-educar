@@ -56,7 +56,6 @@ class clsPmieducarVPSEntrevista
 	var $termino_vps;
 	var $insercao_vps;
 
-
 	// propriedades padrao
 
 	/**

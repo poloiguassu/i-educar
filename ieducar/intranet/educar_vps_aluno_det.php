@@ -226,6 +226,10 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe(array("Situação VPS", "{$situacaoVPS}"));
 		}
+		if($registroVPS["motivo_desligamento"])
+		{
+			$this->addDetalhe(array("Motivo Desligamento VPS", "{$registroVPS["motivo_desligamento"]}"));
+		}
 		if($nm_entrevista)
 		{
 			$this->addDetalhe(array("Entrevista início VPS", "<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$ref_cod_vps_entrevista}\" target=\"_blank\">{$nm_entrevista}</a>"));
@@ -290,58 +294,15 @@ class indice extends clsDetalhe
 			$this->addDetalhe(array("Todas as Entrevistas", "{$tabela}"));
 		}
 
-		/*$obj = new clsPmieducarVPSIdioma();
-		$obj = $obj->listaIdiomasEntrevista($this->cod_vps_entrevista);
-
-		if (count($obj))
-		{
-			foreach ($obj as $reg)
-			{
-				$assuntos.= '<span style="background-color: #A1B3BD; padding: 2px;"><b>' . $reg['nome'] . '</b></span>&nbsp; ';
-			}
-			if(!empty($assuntos))
-				$this->addDetalhe(array("Idiomas necessários", "{$assuntos}"));
-		}
-
-		$entrevistas = new clsPmieducarVPSAlunoEntrevista(null, null, $this->cod_vps_entrevista);
-		$todasEntrevistas = $entrevistas->lista();
-
-		if (count($todasEntrevistas))
-		{
-			$assuntos = "";
-
-			$tabela =	"<TABLE>
-							<TR align=center>
-							<TD bgcolor=#A1B3BD><B>Nome</B></TD>
-						</TR>";
-			$cont = 0;
-
-			foreach ($todasEntrevistas AS $valor)
-			{
-				$nm_jovem = strtoupper($valor["nome"]);
-				$id_jovem = $valor["ref_cod_aluno"];
-
-				$tabela .= "<TR>
-								<TD {$color} align=left><a href='/intranet/educar_aluno_det.php?cod_aluno={$id_jovem}' target ='_blank'>{$nm_jovem}</a></TD>
-							</TR>";
-				$cont++;
-			}
-
-			$tabela .= "</TABLE>";
-
-			if($tabela)
-			{
-				$this->addDetalhe(array("Entrevistados", "{$tabela}"));
-			}
-			if(!empty($assuntos))
-				$this->addDetalhe(array("Jovens entrevistados", "{$assuntos}"));
-
-		}*/
-
 		$obj_permissoes = new clsPermissoes();
 		if($obj_permissoes->permissao_cadastra(598, $this->pessoa_logada, 11))
 		{
-			$this->url_novo = "educar_entrevista_cad.php";
+			$this->array_botao = array('Atualizar Situação', 'Agendar Visita VPS');
+
+			$this->array_botao_url_script = array(
+				sprintf('go("educar_vps_aluno_cad.php?cod_aluno=%d");', $this->cod_aluno),
+				sprintf('go("educar_vps_visita_cad.php?ref_cod_aluno=%d");', $this->cod_aluno)
+			);
 			$this->url_editar = "educar_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}";
 		}
 

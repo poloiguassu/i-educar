@@ -128,14 +128,14 @@ class indice extends clsListagem
 			$this->situacao_vps = $_GET['situacao_vps'];
 
 		$filtrosSituacao = array(
-			'0' => 'Evadido',
-			'1' => 'Desistente',
-			'2' => 'Desligado',
-			'3' => 'Apto a VPS',
-			'4' => 'Em cumprimento',
-			'5' => 'Concluído (Avaliado)',
-			'6' => 'Inserido',
-			'7' => 'Jovens com Entrevista Agendada'
+			'1' => 'Evadido',
+			'2' => 'Desistente',
+			'3' => 'Desligado',
+			'4' => 'Apto a VPS',
+			'5' => 'Em cumprimento',
+			'6' => 'Concluído (Avaliado)',
+			'7' => 'Inserido',
+			'8' => 'Jovens com Entrevista Agendada'
 		);
 
 		$this->campoLista('situacao_vps', 'Situação VPS', $filtrosSituacao, $this->situacao_vps, '', FALSE, '', '', FALSE, FALSE);

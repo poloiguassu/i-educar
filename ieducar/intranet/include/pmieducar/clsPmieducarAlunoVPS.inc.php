@@ -33,6 +33,7 @@ class clsPmieducarAlunoVPS
 	var $ref_cod_vps_aluno_entrevista;
 	var $ref_cod_aluno;
 	var $situacao_vps;
+	var $motivo_desligamento;
 	var $ativo;
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
@@ -104,13 +105,14 @@ class clsPmieducarAlunoVPS
 	 *
 	 * @return object
 	 */
-	function clsPmieducarAlunoVPS($ref_cod_aluno = null, $situacao_vps = null, $ref_cod_vps_aluno_entrevista = null, $ativo = null, $ref_usuario_exc = null, $ref_usuario_cad = null)
+	function clsPmieducarAlunoVPS($ref_cod_aluno = null, $situacao_vps = null, $ref_cod_vps_aluno_entrevista = null, $ativo = null,
+		$ref_usuario_exc = null, $ref_usuario_cad = null, $motivo_desligamento = null)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}aluno_vps";
 
-		$this->_campos_lista = $this->_todos_campos = "cod_aluno_vps, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, ativo, ref_cod_aluno, ref_cod_vps_aluno_entrevista, situacao_vps";
+		$this->_campos_lista = $this->_todos_campos = "cod_aluno_vps, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, ativo, ref_cod_aluno, ref_cod_vps_aluno_entrevista, situacao_vps, motivo_desligamento";
 
 		if( is_numeric( $ref_cod_vps_aluno_entrevista ) )
 		{
@@ -171,7 +173,12 @@ class clsPmieducarAlunoVPS
 
 		if(is_numeric($situacao_vps))
 		{
-			$this->situacao_vps = $$situacao_vps;
+			$this->situacao_vps = $situacao_vps;
+		}
+
+		if(is_string($motivo_desligamento))
+		{
+			$this->motivo_desligamento = $motivo_desligamento;
 		}
 
 		if(is_numeric($ativo))
@@ -217,6 +224,11 @@ class clsPmieducarAlunoVPS
 				$set .= "{$gruda}ref_usuario_cad = '{$this->ref_usuario_cad}'";
 				$gruda = ", ";
 			}
+			if(is_string($this->motivo_desligamento))
+			{
+				$set .= "{$gruda}motivo_desligamento = '{$this->motivo_desligamento}'";
+				$gruda = ", ";
+			}
 			if(is_numeric($this->situacao_vps))
 			{
 				$set .= "{$gruda}situacao_vps = '{$this->situacao_vps}'";
@@ -224,7 +236,10 @@ class clsPmieducarAlunoVPS
 			}
 			if(is_numeric($this->ref_cod_vps_aluno_entrevista))
 			{
-				$set .= "{$gruda}ref_cod_vps_aluno_entrevista = '{$this->ref_cod_vps_aluno_entrevista}'";
+				if($this->ref_cod_vps_aluno_entrevista > 0)
+					$set .= "{$gruda}ref_cod_vps_aluno_entrevista = '{$this->ref_cod_vps_aluno_entrevista}'";
+				else
+					$set .= "{$gruda}ref_cod_vps_aluno_entrevista = NULL";
 				$gruda = ", ";
 			}
 			if(is_string($this->data_cadastro))
@@ -283,6 +298,13 @@ class clsPmieducarAlunoVPS
 			{
 				$campos .= "{$gruda}situacao_vps";
 				$valores .= "{$gruda}'{$this->situacao_vps}'";
+				$gruda = ", ";
+			}
+
+			if(is_string($this->motivo_desligamento))
+			{
+				$campos .= "{$gruda}motivo_desligamento";
+				$valores .= "{$gruda}'{$this->motivo_desligamento}'";
 				$gruda = ", ";
 			}
 
