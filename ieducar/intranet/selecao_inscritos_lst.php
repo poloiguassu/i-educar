@@ -22,7 +22,7 @@ class indice extends clsListagem
 		$this->titulo = "Jovens Inscritos Processo Seletivo";
 
 
-		$this->addCabecalhos(array( "Nome", "CPF", "Turno", "Idade", "Telefone", "Etapa 1"));
+		$this->addCabecalhos(array( "Nome", "CPF", "Turno", "Idade", "Telefone", "Etapa 1", "Etapa 2"));
 
 		$this->campoTexto( "nm_inscrito", "Nome",  $_GET['nm_inscrito'], "50", "255", true );
 		$this->campoCpf( "id_federal", "CPF",  $_GET['id_federal'], "50", "", true );
@@ -40,6 +40,21 @@ class indice extends clsListagem
 		);
 
 		$this->inputsHelper()->select('etapa_1', $options);
+
+		$options = array(
+			'required' => false,
+			'label'    => "Avaliação Projeto Etapa 2",
+			'value'     => $_GET['etapa_2'],
+			'resources' => array(
+				'' => '2ª Etapa',
+				'-1' => 'Não Avaliado',
+				'1' => 'Não Adequado',
+				'2' => 'Parcialmente Adequado',
+				'3' => 'Adequado'
+			),
+		);
+
+		$this->inputsHelper()->select('etapa_2', $options);
 
 		$where = "";
 
@@ -64,6 +79,11 @@ class indice extends clsListagem
 			$par_etapa_1 = $_GET['etapa_1'];
 		}
 
+		if($_GET['etapa_2'])
+		{
+			$par_etapa_2 = $_GET['etapa_2'];
+		}
+
 		$dba = $db = new clsBanco();
 
 		$objPessoa = new clsPreInscrito();
@@ -85,7 +105,7 @@ class indice extends clsListagem
 			'3' => 'Adequado'
 		);
 
-		$pessoas = $objPessoa->lista($par_etapa_1, null, $par_nome, $par_id_federal, null, $iniciolimit, $limite);
+		$pessoas = $objPessoa->lista($par_etapa_1, $par_etapa_2, null, null, $par_nome, $par_id_federal, null, $iniciolimit, $limite);
 
 		if($pessoas)
 		{
@@ -121,8 +141,9 @@ class indice extends clsListagem
 				}
 
 				$etapa_1 = $avaliacao[$pessoa['etapa_1']];
+				$etapa_2 = $avaliacao[$pessoa['etapa_2']];
 
-				$this->addLinhas( array("<img src='imagens/noticia.jpg' border=0><a href='selecao_inscritos_det.php?cod_pessoa={$cod}'>$nome</a>", $cpf, $turno, $idade, $telefone, $etapa_1 ) );
+				$this->addLinhas( array("<img src='imagens/noticia.jpg' border=0><a href='selecao_inscritos_det.php?cod_pessoa={$cod}'>$nome</a>", $cpf, $turno, $idade, $telefone, $etapa_1, $etapa_2 ) );
 			}
 		}
 

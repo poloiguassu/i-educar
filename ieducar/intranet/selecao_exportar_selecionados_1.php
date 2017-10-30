@@ -16,7 +16,7 @@ fputcsv($output, array('Nome', 'Turno', 'Data Nascimento', 'Idade', 'Telefone', 
 
 $objPessoa = new clsPreInscrito();
 
-$pessoas = $objPessoa->lista(null, 3);
+$pessoas = $objPessoa->lista2(2);
 
 /*foreach($objPessoa->lista(3) as $pessoa)
 {

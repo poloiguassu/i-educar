@@ -108,6 +108,8 @@ class indice extends clsCadastro
 	var $copia_historico;
 	var $copia_renda;
 	var $etapa_1;
+	var $etapa_2;
+	var $etapa_3;
 	var $encaminhamento;
 
 	//var $cod_escola;
@@ -373,7 +375,7 @@ class indice extends clsCadastro
 		$options = array(
 			'required' => false,
 			'label'    => "Avaliação Projeto Etapa 1",
-			'inline'   => true,
+			'inline'   => false,
 			'value'     => $this->etapa_1,
 			'resources' => array(
 				'' => '1ª Etapa',
@@ -384,6 +386,36 @@ class indice extends clsCadastro
 		);
 
 		$this->inputsHelper()->select('etapa_1', $options);
+
+		$options = array(
+			'required' => false,
+			'label'    => "Avaliação Projeto Etapa 1",
+			'inline'   => false,
+			'value'     => $this->etapa_2,
+			'resources' => array(
+				'-1' => '2ª Etapa',
+				'1' => 'Não Adequado',
+				'2' => 'Parcialmente Adequado',
+				'3' => 'Adequado'
+			),
+		);
+
+		$this->inputsHelper()->select('etapa_2', $options);
+
+		$options = array(
+			'required' => false,
+			'label'    => "Avaliação Projeto Etapa 1",
+			'inline'   => false,
+			'value'     => $this->etapa_3,
+			'resources' => array(
+				'-1' => '3ª Etapa',
+				'1' => 'Não Aprovado',
+				'2' => 'Parcialmente Aprovado',
+				'3' => 'Aprovado'
+			),
+		);
+
+		$this->inputsHelper()->select('etapa_3', $options);
 	}
 
 	function Novo() {
@@ -501,6 +533,8 @@ class indice extends clsCadastro
 		$preInscrito->ano = $this->ano;
 
 		$preInscrito->etapa_1 = $this->etapa_1;
+		$preInscrito->etapa_2 = $this->etapa_2;
+		$preInscrito->etapa_3 = $this->etapa_3;
 
 		$preInscrito->guarda_mirim = isset($this->guarda_mirim) ? 1 : 0;
 		$preInscrito->encaminhamento = isset($this->encaminhamento) ? 1 : 0;

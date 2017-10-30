@@ -6,7 +6,7 @@ var pessoaPaiOuMae;
 
  // before page is ready
 var firstTab = 11;
- 
+
 
 var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');
@@ -24,7 +24,7 @@ var $paiNomeField = $j('#pai_nome');
 var $paiIdField   = $j('#pai_id');
 
 var $maeNomeField = $j('#mae_nome');
-var $maeIdField   = $j('#mae_id'); 
+var $maeIdField   = $j('#mae_id');
 
 var $pessoaPaiActionBar  = $j('<span>').html('')
                                        .addClass('pessoa-links pessoa-pai-links')
@@ -57,7 +57,7 @@ var $linkToEditPessoaMae = $linkToEditPessoaPai.clone()
                                                .removeClass('editar-pessoa-pai')
                                                .addClass('editar-pessoa-mae')
                                                .attr('id', 'editar-pessoa-mae-link')
-                                               .appendTo($pessoaMaeActionBar);                             
+                                               .appendTo($pessoaMaeActionBar);
 
 
 
@@ -110,13 +110,17 @@ var tipo_resp;
 resourceOptions.handleGet = function(dataResponse) {
   handleMessages(dataResponse.msgs);
   $resourceNotice.hide();
+  if(dataResponse.pre_inscrito) {
+	  console.log('teste' + dataResponse.pre_inscrito);
+  }
+  console.log('teste' + dataResponse.pre_inscrito);
 
   if (dataResponse.id && ! dataResponse.ativo) {
     $submitButton.attr('disabled', 'disabled').hide();
     $deleteButton.attr('disabled', 'disabled').hide();
 
     var msg = "Este cadastro foi desativado em <b>"+ dataResponse.destroyed_at +
-              " </b><br/>pelo usuário <b>" + dataResponse.destroyed_by + "</b>, ";
+              " </b><br/>pelo usu�rio <b>" + dataResponse.destroyed_by + "</b>, ";
 
     $resourceNotice.html(stringUtils.toUtf8(msg)).slideDown('fast');
 
@@ -133,7 +137,7 @@ resourceOptions.handleGet = function(dataResponse) {
     getPersonDetails(dataResponse.pessoa_id);
 
   $idField.val(dataResponse.id);
-  tipo_resp = dataResponse.tipo_responsavel;  
+  tipo_resp = dataResponse.tipo_responsavel;
   $j('#religiao_id').val(dataResponse.religiao_id);
   $j('#beneficio_id').val(dataResponse.beneficio_id);
   $j('#tipo_transporte').val(dataResponse.tipo_transporte);
@@ -147,118 +151,118 @@ resourceOptions.handleGet = function(dataResponse) {
 
   //campos checkbox
    if (dataResponse.alergia_medicamento == 'S'){
-    $j('#alergia_medicamento').attr('checked',true);  
-    $j('#alergia_medicamento').val('on');   
-  }   
+    $j('#alergia_medicamento').attr('checked',true);
+    $j('#alergia_medicamento').val('on');
+  }
 
    if (dataResponse.alergia_alimento == 'S'){
-    $j('#alergia_alimento').attr('checked',true);  
-    $j('#alergia_alimento').val('on');   
-  }   
+    $j('#alergia_alimento').attr('checked',true);
+    $j('#alergia_alimento').val('on');
+  }
 
    if (dataResponse.doenca_congenita == 'S'){
-    $j('#doenca_congenita').attr('checked',true);  
-    $j('#doenca_congenita').val('on');   
-  }   
+    $j('#doenca_congenita').attr('checked',true);
+    $j('#doenca_congenita').val('on');
+  }
 
    if (dataResponse.fumante == 'S'){
-    $j('#fumante').attr('checked',true);  
-    $j('#fumante').val('on');   
-  }   
+    $j('#fumante').attr('checked',true);
+    $j('#fumante').val('on');
+  }
 
    if (dataResponse.doenca_caxumba == 'S'){
-    $j('#doenca_caxumba').attr('checked',true);  
-    $j('#doenca_caxumba').val('on');   
-  }   
+    $j('#doenca_caxumba').attr('checked',true);
+    $j('#doenca_caxumba').val('on');
+  }
 
    if (dataResponse.doenca_sarampo == 'S'){
-    $j('#doenca_sarampo').attr('checked',true);  
-    $j('#doenca_sarampo').val('on');   
-  }   
+    $j('#doenca_sarampo').attr('checked',true);
+    $j('#doenca_sarampo').val('on');
+  }
 
    if (dataResponse.doenca_rubeola == 'S'){
-    $j('#doenca_rubeola').attr('checked',true);  
-    $j('#doenca_rubeola').val('on');   
-  }   
+    $j('#doenca_rubeola').attr('checked',true);
+    $j('#doenca_rubeola').val('on');
+  }
 
    if (dataResponse.doenca_catapora == 'S'){
-    $j('#doenca_catapora').attr('checked',true);  
-    $j('#doenca_catapora').val('on');   
-  }   
+    $j('#doenca_catapora').attr('checked',true);
+    $j('#doenca_catapora').val('on');
+  }
 
    if (dataResponse.doenca_escarlatina == 'S'){
-    $j('#doenca_escarlatina').attr('checked',true);  
-    $j('#doenca_escarlatina').val('on');   
-  }   
+    $j('#doenca_escarlatina').attr('checked',true);
+    $j('#doenca_escarlatina').val('on');
+  }
 
    if (dataResponse.doenca_coqueluche == 'S'){
-    $j('#doenca_coqueluche').attr('checked',true);  
-    $j('#doenca_coqueluche').val('on');   
-  }   
+    $j('#doenca_coqueluche').attr('checked',true);
+    $j('#doenca_coqueluche').val('on');
+  }
 
    if (dataResponse.epiletico == 'S'){
-    $j('#epiletico').attr('checked',true);  
-    $j('#epiletico').val('on');   
-  }   
+    $j('#epiletico').attr('checked',true);
+    $j('#epiletico').val('on');
+  }
 
    if (dataResponse.epiletico_tratamento == 'S'){
-    $j('#epiletico_tratamento').attr('checked',true);  
-    $j('#epiletico_tratamento').val('on');   
-  }   
+    $j('#epiletico_tratamento').attr('checked',true);
+    $j('#epiletico_tratamento').val('on');
+  }
 
    if (dataResponse.hemofilico == 'S'){
-    $j('#hemofilico').attr('checked',true);  
-    $j('#hemofilico').val('on');   
-  }   
+    $j('#hemofilico').attr('checked',true);
+    $j('#hemofilico').val('on');
+  }
 
    if (dataResponse.hipertenso == 'S'){
-    $j('#hipertenso').attr('checked',true);  
-    $j('#hipertenso').val('on');   
-  }   
+    $j('#hipertenso').attr('checked',true);
+    $j('#hipertenso').val('on');
+  }
 
    if (dataResponse.asmatico == 'S'){
-    $j('#asmatico').attr('checked',true);  
-    $j('#asmatico').val('on');   
-  }   
+    $j('#asmatico').attr('checked',true);
+    $j('#asmatico').val('on');
+  }
 
    if (dataResponse.diabetico == 'S'){
-    $j('#diabetico').attr('checked',true);  
-    $j('#diabetico').val('on');   
-  }   
+    $j('#diabetico').attr('checked',true);
+    $j('#diabetico').val('on');
+  }
 
    if (dataResponse.insulina == 'S'){
-    $j('#insulina').attr('checked',true);  
-    $j('#insulina').val('on');   
-  }   
+    $j('#insulina').attr('checked',true);
+    $j('#insulina').val('on');
+  }
 
    if (dataResponse.tratamento_medico == 'S'){
-    $j('#tratamento_medico').attr('checked',true);  
-    $j('#tratamento_medico').val('on');   
-  }   
+    $j('#tratamento_medico').attr('checked',true);
+    $j('#tratamento_medico').val('on');
+  }
 
    if (dataResponse.medicacao_especifica == 'S'){
-    $j('#medicacao_especifica').attr('checked',true);  
-    $j('#medicacao_especifica').val('on');   
-  }   
+    $j('#medicacao_especifica').attr('checked',true);
+    $j('#medicacao_especifica').val('on');
+  }
 
    if (dataResponse.acomp_medico_psicologico == 'S'){
-    $j('#acomp_medico_psicologico').attr('checked',true);  
-    $j('#acomp_medico_psicologico').val('on');   
-  }   
+    $j('#acomp_medico_psicologico').attr('checked',true);
+    $j('#acomp_medico_psicologico').val('on');
+  }
 
    if (dataResponse.restricao_atividade_fisica == 'S'){
-    $j('#restricao_atividade_fisica').attr('checked',true);  
-    $j('#restricao_atividade_fisica').val('on');   
-  }   
+    $j('#restricao_atividade_fisica').attr('checked',true);
+    $j('#restricao_atividade_fisica').val('on');
+  }
 
    if (dataResponse.fratura_trauma == 'S'){
-    $j('#fratura_trauma').attr('checked',true);  
-    $j('#fratura_trauma').val('on');   
-  }   
+    $j('#fratura_trauma').attr('checked',true);
+    $j('#fratura_trauma').val('on');
+  }
    if (dataResponse.plano_saude == 'S'){
-    $j('#plano_saude').attr('checked',true);  
-    $j('#plano_saude').val('on');   
-  }   
+    $j('#plano_saude').attr('checked',true);
+    $j('#plano_saude').val('on');
+  }
   // campos texto
   $j('#altura').val(dataResponse.altura);
   $j('#peso').val(dataResponse.peso);
@@ -287,100 +291,100 @@ resourceOptions.handleGet = function(dataResponse) {
     ************************************************/
 
   if (dataResponse.recebeu_uniforme == 'S'){
-    $j('#recebeu_uniforme').attr('checked',true);  
-    $j('#recebeu_uniforme').val('on');   
-  }   
+    $j('#recebeu_uniforme').attr('checked',true);
+    $j('#recebeu_uniforme').val('on');
+  }
   $j('#tamanho_camiseta').val(dataResponse.tamanho_camiseta);
   $j('#quantidade_camiseta').val(dataResponse.quantidade_camiseta);
 
     /***********************************************
       CAMPOS DA MORADIA
-    ************************************************/  
+    ************************************************/
 
   if (dataResponse.empregada_domestica == 'S'){
-    $j('#empregada_domestica').attr('checked',true);  
-    $j('#empregada_domestica').val('on');   
-  }     
+    $j('#empregada_domestica').attr('checked',true);
+    $j('#empregada_domestica').val('on');
+  }
   if (dataResponse.automovel == 'S'){
-    $j('#automovel').attr('checked',true);  
-    $j('#automovel').val('on');   
-  }     
+    $j('#automovel').attr('checked',true);
+    $j('#automovel').val('on');
+  }
   if (dataResponse.motocicleta == 'S'){
-    $j('#motocicleta').attr('checked',true);  
-    $j('#motocicleta').val('on');   
-  }     
+    $j('#motocicleta').attr('checked',true);
+    $j('#motocicleta').val('on');
+  }
   if (dataResponse.computador == 'S'){
-    $j('#computador').attr('checked',true);  
-    $j('#computador').val('on');   
-  }     
+    $j('#computador').attr('checked',true);
+    $j('#computador').val('on');
+  }
   if (dataResponse.geladeira == 'S'){
-    $j('#geladeira').attr('checked',true);  
-    $j('#geladeira').val('on');   
-  }     
+    $j('#geladeira').attr('checked',true);
+    $j('#geladeira').val('on');
+  }
   if (dataResponse.fogao == 'S'){
-    $j('#fogao').attr('checked',true);  
-    $j('#fogao').val('on');   
-  }     
+    $j('#fogao').attr('checked',true);
+    $j('#fogao').val('on');
+  }
   if (dataResponse.maquina_lavar == 'S'){
-    $j('#maquina_lavar').attr('checked',true);  
-    $j('#maquina_lavar').val('on');   
-  }     
+    $j('#maquina_lavar').attr('checked',true);
+    $j('#maquina_lavar').val('on');
+  }
   if (dataResponse.microondas == 'S'){
-    $j('#microondas').attr('checked',true);  
-    $j('#microondas').val('on');   
-  }     
+    $j('#microondas').attr('checked',true);
+    $j('#microondas').val('on');
+  }
   if (dataResponse.video_dvd == 'S'){
-    $j('#video_dvd').attr('checked',true);  
-    $j('#video_dvd').val('on');   
-  }     
+    $j('#video_dvd').attr('checked',true);
+    $j('#video_dvd').val('on');
+  }
   if (dataResponse.televisao == 'S'){
-    $j('#televisao').attr('checked',true);  
-    $j('#televisao').val('on');   
-  }  
+    $j('#televisao').attr('checked',true);
+    $j('#televisao').val('on');
+  }
   if (dataResponse.telefone == 'S'){
-    $j('#telefone').attr('checked',true);  
-    $j('#telefone').val('on');   
-  }  
+    $j('#telefone').attr('checked',true);
+    $j('#telefone').val('on');
+  }
   if (dataResponse.celular == 'S'){
-    $j('#celular').attr('checked',true);  
-    $j('#celular').val('on');   
-  }         
+    $j('#celular').attr('checked',true);
+    $j('#celular').val('on');
+  }
   if (dataResponse.agua_encanada == 'S'){
-    $j('#agua_encanada').attr('checked',true);  
-    $j('#agua_encanada').val('on');   
-  }  
+    $j('#agua_encanada').attr('checked',true);
+    $j('#agua_encanada').val('on');
+  }
   if (dataResponse.poco == 'S'){
-    $j('#poco').attr('checked',true);  
-    $j('#poco').val('on');   
-  }  
+    $j('#poco').attr('checked',true);
+    $j('#poco').val('on');
+  }
   if (dataResponse.energia == 'S'){
-    $j('#energia').attr('checked',true);  
-    $j('#energia').val('on');   
-  }  
+    $j('#energia').attr('checked',true);
+    $j('#energia').val('on');
+  }
   if (dataResponse.esgoto == 'S'){
-    $j('#esgoto').attr('checked',true);  
-    $j('#esgoto').val('on');   
-  }  
+    $j('#esgoto').attr('checked',true);
+    $j('#esgoto').val('on');
+  }
   if (dataResponse.fossa == 'S'){
-    $j('#fossa').attr('checked',true);  
-    $j('#fossa').val('on');   
-  }         
+    $j('#fossa').attr('checked',true);
+    $j('#fossa').val('on');
+  }
   if (dataResponse.lixo == 'S'){
-    $j('#lixo').attr('checked',true);  
-    $j('#lixo').val('on');   
-  }         
+    $j('#lixo').attr('checked',true);
+    $j('#lixo').val('on');
+  }
 
-  $j('#quartos').val(dataResponse.quartos);   
-  $j('#sala').val(dataResponse.sala);   
-  $j('#copa').val(dataResponse.copa);   
-  $j('#banheiro').val(dataResponse.banheiro);   
-  $j('#garagem').val(dataResponse.garagem);  
-  $j('#casa_outra').val(dataResponse.casa_outra);  
-  $j('#quant_pessoas').val(dataResponse.quant_pessoas);  
-  $j('#renda').val(dataResponse.renda);  
+  $j('#quartos').val(dataResponse.quartos);
+  $j('#sala').val(dataResponse.sala);
+  $j('#copa').val(dataResponse.copa);
+  $j('#banheiro').val(dataResponse.banheiro);
+  $j('#garagem').val(dataResponse.garagem);
+  $j('#casa_outra').val(dataResponse.casa_outra);
+  $j('#quant_pessoas').val(dataResponse.quant_pessoas);
+  $j('#renda').val(dataResponse.renda);
   $j('#moradia').val(dataResponse.moradia).change();
-  $j('#material').val(dataResponse.material).change(); 
-  $j('#moradia_situacao').val(dataResponse.moradia_situacao).change(); 
+  $j('#material').val(dataResponse.material).change();
+  $j('#moradia_situacao').val(dataResponse.moradia_situacao).change();
 
 };
 
@@ -472,10 +476,10 @@ var handleGetPersonDetails = function(dataResponse) {
   if (dataResponse.mae_id){
     mae_details.nome = nomeMae;
     $j('#mae_nome').val(dataResponse.mae_id + ' - ' + nomeMae);
-    $j('#mae_id').val(dataResponse.mae_id);  
+    $j('#mae_id').val(dataResponse.mae_id);
   }else{
     $j('#mae_nome').val('');
-    $j('#mae_id').val('');  
+    $j('#mae_id').val('');
   }
 
   $j('#mae_id').trigger('change');
@@ -611,7 +615,7 @@ function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
   }
 
 
-  // timeout para usuario perceber mudança
+  // timeout para usuario perceber mudan�a
   window.setTimeout(function() {
     messageUtils.success('Pessoa alterada com sucesso', $tempNomeField);
 
@@ -693,23 +697,23 @@ function canShowParentsFields(){
     }
 
     checkTipoResponsavel();
-    $j('#tipo_responsavel').change(checkTipoResponsavel); 
+    $j('#tipo_responsavel').change(checkTipoResponsavel);
 
-    
+
     var checkMoradia = function(){
       if($j('#moradia').val() == 'C'){
-        $j('#material').show();    
+        $j('#material').show();
         $j('#casa_outra').hide();
       }else if($j('#moradia').val() == 'O'){
         $j('#material').hide();
         $j('#casa_outra').show();
       }else{
         $j('#casa_outra').hide();
-        $j('#material').hide();        
+        $j('#material').hide();
       }
-    } 
+    }
     checkMoradia();
-    $j('#moradia').change(checkMoradia); 
+    $j('#moradia').change(checkMoradia);
 
 
     /***********************
@@ -717,7 +721,7 @@ function canShowParentsFields(){
     ************************/
 
     // DADOS PESSOAIS
-    $j('#tab1').click( 
+    $j('#tab1').click(
       function(){
 
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
@@ -727,16 +731,16 @@ function canShowParentsFields(){
             if (row.id!='stop')
               row.hide();
             else
-              return false;            
+              return false;
           }else{
             row.show();
           }
-        });        
+        });
       }
-    );  
+    );
 
     // FICHA MÉDICA
-    $j('#tab2').click( 
+    $j('#tab2').click(
       function(){
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab2').toggleClass('alunoTab alunoTab-active')
@@ -750,14 +754,14 @@ function canShowParentsFields(){
           }else
             return false;
         });
-        // Esse loop desativa/ativa os campos de descrição, conforme os checkbox    
+        // Esse loop desativa/ativa os campos de descrição, conforme os checkbox
         $j('.temDescricao').each(function(i, obj) {
-            $j('#desc_'+obj.id).prop('disabled', !$j('#'+obj.id).prop('checked'));                  
+            $j('#desc_'+obj.id).prop('disabled', !$j('#'+obj.id).prop('checked'));
         });
-      
-      });    
+
+      });
     // UNIFORME
-    $j('#tab3').click( 
+    $j('#tab3').click(
       function(){
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab3').toggleClass('alunoTab alunoTab-active')
@@ -767,15 +771,15 @@ function canShowParentsFields(){
               row.show();
             }else if (index>0){
               row.hide();
-            }       
+            }
           }else
             return false;
         });
         $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
-      });     
+      });
 
     // MORADIA
-    $j('#tab4').click( 
+    $j('#tab4').click(
       function(){
         $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
         $j('#tab4').toggleClass('alunoTab alunoTab-active')
@@ -785,30 +789,30 @@ function canShowParentsFields(){
             row.hide();
 		  }else if(index<109){
             row.show();
-          }          
+          }
         });
         $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
-      });   
+      });
 
 
-    /* A seguinte função habilitam/desabilitam o campo de descrição quando for clicado 
-    nos referentes checkboxs */         
+    /* A seguinte função habilitam/desabilitam o campo de descrição quando for clicado
+    nos referentes checkboxs */
 
     $j('.temDescricao').click(function(){
         if ($j('#'+this.id).prop('checked'))
-          $j('#desc_'+this.id).removeAttr('disabled');          
+          $j('#desc_'+this.id).removeAttr('disabled');
         else{
-          $j('#desc_'+this.id).attr('disabled','disabled');          
-          $j('#desc_'+this.id).val('');          
+          $j('#desc_'+this.id).attr('disabled','disabled');
+          $j('#desc_'+this.id).val('');
         }
     });
 
     $j('#recebeu_uniforme').click(function(){
       if ($j('#recebeu_uniforme').prop('checked'))
-        $j('.uniforme').removeAttr('disabled');          
+        $j('.uniforme').removeAttr('disabled');
       else{
-        $j('.uniforme').attr('disabled','disabled');          
-        $j('.uniforme').val('');          
+        $j('.uniforme').attr('disabled','disabled');
+        $j('.uniforme').val('');
       }
     });
 
@@ -841,7 +845,7 @@ function canShowParentsFields(){
     $j('<label>').html('CEP').attr('for', 'cep_').insertBefore($j('#cep_'));
     $j('#cep_').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
     $j('<label>').html('Munic&iacute;pio').attr('for', 'municipio_municipio').insertBefore($j('#municipio_municipio'));
-    $j('#municipio_municipio').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();      
+    $j('#municipio_municipio').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
     $j('<label>').html('Logradouro').attr('for', 'logradouro_logradouro').insertBefore($j('#logradouro_logradouro'));
     $j('#logradouro_logradouro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
     $j('<label>').html('Tipo de logradouro').attr('for', 'idtlog').insertBefore($j('#idtlog'));
@@ -858,11 +862,11 @@ function canShowParentsFields(){
     $j('<label>').html('Complemento').attr('for', 'complemento').insertBefore($j('#complemento'));
     $j('#complemento').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
     $j('<label>').html('N&uacute;mero').attr('for', 'numero').insertBefore($j('#numero'));
-    $j('#numero').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(3) fieldset table').find('td').removeClass();      
+    $j('#numero').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(3) fieldset table').find('td').removeClass();
     $j('<label>').html('Letra').attr('for', 'letra').insertBefore($j('#letra'));
     $j('#letra').toggleClass('geral text');
     $j('<label>').html('N&ordm; de apartamento').attr('for', 'apartamento').insertBefore($j('#apartamento'));
-    $j('#apartamento').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(3) fieldset table').find('td').removeClass();      
+    $j('#apartamento').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(3) fieldset table').find('td').removeClass();
     $j('<label>').html('Bloco').attr('for', 'bloco').insertBefore($j('#bloco'));
     $j('#bloco').toggleClass('geral text');
     $j('<label>').html('Andar').attr('for', 'andar').insertBefore($j('#andar'));
@@ -916,7 +920,7 @@ function canShowParentsFields(){
       }
     });
 
-    $j('body').append('<div id="dialog-form-pessoa-parent"><form><p></p><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="58" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option></select></fieldset><p><a id="link_cadastro_detalhado_parent" target="_blank">Cadastro detalhado</a></p></form></div>');    
+    $j('body').append('<div id="dialog-form-pessoa-parent"><form><p></p><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="58" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option></select></fieldset><p><a id="link_cadastro_detalhado_parent" target="_blank">Cadastro detalhado</a></p></form></div>');
 
     $j('#dialog-form-pessoa-parent').find(':input').css('display', 'block');
 
@@ -1157,7 +1161,7 @@ function canShowParentsFields(){
       sexoParent.val(window[parentType+'_details'].sexo);
 
       $j('#dialog-form-pessoa-parent form p:first-child').html('Editar pessoa '+(parentType == 'mae' ? 'm&atilde;e' : parentType)).css('margin-left', '0.75em');
-  
+
       pessoaPaiOuMae = parentType;
 
       editar_pessoa = true;

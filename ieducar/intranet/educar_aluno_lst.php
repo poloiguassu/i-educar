@@ -1,29 +1,29 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																	     *
-	*	@author Prefeitura Municipal de Itajaï¿½								 *
-	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Pï¿½blico Livre e Brasileiro					 *
-	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaï¿½			 *
-	*						ctima@itajai.sc.gov.br					    	 *
-	*																		 *
-	*	Este  programa  ï¿½  software livre, vocï¿½ pode redistribuï¿½-lo e/ou	 *
-	*	modificï¿½-lo sob os termos da Licenï¿½a Pï¿½blica Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versï¿½o 2 da	 *
-	*	Licenï¿½a   como  (a  seu  critï¿½rio)  qualquer  versï¿½o  mais  nova.	 *
-	*																		 *
-	*	Este programa  ï¿½ distribuï¿½do na expectativa de ser ï¿½til, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implï¿½cita de COMERCIALI-	 *
-	*	ZAï¿½ï¿½O  ou  de ADEQUAï¿½ï¿½O A QUALQUER PROPï¿½SITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licenï¿½a  Pï¿½blica  Geral  GNU para obter mais detalhes.	 *
-	*																		 *
-	*	Vocï¿½  deve  ter  recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral GNU	 *
-	*	junto  com  este  programa. Se nï¿½o, escreva para a Free Software	 *
-	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
-	*	02111-1307, USA.													 *
-	*																		 *
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+*																	     *
+*	@author Prefeitura Municipal de Itajaí								 *
+*	@updated 29/03/2007													 *
+*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+*																		 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+*						ctima@itajai.sc.gov.br					    	 *
+*																		 *
+*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
+*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
+*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+*																		 *
+*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
+*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
+*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+*																		 *
+*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
+*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
+*	02111-1307, USA.													 *
+*																		 *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -35,10 +35,10 @@ class clsIndexBase extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Aluno" );
+		$this->SetTitulo( "{$this->_instituicao} - Aluno" );
 		$this->processoAp = "578";
-                $this->addEstilo( "localizacaoSistema" );
-        }
+		$this->addEstilo( "localizacaoSistema" );
+	}
 }
 
 class indice extends clsListagem
@@ -73,7 +73,6 @@ class indice extends clsListagem
 
 	var $cod_aluno;
 	var $ref_idpes_responsavel;
-	//var $ref_cod_pessoa_educ;
 	var $ref_cod_aluno_beneficio;
 	var $ref_cod_religiao;
 	var $ref_usuario_exc;
@@ -104,19 +103,16 @@ class indice extends clsListagem
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
-		
-
-		$this->campoNumero("cod_aluno","C&oacute;digo Aluno",$this->cod_aluno,20,9,false);
-		$this->campoNumero("cod_inep","C&oacute;digo INEP",$this->cod_inep,20,12,false);
-		$this->campoTexto("nome_aluno","Nome do aluno", $this->nome_aluno,50,255,false);
+		$this->campoNumero("cod_aluno", "Código Aluno", $this->cod_aluno, 20, 9, false);
+		$this->campoTexto("nome_aluno", "Nome do aluno", $this->nome_aluno, 50, 255, false);
 		$this->campoData("data_nascimento", "Data de Nascimento", $this->data_nascimento);
 		$this->campoTexto("nome_pai", "Nome do Pai", $this->nome_pai, 50, 255);
 		$this->campoTexto("nome_mae", "Nome da Mãe", $this->nome_mae, 50, 255);
 		$this->campoTexto("nome_responsavel", "Nome do Responsável", $this->nome_responsavel, 50, 255);
 
-		
-                
-                $obj_permissoes = new clsPermissoes();
+
+
+		$obj_permissoes = new clsPermissoes();
 		$cod_escola = $obj_permissoes->getEscola( $this->pessoa_logada );
 		if ($cod_escola)
 		{
@@ -134,12 +130,11 @@ class indice extends clsListagem
 		$nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
 		$this->addCabecalhos( array(
-			"C&oacute;digo Aluno",
-                        "Cï¿½digo INEP",
+			"Código Aluno",
 			"Nome do Aluno",
-			"Nome da Mï¿½e",
-			"Nome do Respons&aacute;vel",
-			"CPF Respons&aacute;vel",
+			"Nome da Mãe",
+			"Nome do Responsável",
+			"CPF Responsável",
 		) );
 
 		// Paginador
@@ -174,24 +169,23 @@ class indice extends clsListagem
 			$this->nome_pai,
 			$this->nome_mae,
 			$this->nome_responsavel,
-                        $this->cod_inep
+			null
 		);
 
 		$total = $aluno->_total;
 
 		foreach ( $alunos AS $registro ) {
-	    $alunoInepId      = $this->tryLoadAlunoInepId($registro["cod_aluno"]);
-	    $nomeAluno        = strtoupper($registro["nome_aluno"]);
-	    $nomeMae          = strtoupper($this->loadNomeMae($registro));
+			$alunoInepId      = $this->tryLoadAlunoInepId($registro["cod_aluno"]);
+			$nomeAluno        = strtoupper($registro["nome_aluno"]);
+			$nomeMae          = strtoupper($this->loadNomeMae($registro));
 
-	    // responsavel
+			// responsavel
 			$aluno->cod_aluno = $registro["cod_aluno"];
-	    $responsavel      = $aluno->getResponsavelAluno();
-	    $nomeResponsavel  = strtoupper($responsavel["nome_responsavel"]);
+			$responsavel      = $aluno->getResponsavelAluno();
+			$nomeResponsavel  = strtoupper($responsavel["nome_responsavel"]);
 
 			$this->addLinhas( array(
 				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",
-				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$alunoInepId}</a>",
 				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeAluno}</a>",
 				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeMae}</a>",
 				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeResponsavel}</a>",
@@ -207,55 +201,50 @@ class indice extends clsListagem
 		{
 			$this->acao = "go(\"/module/Cadastro/aluno\")";
 			$this->nome_acao = "Novo";
-
-			/*$this->array_botao = array("Ficha do Aluno (em branco)");
-			$this->array_botao_script = array( "showExpansivelImprimir(400, 200,  \"educar_relatorio_aluno_dados.php\",\"\", \"Relatï¿½rio i-Educar\" )" );*/
 		}
-		//**
+
 		$this->largura = "100%";
 
-	    $localizacao = new LocalizacaoSistema();
-	    $localizacao->entradaCaminhos( array(
-	         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-	         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
-	         ""                                  => "Listagem de alunos"
-	    ));
-	    $this->enviaLocalizacao($localizacao->montar());
+		$localizacao = new LocalizacaoSistema();
+		$localizacao->entradaCaminhos( array(
+			$_SERVER['SERVER_NAME'] . "/intranet" => "Início",
+			"educar_index.php"                    => "Trilha Jovem",
+			""                                    => "Listagem de alunos"
+		));
+
+		$this->enviaLocalizacao($localizacao->montar());
 	}
 
 	protected function loadNomeMae($aluno) {
 		$nome        = $aluno['nm_mae'];
 
-  	$pessoaAluno = new clsFisica($aluno['ref_idpes']);
-  	$pessoaAluno = $pessoaAluno->detalhe();
+		$pessoaAluno = new clsFisica($aluno['ref_idpes']);
+		$pessoaAluno = $pessoaAluno->detalhe();
 
-  	if ($pessoaAluno['idpes_mae']) {
-    	$pessoaMae   = new clsPessoaFj($pessoaAluno['idpes_mae']);
-    	$pessoaMae   = $pessoaMae->detalhe();
-    	$nome        = $pessoaMae['nome'];
-         }
-         
-    return $nome;
+		if ($pessoaAluno['idpes_mae']) {
+			$pessoaMae   = new clsPessoaFj($pessoaAluno['idpes_mae']);
+			$pessoaMae   = $pessoaMae->detalhe();
+			$nome        = $pessoaMae['nome'];
+		}
+
+		return $nome;
 	}
 
 	protected function tryLoadAlunoInepId($alunoId) {
-    $dataMapper  = new Educacenso_Model_AlunoDataMapper();
+		$dataMapper  = new Educacenso_Model_AlunoDataMapper();
 
-    try {
-      $alunoInep = $dataMapper->find(array('cod_aluno' => $alunoId));
-	    $id        = $alunoInep->alunoInep;
-    }
-    catch(Exception $e) {
-    	$id = '';
-    }
-                
-    return $id;
-      
-    }
+		try {
+			$alunoInep = $dataMapper->find(array('cod_aluno' => $alunoId));
+			$id        = $alunoInep->alunoInep;
+		} catch(Exception $e) {
+			$id = '';
+		}
+		
+		return $id;
+		
+	}
+}
 
-        
-    }
-      
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();
 // cria o conteudo

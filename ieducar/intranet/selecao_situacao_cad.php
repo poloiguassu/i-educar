@@ -117,19 +117,36 @@ class indice extends clsCadastro
 		//$this->cod_inscrito = @$_GET['cod_inscrito'];
 		$this->retorno       = 'Novo';
 		$this->etapa = @$_GET['etapa'];
+		$aprovados = @$_GET['aprovados'];
 
 		$objPessoa = new clsPreInscrito();
 		$pessoas = $objPessoa->lista();
+
+
+		if($aprovados >= 1)
+		{
+			foreach ($pessoas as $key => $pessoa)
+			{
+				if($pessoa['etapa_1'] == 1)
+				{
+					unset($pessoas[$key]);
+				}
+			}
+		}
+
 		$this->pessoas = $pessoas;
 
 		if($pessoas)
 		{
+
 			foreach ($pessoas as $pessoa)
 			{
 				$pessoaId = $pessoa['cod_inscrito'];
 				$objPessoa = new clsPreInscrito($pessoaId);
 				$detalhe = $objPessoa->detalhe();
 				$this->{"etapa_1_{$pessoaId}"} = $detalhe['etapa_1'];
+				$this->{"etapa_2_{$pessoaId}"} = $detalhe['etapa_2'];
+				$this->{"etapa_3_{$pessoaId}"} = $detalhe['etapa_3'];
 			}
 		}
 
@@ -153,7 +170,7 @@ class indice extends clsCadastro
 		$this->url_cancelar = $this->retorno == 'Editar' ?
 			'selecao_inscritos_det.php?cod_pessoa=' . $this->cod_inscrito : 'selecao_inscritos_lst.php';
 
-		$limite = 100;
+		$limite = 999;
 		$iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
 
 		if($this->pessoas)
@@ -164,6 +181,7 @@ class indice extends clsCadastro
 			{
 				// nome
 				$pessoaId = $pessoa['cod_inscrito'];
+				//print($pessoaId);
 				$options = array('label' => $index . '. Nome ',
 								'disabled' => true,
 								'required' => false,
@@ -269,23 +287,32 @@ class indice extends clsCadastro
 
 	protected function updateState()
 	{
+		//print($this->lista_pessoas);
 		$pessoas = explode("%2C", $this->lista_pessoas);
+		//print_r($pessoas);
 
 		if($pessoas)
 		{
-			foreach ($pessoas as $pessoa)
+			foreach ($pessoas as $key => $pessoa)
 			{
+
 				$pessoaId = $pessoa;
-				if($this->{"etapa_1_{$pessoaId}"})
+				if($this->{"etapa_1_{$pessoaId}"} || $this->{"etapa_2_{$pessoaId}"} || $this->{"etapa_3_{$pessoaId}"})
 				{
+
 					$preInscrito = new clsPreInscrito();
 					$preInscrito->cod_inscrito = $pessoaId;
+
 					$preInscrito->etapa_1 = $this->{"etapa_1_{$pessoaId}"};
+					$preInscrito->etapa_2 = $this->{"etapa_2_{$pessoaId}"};
+					$preInscrito->etapa_3 = $this->{"etapa_3_{$pessoaId}"};
 
 					$sql = "select 1 from pmieducar.selecao_inscrito WHERE cod_inscrito = $1 limit 1";
 
-					if ($pessoaId && Portabilis_Utils_Database::selectField($sql, $pessoaId) == 1)
+					if ($pessoaId /*&& Portabilis_Utils_Database::selectField($sql, $pessoaId) == 1*/)
 					{
+						////print_r("{$pessoaId},");
+						//print_r($pessoa . " => " . $preInscrito->etapa_2 . ', ');
 						$preInscrito->edita();
 					}
 				}
