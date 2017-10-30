@@ -52,7 +52,6 @@ class clsPmieducarAluno
   var $data_exclusao;
   var $ativo;
   var $caminho_foto;
-  var $analfabeto;
   var $nm_pai;
   var $nm_mae;
   var $tipo_responsavel;
@@ -113,14 +112,14 @@ class clsPmieducarAluno
   function clsPmieducarAluno($cod_aluno = NULL, $ref_cod_aluno_beneficio = NULL,
     $ref_cod_religiao = NULL, $ref_usuario_exc = NULL, $ref_usuario_cad = NULL,
     $ref_idpes = NULL, $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL,
-    $caminho_foto = NULL,$analfabeto = NULL, $nm_pai = NULL, $nm_mae = NULL,
+    $caminho_foto = NULL, $nm_pai = NULL, $nm_mae = NULL,
     $tipo_responsavel = NULL, $aluno_estado_id = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'aluno';
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_aluno, ref_cod_aluno_beneficio, ref_cod_religiao, ref_usuario_exc, ref_usuario_cad, ref_idpes, data_cadastro, data_exclusao, ativo, caminho_foto, analfabeto, nm_pai, nm_mae,tipo_responsavel, aluno_estado_id';
+    $this->_campos_lista = $this->_todos_campos = 'cod_aluno, ref_cod_aluno_beneficio, ref_cod_religiao, ref_usuario_exc, ref_usuario_cad, ref_idpes, data_cadastro, data_exclusao, ativo, caminho_foto, nm_pai, nm_mae,tipo_responsavel, aluno_estado_id';
 
     if (is_numeric($ref_cod_aluno_beneficio)) {
       if (class_exists('clsPmieducarAlunoBeneficio')) {
@@ -221,10 +220,6 @@ class clsPmieducarAluno
       $this->caminho_foto = $caminho_foto;
     }
 
-    if (is_numeric($analfabeto)) {
-      $this->analfabeto = $analfabeto;
-    }
-
     if (is_string($caminho_foto)) {
       $this->caminho_foto = $caminho_foto;
     }
@@ -278,12 +273,6 @@ class clsPmieducarAluno
       if (is_numeric($this->ref_idpes)) {
         $campos  .= "{$gruda}ref_idpes";
         $valores .= "{$gruda}'{$this->ref_idpes}'";
-        $gruda = ', ';
-      }
-
-      if (is_numeric($this->analfabeto)) {
-        $campos  .= "{$gruda}analfabeto";
-        $valores .= "{$gruda}'{$this->analfabeto}'";
         $gruda = ', ';
       }
 
@@ -389,11 +378,6 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
-      if (is_numeric($this->analfabeto)) {
-        $set .= "{$gruda}analfabeto = '{$this->analfabeto}'";
-        $gruda = ', ';
-      }
-
       if (is_string($this->nm_pai) && $this->nm_pai != "NULL") {
         $set .= "{$gruda}nm_pai = '{$this->nm_pai}'";
         $gruda = ', ';
@@ -449,7 +433,7 @@ class clsPmieducarAluno
     $date_data_cadastro_fim = null, $date_data_exclusao_ini = null,
     $date_data_exclusao_fim = null, $int_ativo = null, $str_caminho_foto = null,
     $str_nome_aluno = null,$str_nome_responsavel = null, $int_cpf_responsavel = null,
-    $int_analfabeto = null, $str_nm_pai = null, $str_nm_mae = null,
+    $str_nm_pai = null, $str_nm_mae = null,
     $int_ref_cod_escola = null,$str_tipo_responsavel = null)
   {
     $filtros = '';
@@ -525,11 +509,6 @@ class clsPmieducarAluno
 
     if (is_string($str_caminho_foto)) {
       $filtros .= "{$whereAnd} caminho_foto LIKE '%{$str_caminho_foto}%'";
-      $whereAnd = ' AND ';
-    }
-
-    if (is_numeric($int_analfabeto)) {
-      $filtros .= "{$whereAnd} analfabeto = '{$int_analfabeto}'";
       $whereAnd = ' AND ';
     }
 
@@ -673,7 +652,7 @@ class clsPmieducarAluno
     $date_data_cadastro_fim = NULL, $date_data_exclusao_ini = NULL,
     $date_data_exclusao_fim = NULL, $int_ativo = NULL, $str_caminho_foto = NULL,
     $str_nome_aluno = NULL, $str_nome_responsavel = NULL, $int_cpf_responsavel = NULL,
-    $int_analfabeto = NULL, $str_nm_pai = NULL, $str_nm_mae = NULL,
+    $str_nm_pai = NULL, $str_nm_mae = NULL,
     $int_ref_cod_escola = NULL, $str_tipo_responsavel = NULL, $data_nascimento = NULL,
     $str_nm_pai2 = NULL, $str_nm_mae2 = NULL, $str_nm_responsavel2 = NULL, $cod_inep = NULL)
   {
@@ -750,11 +729,6 @@ class clsPmieducarAluno
 
     if (is_string($str_caminho_foto)) {
       $filtros .= "{$whereAnd} caminho_foto LIKE '%{$str_caminho_foto}%'";
-      $whereAnd = ' AND ';
-    }
-
-    if (is_numeric($int_analfabeto)) {
-      $filtros .= "{$whereAnd} analfabeto = '{$int_analfabeto}'";
       $whereAnd = ' AND ';
     }
 
@@ -1169,5 +1143,68 @@ class clsPmieducarAluno
       return " ORDER BY {$this->_campo_order_by} ";
     }
     return '';
+  }
+  
+  public function getEnderecosAlunos()
+  {
+    $sql = "select *"
+         . " from cadastro.endereco_externo"
+         . " where idpes in (select ref_idpes from pmieducar.aluno);";
+
+    $db = new clsBanco();
+    $db->Consulta($sql);
+
+    while ($db->ProximoRegistro()) {
+      $enderecos[] = $db->Tupla();
+    }
+
+    return $enderecos;
+  }
+
+  public function getEnderecosComCoordenadasVazias()
+  {
+    $sql = "select *"
+         . " from cadastro.endereco_pessoa"
+         . " where idpes in (select ref_idpes from pmieducar.aluno)"
+         . " AND lat is null"
+         . " AND long is null;";
+
+    $db = new clsBanco();
+    $db->Consulta($sql);
+
+    while ($db->ProximoRegistro()) {
+      $enderecos[] = $db->Tupla();
+    }
+
+    return $enderecos;
+  }
+
+  public function updateCoordenadas($id, $geocodingResult)
+  {
+    $sql = "UPDATE cadastro.endereco_pessoa"
+         . " SET lat='" . $geocodingResult['latitude'] . "'"
+         . ", long='" . $geocodingResult['longitude'] . "'"
+         . " WHERE idpes='" . $id . "'";
+
+    $db = new clsBanco();
+    $db->Consulta($sql);
+  }
+
+  public function getEnderecosComCoordenadasPreenchidas()
+  {
+    $sql = "select *"
+         . " from cadastro.endereco_pessoa"
+         . " where idpes in (select ref_idpes from pmieducar.aluno)"
+         . " AND lat is not null"
+         . " AND long is not null;";
+
+    $db = new clsBanco();
+    $db->Consulta($sql);
+
+    while ($db->ProximoRegistro()) {
+      $enderecos[] = $db->Tupla();
+    }
+
+    return $enderecos;
   }
 }

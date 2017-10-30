@@ -57,6 +57,7 @@ class DiarioController extends Portabilis_Controller_Page_ListController
     $this->inputsHelper()->input('ano');
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma', 'etapa'));
     $this->inputsHelper()->dynamic(array('componenteCurricular', 'matricula'), array('required' => false));
+	$this->campoData( "data_aula", "Data da Aula", "", true );
 
     $this->loadResourceAssets($this->getDispatcher());
   }
@@ -70,9 +71,9 @@ class DiarioController extends Portabilis_Controller_Page_ListController
     $localizacao = new LocalizacaoSistema();
 
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         $_SERVER['SERVER_NAME']."/intranet" => "Início",
          "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
-         ""                                  => "Lan&ccedil;amento de faltas"
+         ""                                  => "Lançamento de faltas"
     ));
     $this->enviaLocalizacao($localizacao->montar(), true);
   }

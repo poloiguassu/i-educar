@@ -49,12 +49,12 @@ require_once 'App/Model/ZonaLocalizacao.php';
  */
 class clsIndex extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Pessoa');
-    $this->processoAp = 43;
-    $this->addEstilo('localizacaoSistema');
-  }
+	function Formular()
+	{
+		$this->SetTitulo('Processo Seletivo - Jovem');
+		$this->processoAp = 43;
+		$this->addEstilo('localizacaoSistema');
+	}
 }
 
 /**
@@ -71,7 +71,7 @@ class indice extends clsDetalhe
 {
   function Gerar()
   {
-    $this->titulo = 'Detalhe da Pessoa';
+    $this->titulo = 'Detalhe da Jovem - Processo Seletivo';
 
     $this->addBanner('imagens/nvp_top_intranet.jpg',
       'imagens/nvp_vert_intranet.jpg', 'Intranet');
@@ -96,7 +96,7 @@ class indice extends clsDetalhe
                                   <p><img height="117" src="'.$caminhoFoto['caminho'].'"/></p>'));
     else
       $this->addDetalhe(array('Nome', $detalhe['nome']));
-     
+
     $this->addDetalhe(array('CPF', int2cpf($detalhe['cpf'])));
 
     if ($detalhe['data_nasc']) {
@@ -187,7 +187,7 @@ class indice extends clsDetalhe
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          ""                                  => "Detalhe da pessoa f&iacute;sica"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

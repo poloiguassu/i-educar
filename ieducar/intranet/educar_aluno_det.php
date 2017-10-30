@@ -396,11 +396,6 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Data de Nascimento', $registro['data_nasc']));
     }
 
-    /**
-     * Analfabeto.
-     */
-    $this->addDetalhe(array('Analfabeto', $registro['analfabeto'] == 0 ? 'Não' : 'Sim'));
-
     if ($registro['sexo']) {
       $this->addDetalhe(array('Sexo', $registro['sexo']));
     }
@@ -726,25 +721,7 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('<span id="funiforme"></span>Recebeu uniforme', ($reg['recebeu_uniforme'] == 'S' ? 'Sim': 'Não') ));       
       $this->addDetalhe(array('<span class="tit_uniforme">Camiseta</span>'));   
       $this->addDetalhe(array('Quantidade', $reg['quantidade_camiseta'])); 
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_camiseta']));  
-      $this->addDetalhe(array('<span class="tit_uniforme">Blusa/Jaqueta</span>'));   
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_blusa_jaqueta'])); 
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_blusa_jaqueta']));  
-      $this->addDetalhe(array('<span class="tit_uniforme">Bermuda</span>'));   
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_bermuda'])); 
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_bermuda']));  
-      $this->addDetalhe(array('<span class="tit_uniforme">Calça</span>'));   
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_calca'])); 
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_calca']));  
-      $this->addDetalhe(array('<span class="tit_uniforme">Saia</span>'));   
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_saia'])); 
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_saia']));  
-      $this->addDetalhe(array('<span class="tit_uniforme">Calçado</span>'));   
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_calcado'])); 
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_calcado']));  
-      $this->addDetalhe(array('<span class="tit_uniforme">Meia</span>'));   
-      $this->addDetalhe(array('Quantidade', $reg['quantidade_meia'])); 
-      $this->addDetalhe(array('Tamanho', $reg['tamanho_meia']));                                              
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_camiseta']));
     }  
 
     $objMoradia        = new clsModulesMoradiaAluno($this->cod_aluno);

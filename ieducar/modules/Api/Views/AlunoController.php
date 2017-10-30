@@ -342,24 +342,6 @@ protected function createOrUpdateUniforme($id) {
     $obj->quantidade_camiseta                   = $this->getRequest()->quantidade_camiseta;
     $obj->tamanho_camiseta                      = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_camiseta);
 
-    $obj->quantidade_calca                      = $this->getRequest()->quantidade_calca;
-    $obj->tamanho_calca                         = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_calca);
-
-    $obj->quantidade_bermuda                    = $this->getRequest()->quantidade_bermuda;
-    $obj->tamanho_bermuda                       = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_bermuda);
-
-    $obj->quantidade_meia                       = $this->getRequest()->quantidade_meia;
-    $obj->tamanho_meia                          = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_meia);
-
-    $obj->quantidade_saia                       = $this->getRequest()->quantidade_saia;
-    $obj->tamanho_saia                          = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_saia);
-
-    $obj->quantidade_calcado                    = $this->getRequest()->quantidade_calcado;
-    $obj->tamanho_calcado                       = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_calcado);
-
-    $obj->quantidade_blusa_jaqueta              = $this->getRequest()->quantidade_blusa_jaqueta;
-    $obj->tamanho_blusa_jaqueta                 = Portabilis_String_Utils::toLatin1($this->getRequest()->tamanho_blusa_jaqueta);    
-
     return ($obj->existe() ? $obj->edita() : $obj->cadastra());
   }  
 
@@ -489,7 +471,6 @@ protected function createOrUpdateUniforme($id) {
 
     $aluno->ref_cod_aluno_beneficio = $this->getRequest()->beneficio_id;
     $aluno->ref_cod_religiao        = $this->getRequest()->religiao_id;
-    $aluno->analfabeto              = $this->getRequest()->alfabetizado ? 0 : 1;
     $aluno->tipo_responsavel        = $tiposResponsavel[$this->getRequest()->tipo_responsavel];
     $aluno->ref_usuario_exc         = $this->getSession()->id_pessoa;
 
@@ -737,7 +718,6 @@ protected function createOrUpdateUniforme($id) {
         'tipo_responsavel'        => 'tipo_responsavel',
         'ref_usuario_exc'         => 'destroyed_by',
         'data_exclusao'           => 'destroyed_at',
-        'analfabeto',
         'ativo',
         'aluno_estado_id'
       );
@@ -750,9 +730,6 @@ protected function createOrUpdateUniforme($id) {
       $aluno['aluno_inep_id']    = $this->loadAlunoInepId($id);
       $aluno['ativo']            = $aluno['ativo'] == 1;
       $aluno['aluno_estado_id']  = Portabilis_String_Utils::toUtf8($aluno['aluno_estado_id']);
-
-      $aluno['alfabetizado']     = $aluno['analfabeto'] == 0;
-      unset($aluno['analfabeto']);
 
       // destroyed_by username
       $dataMapper            = $this->getDataMapperFor('usuario', 'funcionario');

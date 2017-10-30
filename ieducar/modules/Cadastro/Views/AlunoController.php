@@ -70,11 +70,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'help'   => '',
     ),
 
-    'alfabetizado' => array(
-      'label'  => 'Alfabetizado',
-      'help'   => '',
-    ),
-
     'transporte' => array(
       'label'  => 'Transporte público',
       'help'   => '',
@@ -193,42 +188,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
       'quantidade_camiseta' => array('label' => 'Quantidade'),
 
       'tamanho_camiseta' => array('label' => 'Tamanho'),
-
-      'label_blusa_jaqueta' => array('label' => 'Blusa/Jaqueta'),
-
-      'quantidade_blusa_jaqueta' => array('label' => 'Quantidade'),
-
-      'tamanho_blusa_jaqueta' => array('label' => 'Tamanho'),
-
-      'label_bermuda' => array('label' => 'Bermuda'),
-
-      'quantidade_bermuda' => array('label' => 'Quantidade'),
-
-      'tamanho_bermuda' => array('label' => 'Tamanho'),      
-
-      'label_calca' => array('label' => 'Calça'),
-
-      'quantidade_calca' => array('label' => 'Quantidade'),
-
-      'tamanho_calca' => array('label' => 'Tamanho'),
-
-      'label_saia' => array('label' => 'Saia'),
-
-      'quantidade_saia' => array('label' => 'Quantidade'),
-
-      'tamanho_saia' => array('label' => 'Tamanho'),
-
-      'label_calcado' => array('label' => 'Calçado'),
-
-      'quantidade_calcado' => array('label' => 'Quantidade'),
-
-      'tamanho_calcado' => array('label' => 'Tamanho'),
-
-      'label_meia' => array('label' => 'Meia'),
-
-      'quantidade_meia' => array('label' => 'Quantidade'),
-
-      'tamanho_meia' => array('label' => 'Tamanho'),
 
     /************
       MORADIA    
@@ -408,11 +367,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
                            'options' => array('value' => null));
 
     $this->inputsHelper()->multipleSearchDeficiencias('', $options, $helperOptions);
-
-
-    // alfabetizado
-    $options = array('label' => $this->_getLabel('alfabetizado'), 'value' => 'checked');
-    $this->inputsHelper()->checkbox('alfabetizado', $options);
 
 
     /* *************************************
@@ -618,64 +572,6 @@ class AlunoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->text('tamanho_camiseta',$options);   
 
     $this->campoRotulo('label_bermuda',Portabilis_String_Utils::toLatin1($this->_getLabel('label_bermuda'))); 
-
-    // quantidade_bermuda
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quantidade_bermuda') ), 'size' => 2, 'max_length' => 3,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->integer('quantidade_bermuda',$options);  
-
-    // tamanho_bermuda
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_bermuda') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->text('tamanho_bermuda',$options);   
-
-    $this->campoRotulo('label_calca',Portabilis_String_Utils::toLatin1($this->_getLabel('label_calca'))); 
-
-    // quantidade_calca
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quantidade_calca') ), 'size' => 2, 'max_length' => 3,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->integer('quantidade_calca',$options);  
-
-    // tamanho_calca
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_calca') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->text('tamanho_calca',$options);   
-
-    $this->campoRotulo('label_saia',Portabilis_String_Utils::toLatin1($this->_getLabel('label_saia'))); 
-
-    // quantidade_saia
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quantidade_saia') ), 'size' => 2, 'max_length' => 3,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->integer('quantidade_saia',$options);  
-
-    // tamanho_saia
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_saia') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->text('tamanho_saia',$options);   
-
-    $this->campoRotulo('label_calcado',Portabilis_String_Utils::toLatin1($this->_getLabel('label_calcado'))); 
-
-    // quantidade_calcado
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quantidade_calcado') ), 'size' => 2, 'max_length' => 3,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->integer('quantidade_calcado',$options);  
-
-    // tamanho_calcado
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_calcado') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->text('tamanho_calcado',$options);                          
-
-    $this->campoRotulo('label_meia',Portabilis_String_Utils::toLatin1($this->_getLabel('label_meia'))); 
-
-    // quantidade_meia
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quantidade_meia') ), 'size' =>2, 'max_length' => 3,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->integer('quantidade_meia',$options);  
-
-    // tamanho_meia
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_meia') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->text('tamanho_meia',$options);                              
-
-    $this->campoRotulo('label_blusa_jaqueta',Portabilis_String_Utils::toLatin1($this->_getLabel('label_blusa_jaqueta'))); 
-    
-    // quantidade_blusa_jaqueta
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('quantidade_blusa_jaqueta') ), 'size' =>2, 'max_length' => 3,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->integer('quantidade_blusa_jaqueta',$options);  
-
-    // tamanho_blusa_jaqueta
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('tamanho_blusa_jaqueta') ), 'size' => 2, 'max_length' => 2,'required' => false, 'placeholder' => '');
-    $this->inputsHelper()->text('tamanho_blusa_jaqueta',$options);   
 
     $moradias = array(null   => 'Selecione',
                         'A'  => 'Apartamento',

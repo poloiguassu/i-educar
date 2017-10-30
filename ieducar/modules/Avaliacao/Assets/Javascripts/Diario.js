@@ -33,7 +33,8 @@ var deleteResourceUrlBuilder = {
       serie_id : $j('#ref_ref_cod_serie').val(),
       turma_id : $j('#ref_cod_turma').val(),
       ano_escolar : $j('#ano').val(),
-      etapa : $j('#etapa').val()
+      etapa : $j('#etapa').val(),
+	  data_aula : $j('#data_aula').val()
     };
 
     return resourceUrlBuilder.buildUrl(urlBase, $j.extend(vars, additionalVars));
@@ -55,6 +56,7 @@ var postResourceUrlBuilder = {
       ano_escolar : $j('#ano').val(),
       componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
       etapa : $j('#etapa').val(),
+	  data_aula : $j('#data_aula').val(),
       matricula_id : $j('#etapa').val()
     };
 
@@ -78,6 +80,7 @@ var getResourceUrlBuilder = {
       ano_escolar : $j('#ano').val(),
       componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
       etapa : $j('#etapa').val(),
+	  data_aula : $j('#data_aula').val(),
       matricula_id : $j('#ref_cod_matricula').val()
     };
 
@@ -253,7 +256,8 @@ function postFalta($faltaFieldElement) {
 
     var additionalVars = {
       matricula_id             : $faltaFieldElement.data('matricula_id'),
-      componente_curricular_id : $faltaFieldElement.data('componente_curricular_id')
+      componente_curricular_id : $faltaFieldElement.data('componente_curricular_id'),
+	  data_falta : $faltaFieldElement.data('data_falta')
     };
 
     var options = {
@@ -335,6 +339,7 @@ function deleteNota($notaFieldElement) {
     ano_escolar : $j('#ano').val(),
     componente_curricular_id : $notaFieldElement.data('componente_curricular_id'),
     etapa : $j('#etapa').val(),
+	data_aula : $j('#data_aula').val(),
     matricula_id : $notaFieldElement.data('matricula_id')
    };
 
@@ -391,7 +396,8 @@ function deleteFalta($faltaFieldElement) {
 
     var additionalVars = {
       componente_curricular_id : $faltaFieldElement.data('componente_curricular_id'),
-      matricula_id : $faltaFieldElement.data('matricula_id')
+      matricula_id : $faltaFieldElement.data('matricula_id'),
+	  data_falta: $faltaFieldElement.data('data_falta')
      };
 
     var options = {
@@ -635,7 +641,7 @@ function notaNecessariaField(matriculaId, componenteCurricularId, value){
                                    .attr('id', 'nn-matricula-' + matriculaId + '-cc-' + componenteCurricularId)
                                    .text(value);
   setNextTabIndex($notaNecessariaField);
-  return $j('<td />').html($notaNecessariaField).addClass('center');                                   
+  return $j('<td />').html($notaNecessariaField).addClass('center');
 }
 
 function faltaField(matriculaId, componenteCurricularId, value) {
@@ -698,8 +704,8 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
 
       $fieldNotaExame.appendTo($targetElement);
 
-      // Adiciona campo com nota necessária      
-      $fieldNN.appendTo($targetElement);      
+      // Adiciona campo com nota necessária
+      $fieldNN.appendTo($targetElement);
     }
 
   }
@@ -714,16 +720,16 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
   var useNota                = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
   var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
 
-  $tagElement.clone().addClass('center').html(safeUtf8Decode('Situação')).appendTo($targetElement);
+  $tagElement.clone().addClass('center').html(safeUtf8Decode('Situa��o')).appendTo($targetElement);
 
   if (useNota) {
-    $tagElement.clone().addClass('center').html('Nota').appendTo($targetElement);
+    /*$tagElement.clone().addClass('center').html('Nota').appendTo($targetElement);
 
     if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()){
       $tagElement.clone().addClass('center').html('Nota '+nomenclatura_exame).appendTo($targetElement);
       $tagElement.clone().addClass('center').html(safeUtf8Decode('Nota necessária no '+nomenclatura_exame)).appendTo($targetElement);
-    }
-  }
+  }*/
+}
 
   $tagElement.clone().addClass('center').html('Falta').appendTo($targetElement);
 
@@ -736,22 +742,22 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
   var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
 
   var areas = new Array();
-  
+
   var setaDireita = "<img src=\"imagens/mytdt/seta-preta-direita.png\" align=\"top\" class=\"area-conhecimento-seta seta-direita\" />";
   var setaBaixo   = "<img src=\"imagens/mytdt/seta-branca-baixo.png\" align=\"top\" class=\"area-conhecimento-seta seta-baixo\" />";
 
   $j.each(componentesCurriculares, function(index, cc) {
     if (areas.indexOf(cc.area_id) == -1) {
       areas.push(cc.area_id);
-      
+
       //primeiro o header para calcular o colspan
       var $ccHeader = $j('<tr />').addClass('strong').addClass('tr-componente-curricular').data('areaid', cc.area_id);
       $j('<td />').addClass('center').html('Componente curricular').appendTo($ccHeader);
       updateComponenteCurricularHeaders($ccHeader, $j('<td />'));
-      
+
       //pegando o colspan
       var areaColspan = $j('td', $ccHeader).length;
-      
+
       var $areaRow = $j('<tr />').addClass('tr-area-conhecimento').data('areaid', cc.area_id);
       var conteudo = setaDireita + setaBaixo + " " + cc.area_nome;
       $j('<td />').addClass('area-conhecimento').attr('colspan', areaColspan).html(conteudo).appendTo($areaRow);
@@ -760,7 +766,7 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
       $areaRow.appendTo($targetElement);
       $ccHeader.appendTo($targetElement);
     }
-	    
+
     var $ccRow = $j('<tr />').addClass('tr-componente-curricular').data('areaid', cc.area_id);
 
     $j('<td />').addClass('center').html(cc.nome).appendTo($ccRow);
@@ -768,10 +774,10 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
 
     $ccRow.appendTo($targetElement);
   });
-  
+
   $j('.tr-area-conhecimento').bind('click', function() {
 	$j('td', this).toggleClass('area-conhecimento-destaque');
-	
+
     var fechado = $j('.seta-baixo', this).is(':hidden');
     if (fechado) {
       $j('.seta-baixo', this).css('display', 'inline');
@@ -780,7 +786,7 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
       $j('.seta-baixo', this).css('display', 'none');
       $j('.seta-direita', this).css('display', 'inline');
     }
-    
+
     var id = $j(this).data('areaid');
     $j('.tr-componente-curricular').each(function() {
       if ($j(this).data('areaid') == id) {
@@ -851,10 +857,10 @@ function myNextValid($selectElement) {
         return a.next('option');
     }
 }
-	
+
 function selectNextOption($selectElement){
   var $nextOption = myNextValid($selectElement);
-  
+
   if ($nextOption.val() != undefined) {
     $selectElement.val($nextOption.val());
 
@@ -898,7 +904,7 @@ function showNextSelectionButton() {
 	    defaults: {
 	        slideSpeed: 400,
 	        easing: false,
-	        callback: false     
+	        callback: false
 	    },
 	    thisCallArgs: {
 	        slideSpeed: 400,
@@ -922,12 +928,12 @@ function showNextSelectionButton() {
 	            }else if(typeof arg2 == 'function'){
 	                sR.thisCallArgs.callback = arg2;
 	            }else if(typeof arg2 == 'undefined') {
-	                sR.thisCallArgs.easing = sR.defaults.easing;    
+	                sR.thisCallArgs.easing = sR.defaults.easing;
 	            }
 	            if(typeof arg3 == 'function') {
 	                sR.thisCallArgs.callback = arg3;
 	            }else if(typeof arg3 == 'undefined' && typeof arg2 != 'function'){
-	                sR.thisCallArgs.callback = sR.defaults.callback;    
+	                sR.thisCallArgs.callback = sR.defaults.callback;
 	            }
 	            var $cells = $(this).find('td');
 	            $cells.wrapInner('<div class="slideRowUp" />');
@@ -948,7 +954,7 @@ function showNextSelectionButton() {
 	                        sR.thisCallArgs.callback.call(this);
 	                    }
 	                }
-	            }, 100);                                                                                                    
+	            }, 100);
 	            return $(this);
 	        },
 	        down: function (arg1,arg2,arg3) {
@@ -967,12 +973,12 @@ function showNextSelectionButton() {
 	            }else if(typeof arg2 == 'function'){
 	                sR.thisCallArgs.callback = arg2;
 	            }else if(typeof arg2 == 'undefined') {
-	                sR.thisCallArgs.easing = sR.defaults.easing;    
+	                sR.thisCallArgs.easing = sR.defaults.easing;
 	            }
 	            if(typeof arg3 == 'function') {
 	                sR.thisCallArgs.callback = arg3;
 	            }else if(typeof arg3 == 'undefined' && typeof arg2 != 'function'){
-	                sR.thisCallArgs.callback = sR.defaults.callback;    
+	                sR.thisCallArgs.callback = sR.defaults.callback;
 	            }
 	            var $cells = $(this).find('td');
 	            $cells.wrapInner('<div class="slideRowDown" style="display:none;" />');

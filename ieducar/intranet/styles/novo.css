@@ -110,6 +110,15 @@ body{
 	height: 27px;
 	font-size: 10px;
 	vertical-align: middle;
+	border-left: 3px solid;
+	border-color: #371803;
+}
+
+.r2c1A{
+	font-size: 10px;
+	vertical-align: middle;
+	color: #371803;
+	padding-top: 0.35rem;
 }
 
 .r2c2{
