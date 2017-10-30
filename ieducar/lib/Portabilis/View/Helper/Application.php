@@ -168,6 +168,11 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
 		self::loadJavascript($viewInstance, '/assets/js/moment-weekday-calc.js', false);
 	}
 
+	public static function loadJQueryDependsOnLib($viewInstance)
+	{
+		self::loadJavascript($viewInstance, '/assets/js/dependsOn.min.js', false);
+	}
+
 	public static function loadJQueryFormLib($viewInstance)
 	{
 		self::loadJavascript($viewInstance, 'scripts/jquery/jquery.form.js', false);
