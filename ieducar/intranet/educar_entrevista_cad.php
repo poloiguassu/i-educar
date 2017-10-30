@@ -882,13 +882,7 @@ $pagina->MakeAll();
 
 	function pesquisa()
 	{
-		var escola = document.getElementById('ref_cod_escola').value;
-		if(!escola)
-		{
-			alert('Por favor,\nselecione uma escola!');
-			return;
-		}
-		pesquisa_valores_popless('educar_pesquisa_acervo_lst.php?campo1=ref_cod_vps_entrevista&ref_cod_escola=' + biblioteca , 'ref_cod_vps_entrevista')
+		pesquisa_valores_popless('educar_pesquisa_vps_entrevista_lst.php?campo1=ref_cod_vps_entrevista',  'ref_cod_vps_entrevista')
 	}
 
 

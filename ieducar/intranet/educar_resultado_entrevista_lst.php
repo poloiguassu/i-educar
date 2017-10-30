@@ -241,8 +241,11 @@ class indice extends clsListagem
 					$total_jovens = "{$registro["numero_vagas"]} vagas / $numero_total jovens";
 				}
 
-				$sql     = "select COUNT(ref_cod_aluno) from pmieducar.vps_aluno_entrevista where ref_cod_vps_entrevista = $1 AND resultado_entrevista >= $2";
-				$options = array('params' => array('$1' => $registro["cod_vps_entrevista"], '$2' => App_Model_EntrevistaResultado::APROVADO_EXTRA), 'return_only' => 'first-field');
+				$sql     = "select COUNT(ref_cod_aluno) from pmieducar.vps_aluno_entrevista where ref_cod_vps_entrevista = $1 AND (resultado_entrevista >= $2 OR resultado_entrevista = $3";
+				$options = array('params' => array(
+					'$1' => $registro["cod_vps_entrevista"],
+					'$2' => App_Model_EntrevistaResultado::APROVADO_EXTRA,
+					'$3' => App_Model_EntrevistaResultado::APROVADO_ABANDONO), 'return_only' => 'first-field');
 				$numero_jovens    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
 				$registro["situacao_entrevista"] = App_Model_EntrevistaSituacao::getInstance()->getValue($registro["situacao_entrevista"]);
