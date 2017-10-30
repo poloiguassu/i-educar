@@ -256,11 +256,14 @@ class indice extends clsDetalhe
 		$obj->setOrderby("principal DESC");
 		$lst = $obj->lista(null, $this->cod_vps_entrevista);
 		if ($lst) {
-			$tabela = "<TABLE>
-					       <TR align=center>
-					           <TD bgcolor=#A1B3BD><B>Nome</B></TD>
-					           <TD bgcolor=#A1B3BD><B>Principal</B></TD>
-					       </TR>";
+			$tabela =
+				'<table class="table sub table-striped table-bordered" cellspacing="0" width="30%">
+					<thead>
+						<tr align=center>
+							<td bgcolor=#A1B3BD><B>Nome</B></td>
+							<td bgcolor=#A1B3BD><B>Principal</B></td>
+						</tr>
+					</thead>';
 			$cont = 0;
 
 			foreach ($lst AS $valor)
@@ -271,22 +274,24 @@ class indice extends clsDetalhe
 				} else {
 					$color = " bgcolor=#FFFFFF ";
 				}
+
 				$obj = new clsPmieducarVPSResponsavelEntrevista($valor["ref_cod_vps_responsavel_entrevista"]);
 				$det = $obj->detalhe();
 				$nm_autor = $det["nm_responsavel"];
 				$principal = $valor["principal"];
+
 				if ($principal == 1)
 					$principal = "sim";
 				else
 					$principal = "não";
 
-				$tabela .= "<TR>
-							    <TD {$color} align=left>{$nm_autor}</TD>
-							    <TD {$color} align=left>{$principal}</TD>
-							</TR>";
+				$tabela .= "<tr>
+								<td {$color} align=left>{$nm_autor}</td>
+								<td {$color} align=left>{$principal}</td>
+							</tr>";
 				$cont++;
 			}
-			$tabela .= "</TABLE>";
+			$tabela .= "</table>";
 		}
 		if($tabela)
 		{
@@ -313,10 +318,13 @@ class indice extends clsDetalhe
 		{
 			$assuntos = "";
 
-			$tabela =	"<TABLE>
-							<TR align=center>
-							<TD bgcolor=#A1B3BD><B>Nome</B></TD>
-						</TR>";
+			$tabela =
+				'<table class="table sub table-striped table-bordered" cellspacing="0" width="30%">
+					<thead>
+						<tr align=center>
+							<td bgcolor=#A1B3BD><B>Nome</B></td>
+						</tr>
+					</thead>';
 			$cont = 0;
 
 			foreach ($todasEntrevistas AS $valor)
