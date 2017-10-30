@@ -99,6 +99,7 @@ class clsCadastro extends clsCampos
   var $onSubmit = 'acao()';
 
   var $form_enctype;
+  var $template = "cadastro";
 
   function addBanner($strBannerUrl = '', $strBannerLateralUrl = '',
     $strBannerTitulo = '', $boolFechaBanner = TRUE)
@@ -278,19 +279,13 @@ class clsCadastro extends clsCampos
       }
     }
 
-    if ($this->locale){
-
-      $retorno .=  "
-        <table class='tableDetalhe' $width border='0'  cellpadding='0' cellspacing='0'>";
-
-      $retorno .=  "<tr height='10px'>
-                      <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
-                    </tr>";
-
-      $retorno .= "</table>";
+    if ($this->locale) {
+		$retorno .= "
+			<div class='panel panel-default'>
+				<div class='panel-heading'>{$this->locale}</div>";
     }
 
-    $retorno .= "<center>\n<table class='tablecadastro' $width border='0' cellpadding='2' cellspacing='0'>\n";
+    $retorno .= "<center>\n<table class='table table-striped table-bordered' cellspacing='0' width='100%''>\n";
     $titulo = $this->titulo ? $this->titulo : "<b>{$this->tipoacao} {$this->titulo_aplication}</b>";
 
     /**
@@ -668,7 +663,7 @@ class clsCadastro extends clsCampos
     }
 
     $retorno .=  "</td>\n</tr>\n";
-    $retorno .=  "</table>\n</center>\n<!-- cadastro end -->\n";
+    $retorno .=  "</table></div>\n</center>\n<!-- cadastro end -->\n";
     $retorno .=  "</form>\n";
 
     if ($this->bannerClose) {

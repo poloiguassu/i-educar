@@ -31,13 +31,13 @@ require_once 'CoreExt/Enum.php';
 
 class App_Model_VivenciaProfissionalSituacao extends CoreExt_Enum
 {
-	const EVADIDO			= 0;
-	const DESISTENTE		= 1;
-	const DESLIGADO			= 2;
-	const APTO				= 3;
-	const EM_CUMPRIMENTO	= 4;
-	const CONCLUIDO			= 5;
-	const INSERIDO			= 6;
+	const EVADIDO			= 1;
+	const DESISTENTE		= 2;
+	const DESLIGADO			= 3;
+	const APTO				= 4;
+	const EM_CUMPRIMENTO	= 5;
+	const CONCLUIDO			= 6;
+	const INSERIDO			= 7;
 
 	protected $_data = array(
 		''							=> 'Informe a situação desta entrevista',

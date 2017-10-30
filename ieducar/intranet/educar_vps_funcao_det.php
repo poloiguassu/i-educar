@@ -113,19 +113,11 @@ class indice extends clsDetalhe
 			die();
 		}
 
-		if($nivel_usuario == 1)
-		{
-			if($registro["ref_cod_instituicao"])
-			{
-				$this->addDetalhe(array("Instituição", "{$registro["ref_cod_instituicao"]}"));
-			}
-		}
-
 		if($nivel_usuario == 1 || $nivel_usuario == 2)
 		{
 			if($registro["ref_cod_escola"])
 			{
-				$this->addDetalhe(array("Escola", "{$registro["ref_cod_escola"]}"));
+				$this->addDetalhe(array("Instituição", "{$registro["ref_cod_escola"]}"));
 			}
 		}
 

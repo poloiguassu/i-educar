@@ -87,11 +87,6 @@ class indice extends clsCadastro
 	var $jornada_trabalho;
 	var $responsavel;
 
-	protected function setSelectionFields()
-	{
-
-	}
-
 	function Inicializar()
 	{
 		$retorno = "Novo";
@@ -101,6 +96,9 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$this->cod_vps_entrevista = $_GET["cod_vps_entrevista"];
+
+		if(!empty($_GET["cod_selecionados"]))
+			$this->cod_selecionados = json_decode($_GET["cod_selecionados"]);
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra(598, $this->pessoa_logada, 11,  "educar_atribuir_entrevista_lst.php");
@@ -115,18 +113,34 @@ class indice extends clsCadastro
 				foreach($registro AS $campo => $val)	// passa todos os valores obtidos no registro para atributos do objeto
 					$this->$campo = $val;
 
-				$entrevistas = new clsPmieducarVPSAlunoEntrevista(null, null, $this->cod_vps_entrevista);
-				$todasEntrevistas = $entrevistas->lista();
-
-				if($todasEntrevistas)
+				if(empty($this->cod_selecionados))
 				{
+					$entrevistas = new clsPmieducarVPSAlunoEntrevista(null, null, $this->cod_vps_entrevista);
+					$todasEntrevistas = $entrevistas->lista();
+
+					$this->total_jovens = $this->numero_vagas * $this->numero_jovens;
+
+					if($todasEntrevistas)
+					{
+						$index = 1;
+
+						foreach($todasEntrevistas AS $campo => $val)
+						{
+							$this->{"aluno" . $index . "_id"} = $val['ref_cod_aluno'];
+							$index++;
+						}
+					}
+				} else {
 					$index = 1;
 
-					foreach($todasEntrevistas AS $campo => $val)
+					foreach($this->cod_selecionados AS $campo => $val)
 					{
-						$this->{"aluno" . $index . "_id"} = $val['ref_cod_aluno'];
+						$this->{"aluno" . $index . "_id"} = $val;
 						$index++;
 					}
+
+					$this->total_jovens = count($this->cod_selecionados);
+
 				}
 
 				$obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
@@ -182,8 +196,6 @@ class indice extends clsCadastro
 		{
 			$this->ref_cod_vps_responsavel_entrevista = $this->responsavel;
 		}
-
-		$this->total_jovens = $this->numero_vagas * $this->numero_jovens;
 
 		// foreign keys
 		$desabilitado = true;

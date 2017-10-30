@@ -138,7 +138,7 @@
 				$obj_escola = new clsPmieducarEscola($this->ref_cod_escola);
 				$det_escola = $obj_escola->detalhe();
 				$nm_escola = $det_escola['nome'];
-				$this->campoRotulo( "nm_escola","Escola", $nm_escola );
+				$this->campoRotulo( "nm_escola","Instituição Executora", $nm_escola );
 			}
 			if ( $get_biblioteca )
 			{
@@ -169,11 +169,11 @@
 
 		if ($get_biblioteca)
 		{
-			$this->campoLista( "ref_cod_escola", "Escola", $opcoes_escola, $this->ref_cod_escola,"getBiblioteca(2);",null,null,null,$escola_desabilitado,$escola_obrigatorio );
+			$this->campoLista( "ref_cod_escola", "Instituição Executora", $opcoes_escola, $this->ref_cod_escola,"getBiblioteca(2);",null,null,null,$escola_desabilitado,$escola_obrigatorio );
 		}
 		else
 		{
-			$this->campoLista( "ref_cod_escola", "Escola", $opcoes_escola, $this->ref_cod_escola,null,null,null,null,$escola_desabilitado,$escola_obrigatorio );
+			$this->campoLista( "ref_cod_escola", "Instituição Executora", $opcoes_escola, $this->ref_cod_escola,null,null,null,null,$escola_desabilitado,$escola_obrigatorio );
 		}
 	}
 	if ($get_curso)
@@ -390,9 +390,9 @@
 		else if ($nivel_usuario == 1 || $nivel_usuario == 2 || $nivel_usuario == 4)
 			${$get_cabecalho}[] = "Biblioteca";
 		if ($nivel_usuario == 1 || $nivel_usuario == 2)
-			${$get_cabecalho}[] = "Escola";
+			${$get_cabecalho}[] = "Instituição Executora";
 		if ($nivel_usuario == 1)
-			${$get_cabecalho}[] = "Institui&ccedil;&atilde;o";
+			${$get_cabecalho}[] = "Instituição";
 	}
 ?>
 <script type='text/javascript'>

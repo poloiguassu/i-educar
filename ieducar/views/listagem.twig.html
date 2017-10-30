@@ -1,0 +1,66 @@
+<script src="/assets/js/datatables.min.js"></script>
+<script type="text/javascript">
+		(function($) {
+			$(document).ready(function() {
+				$.noConflict();
+
+				var table = $('#table_id').DataTable({
+					colReorder: true,
+					select: true,
+					lengthChange: true,
+					pageLength: 25,
+					dom: "lf<'floatright'B>rtip",
+					select: true,
+					buttons: [
+						"excel",
+						{
+							extend: "print",
+							exportOptions: {
+								columns: ":visible",
+								modifier: { search: "applied" }
+							}
+						},
+						{
+							extend: "pdfHtml5",
+							orientation: "landscape",
+							pageSize: "LEGAL",
+							download: "open",
+							exportOptions: {
+								columns: ":visible",
+								modifier: { search: "applied" }
+							}
+						},
+						"colvis"
+					],
+					language: {
+						url: '/assets/language/datatable.pt_BR.json'
+					}
+				});
+			}); // ready
+		})(jQuery);
+</script>
+<table id="table_id" class="table table-striped table-bordered" cellspacing="0" width="100%">
+	<thead>
+		<tr>
+			{% for coluna in cabecalho %}
+				<th>{{ coluna }}</th>
+			{% endfor %}
+		</tr>
+	</thead>
+	<tfoot>
+		<tr>
+			{% for coluna in cabecalho %}
+				<th>{{ coluna }}</th>
+			{% endfor %}
+		</tr>
+	</tfoot>
+	<tbody>
+		{% for linha in linhas %}
+			<tr>
+				{% for coluna in linha %}
+					<th>{{ coluna|raw }}</th>
+				{% endfor %}
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>

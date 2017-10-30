@@ -94,6 +94,7 @@ class indice extends clsListagem
 		$this->addCabecalhos(
 			array(
 				"Modelo Contratação",
+				"Descrição",
 				"Instituição"
 			)
 		);
@@ -140,11 +141,12 @@ class indice extends clsListagem
 
 				$this->addLinhas(array(
 					"<a href=\"educar_vps_tipo_contratacao_det.php?cod_vps_tipo_contratacao={$registro["cod_vps_tipo_contratacao"]}\">{$registro["nm_tipo"]}</a>",
+					"<a href=\"educar_vps_tipo_contratacao_det.php?cod_vps_tipo_contratacao={$registro["cod_vps_tipo_contratacao"]}\">{$registro["descricao"]}</a>",
 					"<a href=\"educar_vps_tipo_contratacao_det.php?cod_vps_tipo_contratacao={$registro["cod_vps_tipo_contratacao"]}\">{$registro["ref_cod_instituicao"]}</a>"
 				));
 			}
 		}
-		
+
 		$this->addPaginador2("educar_vps_tipo_contratacao_lst.php", $total, $_GET, $this->nome, $this->limite);
 		$obj_permissoes = new clsPermissoes();
 

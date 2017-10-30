@@ -1,0 +1,104 @@
+<script src="/assets/js/datatables.min.js"></script>
+<script type="text/javascript">
+		(function($) {
+			$(document).ready(function() {
+				$.noConflict();
+
+				$('#table_id tfoot th').each( function () {
+					var title = $('#table_id thead th').eq( $(this).index() ).text();
+					$(this).html( '<input type="text" placeholder="Pesquisar '+title+'" />' );
+				} );
+
+				var table = $('#table_id').DataTable({
+					colReorder: true,
+					select: true,
+					lengthChange: true,
+					pageLength: 25,
+					dom: "lf<'floatright'B>rtip",
+					select: true,
+					buttons: [
+						"excel",
+						{
+							extend: "print",
+							exportOptions: {
+								columns: ":visible",
+								modifier: { search: "applied" }
+							}
+						},
+						{
+							extend: "pdfHtml5",
+							orientation: "landscape",
+							pageSize: "LEGAL",
+							download: "open",
+							exportOptions: {
+								columns: ":visible",
+								modifier: { search: "applied" }
+							}
+						},
+						"colvis",
+						{
+							text: 'Atribuir jovens',
+							action: function () {
+								var rowData = table.rows( { selected: true } ).data().toArray();
+
+								var selecteds = new Array();
+
+								for(selected in rowData)
+								{
+									if(rowData.hasOwnProperty(selected))
+										selecteds.push(parseInt(rowData[selected][0]));
+								}
+								if(selecteds.length > 0)
+								{
+									var params = JSON.stringify(selecteds);
+									document.location.href = "/intranet/educar_atribuir_entrevista_lst.php?cod_selecionados=" + encodeURIComponent(params);
+								}
+							}
+						}
+					],
+					language: {
+						url: '/assets/language/datatable.pt_BR.json'
+					},
+					columnDefs: [
+						{
+							"targets": [0],
+							"visible": false,
+							"searchable": false
+						},
+					]
+				});
+
+				$("#table_id tfoot input").on('keyup change', function () {
+					table
+					.column( $(this).parent().index()+':visible' )
+					.search(this.value, true, false)
+					.draw();
+				} );
+			}); // ready
+		})(jQuery);
+</script>
+<table id="table_id" class="table table-striped table-bordered" cellspacing="0" width="100%">
+	<thead>
+		<tr>
+			{% for coluna in cabecalho %}
+				<th>{{ coluna }}</th>
+			{% endfor %}
+		</tr>
+	</thead>
+	<tfoot>
+		<tr>
+			{% for coluna in cabecalho %}
+				<th>{{ coluna }}</th>
+			{% endfor %}
+		</tr>
+	</tfoot>
+	<tbody>
+		{% for linha in linhas %}
+			<tr>
+				{% for coluna in linha %}
+					<th>{{ coluna|raw }}</th>
+				{% endfor %}
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>

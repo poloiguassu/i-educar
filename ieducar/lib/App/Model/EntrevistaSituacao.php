@@ -31,9 +31,9 @@ require_once 'CoreExt/Enum.php';
 
 class App_Model_EntrevistaSituacao extends CoreExt_Enum
 {
-	const EM_ANDAMENTO	= 0;
-	const REPROVADO		= 1;
-	const APROVADO		= 2;
+	const EM_ANDAMENTO	= 1;
+	const REPROVADO		= 2;
+	const APROVADO		= 3;
 
 	protected $_data = array(
 		''							=> 'Informe a situação desta entrevista',

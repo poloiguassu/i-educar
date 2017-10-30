@@ -196,14 +196,7 @@ class indice extends clsDetalhe
 		{
 			if($registro["ref_cod_instituicao"])
 			{
-				$this->addDetalhe(array("Instituiï¿½ï¿½o", "{$registro["ref_cod_instituicao"]}"));
-			}
-		}
-		if ($nivel_usuario == 1 || $nivel_usuario == 2)
-		{
-			if($registro["ref_cod_escola"])
-			{
-				$this->addDetalhe(array("Escola", "{$registro["ref_cod_escola"]}"));
+				$this->addDetalhe(array("Instituição", "{$registro["ref_cod_instituicao"]}"));
 			}
 		}
 		if($registro["ref_cod_curso"])
@@ -220,30 +213,30 @@ class indice extends clsDetalhe
 		}
 		if($registro["nm_entrevista"])
 		{
-			$this->addDetalhe(array("Tï¿½tulo", "{$registro["nm_entrevista"]}"));
+			$this->addDetalhe(array("Título", "{$registro["nm_entrevista"]}"));
 		}
 		if($registro["descricao"])
 		{
-			$this->addDetalhe(array("Descriï¿½ï¿½o", "{$registro["descricao"]}"));
+			$this->addDetalhe(array("Descrição", "{$registro["descricao"]}"));
 		}
 		if($registro["ref_cod_vps_funcao"])
 		{
-			$this->addDetalhe(array("Funï¿½ï¿½o", "{$registro["ref_cod_vps_funcao"]}"));
+			$this->addDetalhe(array("Função", "{$registro["ref_cod_vps_funcao"]}"));
 		}
 		if($registro["salario"])
 		{
 			$valor = "R$ " . number_format($registro["salario"], 2, ",", ".");
-			$this->addDetalhe(array("Salï¿½rio", "{$valor}"));
+			$this->addDetalhe(array("Salário", "{$valor}"));
 		}
 		if($registro["numero_vagas"])
 		{
 			$valor = $registro["numero_vagas"];
-			$this->addDetalhe(array("Nï¿½mero de vagas", "{$valor} vagas"));
+			$this->addDetalhe(array("Número de vagas", "{$valor} vagas"));
 		}
 		if($registro["numero_jovens"])
 		{
 			$valor = $registro["numero_jovens"];
-			$this->addDetalhe(array("Nï¿½mero de jovens por vaga", "{$valor} jovens"));
+			$this->addDetalhe(array("Número de jovens por vaga", "{$valor} jovens"));
 		}
 		if($registro["data_entrevista"])
 		{
@@ -263,11 +256,14 @@ class indice extends clsDetalhe
 		$obj->setOrderby("principal DESC");
 		$lst = $obj->lista(null, $this->cod_vps_entrevista);
 		if ($lst) {
-			$tabela = "<TABLE>
-					       <TR align=center>
-					           <TD bgcolor=#A1B3BD><B>Nome</B></TD>
-					           <TD bgcolor=#A1B3BD><B>Principal</B></TD>
-					       </TR>";
+			$tabela =
+				'<table class="table sub table-striped table-bordered" cellspacing="0" width="30%">
+					<thead>
+						<tr align=center>
+							<td bgcolor=#A1B3BD><B>Nome</B></td>
+							<td bgcolor=#A1B3BD><B>Principal</B></td>
+						</tr>
+					</thead>';
 			$cont = 0;
 
 			foreach ($lst AS $valor)
@@ -278,26 +274,28 @@ class indice extends clsDetalhe
 				} else {
 					$color = " bgcolor=#FFFFFF ";
 				}
+
 				$obj = new clsPmieducarVPSResponsavelEntrevista($valor["ref_cod_vps_responsavel_entrevista"]);
 				$det = $obj->detalhe();
 				$nm_autor = $det["nm_responsavel"];
 				$principal = $valor["principal"];
+
 				if ($principal == 1)
 					$principal = "sim";
 				else
-					$principal = "nï¿½o";
+					$principal = "não";
 
-				$tabela .= "<TR>
-							    <TD {$color} align=left>{$nm_autor}</TD>
-							    <TD {$color} align=left>{$principal}</TD>
-							</TR>";
+				$tabela .= "<tr>
+								<td {$color} align=left>{$nm_autor}</td>
+								<td {$color} align=left>{$principal}</td>
+							</tr>";
 				$cont++;
 			}
-			$tabela .= "</TABLE>";
+			$tabela .= "</table>";
 		}
 		if($tabela)
 		{
-			$this->addDetalhe(array("Responsï¿½vel", "{$tabela}"));
+			$this->addDetalhe(array("Responsável", "{$tabela}"));
 		}
 
 		$obj = new clsPmieducarVPSIdioma();
@@ -310,7 +308,7 @@ class indice extends clsDetalhe
 				$assuntos.= '<span style="background-color: #A1B3BD; padding: 2px;"><b>' . $reg['nome'] . '</b></span>&nbsp; ';
 			}
 			if(!empty($assuntos))
-				$this->addDetalhe(array("Idiomas necessï¿½rios", "{$assuntos}"));
+				$this->addDetalhe(array("Idiomas necessários", "{$assuntos}"));
 		}
 
 		$entrevistas = new clsPmieducarVPSAlunoEntrevista(null, null, $this->cod_vps_entrevista);
@@ -320,10 +318,13 @@ class indice extends clsDetalhe
 		{
 			$assuntos = "";
 
-			$tabela =	"<TABLE>
-							<TR align=center>
-							<TD bgcolor=#A1B3BD><B>Nome</B></TD>
-						</TR>";
+			$tabela =
+				'<table class="table sub table-striped table-bordered" cellspacing="0" width="30%">
+					<thead>
+						<tr align=center>
+							<td bgcolor=#A1B3BD><B>Nome</B></td>
+						</tr>
+					</thead>';
 			$cont = 0;
 
 			foreach ($todasEntrevistas AS $valor)
@@ -371,7 +372,7 @@ class indice extends clsDetalhe
 
 		$localizacao = new LocalizacaoSistema();
 		$localizacao->entradaCaminhos(array(
-			$_SERVER['SERVER_NAME'] . "/intranet" => "Inï¿½cio",
+			$_SERVER['SERVER_NAME'] . "/intranet" => "Início",
 			"educar_vps_index.php"                => "Trilha Jovem Iguassu - VPS",
 			""                                    => "Detalhe da entrevista"
 		));

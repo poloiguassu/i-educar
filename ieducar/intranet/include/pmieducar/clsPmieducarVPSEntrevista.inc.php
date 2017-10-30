@@ -54,7 +54,7 @@ class clsPmieducarVPSEntrevista
 	var $ref_cod_curso;
 	var $inicio_vps;
 	var $termino_vps;
-
+	var $insercao_vps;
 
 	// propriedades padrao
 
@@ -122,13 +122,13 @@ class clsPmieducarVPSEntrevista
 	 */
 	function clsPmieducarVPSEntrevista($cod_vps_entrevista = null, $ref_cod_vps_tipo_contratacao = null, $ref_cod_vps_entrevista = null, $ref_usuario_exc = null, $ref_usuario_cad = null, $ref_cod_vps_funcao = null, $ref_cod_vps_jornada_trabalho = null,
 		$ref_idpes = null, $nm_entrevista = null, $descricao = null, $ano = null, $data_cadastro = null, $data_exclusao = null, $ativo = null, $ref_cod_escola = null, $ref_cod_curso = null, $salario = null, $data_entrevista = null, $hora_entrevista = null,
-		$numero_vagas = null, $numero_jovens = null, $situacao_entrevista = null, $inicio_vps = null, $termino_vps = null)
+		$numero_vagas = null, $numero_jovens = null, $situacao_entrevista = null, $inicio_vps = null, $termino_vps = null, $insercao_vps = null)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}vps_entrevista";
 
-		$this->_campos_lista = $this->_todos_campos = "a.cod_vps_entrevista, a.ref_cod_vps_tipo_contratacao, a.ref_cod_vps_entrevista, a.ref_usuario_exc, a.ref_usuario_cad, a.ref_cod_vps_funcao, a.ref_cod_vps_jornada_trabalho, a.ref_idpes, a.nm_entrevista, a.salario, a.data_entrevista, a.hora_entrevista, a.descricao, a.ano, a.data_cadastro, a.data_exclusao, a.ativo, a.ref_cod_escola, a.ref_cod_curso, a.numero_vagas, a.numero_jovens, a.situacao_entrevista, a.inicio_vps, a.termino_vps";
+		$this->_campos_lista = $this->_todos_campos = "a.cod_vps_entrevista, a.ref_cod_vps_tipo_contratacao, a.ref_cod_vps_entrevista, a.ref_usuario_exc, a.ref_usuario_cad, a.ref_cod_vps_funcao, a.ref_cod_vps_jornada_trabalho, a.ref_idpes, a.nm_entrevista, a.salario, a.data_entrevista, a.hora_entrevista, a.descricao, a.ano, a.data_cadastro, a.data_exclusao, a.ativo, a.ref_cod_escola, a.ref_cod_curso, a.numero_vagas, a.numero_jovens, a.situacao_entrevista, a.inicio_vps, a.termino_vps, a.insercao_vps";
 
 		if(is_numeric($ref_cod_escola))
 		{
@@ -421,6 +421,10 @@ class clsPmieducarVPSEntrevista
 		{
 			$this->termino_vps = $termino_vps;
 		}
+		if(is_string($insercao_vps))
+		{
+			$this->insercao_vps = $insercao_vps;
+		}
 		if(is_string($data_entrevista))
 		{
 			$this->data_entrevista = $data_entrevista;
@@ -542,6 +546,12 @@ class clsPmieducarVPSEntrevista
 			{
 				$campos .= "{$gruda}termino_vps";
 				$valores .= "{$gruda}'{$this->termino_vps}'";
+				$gruda = ", ";
+			}
+			if(is_string($this->insercao_vps))
+			{
+				$campos .= "{$gruda}insercao_vps";
+				$valores .= "{$gruda}'{$this->insercao_vps}'";
 				$gruda = ", ";
 			}
 			if(is_string($this->data_entrevista))
@@ -677,6 +687,11 @@ class clsPmieducarVPSEntrevista
 			if(is_string($this->termino_vps))
 			{
 				$set .= "{$gruda}termino_vps = '{$this->termino_vps}'";
+				$gruda = ", ";
+			}
+			if(is_string($this->insercao_vps))
+			{
+				$set .= "{$gruda}insercao_vps = '{$this->insercao_vps}'";
 				$gruda = ", ";
 			}
 			if(is_string($this->data_entrevista))
@@ -886,7 +901,8 @@ class clsPmieducarVPSEntrevista
 	}
 
 
-	function listaEntrevista($int_ref_cod_escola = null, $str_nm_entrevista = null, $ativo = null, $int_ref_cod_vps_funcao = null,  $int_ref_cod_vps_tipo_contratacao = null, $int_ref_idpes = null, $int_ref_cod_curso = null, $int_ano)
+	function listaEntrevista($int_ref_cod_escola = null, $str_nm_entrevista = null, $ativo = null, $int_ref_cod_vps_funcao = null,
+		$int_ref_cod_vps_tipo_contratacao = null, $int_ref_idpes = null, $int_ref_cod_curso = null, $int_ano = null, $int_situacao_entrevista = null)
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} a";
 
@@ -942,6 +958,11 @@ class clsPmieducarVPSEntrevista
 		if (is_numeric($int_ano))
 		{
 			$filtros .= "{$whereAnd} ano = {$int_ano}";
+			$whereAnd = " AND ";
+		}
+		if (is_numeric($int_situacao_entrevista))
+		{
+			$filtros .= "{$whereAnd} situacao_entrevista = {$int_situacao_entrevista}";
 			$whereAnd = " AND ";
 		}
 

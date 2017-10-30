@@ -110,14 +110,6 @@ body{
 	height: 27px;
 	font-size: 10px;
 	vertical-align: middle;
-	border-left: 3px solid;
-	border-color: #371803;
-}
-
-.r2c1A{
-	font-size: 10px;
-	vertical-align: middle;
-	color: #371803;
 }
 
 .r2c2{
@@ -264,11 +256,11 @@ table{
 }
 
 a{
-	color: 341803;
+	color: #341803;
 }
 
 a:hover{
-	color: a05a2a;
+	color: #a05a2a;
 }
 
 .botaolistagem{
@@ -577,50 +569,32 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
 
 ul.menu
 {
-list-style: none;
-	margin:0px;
-	margin-top:-2px;
-	padding:0px;
-	width:159px;
+	list-style: none;
+	width: 168px;
 	/*border-right:1px solid #371803;
 	border-bottom:1px solid #371803;*/
-}
+	padding: 0;
+	margin: 0;
+	}
 ul.menu li
 {
 	margin:0px;
 	padding-left:10px;
+	padding-top: 3px;
+	padding-bottom: 3px;
 
 }
 ul.menu li a
 {
-margin:0px;
-padding:0px;
-font-family: arial,verdana,sans-serif;
-font-weight:normal;
-font-size:10px;
+	margin:0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	font-family: arial,verdana,sans-serif;
+	font-weight:normal;
+	font-size:10px;
 }
 
-.title {
--moz-border-radius-bottomleft:0pt;
--moz-border-radius-bottomright:0pt;
--moz-border-radius-topleft:0pt;
--moz-border-radius-topright:0pt;
-background:transparent url(../imagens/sec-title6.png) no-repeat scroll 0pt;
-/*background-color: #f8822a;*/
-border:medium none;
-color:#215DC6;
-font-family:tahoma,verdana,sans-serif;
-font-size:11px;
-font-size-adjust:none;
-font-stretch:normal;
-font-style:normal;
-font-variant:normal;
-font-weight:bold;
-height:25px;
-letter-spacing:0pt;
-line-height:normal;
-width:168px;
-}
+.title {-moz-border-radius-bottomleft:0pt;-moz-border-radius-bottomright:0pt;-moz-border-radius-topleft:0pt;-moz-border-radius-topright:0pt;/* background:transparent url(../imagens/sec-title6.png) no-repeat scroll 0pt; */background-color: #ee7335;border:medium none;color:#215DC6;font-family:tahoma,verdana,sans-serif;font-size:11px;font-size-adjust:none;font-stretch:normal;font-style:normal;font-variant:normal;font-weight:bold;height:25px;letter-spacing:0pt;line-height:normal;width:168px;margin-bottom: 1px;}
 .title a
 {
 color:#ffffff;

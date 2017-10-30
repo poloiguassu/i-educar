@@ -311,6 +311,7 @@ class clsPessoaFj
 
       if ($detalhe_fisica) {
         $detalhePessoa['cpf'] = $detalhe_fisica['cpf'];
+		$detalhePessoa['sexo'] = $detalhe_fisica['sexo'];
 
         $this->cpf       = $detalhe_fisica['cpf'];
         $this->data_nasc = $detalhe_fisica['data_nasc'];

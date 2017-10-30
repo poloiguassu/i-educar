@@ -12,6 +12,30 @@ body {
 	flex-direction: column;
 }
 
+.table.sub {
+	width: 30%;
+	max-width: 100%;
+	margin-bottom: 0px;
+}
+
+.dataTables_length {
+	width: 33.33333333%;
+	display: inline-block;
+}
+
+div.dataTables_wrapper div.dataTables_filter {
+	/* text-align: right; */
+	width: 33.33333333%;
+	display: inline-block;
+	text-align: center;
+}
+
+div.floatright {
+	display: inline-block;
+	width: 33.33333333%;
+	text-align: right;
+}
+
 .main {
 	flex: 1;
 }
@@ -56,6 +80,7 @@ a {
   -webkit-align-self: stretch;
   -ms-flex-item-align: stretch;
   align-self: stretch;
+  height: 73px;
 }
 
 .navmenu-item {

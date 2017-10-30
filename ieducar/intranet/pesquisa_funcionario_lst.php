@@ -52,6 +52,8 @@ class indice extends clsListagem
 	var $chave_campo;
 	var $importarCpf;
 
+	var $funcionario_ativo;
+
 	function Gerar()
 	{
 		@session_start();
@@ -75,7 +77,15 @@ class indice extends clsListagem
 
 		// Filtros de Busca
 		$this->campoTexto( "campo_busca", "Funcionário", "", 50, 255, false, false, false, "Matrícula/Nome do Funcionário" );
+
 		$this->campoOculto("com_matricula",$_GET['com_matricula']);
+
+		if(!is_numeric($_GET['funcionario_ativo']))
+			$this->funcionario_ativo = App_Model_AtivoInativo::ATIVO;
+		else
+			$this->funcionario_ativo = $_GET['funcionario_ativo'];
+
+		$this->campoLista('funcionario_ativo', 'Usuário ativo', App_Model_AtivoInativo::getInstance()->getValues(), $this->funcionario_ativo, '', FALSE, '', '', FALSE, FALSE);
 
 		if ( $_GET['campo_busca'] )
 			$chave_busca = @$_GET['campo_busca'];
@@ -104,16 +114,18 @@ class indice extends clsListagem
 		if ( $busca == 'S' ) {
 
 			$obj_funcionario = new clsFuncionario();
-			$lst_funcionario = $obj_funcionario->lista( false, $chave_busca, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula );
+			$obj_funcionario->setOrderby("ativo='1' DESC, to_ascii(nome) ASC");
+			$lst_funcionario = $obj_funcionario->lista( false, $chave_busca, $this->funcionario_ativo, false, false, false, false, $iniciolimit, $limite, false, $com_matricula );
 
 			if ( !$lst_funcionario )
 			{
-				$lst_funcionario = $obj_funcionario->lista( $chave_busca, false, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula );
+				$lst_funcionario = $obj_funcionario->lista( $chave_busca, $this->funcionario_ativo, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula );
 			}
 		}
 		else {
 			$obj_funcionario = new clsFuncionario();
-			$lst_funcionario = $obj_funcionario->lista( false, false, false, false, false, false, false, $iniciolimit, $limite, false, $com_matricula );
+			$obj_funcionario->setOrderby("ativo='1' DESC, to_ascii(nome) ASC");
+			$lst_funcionario = $obj_funcionario->lista( false, false, $this->funcionario_ativo, false, false, false, false, $iniciolimit, $limite, false, $com_matricula );
 		}
 		if ( $lst_funcionario ) {
 			foreach ( $lst_funcionario as $funcionario ) {

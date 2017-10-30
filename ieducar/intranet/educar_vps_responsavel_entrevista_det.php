@@ -73,23 +73,23 @@ class indice extends clsDetalhe
 
 		$tmp_obj = new clsPmieducarVPSResponsavelEntrevista($this->cod_vps_responsavel_entrevista);
 		$registro = $tmp_obj->detalhe();
-		
+
 		if(!$registro)
 		{
 			header("location: educar_vps_responsavel_entrevista_lst.php");
 			die();
 		}
-		
+
 		$obj_permissoes = new clsPermissoes();
 		$nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-		
+
 		if(class_exists("clsPmieducarEscola"))
 		{
 			$obj_ref_cod_escola = new clsPmieducarEscola($registro["ref_cod_escola"]);
 			$det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
 			$registro["ref_cod_escola"] = $det_ref_cod_escola["nome"];
 			$registro["ref_cod_instituicao"] = $det_ref_cod_escola["ref_cod_instituicao"];
-			
+
 			if($registro["ref_cod_instituicao"])
 			{
 				$obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro["ref_cod_instituicao"]);
@@ -103,13 +103,9 @@ class indice extends clsDetalhe
 			echo "<!--\nErro\nClasse não existente: clsPmieducarEscola\n-->";
 		}
 
-		if($registro["ref_cod_instituicao"] && $nivel_usuario == 1)
-		{
-			$this->addDetalhe(array("Instituição", "{$registro["ref_cod_instituicao"]}"));
-		}
 		if($registro["ref_cod_escola"] && ($nivel_usuario == 1 || $nivel_usuario == 2))
 		{
-			$this->addDetalhe(array("Escola", "{$registro["ref_cod_escola"]}"));
+			$this->addDetalhe(array("Instituição", "{$registro["ref_cod_escola"]}"));
 		}
 		if($registro["nm_responsavel"])
 		{
@@ -157,7 +153,7 @@ class indice extends clsDetalhe
 			""                                    => "Detalhe do responsável entrevista"
 		));
 
-		$this->enviaLocalizacao($localizacao->montar());		
+		$this->enviaLocalizacao($localizacao->montar());
 	}
 }
 

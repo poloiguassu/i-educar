@@ -109,6 +109,8 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra(598, $this->pessoa_logada, 11,  "educar_resultado_entrevista_lst.php");
 
+		Portabilis_View_Helper_Application::loadMomentJsLib($this);
+
 		if(is_numeric($this->cod_vps_entrevista))
 		{
 			$obj = new clsPmieducarVPSEntrevista($this->cod_vps_entrevista);
@@ -190,6 +192,8 @@ class indice extends clsCadastro
 		$this->campoOculto("funcao", "");
 		$this->campoOculto("jornada_trabalho", "");
 		$this->campoOculto("responsavel", "");
+		$this->campoOculto("termino_vps", $this->termino_vps);
+		$this->campoOculto("insercao_vps", $this->insercao_vps);
 
 		if ( $this->ref_cod_escola )
 		{
@@ -294,9 +298,21 @@ class indice extends clsCadastro
 			'placeholder' => '',
 			'value'       => Portabilis_Date_Utils::pgSQLToBr($this->termino_vps),
 			'size'        => 7,
+			'disabled'    => true
 		);
 
-		$this->inputsHelper()->date('termino_vps', $options);
+		$this->inputsHelper()->date('data_termino_vps', $options);
+
+		$options = array(
+			'required'    => false,
+			'label'       => 'Data Inserção Profissional',
+			'placeholder' => '',
+			'value'       => Portabilis_Date_Utils::pgSQLToBr($this->insercao_vps),
+			'size'        => 7,
+			'disabled'    => true
+		);
+
+		$this->inputsHelper()->date('data_insercao_vps', $options);
 
 		$this->campoQuebra();
 
@@ -381,14 +397,25 @@ class indice extends clsCadastro
 
 		if($this->cod_vps_entrevista && $entrevista->existe())
 		{
-			$str_inicio_vps = Portabilis_Date_Utils::brToPgSQL($this->inicio_vps);
-			$str_termino_vps = Portabilis_Date_Utils::brToPgSQL($this->termino_vps);
+			$str_inicio_vps = $this->inicio_vps;
+			$str_termino_vps = $this->termino_vps;
+			$str_insercao_vps = $this->insercao_vps;
+
+			if(strrpos($str_inicio_vps, '/') > -1)
+				$str_inicio_vps = Portabilis_Date_Utils::brToPgSQL($this->inicio_vps);
+
+			if(strrpos($str_termino_vps, '/') > -1)
+				$str_termino_vps = Portabilis_Date_Utils::brToPgSQL($this->termino_vps);
+
+			if(strrpos($str_insercao_vps, '/') > -1	)
+				$str_insercao_vps = Portabilis_Date_Utils::brToPgSQL($this->insercao_vps);
 
 			$entrevista->situacao_entrevista = $this->situacao_entrevista;
-			if(!empty($str_inicio_vps) && !empty($str_termino_vps))
+			if(!empty($str_inicio_vps))
 			{
 				$entrevista->inicio_vps = $str_inicio_vps;
 				$entrevista->termino_vps = $str_termino_vps;
+				$entrevista->insercao_vps = $str_insercao_vps;
 			}
 			$entrevista->edita();
 
@@ -400,10 +427,11 @@ class indice extends clsCadastro
 				{
 					$alunoEntrevista->resultado_entrevista = $resultado;
 					if($resultado >= App_Model_EntrevistaResultado::APROVADO_EXTRA
-						&& !empty($str_inicio_vps) && !empty($str_termino_vps))
+						&& !empty($str_inicio_vps))
 					{
 						$alunoEntrevista->inicio_vps = $str_inicio_vps;
 						$alunoEntrevista->termino_vps = $str_termino_vps;
+						$alunoEntrevista->insercao_vps = $str_insercao_vps;
 
 						$detalheAlunoEntrevista = $alunoEntrevista->detalhe();
 
@@ -445,311 +473,31 @@ $pagina->addForm($miolo);
 $pagina->MakeAll();
 ?>
 
-<script>
-	document.getElementById('ref_cod_vps_funcao').disabled = true;
-	document.getElementById('ref_cod_vps_funcao').options[0].text = 'Selecione uma escola';
+<script type="text/javascript">
+	(function($) {
+		$(document).ready(function() {
+			$.noConflict();
+			console.log("valor qualquer");
 
-	document.getElementById('ref_cod_vps_jornada_trabalho').disabled = true;
-	document.getElementById('ref_cod_vps_jornada_trabalho').options[0].text = 'Selecione uma instituição';
+			$("#inicio_vps").on("change", function() {
+				var dataInicio = $("#inicio_vps").val();
 
-	document.getElementById('ref_cod_vps_responsavel_entrevista').disabled = true;
-	document.getElementById('ref_cod_vps_responsavel_entrevista').options[0].text = 'Selecione uma empresa';
-
-	var tempExemplarTipo;
-	var tempFuncao;
-	var tempJornadaTrabalho;
-	var tempResponsavel;
-
-	if(document.getElementById('ref_cod_escola').value == "")
-	{
-		setVisibility(document.getElementById('img_funcao'), false);
-		setVisibility(document.getElementById('img_jornada_trabalho'), false);
-
-		tempFuncao = null;
-	} else {
-		ajaxEscola('novo');
-	}
-
-	if(document.getElementById('ref_cod_instituicao').value == "")
-	{
-		setVisibility(document.getElementById('img_jornada_trabalho'), false);
-
-		tempJornadaTrabalho = null;
-	} else {
-		ajaxInstituicao('novo');
-	}
-
-	if(document.getElementById('empresa_id').value == "")
-	{
-		setVisibility(document.getElementById('img_responsavel'), false);
-
-		tempResponsavel = null;
-	} else {
-		ajaxResponsavel('novo');
-	}
-
-	function getFuncao(xml_vps_funcao)
-	{
-		var campoFuncao = document.getElementById('ref_cod_vps_funcao');
-		var DOM_array = xml_vps_funcao.getElementsByTagName("vps_funcao");
-
-		if(DOM_array.length)
-		{
-			campoFuncao.length = 1;
-			campoFuncao.options[0].text = 'Selecione uma Função/Cargo';
-			campoFuncao.disabled = false;
-
-			for(var i=0; i<DOM_array.length; i++)
-			{
-				campoFuncao.options[campoFuncao.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_funcao"), false, false);
-			}
-			setVisibility(document.getElementById('img_funcao'), true);
-			if(tempFuncao != null)
-				campoFuncao.value = tempFuncao;
-		}
-		else
-		{
-			if(document.getElementById('ref_cod_escola').value == "")
-			{
-				campoFuncao.options[0].text = 'Selecione uma escola';
-				setVisibility(document.getElementById('img_funcao'), false);
-			}
-			else
-			{
-				campoFuncao.options[0].text = 'A Escola não possui função/cargo';
-				setVisibility(document.getElementById('img_funcao'), true);
-			}
-		}
-	}
-
-	function getJornadaTrabalho(xml_vps_jornada_trabalho)
-	{
-		var campoJornadaTrabalho = document.getElementById('ref_cod_vps_jornada_trabalho');
-		var DOM_array = xml_vps_jornada_trabalho.getElementsByTagName("vps_jornada_trabalho");
-
-		if(DOM_array.length)
-		{
-			campoJornadaTrabalho.length = 1;
-			campoJornadaTrabalho.options[0].text = 'Selecione uma Jornada de Trabalho';
-			campoJornadaTrabalho.disabled = false;
-
-			for(var i=0; i<DOM_array.length; i++)
-			{
-				campoJornadaTrabalho.options[campoJornadaTrabalho.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_jornada_trabalho"), false, false);
-			}
-			setVisibility(document.getElementById('img_jornada_trabalho'), true);
-			if(tempJornadaTrabalho != null)
-				campoJornadaTrabalho.value = tempJornadaTrabalho;
-		}
-		else
-		{
-			if(document.getElementById('ref_cod_instituicao').value == "")
-			{
-				campoJornadaTrabalho.options[0].text = 'Selecione uma instituição';
-				setVisibility(document.getElementById('img_jornada_trabalho'), false);
-			}
-			else
-			{
-				campoJornadaTrabalho.options[0].text = 'A instituição não possui jornadas de trabalhos';
-				setVisibility(document.getElementById('img_jornada_trabalho'), true);
-			}
-		}
-	}
-
-	function getResponsavelEntrevista(xml_vps_responsavel_entrevista)
-	{
-		var campoResponsavelEntrevista = document.getElementById('ref_cod_vps_responsavel_entrevista');
-		var DOM_array = xml_vps_responsavel_entrevista.getElementsByTagName("vps_responsavel_entrevista");
-
-		if(DOM_array.length)
-		{
-			campoResponsavelEntrevista.length = 1;
-			campoResponsavelEntrevista.options[0].text = 'Selecione um responsável';
-			campoResponsavelEntrevista.disabled = false;
-
-			for(var i = 0; i < DOM_array.length; i++)
-			{
-				campoResponsavelEntrevista.options[campoResponsavelEntrevista.options.length] = new Option(DOM_array[i].firstChild.data, DOM_array[i].getAttribute("cod_vps_responsavel_entrevista"), false, false);
-			}
-
-			setVisibility(document.getElementById('img_responsavel'), true);
-
-			if(tempResponsavel != null)
-				campoResponsavelEntrevista.value = tempResponsavel;
-		}
-		else
-		{
-			if(document.getElementById('empresa_id').value == "")
-			{
-				campoResponsavelEntrevista.options[0].text = 'Selecione uma empresa';
-				setVisibility(document.getElementById('img_responsavel'), false);
-			}
-			else
-			{
-				campoResponsavelEntrevista.options[0].text = 'A escola não possui responsáveis cadastrados';
-				setVisibility(document.getElementById('img_responsavel'), true);
-			}
-		}
-	}
-
-	jQuery(document).ready(function () {
-		var empresaId = jQuery("#empresa_id").val();
-
-		jQuery("#ref_cod_instituicao").change(function() {
-			ajaxInstituicao();
-		});
-
-		jQuery("#ref_cod_escola").change(function() {
-			ajaxEscola();
-			ajaxResponsavel();
-		});
-
-		jQuery("#empresa_nome").bind("change keyup focusout", function() {
-			setInterval(function() {
-				var empresaSelecionada = jQuery("#empresa_id").val();
-				if(empresaSelecionada != "" && empresaId != empresaSelecionada)
-				{
-					console.log("afffz " + jQuery("#empresa_id").val());
-					empresaId = empresaSelecionada;
-					ajaxResponsavel();
-				}
-			}, 300);
-		});
-
-		jQuery(".chosen-container").width(jQuery("#idiomas").width() + 14);
-	});
-
-	function ajaxEscola(acao)
-	{
-		var campoEscola = document.getElementById('ref_cod_escola').value;
-
-		var campoExemplarTipo = document.getElementById('ref_cod_exemplar_tipo');
-
-		var campoFuncao = document.getElementById('ref_cod_vps_funcao');
-
-		if(acao == 'novo')
-		{
-			tempFuncao = campoFuncao.value;
-		}
-
-		campoFuncao.length = 1;
-		campoFuncao.disabled = true;
-		campoFuncao.options[0].text = 'Carregando coleções';
-
-		var xml_funcao = new ajax(getFuncao);
-		xml_funcao.envia("educar_vps_funcao_xml.php?esc="+campoEscola);
-	}
-
-	function ajaxInstituicao(acao)
-	{
-		var campoInstituicao = document.getElementById('ref_cod_instituicao').value;
-
-		var campoJornadaTrabalho = document.getElementById('ref_cod_vps_jornada_trabalho');
-
-		if(acao == 'novo')
-		{
-			tempJornadaTrabalho = campoJornadaTrabalho.value;
-		}
-
-		campoJornadaTrabalho.length = 1;
-		campoJornadaTrabalho.disabled = true;
-		campoJornadaTrabalho.options[0].text = 'Carregando Jornada de Trabalho';
-
-		var xml_jornada_trabalho = new ajax(getJornadaTrabalho);
-		xml_jornada_trabalho.envia("educar_vps_jornada_trabalho_xml.php?inst="+campoInstituicao);
-	}
-
-	function ajaxResponsavel(acao)
-	{
-		var campoEscola = document.getElementById('ref_cod_escola').value;
-		var campoEmpresa = document.getElementById('empresa_id').value;
-
-		if(campoEmpresa != "" && campoEscola != "")
-		{
-			var campoResponsavel = document.getElementById('ref_cod_vps_responsavel_entrevista');
-
-			if(acao == 'novo')
-			{
-				tempResponsavel = campoResponsavel.value;
-			}
-
-			campoResponsavel.length = 1;
-			campoResponsavel.disabled = true;
-			campoResponsavel.options[0].text = 'Carregando responsável';
-
-			var xml_jornada_trabalho = new ajax(getResponsavelEntrevista);
-			console.log("valores esc=" + campoEscola + "&idpes" + campoEmpresa);
-			xml_jornada_trabalho.envia("educar_entrevista_xml.php?esc=" + campoEscola + "&idpes=" + campoEmpresa);
-		}
-	}
-
-	function pesquisa()
-	{
-		var escola = document.getElementById('ref_cod_escola').value;
-		if(!escola)
-		{
-			alert('Por favor,\nselecione uma escola!');
-			return;
-		}
-		pesquisa_valores_popless('educar_pesquisa_acervo_lst.php?campo1=ref_cod_vps_entrevista&ref_cod_escola=' + biblioteca , 'ref_cod_vps_entrevista')
-	}
-
-
-	function fixupPrincipalCheckboxes() {
-		$j('#principal').hide();
-
-		var $checkboxes = $j("input[type='checkbox']").filter("input[id^='principal_']");
-
-		$checkboxes.change(function(){
-			$checkboxes.not(this).removeAttr('checked');
-		});
-	}
-
-	fixupPrincipalCheckboxes();
-	function fixupIdiomasSize(){
-
-		$j('#idiomas_chzn ul').css('width', '307px');
-
-	}
-
-	fixupIdiomasSize();
-
-	$idiomas = $j('#idiomas');
-
-	$idiomas.trigger('chosen:updated');
-	var testezin;
-
-	var handleGetIdiomas = function(dataResponse) {
-		testezin = dataResponse['idiomas'];
-
-		console.log(testezin);
-
-		$j.each(dataResponse['idiomas'], function(id, value) {
-			$idiomas.children("[value=" + value + "]").attr('selected', '');
-		});
-
-		$idiomas.trigger('chosen:updated');
-	}
-
-	var getIdiomas = function() {
-		var $cod_vps_entrevista = $j('#cod_vps_entrevista').val();
-
-		if ($j('#cod_vps_entrevista').val() != '') {
-			var additionalVars = {
-				id : $j('#cod_vps_entrevista').val(),
-			};
-
-			var options = {
-				url      : getResourceUrlBuilder.buildUrl('/module/Api/idioma', 'idioma', additionalVars),
-				dataType : 'json',
-				data     : {},
-				success  : handleGetIdiomas,
-			};
-
-			getResource(options);
-		}
-	}
-
-	getIdiomas();
-
+				var dataVPS = moment(dataInicio, 'DD/MM/YYYY').addWeekdaysFromSet({
+					'workdays': 11,
+					'weekdays': [1,2,3,4,5,6],
+					'exclusions': ['2017-10-12', '2017-11-02', '2017-11-15', '2017-12-25']
+				});
+				var dataInsercao = moment(dataInicio, 'DD/MM/YYYY').addWeekdaysFromSet({
+					'workdays': 90,
+					'weekdays': [0,1,2,3,4,5,6],
+				});
+				var termino_vps = dataVPS.format('DD/MM/YYYY');
+				document.getElementById('termino_vps').value = termino_vps;
+				document.getElementById('data_termino_vps').value = termino_vps;
+				var insercao_vps = dataInsercao.format('DD/MM/YYYY');
+				document.getElementById('insercao_vps').value = insercao_vps;
+				document.getElementById('data_insercao_vps').value = insercao_vps;
+			});
+		}); // ready
+	})(jQuery);
 </script>

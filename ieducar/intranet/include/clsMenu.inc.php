@@ -274,7 +274,7 @@ class clsMenu
       if ($item[0] != $menuPaiAtual) {
         $estilo_linha = 'nvp_cor_sim';
 
-        $this->aberto = 0;
+        $this->aberto = 1;
         $menuPaiId = $item[6];
 
         if (isset($_COOKIE['menu_' . $menuPaiId])) {

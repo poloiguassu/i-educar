@@ -61,6 +61,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
   var $url_cancelar;
   var $nome_url_cancelar = "Voltar";
 
+  var $template = "detalhe";
   var $array_botao;
   var $array_botao_url;
   var $array_botao_url_script;
@@ -152,80 +153,15 @@ class clsDetalhe extends Core_Controller_Page_Abstract
       }
     }
 
-    if ($this->locale){
+	$twig = new TemplateRenderer();
+	$templateText = $twig->render($this->template, array(
+		'titulo'		=> $this->titulo,
+		'localizacao'	=> $this->locale,
+		'linhas'		=> $this->detalhe
+	));
 
-      $retorno .=  "
-        <table class='tableDetalhe' $width border='0'  cellpadding='0' cellspacing='0'>";
+	$retorno .= $templateText;
 
-      $retorno .=  "<tr height='10px'>
-                      <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
-                    </tr>";
-
-      $retorno .= "</table>";
-    }
-
-    $retorno .= "
-      <!-- detalhe begin -->
-      <table class='tableDetalhe' $width border='0' cellpadding='2' cellspacing='2'>
-        <tr>
-          <td class='formdktd' colspan='2' height='24'>{$barra}</td>
-        </tr>
-      ";
-
-    if (empty($this->detalhe)) {
-      $retorno .= "<tr><td class='tableDetalheLinhaSim' colspan='2'>N&atilde;o h&aacute; informa&ccedil;&atilde;o a ser apresentada.</td></tr>\n";
-    }
-    else
-    {
-      if (is_array($this->detalhe))
-      {
-        reset($this->detalhe);
-
-        $campo_anterior = "";
-        $md = TRUE;
-
-        foreach ($this->detalhe as $pardetalhe)
-        {
-          if (is_array($pardetalhe))
-          {
-            $campo = $pardetalhe[0].":";
-            $texto = $pardetalhe[1];
-
-            if ($campo == $campo_anterior)
-            {
-              $campo = "";
-            }
-            else
-            {
-              $campo_anterior = $campo;
-              $md = !$md;
-            }
-
-            if ($campo == "-:")
-            {
-              if (empty($texto))
-              {
-                $texto = '&nbsp;';
-              }
-              $retorno .= "<tr><td colspan='2' class='' width='20%'><span class='form'><b>$texto</b></span></td></tr>\n";
-            }
-            else
-            {
-              $classe = $md ? 'formmdtd' : 'formlttd';
-              $retorno .= "<tr><td class='$classe' width='20%'>$campo</td><td class='$classe'>$texto</td></tr>\n";
-            }
-          }
-          else
-          {
-
-            $retorno .= "<tr><td colspan='2'>$pardetalhe</td></tr>";
-
-          }
-        }
-      }
-    }
-
-    $retorno .= "<tr><td class='tableDetalheLinhaSeparador' colspan='2'></td></tr>\n";
 
     if (!empty($this->url_editar) || !empty($this->url_cancelar) || $this->array_botao) {
       $retorno .= "
@@ -268,8 +204,6 @@ class clsDetalhe extends Core_Controller_Page_Abstract
       if ($this->array_botao_url || $this->array_botao_url_script) {
         $retorno .= "</td></tr>";
       }
-
-      $retorno .= "<tr><td colspan='2' height='1' bgcolor='black' style='font-size: 0px;'>&nbsp;</td></tr>";
     }
 
     $retorno .= "

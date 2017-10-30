@@ -127,7 +127,7 @@ class clsPmieducarVPSResponsavelEntrevista
 			if(class_exists("clsPmieducarEscola"))
 			{
 				$tmp_obj = new clsPmieducarEscola($ref_cod_escola);
-				
+
 				if(method_exists($tmp_obj, "existe"))
 				{
 					if($tmp_obj->existe())
@@ -151,13 +151,13 @@ class clsPmieducarVPSResponsavelEntrevista
 				}
 			}
 		}
-		
+
 		if(is_numeric($ref_idpes))
 		{
 			if(class_exists("clsPessoaJuridica"))
 			{
 				$tmp_obj = new clsPessoaJuridica($ref_idpes);
-				
+
 				if(method_exists($tmp_obj, "existe"))
 				{
 					if($tmp_obj->existe())
@@ -181,7 +181,7 @@ class clsPmieducarVPSResponsavelEntrevista
 				}
 			}
 		}
-		
+
 		if(is_numeric($ref_usuario_exc))
 		{
 			if(class_exists("clsPmieducarUsuario"))
@@ -210,7 +210,7 @@ class clsPmieducarVPSResponsavelEntrevista
 				}
 			}
 		}
-		
+
 		if(is_numeric($ref_usuario_cad))
 		{
 			if(class_exists("clsPmieducarUsuario"))
@@ -254,7 +254,7 @@ class clsPmieducarVPSResponsavelEntrevista
 		{
 			$this->email = $email;
 		}
-		
+
 		if(is_numeric($ddd_telefone_com) && is_numeric($telefone_com))
 		{
 			$this->ddd_telefone_com = $ddd_telefone_com;
@@ -314,14 +314,14 @@ class clsPmieducarVPSResponsavelEntrevista
 				$valores .= "{$gruda}'{$this->nm_responsavel}'";
 				$gruda = ", ";
 			}
-			
+
 			if(is_string($this->email))
 			{
 				$campos .= "{$gruda}email";
 				$valores .= "{$gruda}'{$this->email}'";
 				$gruda = ", ";
 			}
-			
+
 			if(is_numeric($this->ddd_telefone_com) && is_numeric($this->telefone_com))
 			{
 				$campos .= "{$gruda}ddd_telefone_com";
@@ -411,7 +411,7 @@ class clsPmieducarVPSResponsavelEntrevista
 				$set .= "{$gruda}email = '{$this->email}'";
 				$gruda = ", ";
 			}
-			
+
 			if(is_numeric($this->ddd_telefone_com))
 			{
 				$set .= "{$gruda}ddd_telefone_com = '{$this->ddd_telefone_com}'";
@@ -483,7 +483,8 @@ class clsPmieducarVPSResponsavelEntrevista
 	 *
 	 * @return array
 	 */
-	function lista($int_cod_vps_responsavel_entrevista = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_responsavel = null, $str_observacao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_escola = null, $int_ref_idpes = null, $int_ref_cod_instituicao = null)
+	function lista($int_cod_vps_responsavel_entrevista = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_responsavel = null, $str_observacao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null,
+		$int_ativo = null, $int_ref_cod_escola = null, $int_ref_idpes = null, $int_ref_cod_instituicao = null, $str_email = null, $str_telefone = null)
 	{
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela} aa ";
 		$filtros = "";
@@ -509,6 +510,16 @@ class clsPmieducarVPSResponsavelEntrevista
 		{
 			$str_nm_responsavel = addslashes($str_nm_responsavel);
 			$filtros .= "{$whereAnd} nm_responsavel ILIKE ('%{$str_nm_responsavel}%')";
+			$whereAnd = " AND ";
+		}
+		if(is_string($str_email))
+		{
+			$filtros .= "{$whereAnd} email ILIKE ('{$str_email}%')";
+			$whereAnd = " AND ";
+		}
+		if(is_string($str_telefone))
+		{
+			$filtros .= "{$whereAnd} (telefone_cel = '{$str_telefone}' OR telefone_com = '{$str_telefone}')";
 			$whereAnd = " AND ";
 		}
 		if(is_string($str_observacao))
@@ -696,7 +707,7 @@ class clsPmieducarVPSResponsavelEntrevista
 		if(is_numeric($this->_limite_quantidade))
 		{
 			$retorno = " LIMIT {$this->_limite_quantidade}";
-			
+
 			if(is_numeric($this->_limite_offset))
 			{
 				$retorno .= " OFFSET {$this->_limite_offset} ";

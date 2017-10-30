@@ -103,17 +103,20 @@ class indice extends clsListagem
 
 		$this->titulo = "Atribuir Entrevistas - Listagem";
 
+		$this->setTemplate("filtrarListagem");
+
 		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
 			$this->$var = ( $val === "" ) ? null: $val;
 
 		$this->addCabecalhos( array(
+			"ID",
 			"Nome",
 			"Número de entrevistas",
 			"Situação VPS",
-			"Entrevista incio VPS",
-			"Início VPS",
-			"Conclusão VPS",
-			"Inserção"
+			"Idade",
+			"Sexo",
+			"Estudando?",
+			"Turno Colégio"
 		) );
 
 		// Filtros de Foreign Keys
@@ -173,12 +176,38 @@ class indice extends clsListagem
 				$ref_cod_aluno =  $registro["ref_cod_aluno"];
 
 				$alunoVPS = new clsPmieducarAlunoVPS($ref_cod_aluno);
+				$aluno = new clsPmieducarAluno($ref_cod_aluno);
+
 
 				if($alunoVPS && $alunoVPS->existe())
 					$registroVPS = $alunoVPS->detalhe();
 
+				if($aluno && $aluno->existe())
+				{
+					$registroAluno = $aluno->detalhe();
+
+					$objPessoa = new clsPessoaFj($registroAluno["ref_idpes"]);
+					$registroPessoa = $objPessoa->detalhe();
+				}
+
 				if($registroVPS["situacao_vps"])
 					$situacaoVPS = App_Model_VivenciaProfissionalSituacao::getInstance()->getValue($registroVPS["situacao_vps"]);
+
+				if($registroPessoa["data_nasc"])
+				{
+					$hoje = new DateTime();
+					$data_nasc = new DateTime($registroPessoa["data_nasc"]);
+					$idade = $hoje->diff($data_nasc);
+					$idade = $idade->format('%y');
+				}
+
+				if($registroPessoa["sexo"])
+				{
+					if($registroPessoa["sexo"] == 'F')
+						$registroPessoa["sexo"] = "Feminio";
+					else
+						$registroPessoa["sexo"] = "Masculino";
+				}
 
 				if($registroVPS["ref_cod_vps_aluno_entrevista"])
 				{
@@ -209,13 +238,14 @@ class indice extends clsListagem
 				$numero_entrevistas    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
 
 				$lista_busca = array(
-					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$registro["nome"]}</a>",
-					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$numero_entrevistas}</a>",
-					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$situacaoVPS}</a>",
-					"<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$ref_cod_vps_entrevista}\" target=\"_blank\">{$nm_entrevista}</a>",
-					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$inicioVPS}</a>",
-					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$terminoVPS}</a>",
-					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$insercaoVPS}</a>",
+					"{$ref_cod_aluno}",
+					"{$registro["nome"]}",
+					"{$numero_entrevistas}",
+					"{$situacaoVPS}",
+					"{$idade}",
+					"{$registroPessoa["sexo"]}",
+					"{$terminoVPS}",
+					"{$insercaoVPS}",
 				);
 
 				$this->addLinhas($lista_busca);
