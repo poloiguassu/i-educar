@@ -156,7 +156,7 @@ class indice
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          ""                                  => "Agenda"
     ));
-    $this->locale = $localizacao->montar();    
+    $this->locale = $localizacao->montar();
 
 
     if ($this->locale){
@@ -169,7 +169,7 @@ class indice
                     </tr>";
 
       $conteudo .= "</table>";
-    }    
+    }
 
 		$conteudo .= "
 		<div id=\"DOM_expansivel\" class=\"DOM_expansivel\"></div>
@@ -211,7 +211,6 @@ class indice
 								<tr><td valign=\"top\"><img src=\"imagens/agenda_data_fundo.gif\" border=\"0\" title=\"Dia: {$this->arr_data_atual[0]} de {$mesesArr[$this->arr_data_atual[1]]} de {$this->arr_data_atual[2]}\" alt=\"{$this->arr_data_atual[0]} de {$mesesArr[$this->arr_data_atual[1]]} de {$this->arr_data_atual[2]}\"><td></tr>
 							</table>
 						</td>
-						<td width=\"20%\" valign=\"bottom\" align=\"right\">{$preferencias}<a href=\"agenda_imprimir.php?cod_agenda={$this->agenda}\"><img src=\"imagens/btn_imprimir.gif\" border=\"0\" title=\"Imprimir compromissos deste dia\" alt=\"Imprimir compromissos\"></a> &nbsp; </td>
 					</tr>
 				</table>
 			</td>

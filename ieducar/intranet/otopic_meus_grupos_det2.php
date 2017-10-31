@@ -34,7 +34,7 @@ require_once ("include/relatorio.inc.php");
 
 class clsIndex extends clsBase
 {
-	
+
 	function Formular()
 	{
 		$this->SetTitulo( "{$this->_instituicao} i-Pauta - Detalhe do Grupo" );
@@ -49,13 +49,13 @@ class indice extends clsDetalhe
 		@session_start();
 		$id_visualiza = $_SESSION['id_pessoa'];
 		@session_write_close();
-		
+
 		$cod_grupo = $_GET['cod_grupo'];
 
 		$this->titulo = "Detalhe do Grupo";
 		$this->addBanner( "imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet", false);
 
-		/* 
+		/*
 			Verifica se o Usuário atual está cadastrado no grupo,
 			caso nao esteja, redireciona para entrada
 		*/
@@ -63,13 +63,13 @@ class indice extends clsDetalhe
 		$detalhe_pessoa = $obj->detalhe();
 		$obj = new clsGrupoModerador($id_visualiza,$cod_grupo);
 		$detalhe_moderador = $obj->detalhe();
-		
+
 		$obj = new clsFuncionarioSu($id_visualiza);
-		
+
 		if(!$obj->detalhe())
 		{
-			
-			if ($detalhe_moderador && $detalhe_pessoa['ativo']!= 1) 
+
+			if ($detalhe_moderador && $detalhe_pessoa['ativo']!= 1)
 			{
 				if( $detalhe_moderador['ativo'] != 1)
 				{
@@ -82,10 +82,10 @@ class indice extends clsDetalhe
 		}
 		$obj = new clsGrupos($cod_grupo);
 		$detalhe = $obj->detalhe();
-		
+
 		$this->addDetalhe(array("Nome", $detalhe['nm_grupo']));
 		$this->addDetalhe(array("Data de Criação", date("d/m/Y", strtotime(substr($detalhe['data_cadastro'],0,19)))  ));
-		
+
 		$this->url_cancelar = "otopic_meus_grupos_det.php?cod_grupo=$cod_grupo";
 		$this->largura = "100%";
 	}
@@ -103,19 +103,19 @@ class Listas extends clsListagem
 
 		$this->titulo = "Tópicos Sugeridos";
 		$this->addBanner(false,false,false,false );
-	
+
 		$cod_membro = $_GET['cod_membro'];
 		$cod_grupo = $_GET['cod_grupo'];
-		
+
 		$this->addCabecalhos( array( "Tópico", "Responsável" , "Status" ) );
 
 		// Paginador
 		$limite = 10;
 		$iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
-	
+
 		$obj = new clsReuniao();
-		/*  Pega lista de Reunioes Finalizadas, Verifica e mostra os Topicos Finalizados 
-			que nao foram finalizados nessa reuniao 
+		/*  Pega lista de Reunioes Finalizadas, Verifica e mostra os Topicos Finalizados
+			que nao foram finalizados nessa reuniao
 		*/
 		$lista = $obj->lista(false,$cod_grupo,false,false,false,false,false,false,true);
 		if($lista)
@@ -134,9 +134,9 @@ class Listas extends clsListagem
 				}
 			}
 		}
-		/*  Pega lista de Reunioes não Finalizadas, Verifica que estão nessa reuniao e marca como 
+		/*  Pega lista de Reunioes não Finalizadas, Verifica que estão nessa reuniao e marca como
 			comprometido
-		*/	
+		*/
 		$obj = new clsReuniao();
 		$lista = $obj->lista(false,$cod_grupo,false,false,false,false,false,true);
 		if($lista)
@@ -154,31 +154,29 @@ class Listas extends clsListagem
 		}
 		$obj = new clsTopico();
 		$lista = $obj->lista(false,$cod_grupo,false,false,false,false,false,1,$iniciolimit,$limite,false,$topico_comprometidos);
-		
+
 		if($lista)
 		{
-			foreach ($lista as $topicos) 
+			foreach ($lista as $topicos)
 			{
 				$total = $topicos['total'];
 				$obj = new clsPessoaFj($topicos['ref_idpes_cad']);
 				$detalhe = $obj->detalhe();
 				$nome = $detalhe['nome'];
-				
+
 				$obj = new clsTopicoReuniao($topicos['cod_topico']);
 				$status = $obj->detalhe() ? "Pendente" : "Novo";
 				if(strlen($topicos['assunto']) > 60 )
 				{
-					
+
 					$descricao = substr($topicos['assunto'],0,60)."...";
-				}else 
+				}else
 				{
 					$descricao = $topicos['assunto'];
 				}
 				$this->addLinhas( array("<a href='otopic_topicos_cad.php?cod_topico={$topicos['cod_topico']}&cod_grupo=$cod_grupo'>{$descricao}</a>", $nome, $status) );
 			}
-			$this->array_botao = array("Imprimir (Jato)", "Imprimir (Laser)");
-			$this->array_botao_url = array("otopic_meus_grupos_imprime_topicos_sugeridos.php?cod_membro=$cod_membro&cod_grupo=$cod_grupo&imprimir=jato", "otopic_meus_grupos_imprime_topicos_sugeridos.php?cod_membro=$cod_membro&cod_grupo=$cod_grupo&imprimir=laser");
-		}						
+		}
 
 		$obj = new clsGrupoModerador($id_visualiza,$cod_grupo);
 		$detalhe_moderador = $obj->detalhe();
@@ -188,7 +186,7 @@ class Listas extends clsListagem
 			$this->acao = "go(\"otopic_topicos_cad.php?cod_grupo=$cod_grupo\")";
 			$this->nome_acao = "Novo Tópico";
 		}
-		
+
 		$this->largura = "100%";
 		$this->addPaginador2( "otopic_meus_grupos_det2.php", $total, $_GET, $this->nome, $limite );
 	}
@@ -205,30 +203,30 @@ class Listas2 extends clsListagem
 
 		$this->titulo = "Tópicos Aguardando em Reunião";
 		$this->addBanner(false,false,false,false );
-		
+
 		$cod_membro = $_GET['cod_membro'];
 		$cod_grupo = $_GET['cod_grupo'];
-		
+
 		$this->addCabecalhos( array( "Tópico", "Responsável") );
 
 		// Paginador
 		$limite = 10;
 		$iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
-		
+
 		$obj = new clsReuniao();
-		/*  Pega lista de Reunioes Finalizadas, Verifica e mostra os Topicos Finalizados 
-			que nao foram finalizados nessa reuniao 
+		/*  Pega lista de Reunioes Finalizadas, Verifica e mostra os Topicos Finalizados
+			que nao foram finalizados nessa reuniao
 		*/
 		$lista = $obj->lista(false,$cod_grupo,false,false,false,false,false,false,true);
 		if($lista)
 		{
-			foreach ($lista as $reuniao) 
+			foreach ($lista as $reuniao)
 			{
 				$obj = new clsTopicoReuniao();
 				$lista = $obj->lista(false,false,false,false,false,false,false,$reuniao['cod_reuniao']);
 				if($lista)
 				{
-					foreach ($lista as $topicos) 
+					foreach ($lista as $topicos)
 					{
 						if($topicos['finalizado'])
 						{
@@ -238,9 +236,9 @@ class Listas2 extends clsListagem
 				}
 			}
 		}
-		/*  Pega lista de Reunioes não Finalizadas, Verifica que estão nessa reuniao e marca como 
+		/*  Pega lista de Reunioes não Finalizadas, Verifica que estão nessa reuniao e marca como
 			comprometido
-		*/	
+		*/
 		$obj = new clsReuniao();
 		$lista = $obj->lista(false,$cod_grupo,false,false,false,false,false,true);
 		if($lista)
@@ -268,23 +266,23 @@ class Listas2 extends clsListagem
 				}
 			}
 		}
-		
+
 		if($topico_finalizados)
 		{
 			$obj = new clsTopico();
 			$lista = $obj->lista(false,false,false,false,false,false,false,1,$iniciolimit,$limite,"cod_topico DESC",false,$topico_finalizados);
 			if($lista)
 			{
-				foreach ($lista as $topicos) 
+				foreach ($lista as $topicos)
 				{
 					$total = $topicos['total'];
 					$obj = new clsTopicoReuniao($topicos['cod_topico']);
 					$detalhe = $obj->detalhe();
 					if(strlen($topicos['assunto']) > 60 )
 					{
-						
+
 						$descricao = substr($topicos['assunto'],0,60)."...";
-					}else 
+					}else
 					{
 						$descricao = $topicos['assunto'];
 					}
@@ -294,15 +292,12 @@ class Listas2 extends clsListagem
 					$nome = $detalhe['nome'];
 					$this->addLinhas( array("{$descricao}", $nome) );
 				}
-				//pdf
-				$this->array_botao = array("Imprimir (Jato)", "Imprimir (Laser)");
-				$this->array_botao_url = array("otopic_meus_grupos_imprime_topicos_aguardando.php?cod_membro=$cod_membro&cod_grupo=$cod_grupo&imprimir=jato", "otopic_meus_grupos_imprime_topicos_aguardando.php?cod_membro=$cod_membro&cod_grupo=$cod_grupo&imprimir=laser");
 			}
-		}						
+		}
 
 		$this->largura = "100%";
 		$this->addPaginador2( "otopic_meus_grupos_det2.php", $total, $_GET, $this->nome, $limite );
-		
+
 	}
 }
 
@@ -317,10 +312,10 @@ class Listas3 extends clsListagem
 
 		$this->titulo = "Tópicos Finalizados";
 		$this->addBanner( );
-	
+
 		$cod_membro = $_GET['cod_membro'];
 		$cod_grupo = $_GET['cod_grupo'];
-		
+
 		$this->addCabecalhos( array( "Tópico", "Responsável") );
 
 		// Paginador
@@ -328,8 +323,8 @@ class Listas3 extends clsListagem
 		$iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
 
 		$obj = new clsReuniao();
-		/*  Pega lista de Reunioes Finalizadas, Verifica e mostra os Topicos Finalizados 
-			que nao foram finalizados nessa reuniao 
+		/*  Pega lista de Reunioes Finalizadas, Verifica e mostra os Topicos Finalizados
+			que nao foram finalizados nessa reuniao
 		*/
 		$lista = $obj->lista(false,$cod_grupo,false,false,false,false,false,false,true);
 		if($lista)
@@ -348,9 +343,9 @@ class Listas3 extends clsListagem
 				}
 			}
 		}
-		/*  Pega lista de Reunioes não Finalizadas, Verifica que estão nessa reuniao e marca como 
+		/*  Pega lista de Reunioes não Finalizadas, Verifica que estão nessa reuniao e marca como
 			comprometido
-		*/	
+		*/
 		$obj = new clsReuniao();
 		$lista = $obj->lista(false,$cod_grupo,false,false,false,false,false,true);
 		if($lista)
@@ -378,23 +373,23 @@ class Listas3 extends clsListagem
 				}
 			}
 		}
-		
+
 		if($topico_finalizados)
 		{
 			$obj = new clsTopico();
 			$lista = $obj->lista(false,false,false,false,false,false,false,1,$iniciolimit,$limite,"cod_topico DESC",false,$topico_finalizados);
 			if($lista)
 			{
-				foreach ($lista as $topicos) 
+				foreach ($lista as $topicos)
 				{
 					$total = $topicos['total'];
 					$obj = new clsTopicoReuniao($topicos['cod_topico']);
 					$detalhe = $obj->detalhe();
 					if(strlen($topicos['assunto']) > 60 )
 					{
-						
+
 						$descricao = substr($topicos['assunto'],0,60)."...";
-					}else 
+					}else
 					{
 						$descricao = $topicos['assunto'];
 					}
@@ -405,11 +400,9 @@ class Listas3 extends clsListagem
 					$this->addLinhas( array("{$descricao}", $nome) );
 				}
 				//pdf
-				$this->array_botao = array("Imprimir (Jato)", "Imprimir (Laser)");
-				$this->array_botao_url = array("otopic_meus_grupos_imprime_topicos_finalizados.php?cod_membro=$cod_membro&cod_grupo=$cod_grupo&imprimir=jato", "otopic_meus_grupos_imprime_topicos_finalizados.php?cod_membro=$cod_membro&cod_grupo=$cod_grupo&imprimir=laser");
 			}
-			
-		}						
+
+		}
 
 		$this->largura = "100%";
 		$this->addPaginador2( "otopic_meus_grupos_det2.php", $total, $_GET, $this->nome, $limite );
@@ -423,14 +416,14 @@ class lista_reunioes extends clsListagem
 		@session_start();
 		$id_visualiza = $_SESSION['id_pessoa'];
 		@session_write_close();
-		
+
 		$this->nome = "Form4";
 		$this->titulo = "Reuniões";
 		$this->addBanner(false,false,false,false );
-		
+
 		$cod_membro = $_GET['cod_membro'];
 		$cod_grupo = $_GET['cod_grupo'];
-		
+
 		$this->addCabecalhos( array( "Descrição", "Data Inicio", "Data Fim", "Status" ) );
 
 		// Paginador
@@ -449,21 +442,21 @@ class lista_reunioes extends clsListagem
 				$finalizada = $reuniao['data_inicio_real'] && !$reuniao['data_fim_real'] ? "Andamento" : $finalizada;
 				if(strlen($reuniao['descricao']) > 60 )
 				{
-					
+
 					$descricao = substr($reuniao['descricao'],0,60)."...";
-				}else 
+				}else
 				{
 					$descricao = $reuniao['descricao'];
 				}
 				$this->addLinhas( array("<a title='{$reuniao['descricao']}' href='otopic_reunioes_det.php?cod_reuniao={$reuniao['cod_reuniao']}&cod_grupo=$cod_grupo'>{$descricao}</a>", $data_inicio,$data_fim, $finalizada) );
 
 			}
-		
+
 		}
 
 		$obj = new clsReuniao();
-		/*  Pega lista de Reunioes Finalizadas, Verifica e mostra os Topicos Finalizados 
-			que nao foram finalizados nessa reuniao 
+		/*  Pega lista de Reunioes Finalizadas, Verifica e mostra os Topicos Finalizados
+			que nao foram finalizados nessa reuniao
 		*/
 		$lista = $obj->lista(false,$cod_grupo,false,false,false,false,false,false,true);
 		if($lista)
@@ -482,14 +475,14 @@ class lista_reunioes extends clsListagem
 				}
 			}
 		}
-		/*  Pega lista de Reunioes não Finalizadas, Verifica que estão nessa reuniao e marca como 
+		/*  Pega lista de Reunioes não Finalizadas, Verifica que estão nessa reuniao e marca como
 			comprometido
-		*/	
+		*/
 		$obj = new clsReuniao();
 		$lista = $obj->lista(false,$cod_grupo,false,false,false,false,false,true);
 		if($lista)
 		{
-			foreach ($lista as $reuniao) 
+			foreach ($lista as $reuniao)
 			{
 				$obj = new clsTopicoReuniao();
 				$lista = $obj->lista(false,false,false,false,false,false,false,$reuniao['cod_reuniao']);
@@ -503,8 +496,8 @@ class lista_reunioes extends clsListagem
 		}
 		$obj = new clsTopico();
 		$lista = $obj->lista(false,$cod_grupo,false,false,false,false,false,1,$iniciolimit,$limite,false,$topico_comprometidos);
-			
-		/* 
+
+		/*
 			Verifica se o usuário é moderador para poder inserir uma nova reunião e se existem tópicos
 		 	para que se possa formar uma nova reuniao, caso nao exista nenhum tópico, não mostra o botão
 		 	de nova reuniao.
@@ -516,7 +509,7 @@ class lista_reunioes extends clsListagem
 			$this->acao = "go(\"otopic_reunioes_cad.php?cod_grupo=$cod_grupo\")";
 			$this->nome_acao = "Nova Reunião";
 		}
-		
+
 		$this->largura = "100%";
 		$this->addPaginador2( "otopic_meus_grupos_det2.php", $total, $_GET, $this->nome, $limite );
 	}
