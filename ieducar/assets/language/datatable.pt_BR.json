@@ -16,12 +16,19 @@
         "sFirst": "Primeiro",
         "sLast": "último"
     },
+    "select": {
+        "rows": {
+            "_": "%d linhas selecionadas",
+            "0": "",
+            "1": "1 linha selecionada"
+        }
+    },
     "oAria": {
         "sSortAscending": ": Ordenar colunas de forma ascendente",
         "sSortDescending": ": Ordenar colunas de forma descendente"
     },
-	"buttons": {
-		"print": "Imprimir",
-		"colvis": "Ocultar coluna"
-	}
+    "buttons": {
+        "print": "Imprimir",
+        "colvis": "Ocultar coluna"
+    }
 }

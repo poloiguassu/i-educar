@@ -111,6 +111,14 @@ class indice extends clsListagem
 
 		$this->addLinhas($lista_busca);
 
+		$localizacao = new LocalizacaoSistema();
+		$localizacao->entradaCaminhos( array(
+			$_SERVER['SERVER_NAME'] . "/intranet" => "Início",
+			"educar_vps_index.php"                => "Trilha Jovem Iguassu - VPS",
+		));
+
+		$this->enviaLocalizacao($localizacao->montar());
+
 		$this->largura = "100%";
 	}
 }

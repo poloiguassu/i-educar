@@ -2,21 +2,21 @@
 /* CoolMenus 4 - default styles - do not edit */
 .clCMAbs
 {
-	position: absolute; 
-	visibility: hidden; 
-	display: none; 
-	left: 0; 
+	position: absolute;
+	visibility: hidden;
+	display: none;
+	left: 0;
 	top: 0;
 }
 /* CoolMenus 4 - default styles - end */
-  
+
 /*Style for the background-bar*/
 .clBar
 {
-	position:absolute; 
-	width:10; 
-	height:10; 
-	background-color:333333; 
+	position:absolute;
+	width:10;
+	height:10;
+	background-color:333333;
 	/*layer-background-color:333333; */
 	visibility:hidden;
 
@@ -25,111 +25,115 @@
 /*Styles for level 0*/
 .clLevel0,.clLevel0over
 {
-	position: absolute; 
-	font-family: arial, verdana, lucida, helvetica, sans-serif; 
-	font-size: 12px; 
+	position: absolute;
+	font-family: arial, verdana, lucida, helvetica, sans-serif;
+	font-size: 12px;
 	text-align: center;
 }
 
 .clLevel0
 {
-	background-color: #341803;
+	background-color: #a94442;
 	/*layer-background-color: #546c76;*/
 	color: #FFFFFF;
-	padding-top: 1px;
+	padding-top: 5px;
 }
 
 .clLevel0over
 {
-	background-color:#524134; 
-	/*layer-background-color:#3c505b;	*/
-	color: #DDDDDD; 
-	cursor: pointer; 
+	background-color: #7b3130;
+	color: #DDDDDD;
+	cursor: pointer;
 	/*cursor: hand;*/
-	padding-top: 3px;
+	padding-top: 5px;
 }
 
 .clLevel0border
-{	
-	position:absolute; 
-	visibility:hidden; 
-	background-color:#000000; 
+{
+	position:absolute;
+	visibility:hidden;
+	background-color:#000000;
 	/*layer-background-color:#000000;*/
 }
 
 /*Styles for level 1*/
 .clLevel1, .clLevel1over
 {
-	position:absolute; 
-	padding:2px; 
+	position:absolute;
+	padding:5px;
 	font-family: arial, verdana, lucida, helvetica, sans-serif;
-	font-size:12px; 
+	font-size:12px;
 	color: #ffffff;
-	
+
 }
 
 .clLevel1:hover
 {
-	background-color:#d3c4b0; 
+	background-color: #7b3130;
 	/*layer-background-color:#D9DCE5; */
 	color:#341803;
 }
 
 .clLevel1
 {
-	background-color:#d3c4b0; 
+	background-color: #ffffff;
 	/*layer-background-color:#D9DCE5; */
 	color:#341803;
 }
 
+.clLevel1over a,.clLevel2over a
+{
+	color:#FFFFFF;
+}
+
 .clLevel1over
 {
-	background-color:#524134; 
+	background-color: #7b3130;
 	/*layer-background-color:#3c505b; */
-	color:#FFFFFF; 
-	cursor:pointer; 
+	color:#FFFFFF;
+	cursor:pointer;
 	/*cursor:hand; */
-	
+
 }
 
 .clLevel1border
 {
-	position:absolute; 
-	visibility:hidden; 
-	background-color:#B2B1BF; 
+	position:absolute;
+	visibility:hidden;
+	background-color:#B2B1BF;
 	/*layer-background-color:#B2B1BF;*/
 }
 
 /*Styles for level 2*/
 .clLevel2, .clLevel2over
 {
-	position:absolute; 
-	padding-top:2px; 
+	position:absolute;
+	padding-top:5px;
 	font-size:12px;
 	font-family: arial, verdana, lucida, helvetica, sans-serif;
 }
 
 .clLevel2
 {
-	background-color:#d3c4b0; 
+	background-color: #ffffff;
 	/*layer-background-color:#D9DCE5; */
 	color:#000000;
 }
 
 .clLevel2over
 {
-	background-color:#524134; 
+	background-color: #7b3130;
 	/*layer-background-color:#3c505b; */
-	color:#FFFFFF; 
-	cursor:pointer; 
+	color:#FFFFFF;
+	cursor:pointer;
 	/*cursor:hand; */
 }
 
 .clLevel2border
 {
-	position:absolute; 
-	visibility:hidden; 
-	background-color:#B2B1BF; 
+	position:absolute;
+	visibility:hidden;
+	background-color:#B2B1BF;
 	/*layer-background-color:#B2B1BF;*/
 }
 A.menu_susp_root:link,A.menu_susp_root:visited,A.menu_susp_root:active,A.menu_susp_root:hover

@@ -1237,7 +1237,7 @@ function MontaMenu()
 
 	oCMenu.level[0]=new cm_makeLevel();
 	oCMenu.level[0].width=80;
-	oCMenu.level[0].height=20;
+	oCMenu.level[0].height=25;
 	oCMenu.level[0].regClass="clLevel0";
 	oCMenu.level[0].overClass="clLevel0over";
 	oCMenu.level[0].borderX=0;
@@ -1253,7 +1253,7 @@ function MontaMenu()
 
 	oCMenu.level[1]=new cm_makeLevel()
 	oCMenu.level[1].width=oCMenu.level[0].width-2
-	oCMenu.level[1].height=20
+	oCMenu.level[1].height=25
 	oCMenu.level[1].regClass="clLevel1"
 	oCMenu.level[1].overClass="clLevel1over"
 	oCMenu.level[1].borderX=1
@@ -1265,7 +1265,7 @@ function MontaMenu()
 
 	oCMenu.level[2]=new cm_makeLevel()
 	//oCMenu.level[2].width=150
-	oCMenu.level[2].height=20
+	oCMenu.level[2].height=25
 	oCMenu.level[2].offsetX=0
 	oCMenu.level[2].offsetY=0
 	oCMenu.level[2].regClass="clLevel2"
@@ -1393,8 +1393,8 @@ function replace_all(palavra, array_procura, array_substitui)
 function setXY()
 {
 
-	document.getElementById('menu_suspenso').style.height = '20px';
-	document.getElementById('menu_suspenso').style.backgroundColor = '#351903';
+	document.getElementById('menu_suspenso').style.height = '25px';
+	document.getElementById('menu_suspenso').style.backgroundColor = '#a94442';
 
 
 
