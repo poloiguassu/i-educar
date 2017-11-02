@@ -241,7 +241,7 @@ class indice extends clsListagem
 					$total_jovens = "{$registro["numero_vagas"]} vagas / $numero_total jovens";
 				}
 
-				$sql     = "select COUNT(ref_cod_aluno) from pmieducar.vps_aluno_entrevista where ref_cod_vps_entrevista = $1 AND (resultado_entrevista >= $2 OR resultado_entrevista = $3";
+				$sql     = "select COUNT(ref_cod_aluno) from pmieducar.vps_aluno_entrevista where ref_cod_vps_entrevista = $1 AND (resultado_entrevista >= $2 OR resultado_entrevista = $3)";
 				$options = array('params' => array(
 					'$1' => $registro["cod_vps_entrevista"],
 					'$2' => App_Model_EntrevistaResultado::APROVADO_EXTRA,
