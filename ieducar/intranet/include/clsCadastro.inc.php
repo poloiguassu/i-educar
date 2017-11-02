@@ -292,37 +292,17 @@ class clsCadastro extends clsCampos
      * Adiciona os botoes de help para a pagina atual
      */
     $url = parse_url($_SERVER['REQUEST_URI']);
-    $url = ereg_replace('^/', '', $url['path']);
+    $url = preg_match('^/', '', $url['path']);
     if (strpos($url, '_det.php') !== FALSE) {
       $tipo = 'det';
     }
     elseif(strpos($url,'_lst.php') !== FALSE) {
       $tipo = 'lst';
     }
-    elseif(strpos($url,'_pdf.php') !== FALSE) {
-      $tipo = 'pdf';
-    }
     else {
       $tipo = 'cad';
     }
     $barra = $titulo;
-
-    // @todo Remover código, funcionalidade não existente.
-    if (class_exists('clsPmiajudaPagina')) {
-      $ajudaPagina = new clsPmiajudaPagina();
-      $lista = $ajudaPagina->lista(null,null,$url);
-      if ($lista) {
-        $barra = "
-        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
-          <tr>
-          <script type=\"text/javascript\">document.help_page_index = 0;</script>
-          <td width=\"20\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botão de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta página\"></a></td>
-          <td>{$titulo}</td>
-          <td align=\"right\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botão de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta página\"></a></td>
-          </tr>
-        </table>";
-      }
-    }
 
     $retorno .= "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
 
@@ -343,7 +323,7 @@ class clsCadastro extends clsCampos
 
     $retorno .=
     "<tr><td class='tableDetalheLinhaSeparador' colspan='2'></td></tr>
-    <tr class='linhaBotoes'><td colspan='2' align='center'>
+    <tr><td colspan='2' align='center'>
     <script type=\"text/javascript\">
     var goodIE = (document.all) ? 1:0;
     var netscape6 = (document.getElementById && !document.all) ? 1:0;
@@ -381,7 +361,7 @@ class clsCadastro extends clsCampos
       $nomeCampo = $componente[0];
       $validador = $componente[2];
 
-      if (empty($validador) && $nomeCampo == 'cpf' && ereg("^(tab_add_[0-9])", $nome) !== 1) {
+      if (empty($validador) && $nomeCampo == 'cpf' && preg_match("^(tab_add_[0-9])", $nome) !== 1) {
         $retorno .=
         "if( document.getElementById('$nome').value != \"\")
         {
@@ -400,7 +380,7 @@ class clsCadastro extends clsCampos
       /**
        * Campo tabela
        */
-      if (ereg("^(tab_add_[0-9])", $nome) === 1) {
+      if (preg_match("^(tab_add_[0-9])", $nome) === 1) {
         $nome_campos = $componente['cabecalho'];
         $componente = array_shift($componente);
 
