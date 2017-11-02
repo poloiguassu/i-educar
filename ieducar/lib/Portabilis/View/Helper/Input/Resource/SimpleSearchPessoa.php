@@ -66,6 +66,6 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPessoa extends Portabili
   }
 
   protected function inputPlaceholder($inputOptions) {
-    return 'Informe o nome, cÃ³digo, CPF ou RG da pessoa';
+    return 'Informe o nome, código, CPF ou RG da pessoa';
   }
 }
