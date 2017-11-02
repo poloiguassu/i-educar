@@ -85,14 +85,16 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
 	public static function loadJavascript($viewInstance, $files, $appendAssetsVersionParam = true)
 	{
 		if (! is_array($files))
-		$files = array($files);
-		foreach ($files as $file) {
+			$files = array($files);
+		foreach ($files as $file)
+		{
 			// somente carrega o asset uma vez
-			if (! in_array($file, self::$javascriptsLoaded)) {
+			if (! in_array($file, self::$javascriptsLoaded))
+			{
 				self::$javascriptsLoaded[] = $file;
 				if ($appendAssetsVersionParam)
-				$file .= '?assets_version=' . Portabilis_Assets_Version::VERSION;
-				$viewInstance->appendOutput("<script type='text/javascript' src='$file'></script>");
+					$file .= '?assets_version=' . Portabilis_Assets_Version::VERSION;
+				$viewInstance->appendOutput("<script type='text/javascript' src='$file' defer></script>");
 			}
 		}
 	}
@@ -112,13 +114,16 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
 	public static function loadStylesheet($viewInstance, $files, $appendAssetsVersionParam = true)
 	{
 		if (! is_array($files))
-		$files = array($files);
-		foreach ($files as $file) {
+			$files = array($files);
+		foreach ($files as $file)
+		{
 			// somente carrega o asset uma vez
-			if (! in_array($file, self::$stylesheetsLoaded)) {
+			if (! in_array($file, self::$stylesheetsLoaded))
+			{
 				self::$stylesheetsLoaded[] = $file;
 				if ($appendAssetsVersionParam)
-				$file .= '?assets_version=' . Portabilis_Assets_Version::VERSION;
+					$file .= '?assets_version=' . Portabilis_Assets_Version::VERSION;
+
 				$viewInstance->appendOutput("<link type='text/css' rel='stylesheet' href='$file'></script>");
 			}
 		}
@@ -158,8 +163,9 @@ class Portabilis_View_Helper_Application extends CoreExt_View_Helper_Abstract {
 
 	public static function loadJQueryLib($viewInstance)
 	{
-		//self::loadJavascript($viewInstance, 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js', false);
+		//self::loadJavascript($viewInstance, 'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js', false);
 		//self::embedJavascript($viewInstance, "if (typeof(\$j) == 'undefined') { var \$j = jQuery.noConflict(); }");
+		//self::loadJavascript($viewInstance, 'http://code.jquery.com/jquery-migrate-1.4.1.js', false);
 	}
 
 	public static function loadMomentJsLib($viewInstance)

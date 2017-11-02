@@ -1,9 +1,9 @@
 function updateSelect($targetElement, options, emptyOptionHtml) {
   $targetElement.children().not('[value=""]').remove();
-  
+
   var groups = new Array();
   var optgroup = null;
-  
+
   $j.each(options, function(index, value){
     if ($j(value).data('group')) {
       if (groups.indexOf($j(value).data('group')) == -1) {
@@ -33,7 +33,7 @@ function updateSelect($targetElement, options, emptyOptionHtml) {
 
 function resetSelect($targetElement) {
   $targetElement.children().not('[value=""]').remove();
-  $targetElement.children().first().attr('checked', 'checked');
+  $targetElement.children().first().prop('checked', 'checked');
   //$targetElement.attr('disabled', 'disabled');
 }
 
@@ -46,10 +46,10 @@ function xmlResourcesToSelectOptions(resources, parentNodeName, nodeIdAttrName, 
     var text;
 
     var $option = $j('<option />');
-    $option.attr('value', $value.attr(nodeIdAttrName));
+    $option.attr('value', $value.prop(nodeIdAttrName));
 
     if (typeof nodeValueAttrName != 'undefined')
-      text = safeCapitalize($value.attr(nodeValueAttrName));
+      text = safeCapitalize($value.prop(nodeValueAttrName));
     else
       text = safeCapitalize($value.text());
 
@@ -73,9 +73,9 @@ function jsonResourcesToSelectOptions(resources) {
 
     if (id.indexOf && id.substr && id.indexOf('__') == 0)
       id = id.substr(2);
-    
+
     var opt = $j('<option />').attr('value', id);
-    
+
     var newValue = value;
     if (typeof(value) == 'object') {
     	$j.each(value, function(optId, optValue) {
@@ -86,9 +86,9 @@ function jsonResourcesToSelectOptions(resources) {
     		}
     	});
     }
-    
+
     opt.html(safeCapitalize(newValue));
-    
+
     options.push(opt);
   });
 

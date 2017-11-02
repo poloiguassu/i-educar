@@ -16,7 +16,7 @@
         $anoLetivoField.children().first().html('Aguarde carregando...');
 
         var data = {
-          escola_id : $escolaField.attr('value'),
+          escola_id : $escolaField.prop('value'),
         };
 
         $j("input[name='situacoes_ano_letivo']").each(function(index, input){
