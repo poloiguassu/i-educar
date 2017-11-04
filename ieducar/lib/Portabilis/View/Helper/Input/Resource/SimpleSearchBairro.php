@@ -59,11 +59,11 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchBairro extends Portabili
       $zona      = ($municipio['zona_localizacao'] == 1 ? 'Urbana' : 'Rural');
       return Portabilis_String_Utils::toLatin1($nome, array('transform' => true, 'escape' => false)) . " / Zona $zona";
     }
-  }  
-  protected function inputPlaceholder($inputOptions) {
+  }
+  protected function inputPlaceholder($inputOptions = null) {
     return 'Informe o nome do bairro';
   }
-  
+
   protected function loadAssets() {
     $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchBairro.js';
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);

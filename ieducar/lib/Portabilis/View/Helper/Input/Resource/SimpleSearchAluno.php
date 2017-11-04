@@ -64,7 +64,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchAluno extends Portabilis
     parent::simpleSearch($options['objectName'], $attrName, $options);
   }
 
-  protected function inputPlaceholder($inputOptions) {
+  protected function inputPlaceholder($inputOptions = null) {
     return 'Informe o código ou nome do aluno';
   }
 

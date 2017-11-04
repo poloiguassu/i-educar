@@ -65,7 +65,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPais extends Portabilis_
     parent::simpleSearch($options['objectName'], $attrName, $options);
   }
 
-  protected function inputPlaceholder($inputOptions) {
-    return 'Informe o cÃ³digo ou nome do pais de origem';
+  protected function inputPlaceholder($inputOptions = null) {
+    return 'Informe o código ou nome do pais de origem';
   }
 }

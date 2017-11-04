@@ -683,7 +683,7 @@ class clsCampos extends Core_Controller_Page_Abstract
     );
   }
 
-  function campoRotulo($nome, $campo, $valor, $duplo = FALSE, $descricao = '', $separador = ':')
+  function campoRotulo($nome, $campo, $valor = null, $duplo = FALSE, $descricao = '', $separador = ':')
   {
     $arr_componente = array(
       $duplo ? 'rotuloDuplo' : 'rotulo',

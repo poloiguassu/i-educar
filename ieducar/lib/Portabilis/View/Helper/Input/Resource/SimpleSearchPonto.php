@@ -63,7 +63,7 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchPonto extends Portabilis
     parent::simpleSearch($options['objectName'], $attrName, $options);
   }
 
-  protected function inputPlaceholder($inputOptions) {
+  protected function inputPlaceholder($inputOptions = null) {
     return 'Informe o código ou a descrição do ponto';
   }
 
