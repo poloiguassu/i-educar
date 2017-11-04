@@ -1,12 +1,9 @@
 desktop.ini
 ieducar/intranet/tmp/*
 ieducar/intranet/arquivos/*
-# Vagrant
+# Vagrant 
 /.vagrant
 Vagrantfile
-
-#yarn
-ieducar/assets/node_modules/*
 
 #tmp
 ieducar/tmp/**
@@ -14,4 +11,3 @@ ieducar/tmp/**
 # Composer
 vendor/**
 ieducar/lib/vendor/**
-ieducar/npm-debug.log
