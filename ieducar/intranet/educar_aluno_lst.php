@@ -125,7 +125,7 @@ class indice extends clsListagem
 		}
 
 
-		$array_matriculado = array('S' => "Sim", 'N' => 'N&atilde;o');
+		$array_matriculado = array('S' => "Sim", 'N' => 'Não');
 
 		$nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
@@ -175,7 +175,6 @@ class indice extends clsListagem
 		$total = $aluno->_total;
 
 		foreach ( $alunos AS $registro ) {
-			$alunoInepId      = $this->tryLoadAlunoInepId($registro["cod_aluno"]);
 			$nomeAluno        = strtoupper($registro["nome_aluno"]);
 			$nomeMae          = strtoupper($this->loadNomeMae($registro));
 
@@ -228,20 +227,6 @@ class indice extends clsListagem
 		}
 
 		return $nome;
-	}
-
-	protected function tryLoadAlunoInepId($alunoId) {
-		$dataMapper  = new Educacenso_Model_AlunoDataMapper();
-
-		try {
-			$alunoInep = $dataMapper->find(array('cod_aluno' => $alunoId));
-			$id        = $alunoInep->alunoInep;
-		} catch(Exception $e) {
-			$id = '';
-		}
-		
-		return $id;
-		
 	}
 }
 
