@@ -80,16 +80,19 @@ class indice extends clsListagem
 
 		$this->titulo = "Gestão de VPS - Estatísticas";
 
+		$this->template = "listagemEstatistica";
+
 		$this->addCabecalhos(array(
 			"Situação",
 			"Número de Jovens"
 		));
 
 		$registroSituacao = App_Model_VivenciaProfissionalSituacao::getInstance()->getValues();
+		unset($registroSituacao[0]);
 
 		$total_alunos = 0;
 
-		foreach(array_slice($registroSituacao, 1) as $situacao_vps => $situacao)
+		foreach($registroSituacao as $situacao_vps => $situacao)
 		{
 			$sql     = "select COUNT(cod_aluno_vps) from pmieducar.aluno_vps where situacao_vps = $1";
 			$options = array('params' => $situacao_vps, 'return_only' => 'first-field');
@@ -97,8 +100,8 @@ class indice extends clsListagem
 			$total_alunos += $numero_alunos;
 
 			$lista_busca = array(
-				"<a href=\"educar_vps_aluno_lst.php?\" target=\"_blank\">{$situacao}</a>",
-				"<a href=\"educar_vps_aluno_lst.php?\" target=\"_blank\">{$numero_alunos}</a>",
+				"<a href=\"educar_vps_aluno_lst.php?situacao_vps=$situacao_vps\" target=\"_blank\">{$situacao}</a>",
+				"<a href=\"educar_vps_aluno_lst.php?situacao_vps=$situacao_vps\" target=\"_blank\">{$numero_alunos}</a>",
 			);
 
 			$this->addLinhas($lista_busca);
