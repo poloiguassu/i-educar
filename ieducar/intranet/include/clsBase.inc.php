@@ -739,7 +739,7 @@ class clsBase extends clsConfig
 
         $saida_foot .= $this->MakeFootHtml();
 
-		if(isset($_GET['suspenso']))
+		if(isset($_GET['suspenso']) || isset($_SESSION['suspenso']) || isset($_SESSION["tipo_menu"]))
 		{
 	        if ($_GET['suspenso'] == 1 || $_SESSION['suspenso'] == 1 || $_SESSION["tipo_menu"] == 1) {
 	          if ($this->renderMenuSuspenso) {
