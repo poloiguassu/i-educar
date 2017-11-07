@@ -28,6 +28,7 @@ require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/geral.inc.php");
+require_once ("lib/App/Model/PrioridadeVPS.php");
 require_once ("lib/App/Model/VivenciaProfissionalSituacao.php");
 
 class clsIndexBase extends clsBase
@@ -189,6 +190,9 @@ class indice extends clsDetalhe
 				$insercaoVPS = Portabilis_Date_Utils::pgSQLToBr($registroAlunoEntrevista["insercao_vps"]);
 		}
 
+		if(is_numeric($registroVPS["prioridade"]))
+			$prioridadeVPS = App_Model_PrioridadeVPS::getInstance()->getValue($registroVPS["prioridade"]);
+
 		$obj_permissoes = new clsPermissoes();
 		$nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 		if ($nivel_usuario == 1)
@@ -225,6 +229,10 @@ class indice extends clsDetalhe
 		if($situacaoVPS)
 		{
 			$this->addDetalhe(array("Situação VPS", "{$situacaoVPS}"));
+		}
+		if($prioridadeVPS)
+		{
+			$this->addDetalhe(array("Prioridade VPS", "{$prioridadeVPS}"));
 		}
 		if($registroVPS["motivo_desligamento"])
 		{

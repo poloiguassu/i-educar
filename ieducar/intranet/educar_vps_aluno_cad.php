@@ -34,6 +34,7 @@ require_once 'lib/Portabilis/Utils/Float.php';
 require_once 'lib/App/Model/EntrevistaSituacao.php';
 require_once 'lib/App/Model/EntrevistaResultado.php';
 require_once 'lib/App/Model/VivenciaProfissionalSituacao.php';
+require_once 'lib/App/Model/PrioridadeVPS.php';
 
 class clsIndexBase extends clsBase
 {
@@ -76,6 +77,7 @@ class indice extends clsCadastro
 	var $numero_jovens;
 	var $total_jovens;
 	var $resultado_jovens;
+	var $prioridade;
 
 	var $ref_cod_instituicao;
 	var $ref_cod_escola;
@@ -119,8 +121,6 @@ class indice extends clsCadastro
 
 			$registro = array_merge($registro, $registroPessoa);
 
-			print_r($registro);
-
 			if($registro)
 			{
 				foreach($registro AS $campo => $val)	// passa todos os valores obtidos no registro para atributos do objeto
@@ -158,6 +158,10 @@ class indice extends clsCadastro
 		$this->campoRotulo("nm_aluno", "Aluno", $this->nome);
 
 		$this->campoRotulo("nm_situacao_vps", "Situação VPS", App_Model_VivenciaProfissionalSituacao::getInstance()->getValue($this->situacao_vps));
+
+		$opcaoPrioridade = App_Model_PrioridadeVPS::getInstance()->getValues();
+
+		$this->campoLista('prioridade', 'Prioridade VPS', $opcaoPrioridade, $this->prioridade, '', FALSE, '', '', FALSE, TRUE);
 
 		if($this->situacao_vps >= App_Model_VivenciaProfissionalSituacao::EM_CUMPRIMENTO)
 		{
@@ -240,12 +244,12 @@ class indice extends clsCadastro
 			// primary keys
 			$this->campoOculto("situacao_vps", $this->situacao_vps);
 
-			$this->campoOculto("cod_aluno", $this->cod_aluno);
-
 			$this->campoOculto("ref_cod_vps_aluno_entrevista", $this->ref_cod_vps_aluno_entrevista);
 		} else {
 			$this->campoRotulo("evadiu", "Este aluno evadiu o processo de formação", "Não é possível alterar o status de um aluno evadido");
 		}
+
+		$this->campoOculto("cod_aluno", $this->cod_aluno);
 	}
 
 	function Novo()
@@ -270,36 +274,39 @@ class indice extends clsCadastro
 
 		if($this->cod_aluno && $entrevista->existe())
 		{
-			print($this->alterar_situacao_vps);
-
-			$entrevista->situacao_vps = $this->alterar_situacao_vps;
 			if(!empty($this->motivo_desligamento))
 				$entrevista->motivo_desligamento = $this->motivo_desligamento;
 
-			if($this->situacao_vps == App_Model_VivenciaProfissionalSituacao::EM_CUMPRIMENTO &&
-				$this->alterar_situacao_vps < App_Model_VivenciaProfissionalSituacao::EM_CUMPRIMENTO)
+			if(is_numeric($this->prioridade))
+				$entrevista->prioridade = $this->prioridade;
+
+			if($this->situacao_vps)
 			{
-				$entrevista->ref_cod_vps_aluno_entrevista = 0;
+				$entrevista->situacao_vps = $this->alterar_situacao_vps;
 
-				$alunoEntrevista = new clsPmieducarVPSAlunoEntrevista($this->ref_cod_vps_aluno_entrevista);
-
-				if($alunoEntrevista && $alunoEntrevista->existe())
+				if($this->situacao_vps == App_Model_VivenciaProfissionalSituacao::EM_CUMPRIMENTO &&
+					$this->alterar_situacao_vps < App_Model_VivenciaProfissionalSituacao::EM_CUMPRIMENTO)
 				{
-					$alunoEntrevista->resultado_entrevista = App_Model_EntrevistaResultado::APROVADO_ABANDONO;
+					$entrevista->ref_cod_vps_aluno_entrevista = 0;
 
-					print(' entrou aqui ' . $this->motivo_termino);
+					$alunoEntrevista = new clsPmieducarVPSAlunoEntrevista($this->ref_cod_vps_aluno_entrevista);
 
-					if(!empty($this->motivo_termino))
-						$alunoEntrevista->motivo_termino = $this->motivo_termino;
+					if($alunoEntrevista && $alunoEntrevista->existe())
+					{
+						$alunoEntrevista->resultado_entrevista = App_Model_EntrevistaResultado::APROVADO_ABANDONO;
 
-					$cadastrou = $alunoEntrevista->edita();
+						if(!empty($this->motivo_termino))
+							$alunoEntrevista->motivo_termino = $this->motivo_termino;
+
+						$cadastrou = $alunoEntrevista->edita();
+					}
 				}
 			}
 
 			$entrevista->edita();
 
 			$this->mensagem .= "Edição efetuada com sucesso.<br>";
-			header("Location: educar_vps_aluno_lst.php");
+			header("Location: educar_vps_aluno_det.php?cod_aluno={$this->cod_aluno}");
 			die();
 			return true;
 		}

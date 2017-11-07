@@ -34,6 +34,8 @@ class clsPmieducarAlunoVPS
 	var $ref_cod_aluno;
 	var $situacao_vps;
 	var $motivo_desligamento;
+	var $observacao;
+	var $prioridade;
 	var $ativo;
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
@@ -106,13 +108,13 @@ class clsPmieducarAlunoVPS
 	 * @return object
 	 */
 	function clsPmieducarAlunoVPS($ref_cod_aluno = null, $situacao_vps = null, $ref_cod_vps_aluno_entrevista = null, $ativo = null,
-		$ref_usuario_exc = null, $ref_usuario_cad = null, $motivo_desligamento = null)
+		$ref_usuario_exc = null, $ref_usuario_cad = null, $motivo_desligamento = null, $observacao = null, $prioridade = null)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
 		$this->_tabela = "{$this->_schema}aluno_vps";
 
-		$this->_campos_lista = $this->_todos_campos = "cod_aluno_vps, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, ativo, ref_cod_aluno, ref_cod_vps_aluno_entrevista, situacao_vps, motivo_desligamento";
+		$this->_campos_lista = $this->_todos_campos = "cod_aluno_vps, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, ativo, ref_cod_aluno, ref_cod_vps_aluno_entrevista, situacao_vps, motivo_desligamento, observacao, prioridade";
 
 		if( is_numeric( $ref_cod_vps_aluno_entrevista ) )
 		{
@@ -181,6 +183,16 @@ class clsPmieducarAlunoVPS
 			$this->motivo_desligamento = $motivo_desligamento;
 		}
 
+		if(is_numeric($prioridade))
+		{
+			$this->prioridade = $prioridade;
+		}
+
+		if(is_string($observacao))
+		{
+			$this->observacao = $observacao;
+		}
+
 		if(is_numeric($ativo))
 		{
 			$this->ativo = $ativo;
@@ -232,6 +244,16 @@ class clsPmieducarAlunoVPS
 			if(is_numeric($this->situacao_vps))
 			{
 				$set .= "{$gruda}situacao_vps = '{$this->situacao_vps}'";
+				$gruda = ", ";
+			}
+			if(is_string($this->observacao))
+			{
+				$set .= "{$gruda}observacao = '{$this->observacao}'";
+				$gruda = ", ";
+			}
+			if(is_numeric($this->prioridade))
+			{
+				$set .= "{$gruda}prioridade = '{$this->prioridade}'";
 				$gruda = ", ";
 			}
 			if(is_numeric($this->ref_cod_vps_aluno_entrevista))
@@ -305,6 +327,20 @@ class clsPmieducarAlunoVPS
 			{
 				$campos .= "{$gruda}motivo_desligamento";
 				$valores .= "{$gruda}'{$this->motivo_desligamento}'";
+				$gruda = ", ";
+			}
+
+			if(is_numeric($this->prioridade))
+			{
+				$campos .= "{$gruda}prioridade";
+				$valores .= "{$gruda}'{$this->prioridade}'";
+				$gruda = ", ";
+			}
+
+			if(is_string($this->observacao))
+			{
+				$campos .= "{$gruda}observacao";
+				$valores .= "{$gruda}'{$this->observacao}'";
 				$gruda = ", ";
 			}
 
