@@ -34,7 +34,6 @@
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsCadastro.inc.php';
-require_once 'include/pessoa/clsPreInscrito.inc.php';
 require_once 'include/pessoa/clsCadastroRaca.inc.php';
 require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
 require_once 'include/pmieducar/clsPmieducarAluno.inc.php';

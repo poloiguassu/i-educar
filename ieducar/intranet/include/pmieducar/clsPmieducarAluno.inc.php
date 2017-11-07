@@ -119,7 +119,7 @@ class clsPmieducarAluno
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'aluno';
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_aluno, ref_cod_aluno_beneficio, ref_cod_religiao, ref_usuario_exc, ref_usuario_cad, ref_idpes, data_cadastro, data_exclusao, ativo, caminho_foto, nm_pai, nm_mae,tipo_responsavel, aluno_estado_id';
+    $this->_campos_lista = $this->_todos_campos = 'cod_aluno, ref_cod_aluno_beneficio, ref_cod_religiao, ref_usuario_exc, ref_usuario_cad, ref_idpes, data_cadastro, data_exclusao, ativo, caminho_foto, nm_pai, nm_mae,tipo_responsavel, aluno_estado_id, ref_cod_inscrito';
 
     if (is_numeric($ref_cod_aluno_beneficio)) {
       if (class_exists('clsPmieducarAlunoBeneficio')) {
@@ -1144,7 +1144,7 @@ class clsPmieducarAluno
     }
     return '';
   }
-  
+
   public function getEnderecosAlunos()
   {
     $sql = "select *"

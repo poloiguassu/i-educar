@@ -29,6 +29,8 @@ require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/geral.inc.php");
 require_once ("include/localizacaoSistema.php");
+require_once ("lib/App/Model/SerieEstudo.php");
+require_once ("lib/App/Model/TurnoEstudo.php");
 require_once ("lib/App/Model/VivenciaProfissionalSituacao.php");
 
 class clsIndexBase extends clsBase
@@ -111,12 +113,14 @@ class indice extends clsListagem
 		$this->addCabecalhos( array(
 			"ID",
 			"Nome",
+			"Prioridade",
 			"Número de entrevistas",
 			"Situação VPS",
 			"Idade",
 			"Sexo",
 			"Estudando?",
-			"Turno Colégio"
+			"Turno Colégio",
+			"Bairro"
 		) );
 
 		// Filtros de Foreign Keys
@@ -172,6 +176,8 @@ class indice extends clsListagem
 				$terminoVPS		= "";
 				$insercaoVPS	= "";
 				$nm_entrevista	= "";
+				$estudando		= "";
+				$turno			= "";
 
 				$ref_cod_aluno =  $registro["ref_cod_aluno"];
 
@@ -188,6 +194,9 @@ class indice extends clsListagem
 
 					$objPessoa = new clsPessoaFj($registroAluno["ref_idpes"]);
 					$registroPessoa = $objPessoa->detalhe();
+
+					$alunoSelecao = new clsPreInscrito($registroAluno["ref_cod_inscrito"]);
+					$registroSelecao = $alunoSelecao->detalhe();
 				}
 
 				if($registroVPS["situacao_vps"])
@@ -207,6 +216,22 @@ class indice extends clsListagem
 						$registroPessoa["sexo"] = "Feminio";
 					else
 						$registroPessoa["sexo"] = "Masculino";
+				}
+
+				if($registroSelecao["serie"] || $registroSelecao["egresso"])
+				{
+					if($registroSelecao["egresso"])
+					{
+						$estudando = "Egresso";
+					} else {
+						$serieEstudo = App_Model_SerieEstudo::getInstance()->getValue($registroSelecao["serie"]);
+						$estudando = "Sim ({$serieEstudo})";
+
+						if($registroSelecao["turno"])
+						{
+							$turno = App_Model_TurnoEstudo::getInstance()->getValue($registroSelecao["turno"]);
+						}
+					}
 				}
 
 				if($registroVPS["ref_cod_vps_aluno_entrevista"])
@@ -240,12 +265,14 @@ class indice extends clsListagem
 				$lista_busca = array(
 					"{$ref_cod_aluno}",
 					"{$registro["nome"]}",
+					"{$registro["prioridade"]}",
 					"{$numero_entrevistas}",
 					"{$situacaoVPS}",
 					"{$idade}",
 					"{$registroPessoa["sexo"]}",
-					"{$terminoVPS}",
-					"{$insercaoVPS}",
+					"{$estudando}",
+					"{$turno}",
+					"{$registroSelecao["bairro"]}"
 				);
 
 				$this->addLinhas($lista_busca);

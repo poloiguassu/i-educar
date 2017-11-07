@@ -331,7 +331,7 @@ class indice extends clsCadastro
 				'7' => '2º ano Ensino Médio',
 				'8' => '3º ano Ensino Médio',
 				'9' => 'Concluido',
-                                '10' => 'EJA'
+				'10' => 'EJA'
 			),
 		);
 
