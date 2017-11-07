@@ -88,7 +88,7 @@ class clsBase extends clsConfig
   var $script_header;
   var $script_footer;
   var $prog_alert;
-  
+
   function OpenTpl($template)
   {
     $prefix = 'nvp_';
@@ -106,7 +106,7 @@ class clsBase extends clsConfig
   {
     $this->titulo = $titulo;
   }
-  
+
 	function SetTemplate($template)
 	{
 		$this->template = $template;
@@ -722,7 +722,7 @@ class clsBase extends clsConfig
         $this->VerificaPermicao();
         $this->CadastraAcesso();
         $saida_head = $this->MakeHeadHtml();
-		
+
 		// nome completo usuario
 		$nomePessoa       = new clsPessoaFisica();
 		list($nomePessoa) = $nomePessoa->queryRapida($this->currentUserId(), "nome");
@@ -739,17 +739,20 @@ class clsBase extends clsConfig
 
         $saida_foot .= $this->MakeFootHtml();
 
-        if ($_GET['suspenso'] == 1 || $_SESSION['suspenso'] == 1 || $_SESSION["tipo_menu"] == 1) {
-          if ($this->renderMenuSuspenso) {
-            $saida_foot = str_replace("<!-- #&MENUSUSPENSO&# -->", $this->makeMenuSuspenso(), $saida_foot);
-		}
+		if(isset($_GET['suspenso']))
+		{
+	        if ($_GET['suspenso'] == 1 || $_SESSION['suspenso'] == 1 || $_SESSION["tipo_menu"] == 1) {
+	          if ($this->renderMenuSuspenso) {
+	            $saida_foot = str_replace("<!-- #&MENUSUSPENSO&# -->", $this->makeMenuSuspenso(), $saida_foot);
+			}
 
-          if ($_GET['suspenso'] == 1) {
-            @session_start();
-            $_SESSION['suspenso'] = 1;
-            @session_write_close();
-          }
-        }
+	          if ($_GET['suspenso'] == 1) {
+	            @session_start();
+	            $_SESSION['suspenso'] = 1;
+	            @session_write_close();
+	          }
+	        }
+		}
       }
       elseif ((empty($_POST['login'])) || (empty($_POST['senha'])) && $liberado) {
         $saida_head .= $this->MakeHeadHtml();
@@ -783,7 +786,7 @@ class clsBase extends clsConfig
 			'nome' => $nomePessoa
 		)
 	);
-	  
+
 	  $twig = new TemplateRenderer();
 	  echo $twig->render($this->template, $params);
 

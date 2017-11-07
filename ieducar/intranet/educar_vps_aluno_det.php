@@ -53,25 +53,17 @@ class indice extends clsDetalhe
 	var $cod_vps_entrevista;
 	var $ref_cod_exemplar_tipo;
 	var $ref_cod_vps_entrevista;
-	var $ref_usuario_exc;
-	var $ref_usuario_cad;
 	var $ref_cod_vps_funcao;
 	var $ref_cod_vps_jornada_trabalho;
 	var $ref_cod_tipo_contratacao;
-	var $empresa_id;
 	var $nm_entrevista;
 	var $descricao;
 	var $data_entrevista;
 	var $hora_entrevista;
 	var $ano;
-	var $data_cadastro;
-	var $data_exclusao;
-	var $ativo;
 
 	var $ref_cod_instituicao;
 	var $ref_cod_escola;
-
-	var $checked;
 
 	var $vps_entrevista_responsavel;
 	var $ref_cod_vps_responsavel_entrevista;
@@ -79,7 +71,7 @@ class indice extends clsDetalhe
 	function Gerar()
 	{
 		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
+			$this->pessoa_logada = $_SESSION['id_pessoa'];
 		session_write_close();
 
 		$this->titulo = "Aluno VPS - Detalhe";
@@ -190,6 +182,10 @@ class indice extends clsDetalhe
 				$insercaoVPS = Portabilis_Date_Utils::pgSQLToBr($registroAlunoEntrevista["insercao_vps"]);
 		}
 
+		$sql     = "SELECT COUNT(ref_cod_aluno) from pmieducar.vps_aluno_entrevista where ref_cod_aluno = $1";
+		$options = array('params' => $this->cod_aluno, 'return_only' => 'first-field');
+		$numero_entrevistas    = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
+
 		if(is_numeric($registroVPS["prioridade"]))
 			$prioridadeVPS = App_Model_PrioridadeVPS::getInstance()->getValue($registroVPS["prioridade"]);
 
@@ -221,7 +217,6 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe(array("Aluno", "{$registro["ref_idpes"]}"));
 		}
-
 		if($numero_entrevistas)
 		{
 			$this->addDetalhe(array("Número de Entrevistas", "{$numero_entrevistas}"));
@@ -311,7 +306,6 @@ class indice extends clsDetalhe
 				sprintf('go("educar_vps_aluno_cad.php?cod_aluno=%d");', $this->cod_aluno),
 				sprintf('go("educar_vps_visita_cad.php?ref_cod_aluno=%d");', $this->cod_aluno)
 			);
-			$this->url_editar = "educar_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}";
 		}
 
 		$this->url_cancelar = "educar_vps_aluno_lst.php";

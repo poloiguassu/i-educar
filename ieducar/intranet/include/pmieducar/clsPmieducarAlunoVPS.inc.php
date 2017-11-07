@@ -108,7 +108,8 @@ class clsPmieducarAlunoVPS
 	 * @return object
 	 */
 	function clsPmieducarAlunoVPS($ref_cod_aluno = null, $situacao_vps = null, $ref_cod_vps_aluno_entrevista = null, $ativo = null,
-		$ref_usuario_exc = null, $ref_usuario_cad = null, $motivo_desligamento = null, $observacao = null, $prioridade = null)
+		$ref_usuario_exc = null, $ref_usuario_cad = null, $motivo_desligamento = null, $observacao = null, $prioridade = null,
+		$data_cadastro = null, $data_exclusao = null)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";

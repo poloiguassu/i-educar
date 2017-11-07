@@ -55,7 +55,6 @@ class clsFisica
 	var $nacionalidade;
 
 	var $idpais_estrangeiro;
-	var $data_chagada_brasil;
 	var $idmun_nascimento;
 	var $ultima_empresa;
 	var $idocup;
@@ -71,6 +70,7 @@ class clsFisica
 	var $ref_cod_religiao;
 	var $sus;
 	var $nis_pis_pasep;
+	var $data_chegada_brasil;
 
 	var $tabela;
 	var $schema;
@@ -80,7 +80,10 @@ class clsFisica
 	 *
 	 * @return Object:clsFisica
 	 */
-	function clsFisica( $idpes=false, $data_nasc=false, $sexo=false, $idpes_mae=false, $idpes_pai=false, $idpes_responsavel=false, $idesco=false, $ideciv=false, $idpes_con=false, $data_uniao=false, $data_obito=false, $nacionalidade=false, $idpais_estrangeiro=false, $data_chagada_brasil=false, $idmun_nascimento=false, $ultima_empresa=false, $idocup=false, $nome_mae=false, $nome_pai=false, $nome_conjuge=false, $nome_responsavel=false, $justificativa_provisorio=false, $idpes_cad = false, $idpes_rev = false, $ref_cod_sistema = false, $cpf = false, $ref_cod_religiao = false )
+	function clsFisica( $idpes = false, $data_nasc = false, $sexo = false, $idpes_mae = false, $idpes_pai=false, $idpes_responsavel = false, $idesco=false, $ideciv = false,
+		$idpes_con = false, $data_uniao = false, $data_obito = false, $nacionalidade = false, $idpais_estrangeiro = false, $data_chagada_brasil = false, $idmun_nascimento = false,
+		$ultima_empresa = false, $idocup = false, $nome_mae = false, $nome_pai = false, $nome_conjuge = false, $nome_responsavel = false, $justificativa_provisorio = false,
+		$idpes_cad = false, $idpes_rev = false, $ref_cod_sistema = false, $cpf = false, $ref_cod_religiao = false, $data_chegada_brasil = null)
 	{
 		$objPessoa = new clsPessoa_($idpes);
 		if ($objPessoa->detalhe())

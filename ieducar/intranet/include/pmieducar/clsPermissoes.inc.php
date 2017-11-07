@@ -76,9 +76,8 @@ class clsPermissoes
       $detalhe_super_usuario = $obj_menu_funcionario->detalhe();
     }
 
-    if (!$detalhe_super_usuario) {
-      $obj_menu_funcionario = new clsMenuFuncionario($int_idpes_usuario,
-        FALSE, FALSE, $int_processo_ap);
+    if (!isset($detalhe_super_usuario)) {
+      $obj_menu_funcionario = new clsMenuFuncionario($int_idpes_usuario, FALSE, FALSE, $int_processo_ap);
       $detalhe = $obj_menu_funcionario->detalhe();
     }
 

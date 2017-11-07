@@ -652,7 +652,7 @@ class clsDocumento
 				$this->secao_tit_eleitor = $tupla["secao_tit_eleitor"];
 				$this->certidao_nascimento = $tupla["certidao_nascimento"];
 
-				$tupla["idpes"] = $tupla["idpes"];
+				$tupla["idpes"] = $this->idpes;
 				$tupla["idorg_exp_rg"] = $tupla["idorg_exp_rg"];
 				$tupla["sigla_uf_cart_trabalho"] = $tupla["sigla_uf_cart_trabalho"];
 				$tupla["sigla_uf_cert_civil"] = $tupla["sigla_uf_cert_civil"];
