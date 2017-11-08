@@ -24,11 +24,6 @@
 *	02111-1307, USA.													 *
 *																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-/**
-* @author Prefeitura Municipal de Itajaí
-*
-* Criado em 14/07/2006 09:28 pelo gerador automatico de classes
-*/
 
 require_once( "include/pmieducar/geral.inc.php" );
 
@@ -40,6 +35,7 @@ class clsPmieducarVPSVisita
 	var $data_visita;
 	var $hora_visita;
 	var $motivo_visita;
+	var $avaliacao;
 
 	var $data_cadastro;
 	var $data_exclusao;
@@ -111,13 +107,15 @@ class clsPmieducarVPSVisita
 	 *
 	 * @return object
 	 */
-	function clsPmieducarVPSVisita($cod_vps_visita = NULL, $data_visita = NULL, $hora_visita = NULL, $motivo_visita = NULL, $ref_cod_usuario = NULL, $ref_cod_vps_aluno_entrevista = NULL)
+	function clsPmieducarVPSVisita($cod_vps_visita = NULL, $data_visita = NULL, $hora_visita = NULL, $motivo_visita = NULL,
+		$ref_cod_usuario = NULL, $ref_cod_vps_aluno_entrevista = NULL, $avaliacao = NULL, $ref_usuario_cad = NULL,
+		$ref_usuario_exc = NULL, $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL)
 	{
 		$db = new clsBanco();
 		$this->_schema = "pmieducar.";
-		$this->_tabela = "{$this->_schema}vps_funcao";
+		$this->_tabela = "{$this->_schema}vps_visita";
 
-		$this->_campos_lista = $this->_todos_campos = "cod_vps_visita, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, ativo, data_visita, hora_visita, ref_cod_usuario, motivo_visita, ref_cod_vps_aluno_entrevista";
+		$this->_campos_lista = $this->_todos_campos = "cod_vps_visita, ref_usuario_exc, ref_usuario_cad, data_cadastro, data_exclusao, ativo, data_visita, hora_visita, ref_cod_usuario, motivo_visita, ref_cod_vps_aluno_entrevista, avaliacao";
 
 		if( is_numeric( $ref_usuario_cad ) )
 		{
@@ -206,7 +204,7 @@ class clsPmieducarVPSVisita
 		}
 		if(is_numeric($cod_vps_visita))
 		{
-			$this->$cod_vps_visita = $$cod_vps_visita;
+			$this->cod_vps_visita = $cod_vps_visita;
 		}
 
 		if(is_string($data_visita))
@@ -220,6 +218,10 @@ class clsPmieducarVPSVisita
 		if(is_string($motivo_visita))
 		{
 			$this->motivo_visita = $motivo_visita;
+		}
+		if(is_numeric($avaliacao))
+		{
+			$this->avaliacao = $avaliacao;
 		}
 		if(is_numeric($ref_cod_vps_aluno_entrevista))
 		{
@@ -246,8 +248,9 @@ class clsPmieducarVPSVisita
 	 */
 	function cadastra()
 	{
-		if(is_numeric($this->ref_usuario_cad) && is_string($this->cod_vps_visita))
+		if(is_numeric($this->ref_usuario_cad))
 		{
+			print("ENTROU CADSTRA");
 			$db = new clsBanco();
 
 			$campos = "";
@@ -278,6 +281,12 @@ class clsPmieducarVPSVisita
 				$valores .= "{$gruda}'{$this->motivo_visita}'";
 				$gruda = ", ";
 			}
+			if(is_numeric($this->avaliacao))
+			{
+				$campos .= "{$gruda}avaliacao";
+				$valores .= "{$gruda}'{$this->avaliacao}'";
+				$gruda = ", ";
+			}
 			if(is_numeric($this->ref_cod_usuario))
 			{
 				$campos .= "{$gruda}ref_cod_usuario";
@@ -299,7 +308,7 @@ class clsPmieducarVPSVisita
 
 
 			$db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-			return $db->InsertId( "{$this->_tabela}_cod_vps_funcao_seq");
+			return $db->InsertId( "{$this->_tabela}_cod_vps_visita_seq");
 		}
 		return false;
 	}
@@ -311,7 +320,7 @@ class clsPmieducarVPSVisita
 	 */
 	function edita()
 	{
-		if(is_numeric($this->cod_vps_visita)&&is_numeric($this->ref_usuario_exc))
+		if(is_numeric($this->cod_vps_visita) && is_numeric($this->ref_usuario_exc))
 		{
 			$db = new clsBanco();
 			$set = "";
@@ -339,6 +348,11 @@ class clsPmieducarVPSVisita
 			if(is_string($this->motivo_visita))
 			{
 				$set .= "{$gruda}motivo_visita = '{$this->motivo_visita}'";
+				$gruda = ", ";
+			}
+			if(is_numeric($this->avaliacao))
+			{
+				$set .= "{$gruda}avaliacao = '{$this->avaliacao}'";
 				$gruda = ", ";
 			}
 			if(is_string($this->data_cadastro))
@@ -379,80 +393,28 @@ class clsPmieducarVPSVisita
 	 *
 	 * @return array
 	 */
-	/*function lista( $int_cod_vps_funcao = null, $int_ref_usuario_exc = null, $int_ref_usuario_cad = null, $str_nm_funcao = null, $str_descricao = null, $date_data_cadastro_ini = null, $date_data_cadastro_fim = null, $date_data_exclusao_ini = null, $date_data_exclusao_fim = null, $int_ativo = null, $int_ref_cod_escola = null )
+	function lista($int_cod_vps_visita = null, $int_ativo = null)
 	{
+		$filtros = '';
+		$this->resetCamposLista();
+
 		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
-		$filtros = "";
 
 		$whereAnd = " WHERE ";
 
-		if( is_numeric( $int_cod_vps_funcao ) )
+		if( is_numeric( $int_cod_vps_visita ) )
 		{
-			$filtros .= "{$whereAnd} cod_vps_funcao = '{$int_cod_vps_funcao}'";
+			$filtros .= "{$whereAnd} cod_vps_visita = '{$int_cod_vps_visita}'";
 			$whereAnd = " AND ";
 		}
-		if( is_numeric( $int_ref_usuario_exc ) )
-		{
-			$filtros .= "{$whereAnd} ref_usuario_exc = '{$int_ref_usuario_exc}'";
-			$whereAnd = " AND ";
-		}
-		if( is_numeric( $int_ref_usuario_cad ) )
-		{
-			$filtros .= "{$whereAnd} ref_usuario_cad = '{$int_ref_usuario_cad}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $str_nm_funcao ) )
-		{
-			$filtros .= "{$whereAnd} nm_funcao LIKE '%{$str_nm_funcao}%'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $str_descricao ) )
-		{
-			$filtros .= "{$whereAnd} descricao LIKE '%{$str_descricao}%'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_cadastro_ini ) )
-		{
-			$filtros .= "{$whereAnd} data_cadastro >= '{$date_data_cadastro_ini}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_cadastro_fim ) )
-		{
-			$filtros .= "{$whereAnd} data_cadastro <= '{$date_data_cadastro_fim}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_exclusao_ini ) )
-		{
-			$filtros .= "{$whereAnd} data_exclusao >= '{$date_data_exclusao_ini}'";
-			$whereAnd = " AND ";
-		}
-		if( is_string( $date_data_exclusao_fim ) )
-		{
-			$filtros .= "{$whereAnd} data_exclusao <= '{$date_data_exclusao_fim}'";
-			$whereAnd = " AND ";
-		}
-		if(is_array($int_ref_cod_escola))
-		{
-			$bibs = implode(", ", $int_ref_cod_escola);
-			$filtros .= "{$whereAnd} (ref_cod_escola IN ($bibs) OR ref_cod_escola IS NULL)";
-			$whereAnd = " AND ";
-		}
-		elseif (is_numeric($int_ref_cod_escola))
-		{
-			$filtros .= "{$whereAnd} ref_cod_escola = '{$int_ref_cod_escola}'";
-			$whereAnd = " AND ";
-		}
-		if( is_null( $int_ativo ) || $int_ativo )
+		if(is_null($int_ativo) || $int_ativo)
 		{
 			$filtros .= "{$whereAnd} ativo = '1'";
 			$whereAnd = " AND ";
-		}
-		else
-		{
+		} else {
 			$filtros .= "{$whereAnd} ativo = '0'";
 			$whereAnd = " AND ";
 		}
-
 
 		$db = new clsBanco();
 		$countCampos = count( explode( ",", $this->_campos_lista ) );
@@ -486,7 +448,7 @@ class clsPmieducarVPSVisita
 			return $resultado;
 		}
 		return false;
-	}*/
+	}
 
 	/**
 	 * Retorna um array com os dados de um registro
@@ -495,13 +457,12 @@ class clsPmieducarVPSVisita
 	 */
 	function detalhe()
 	{
-		if( is_numeric( $this->cod_vps_funcao ) )
+		if(is_numeric($this->cod_vps_visita))
 		{
-
-		$db = new clsBanco();
-		$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_vps_funcao = '{$this->cod_vps_funcao}'" );
-		$db->ProximoRegistro();
-		return $db->Tupla();
+			$db = new clsBanco();
+			$db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_vps_visita = '{$this->cod_vps_visita}'" );
+			$db->ProximoRegistro();
+			return $db->Tupla();
 		}
 		return false;
 	}
@@ -513,13 +474,12 @@ class clsPmieducarVPSVisita
 	 */
 	function existe()
 	{
-		if( is_numeric( $this->cod_vps_funcao ) )
+		if( is_numeric( $this->cod_vps_visita ) )
 		{
-
-		$db = new clsBanco();
-		$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_vps_funcao = '{$this->cod_vps_funcao}'" );
-		$db->ProximoRegistro();
-		return $db->Tupla();
+			$db = new clsBanco();
+			$db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE cod_vps_visita = '{$this->cod_vps_visita}'" );
+			$db->ProximoRegistro();
+			return $db->Tupla();
 		}
 		return false;
 	}
@@ -531,17 +491,9 @@ class clsPmieducarVPSVisita
 	 */
 	function excluir()
 	{
-		if( is_numeric( $this->cod_vps_funcao ) && is_numeric( $this->ref_usuario_exc ) )
+		if( is_numeric( $this->cod_vps_visita ) && is_numeric( $this->ref_usuario_exc ) )
 		{
-
-		/*
-			delete
-		$db = new clsBanco();
-		$db->Consulta( "DELETE FROM {$this->_tabela} WHERE cod_vps_funcao = '{$this->cod_vps_funcao}'" );
-		return true;
-		*/
-
-		$this->ativo = 0;
+			$this->ativo = 0;
 			return $this->edita();
 		}
 		return false;

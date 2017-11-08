@@ -54,42 +54,28 @@ class indice extends clsCadastro
 	 */
 	var $pessoa_logada;
 
+	var $cod_aluno;
+	var $cod_usuario;
 	var $cod_vps_entrevista;
-	var $ref_cod_exemplar_tipo;
-	var $ref_cod_vps_entrevista;
+	var $nm_aluno;
+	var $nm_situacao_vps;
+	var $nm_entrevista;
+	var $inicio_vps;
+	var $termino_vps;
+	var $insercao_vps;
+	var $data_visita;
+	var $hora_visita;
+	var $motivo_visita;
+	var $avaliacao_vps;
+	var $situacao_vps;
+	var $ref_cod_vps_aluno_entrevista;
+	var $evadiu;
+
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
-	var $ref_cod_vps_funcao;
-	var $ref_cod_vps_jornada_trabalho;
-	var $ref_cod_tipo_contratacao;
-	var $empresa_id;
-	var $nm_entrevista;
-	var $descricao;
-	var $data_entrevista;
-	var $hora_entrevista;
-	var $ano;
 	var $data_cadastro;
 	var $data_exclusao;
 	var $ativo;
-	var $salario;
-	var $numero_vagas;
-	var $numero_jovens;
-	var $total_jovens;
-	var $resultado_jovens;
-
-	var $ref_cod_instituicao;
-	var $ref_cod_escola;
-
-	var $checked;
-
-	var $ref_cod_vps_responsavel_entrevista;
-	var $principal;
-	var $incluir_responsavel;
-	var $excluir_responsavel;
-
-	var $funcao;
-	var $jornada_trabalho;
-	var $responsavel;
 
 	function Inicializar()
 	{
@@ -100,31 +86,58 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$this->cod_aluno = $_GET["cod_aluno"];
+		$this->cod_vps_visita = $_GET["cod_vps_visita"];
 
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_cadastra(598, $this->pessoa_logada, 11,  "educar_vps_aluno_cad.php");
 
-		if(is_numeric($this->cod_aluno))
+		if(is_numeric($this->cod_vps_visita))
 		{
-			$obj = new clsPmieducarAlunoVPS($this->cod_aluno);
-			$registro  = $obj->detalhe();
+			$tmp_obj = new clsPmieducarVPSVisita($this->cod_vps_visita);
+			$registro = $tmp_obj->detalhe();
 
-			$obj = new clsPmieducarAluno($this->cod_aluno);
+			$obj = new clsPmieducarVPSAlunoEntrevista($registro["ref_cod_vps_aluno_entrevista"]);
+			$registroAlunoEntrevista = $obj->detalhe();
+
+			$obj = new clsPmieducarAlunoVPS($registroAlunoEntrevista["ref_cod_aluno"]);
+			$registroAlunoVPS  = $obj->detalhe();
+
+			$obj = new clsPmieducarAluno($registroAlunoEntrevista["ref_cod_aluno"]);
 			$registroAluno = $obj->detalhe();
 
-			$obj = new clsPessoaFj($registroAluno['ref_idpes']);
+			$obj = new clsPessoaFj($registroAluno["ref_idpes"]);
 			$registroPessoa = $obj->detalhe();
 
-			$registro = array_merge($registro, $registroPessoa);
-
-			print_r($registro);
+			$registro = array_merge($registro, $registroAlunoVPS, $registroPessoa);
 
 			if($registro)
 			{
 				foreach($registro AS $campo => $val)	// passa todos os valores obtidos no registro para atributos do objeto
 					$this->$campo = $val;
+			}
 
-				$retorno = "Editar";
+			$retorno = "Editar";
+		} else {
+			if(is_numeric($this->cod_aluno))
+			{
+				$obj = new clsPmieducarAlunoVPS($this->cod_aluno);
+				$registro  = $obj->detalhe();
+
+				$obj = new clsPmieducarAluno($this->cod_aluno);
+				$registroAluno = $obj->detalhe();
+
+				$obj = new clsPessoaFj($registroAluno['ref_idpes']);
+				$registroPessoa = $obj->detalhe();
+
+				$registro = array_merge($registro, $registroPessoa);
+
+				if($registro)
+				{
+					foreach($registro AS $campo => $val)	// passa todos os valores obtidos no registro para atributos do objeto
+						$this->$campo = $val;
+				}
+
+				$retorno = "Novo";
 			}
 		}
 
@@ -191,9 +204,35 @@ class indice extends clsCadastro
 				$this->campoRotulo("insercao_vps", "Inserção Profissional em", $insercaoVPS);
 			}
 
+			if( $this->ref_cod_usuario )
+			{
+				$objTemp = new clsFuncionario( $this->ref_cod_usuario );
+				$detalhe = $objTemp->detalhe();
+				$detalhe = $detalhe["idpes"]->detalhe();
+				$opcoes["{$detalhe["idpes"]}"] = $detalhe["nome"];
+			}
+
+			$parametros = new clsParametrosPesquisas();
+			$parametros->setSubmit(0);
+			$parametros->adicionaCampoSelect("cod_usuario", "ref_cod_pessoa_fj", "nome");
+
+			$this->campoListaPesq( "cod_usuario", "Usuário", $opcoes, $this->ref_cod_usuario, "pesquisa_funcionario_lst.php", "", false, "", "", null, null, "", false, $parametros->serializaCampos() );
+
+			$options = array(
+				'required'    => true,
+				'label'       => 'Data Entrevista',
+				'placeholder' => '',
+				'value'       => Portabilis_Date_Utils::pgSQLToBr($this->data_visita),
+				'size'        => 7,
+			);
+
+			$this->inputsHelper()->date('data_visita', $options);
+
+			$this->campoHora('hora_visita', 'Hora entrevista', $this->hora_visita, false);
+
 			$options = array(
 				'required'    => false,
-				'label'       => 'Motivo Desligamento',
+				'label'       => 'Motivo da Visita',
 				'value'       => $this->motivo_visita,
 				'cols'        => 30,
 				'max_length'  => 150,
@@ -201,9 +240,11 @@ class indice extends clsCadastro
 
 			$this->inputsHelper()->textArea('motivo_visita', $options);
 
-			$this->campoArquivo( "avaliacao_vps", "Avaliação VPS", $this->avaliacao_vps, "50");
+			$this->campoCheck("avaliacao", "Avaliação de VPS", $this->avaliacao, "Marcar como avaliação de VPS");
 
 			// primary keys
+			$this->campoOculto("cod_vps_visita", $this->cod_vps_visita);
+
 			$this->campoOculto("situacao_vps", $this->situacao_vps);
 
 			$this->campoOculto("cod_aluno", $this->cod_aluno);
@@ -216,10 +257,40 @@ class indice extends clsCadastro
 
 	function Novo()
 	{
-		$this->mensagem .= "Edição efetuada com sucesso.<br>";
-		header("Location: educar_vps_aluno_lst.php");
-		die();
-		return true;
+		@session_start();
+			$this->pessoa_logada = $_SESSION['id_pessoa'];
+		@session_write_close();
+
+		$alunoVPS = new clsPmieducarAlunoVPS($this->cod_aluno);
+
+		if($this->cod_aluno && $alunoVPS->existe())
+		{
+			if($this->situacao_vps >= App_Model_VivenciaProfissionalSituacao::EM_CUMPRIMENTO)
+			{
+				if(is_string($this->data_visita))
+					$this->data_visita = Portabilis_Date_Utils::brToPgSQL($this->data_visita);
+
+				$visita = new clsPmieducarVPSVisita(null,
+					$this->data_visita, $this->hora_visita, $this->motivo_visita,
+					$this->cod_usuario, $this->ref_cod_vps_aluno_entrevista, $this->avaliacao,
+					$this->pessoa_logada, null
+				);
+
+				if($cadastrou = $visita->cadastra())
+				{
+					$this->mensagem .= "Cadastro efetuada com sucesso.<br>";
+					header("Location: educar_vps_visita_det.php?cod_vps_visita={$cadastrou}");
+					die();
+					return true;
+				}
+
+			}
+		}
+
+		$this->mensagem = "Edição não realizada.<br> ";
+		echo "<!--\nErro ao editar clsPmieducarAcervo\nvalores obrigatorios\nif(is_numeric($this->cod_vps_entrevista) && is_numeric($this->ref_usuario_exc))\n-->";
+
+		return false;
 	}
 
 	function Editar()
@@ -229,45 +300,32 @@ class indice extends clsCadastro
 		@session_write_close();
 
 		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra(598, $this->pessoa_logada, 11,  "educar_resultado_entrevista_lst.php");
+		$obj_permissoes->permissao_cadastra(598, $this->pessoa_logada, 11,  "educar_vps_visita_lst.php");
 
-		$entrevista = new clsPmieducarAlunoVPS($this->cod_aluno);
-		$entrevista->ref_usuario_exc = $this->pessoa_logada;
+		$visita = new clsPmieducarVPSVisita($this->cod_vps_visita);
 
-		if($this->cod_aluno && $entrevista->existe())
+		if($this->cod_vps_visita && $visita->existe())
 		{
-			print($this->alterar_situacao_vps);
-
-			$entrevista->situacao_vps = $this->alterar_situacao_vps;
-			if(!empty($this->motivo_desligamento))
-				$entrevista->motivo_desligamento = $this->motivo_desligamento;
-
-			if($this->situacao_vps == App_Model_VivenciaProfissionalSituacao::EM_CUMPRIMENTO &&
-				$this->alterar_situacao_vps < App_Model_VivenciaProfissionalSituacao::EM_CUMPRIMENTO)
+			if($this->situacao_vps >= App_Model_VivenciaProfissionalSituacao::EM_CUMPRIMENTO)
 			{
-				$entrevista->ref_cod_vps_aluno_entrevista = 0;
+				if(is_string($this->data_visita))
+					$this->data_visita = Portabilis_Date_Utils::brToPgSQL($this->data_visita);
 
-				$alunoEntrevista = new clsPmieducarVPSAlunoEntrevista($this->ref_cod_vps_aluno_entrevista);
+				$visita = new clsPmieducarVPSVisita($this->cod_vps_visita,
+					$this->data_visita, $this->hora_visita, $this->motivo_visita,
+					$this->cod_usuario, $this->ref_cod_vps_aluno_entrevista, $this->avaliacao,
+					null, $this->pessoa_logada
+				);
 
-				if($alunoEntrevista && $alunoEntrevista->existe())
+				if($visita->edita())
 				{
-					$alunoEntrevista->resultado_entrevista = App_Model_EntrevistaResultado::APROVADO_ABANDONO;
-
-					print(' entrou aqui ' . $this->motivo_termino);
-
-					if(!empty($this->motivo_termino))
-						$alunoEntrevista->motivo_termino = $this->motivo_termino;
-
-					$cadastrou = $alunoEntrevista->edita();
+					$this->mensagem .= "Edição efetuada com sucesso.<br>";
+					header("Location: educar_vps_visita_det.php?cod_vps_visita={$this->cod_vps_visita}");
+					die();
+					return true;
 				}
+
 			}
-
-			$entrevista->edita();
-
-			$this->mensagem .= "Edição efetuada com sucesso.<br>";
-			header("Location: educar_vps_aluno_lst.php");
-			die();
-			return true;
 		}
 
 		$this->mensagem = "Edição não realizada.<br> ";

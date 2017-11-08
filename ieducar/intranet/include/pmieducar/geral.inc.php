@@ -144,6 +144,7 @@ require_once 'include/pmieducar/clsPmieducarVPSContratacaoTipo.inc.php';
 require_once 'include/pmieducar/clsPmieducarVPSEntrevista.inc.php';
 require_once 'include/pmieducar/clsPmieducarVPSEntrevistaResponsavel.inc.php';
 require_once 'include/pmieducar/clsPmieducarVPSAlunoEntrevista.inc.php';
+require_once 'include/pmieducar/clsPmieducarVPSVisita.inc.php';
 require_once 'include/pmieducar/clsPmieducarAlunoVPS.inc.php';
 
 //Biblioteca
