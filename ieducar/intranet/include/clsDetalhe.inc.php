@@ -46,175 +46,181 @@ require_once 'include/localizacaoSistema.php';
  */
 class clsDetalhe extends Core_Controller_Page_Abstract
 {
-  var $titulo;
-  var $banner = FALSE;
-  var $bannerLateral = FALSE;
-  var $titulo_barra;
-  var $bannerClose = FALSE;
-  var $largura;
-  var $detalhe = array();
-  var $locale = null;
+	var $titulo;
+	var $banner = FALSE;
+	var $bannerLateral = FALSE;
+	var $titulo_barra;
+	var $bannerClose = FALSE;
+	var $largura;
+	var $detalhe = array();
+	var $locale = null;
 
-  var $url_novo;
-  var $caption_novo = "Novo";
-  var $url_editar;
-  var $url_cancelar;
-  var $nome_url_cancelar = "Voltar";
+	var $url_novo;
+	var $caption_novo = "Novo";
+	var $url_editar;
+	var $url_cancelar;
+	var $nome_url_cancelar = "Voltar";
 
-  var $template = "detalhe";
-  var $array_botao;
-  var $array_botao_url;
-  var $array_botao_url_script;
+	var $template = "detalhe";
+	var $array_botao;
+	var $array_botao_url;
+	var $array_botao_url_script;
 
-  function addBanner($strBannerUrl = '', $strBannerLateralUrl = '',
-    $strBannerTitulo = '', $boolFechaBanner = TRUE)
-  {
-    if ($strBannerUrl != '') {
-      $this->banner = $strBannerUrl;
-    }
-
-    if ($strBannerLateralUrl != '') {
-      $this->bannerLateral = $strBannerLateralUrl;
-    }
-
-    if ($strBannerTitulo != '') {
-      $this->titulo_barra = $strBannerTitulo;
-    }
-
-    $this->bannerClose = $boolFechaBanner;
-  }
+	function addBanner($strBannerUrl = '', $strBannerLateralUrl = '',
+	$strBannerTitulo = '', $boolFechaBanner = TRUE)
+	{
+		if ($strBannerUrl != '') {
+			$this->banner = $strBannerUrl;
+		}
+		if ($strBannerLateralUrl != '') {
+			$this->bannerLateral = $strBannerLateralUrl;
+		}
+		if ($strBannerTitulo != '') {
+			$this->titulo_barra = $strBannerTitulo;
+		}
+		$this->bannerClose = $boolFechaBanner;
+	}
 
 
-  function addDetalhe($detalhe) {
-    $this->detalhe[] = $detalhe;
-  }
+	function addDetalhe($detalhe) {
+		$this->detalhe[] = $detalhe;
+	}
 
-  function enviaLocalizacao($localizao){
-    if($localizao)
-      $this->locale = $localizao;
-  }
+	function enviaLocalizacao($localizao){
+		if($localizao)
+		$this->locale = $localizao;
+	}
 
-  function Gerar() {
-    return FALSE;
-  }
+	function Gerar() {
+		return FALSE;
+	}
 
-  function RenderHTML()
-  {
-    $this->_preRender();
+	function RenderHTML()
+	{
+		$this->_preRender();
+		$this->titulo_barra= 'Intranet';
+		$this->Gerar();
+		$retorno = '';
+		if ($this->banner) {
+			$retorno .= "<table width='100%' style=\"height:100%\" border='0' cellpadding='0' cellspacing='0'><tr>";
+			$retorno .= "<td class=\"barraLateral\" width=\"21\" valign=\"top\"><a href='#'><img src=\"{$this->bannerLateral}\" align=\"right\" border=\"0\" alt=\"$this->titulo_barra\" title=\"$this->titulo_barra\"></a></td><td valign='top'>";
+		}
 
-    $this->titulo_barra= 'Intranet';
-    $this->Gerar();
+		$script = explode('/', $_SERVER['PHP_SELF']);
+		$script = $script[count($script)-1];
+		$width = empty($this->largura) ? '' : 'width=' . $this->largura;
 
-    $retorno = '';
-    if ($this->banner) {
-      $retorno .= "<table width='100%' style=\"height:100%\" border='0' cellpadding='0' cellspacing='0'><tr>";
-      $retorno .= "<td class=\"barraLateral\" width=\"21\" valign=\"top\"><a href='#'><img src=\"{$this->bannerLateral}\" align=\"right\" border=\"0\" alt=\"$this->titulo_barra\" title=\"$this->titulo_barra\"></a></td><td valign='top'>";
-    }
+		/*
+		* adiciona os botoes de help para a pagina atual
+		*/
+		$url = parse_url($_SERVER['REQUEST_URI']);
+		$url = preg_match( "/^/", "", $url["path"] );
 
-    $script = explode('/', $_SERVER['PHP_SELF']);
-    $script = $script[count($script)-1];
+		if (strpos($url, '_det.php') !== FALSE) {
+			$tipo = "det";
+		}
+		elseif (strpos($url, '_lst.php') !== FALSE) {
+			$tipo = 'lst';
+		}
+		else {
+			$tipo = 'cad';
+		}
 
-    $width = empty($this->largura) ? '' : 'width=' . $this->largura;
+		$barra = '<b>' . $this->titulo . '</b>';
 
-    /*
-     * adiciona os botoes de help para a pagina atual
-     */
-    $url = parse_url($_SERVER['REQUEST_URI']);
-    $url = preg_match( "/^/", "", $url["path"] );
+		if (class_exists('clsPmiajudaPagina'))
+		{
+			$ajudaPagina = new clsPmiajudaPagina();
+			$lista = $ajudaPagina->lista(null,null,$url);
 
-    if (strpos($url, '_det.php') !== FALSE) {
-      $tipo = "det";
-    }
-    elseif (strpos($url, '_lst.php') !== FALSE) {
-      $tipo = 'lst';
-    }
-    else {
-      $tipo = 'cad';
-    }
+			if ($lista) {
+				$barra = "
+				<table border=\"0\" cellpading=\"0\" cellspacing=\"0\" width=\"100%\">
+				<tr>
+				<script type=\"text/javascript\">document.help_page_index = 0;</script>
+				<td width=\"20\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Bot�o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta p�gina\"></a></td>
+				<td><b>{$this->titulo}</b></td>
+				<td align=\"right\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Bot�o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta p�gina\"></a></td>
+				</tr>
+				</table>";
+			}
+		}
 
-    $barra = '<b>' . $this->titulo . '</b>';
-    if (class_exists('clsPmiajudaPagina')) {
-      $ajudaPagina = new clsPmiajudaPagina();
-      $lista = $ajudaPagina->lista(null,null,$url);
+		$twig = new TemplateRenderer();
+		$templateText = $twig->render($this->template, array(
+			'titulo'		=> $this->titulo,
+			'localizacao'	=> $this->locale,
+			'linhas'		=> $this->detalhe
+		));
 
-      if ($lista) {
-        $barra = "
-          <table border=\"0\" cellpading=\"0\" cellspacing=\"0\" width=\"100%\">
-            <tr>
-              <script type=\"text/javascript\">document.help_page_index = 0;</script>
-              <td width=\"20\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Bot�o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta p�gina\"></a></td>
-              <td><b>{$this->titulo}</b></td>
-              <td align=\"right\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Bot�o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta p�gina\"></a></td>
-            </tr>
-          </table>";
-      }
-    }
-
-	$twig = new TemplateRenderer();
-	$templateText = $twig->render($this->template, array(
-		'titulo'		=> $this->titulo,
-		'localizacao'	=> $this->locale,
-		'linhas'		=> $this->detalhe
-	));
-
-	$retorno .= $templateText;
+		$retorno .= $templateText;
 
 
-    if (!empty($this->url_editar) || !empty($this->url_cancelar) || $this->array_botao) {
-      $retorno .= "
-        <tr>
-          <td colspan='2' align='center'>
-            <script type='text/javascript'>
-              function go(url) {
-                document.location = url;
-              }
-            </script>";
+		if (!empty($this->url_editar) || !empty($this->url_cancelar) || $this->array_botao)
+		{
+			$retorno .= "
+			<tr>
+				<td colspan='2' align='center'>
+				<script type='text/javascript'>
+					function go(url) {
+						document.location = url;
+					}
+				</script>";
 
-      if ($this->url_novo) {
-        $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"$this->url_novo\" );' value=' {$this->caption_novo} '>&nbsp;\n";
-      }
+			if ($this->url_novo)
+			{
+				$retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"$this->url_novo\" );' value=' {$this->caption_novo} '>&nbsp;\n";
+			}
 
-      if ($this->url_editar) {
-        $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"$this->url_editar\" );' value=' Editar '>&nbsp;\n";
-      }
+			if ($this->url_editar)
+			{
+				$retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"$this->url_editar\" );' value=' Editar '>&nbsp;\n";
+			}
 
-      if ($this->url_cancelar) {
-        $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;\n";
-      }
-      $retorno .= "</td></tr>";
+			if ($this->url_cancelar)
+			{
+				$retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;\n";
+			}
+			$retorno .= "</td></tr>";
 
-      if ($this->array_botao_url || $this->array_botao_url_script) {
-        $retorno .= "<tr><td colspan=2><table width='100%' summary=''><tr><td></td><td height='1' width='90%' bgcolor='#858585' style='font-size: 0px;'>&nbsp;</td><td></td></tr></table></td></tr><tr><td colspan='2' align='center'>";
-      }
+			if ($this->array_botao_url || $this->array_botao_url_script) {
+				$retorno .= "<tr><td colspan=2><table width='100%' summary=''><tr><td></td><td height='1' width='90%' bgcolor='#858585' style='font-size: 0px;'>&nbsp;</td><td></td></tr></table></td></tr><tr><td colspan='2' align='center'>";
+			}
 
-      if ($this->array_botao_url) {
-        for ($i = 0, $total = count($this->array_botao); $i < $total; $i++) {
-          $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."'>&nbsp;\n";
-        }
-      }
-      elseif ($this->array_botao_url_script) {
-        for ($i = 0, $total = count($this->array_botao); $i < $total; $i++) {
-          $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='{$this->array_botao_url_script[$i]}' value='".$this->array_botao[$i]."'>&nbsp;\n";
-        }
-      }
+			if ($this->array_botao_url)
+			{
+				for ($i = 0, $total = count($this->array_botao); $i < $total; $i++)
+				{
+					$retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."'>&nbsp;\n";
+				}
+			}
+			elseif ($this->array_botao_url_script)
+			{
+				for ($i = 0, $total = count($this->array_botao); $i < $total; $i++)
+				{
+					$retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='{$this->array_botao_url_script[$i]}' value='".$this->array_botao[$i]."'>&nbsp;\n";
+				}
+			}
 
-      if ($this->array_botao_url || $this->array_botao_url_script) {
-        $retorno .= "</td></tr>";
-      }
-    }
+			if ($this->array_botao_url || $this->array_botao_url_script)
+			{
+				$retorno .= "</td></tr>";
+			}
+		}
 
-    $retorno .= "
-      </table><br><br>
-      <!-- detalhe end -->";
+		$retorno .= "
+			</table><br><br>
+			<!-- detalhe end -->";
 
-    if ($this->bannerClose) {
-      $retorno .= "
-        <!-- Fechando o Banner (clsDetalhe) -->
-          </td>
-        </tr>
-        </table>";
-    }
+		if ($this->bannerClose)
+		{
+			$retorno .= "
+				<!-- Fechando o Banner (clsDetalhe) -->
+				</td>
+				</tr>
+				</table>";
+		}
 
-    return $retorno;
-  }
+		return $retorno;
+	}
 }
