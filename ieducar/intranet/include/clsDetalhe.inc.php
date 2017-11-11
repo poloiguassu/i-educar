@@ -67,7 +67,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
 	var $array_botao_url_script;
 
 	function addBanner($strBannerUrl = '', $strBannerLateralUrl = '',
-	$strBannerTitulo = '', $boolFechaBanner = TRUE)
+		$strBannerTitulo = '', $boolFechaBanner = TRUE)
 	{
 		if ($strBannerUrl != '') {
 			$this->banner = $strBannerUrl;
@@ -82,16 +82,19 @@ class clsDetalhe extends Core_Controller_Page_Abstract
 	}
 
 
-	function addDetalhe($detalhe) {
-		$this->detalhe[] = $detalhe;
+	function addDetalhe($detalhe, $grupo = "principal")
+	{
+		$this->detalhe["{$grupo}"][] = $detalhe;
 	}
 
-	function enviaLocalizacao($localizao){
+	function enviaLocalizacao($localizao)
+	{
 		if($localizao)
 		$this->locale = $localizao;
 	}
 
-	function Gerar() {
+	function Gerar()
+	{
 		return FALSE;
 	}
 
@@ -101,10 +104,6 @@ class clsDetalhe extends Core_Controller_Page_Abstract
 		$this->titulo_barra= 'Intranet';
 		$this->Gerar();
 		$retorno = '';
-		if ($this->banner) {
-			$retorno .= "<table width='100%' style=\"height:100%\" border='0' cellpadding='0' cellspacing='0'><tr>";
-			$retorno .= "<td class=\"barraLateral\" width=\"21\" valign=\"top\"><a href='#'><img src=\"{$this->bannerLateral}\" align=\"right\" border=\"0\" alt=\"$this->titulo_barra\" title=\"$this->titulo_barra\"></a></td><td valign='top'>";
-		}
 
 		$script = explode('/', $_SERVER['PHP_SELF']);
 		$script = $script[count($script)-1];
@@ -116,34 +115,15 @@ class clsDetalhe extends Core_Controller_Page_Abstract
 		$url = parse_url($_SERVER['REQUEST_URI']);
 		$url = preg_match( "/^/", "", $url["path"] );
 
-		if (strpos($url, '_det.php') !== FALSE) {
+		if (strpos($url, '_det.php') !== FALSE)
+		{
 			$tipo = "det";
 		}
-		elseif (strpos($url, '_lst.php') !== FALSE) {
-			$tipo = 'lst';
-		}
-		else {
-			$tipo = 'cad';
-		}
-
-		$barra = '<b>' . $this->titulo . '</b>';
-
-		if (class_exists('clsPmiajudaPagina'))
+		elseif (strpos($url, '_lst.php') !== FALSE)
 		{
-			$ajudaPagina = new clsPmiajudaPagina();
-			$lista = $ajudaPagina->lista(null,null,$url);
-
-			if ($lista) {
-				$barra = "
-				<table border=\"0\" cellpading=\"0\" cellspacing=\"0\" width=\"100%\">
-				<tr>
-				<script type=\"text/javascript\">document.help_page_index = 0;</script>
-				<td width=\"20\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Bot�o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta p�gina\"></a></td>
-				<td><b>{$this->titulo}</b></td>
-				<td align=\"right\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Bot�o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta p�gina\"></a></td>
-				</tr>
-				</table>";
-			}
+			$tipo = 'lst';
+		} else {
+			$tipo = 'cad';
 		}
 
 		$twig = new TemplateRenderer();
@@ -154,7 +134,6 @@ class clsDetalhe extends Core_Controller_Page_Abstract
 		));
 
 		$retorno .= $templateText;
-
 
 		if (!empty($this->url_editar) || !empty($this->url_cancelar) || $this->array_botao)
 		{
