@@ -402,7 +402,7 @@ class indice extends clsCadastro
 		// não existe um responsavel principal nem responsavel
 		if (($this->checked != 1) && (!$qtd_responsavel || ($qtd_responsavel == 0)))
 		{
-			$this->campoLista("ref_cod_vps_responsavel_entrevista", "Responsável", $opcoes, $this->ref_cod_vps_responsavel_entrevista,null,true,"","",false,true);
+			$this->campoLista("ref_cod_vps_responsavel_entrevista", "Responsável", $opcoes, $this->ref_cod_vps_responsavel_entrevista,null,true,"","",false,false);
 
 		 	$this->campoCheck("principal", "&nbsp;&nbsp;<img id='img_responsavel' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"showExpansivelImprimir(500, 250,'educar_vps_responsavel_entrevista_cad_pop.php',[], 'Responsável')\" />", $this->principal,"<a href='#' onclick=\"getElementById('incluir_responsavel').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
 		}
@@ -430,7 +430,7 @@ class indice extends clsCadastro
 
 		$options = array(
 			'required'    => true,
-			'label'       => 'Número de Vagas',
+			'label'       => 'Número de Vagas Disponíveis',
 			'placeholder' => '',
 			'value'       => $this->numero_vagas,
 			'max_length'  => 2,
@@ -442,7 +442,7 @@ class indice extends clsCadastro
 
 		$options = array(
 			'required'    => true,
-			'label'       => 'Número de Jovens por vaga',
+			'label'       => 'Número de Jovens por vaga disponível',
 			'placeholder' => '',
 			'value'       => $this->numero_jovens,
 			'max_length'  => 2,
@@ -462,7 +462,7 @@ class indice extends clsCadastro
 
 		$this->inputsHelper()->date('data_entrevista', $options);
 
-		$this->campoHora('hora_entrevista', 'Hora entrevista', $this->hora_entrevista, false);
+		$this->campoHora('hora_entrevista', 'Hora entrevista', $this->hora_entrevista, true);
 
 		$options = array(
 			'required'    => false,
