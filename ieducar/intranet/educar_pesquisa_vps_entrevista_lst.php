@@ -78,7 +78,6 @@ class indice extends clsListagem
 	var $ref_cod_vps_funcao;
 	var $ref_cod_vps_jornada_trabalho;
 	var $ref_idpes;
-	var $nm_entrevista;
 	var $descricao;
 	var $ano;
 	var $data_cadastro;
@@ -110,7 +109,6 @@ class indice extends clsListagem
 		//$get_biblioteca = 1;
 		//$obrigatorio    = false;
 		//include("include/pmieducar/educar_campo_lista.php");
-		$this->campoTexto("nm_entrevista", "Titulo", $this->nm_entrevista, 30, 255, false);
 		$this->campoOculto("ref_cod_biblioteca",$this->ref_cod_biblioteca);
 
 		// Paginador
@@ -130,7 +128,6 @@ class indice extends clsListagem
 			null,
 			null,
 			null,
-			$this->nm_entrevista,
 			null,
 			null,
 			null,

@@ -36,7 +36,7 @@ class clsIndexBase extends clsBase
 	function Formular()
 	{
 		$this->SetTitulo( "{$this->_instituicao} - Detalhamento de Visitas" );
-		$this->processoAp = "634";
+		$this->processoAp = "598";
 		$this->addEstilo("localizacaoSistema");
 	}
 }
@@ -124,9 +124,19 @@ class indice extends clsDetalhe
 			{
 				$entrevista = new clsPmieducarVPSEntrevista($ref_cod_vps_entrevista);
 				$registroEntrevista = $entrevista->detalhe();
-				$nm_entrevista = $registroEntrevista["nm_entrevista"];
 
-				$this->addDetalhe(array("Cumprindo VPS", "{$nm_entrevista}"));
+				if(class_exists("clsPmieducarVPSFuncao"))
+				{
+					$obj_ref_cod_vps_funcao = new clsPmieducarVPSFuncao($registroEntrevista["ref_cod_vps_funcao"]);
+					$det_ref_cod_vps_funcao = $obj_ref_cod_vps_funcao->detalhe();
+
+					$this->addDetalhe(array("Cumprindo VPS", "{$det_ref_cod_vps_funcao["nm_funcao"]}"));
+				}
+				else
+				{
+					$registro["ref_cod_vps_funcao"] = "Erro na geracao";
+					echo "<!--\nErro\nClasse nao existente: clsPmieducarVPSFuncao\n-->";
+				}
 
 				if(class_exists("clsPessoaFj"))
 				{

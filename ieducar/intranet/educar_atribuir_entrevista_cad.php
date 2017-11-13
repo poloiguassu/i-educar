@@ -60,7 +60,6 @@ class indice extends clsCadastro
 	var $ref_cod_vps_jornada_trabalho;
 	var $ref_cod_tipo_contratacao;
 	var $empresa_id;
-	var $nm_entrevista;
 	var $descricao;
 	var $data_entrevista;
 	var $hora_entrevista;
@@ -296,14 +295,11 @@ class indice extends clsCadastro
 
 		$this->campoQuebra();
 
-		// text
-		$this->campoRotulo("nm_entrevista", "Entrevista", $this->nm_entrevista);
-
 		$this->campoMonetario('salario', 'Salário', number_format($this->salario, 2, ',', '.'), 7, 7, false, "", "", "onChange", true);
 
 		$options = array(
 			'required'    => true,
-			'label'       => 'Número de Vagas',
+			'label'       => 'Número de Vagas Disponíveis',
 			'placeholder' => '',
 			'value'       => $this->numero_vagas,
 			'max_length'  => 2,
@@ -316,7 +312,7 @@ class indice extends clsCadastro
 
 		$options = array(
 			'required'    => true,
-			'label'       => 'Número de Jovens por vaga',
+			'label'       => 'Número de Jovens por vaga disponível',
 			'placeholder' => '',
 			'value'       => $this->numero_jovens,
 			'max_length'  => 2,

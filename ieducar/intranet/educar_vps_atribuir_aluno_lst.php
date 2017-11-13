@@ -81,7 +81,6 @@ class indice extends clsListagem
 	var $ref_cod_vps_entrevista_colecao;
 	var $ref_cod_vps_entrevista_idioma;
 	var $ref_cod_vps_entrevista_editora;
-	var $nm_entrevista;
 	var $sub_titulo;
 	var $cdu;
 	var $cutter;
@@ -175,7 +174,6 @@ class indice extends clsListagem
 				$inicioVPS		= "";
 				$terminoVPS		= "";
 				$insercaoVPS	= "";
-				$nm_entrevista	= "";
 				$estudando		= "";
 				$turno			= "";
 
@@ -240,13 +238,6 @@ class indice extends clsListagem
 					$registroAlunoEntrevista = $alunoEntrevista->detalhe();
 
 					$ref_cod_vps_entrevista = $registroAlunoEntrevista["ref_cod_vps_entrevista"];
-
-					if($ref_cod_vps_entrevista)
-					{
-						$entrevista = new clsPmieducarVPSEntrevista($ref_cod_vps_entrevista);
-						$registroEntrevista = $entrevista->detalhe();
-						$nm_entrevista = $registroEntrevista["nm_entrevista"];
-					}
 
 					if($registroAlunoEntrevista["inicio_vps"])
 						$inicioVPS = Portabilis_Date_Utils::pgSQLToBr($registroAlunoEntrevista["inicio_vps"]);

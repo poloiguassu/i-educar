@@ -94,8 +94,8 @@ class indice extends clsListagem
 		$this->addCabecalhos(array(
 			"Aluno",
 			"Empresa",
-			"Responsável Visita",
 			"Entrevista",
+			"Responsável Visita",
 			"Data da visita",
 			"Avaliacao"
 		));
@@ -113,9 +113,9 @@ class indice extends clsListagem
 				$cod_vps_visita	= $registro["cod_vps_visita"];
 				$data_visita	= "";
 				$avaliacao		= "";
+				$funcao			= "";
 				$nm_aluno		= "";
 				$nm_empresa		= "";
-				$nm_entrevista	= "";
 				$nm_usuario		= "";
 
 				$alunoEntrevista = new clsPmieducarVPSAlunoEntrevista($registro["ref_cod_vps_aluno_entrevista"]);
@@ -156,7 +156,18 @@ class indice extends clsListagem
 				{
 					$entrevista = new clsPmieducarVPSEntrevista($ref_cod_vps_entrevista);
 					$registroEntrevista = $entrevista->detalhe();
-					$nm_entrevista = $registroEntrevista["nm_entrevista"];
+
+					if(class_exists("clsPmieducarVPSFuncao"))
+					{
+						$obj_ref_cod_vps_funcao = new clsPmieducarVPSFuncao($registroEntrevista["ref_cod_vps_funcao"]);
+						$det_ref_cod_vps_funcao = $obj_ref_cod_vps_funcao->detalhe();
+						$funcao = $det_ref_cod_vps_funcao["nm_funcao"];
+					}
+					else
+					{
+						$funcao = "Erro na geracao";
+						echo "<!--\nErro\nClasse nao existente: clsPmieducarVPSFuncao\n-->";
+					}
 
 					if(class_exists("clsPessoaFj"))
 					{
@@ -184,9 +195,9 @@ class indice extends clsListagem
 
 				$lista_busca = array(
 					"<a href=\"educar_vps_visita_det.php?cod_vps_visita={$cod_vps_visita}\">{$nm_aluno}</a>",
-					"<a href=\"educar_vps_visita_det.php?cod_vps_visita={$cod_vps_visita}\">{$nm_entrevista}</a>",
-					"<a href=\"educar_vps_visita_det.php?cod_vps_visita={$cod_vps_visita}\">{$nm_usuario}</a>",
 					"<a href=\"educar_vps_visita_det.php?cod_vps_visita={$cod_vps_visita}\">{$nm_empresa}</a>",
+					"<a href=\"educar_vps_visita_det.php?cod_vps_visita={$cod_vps_visita}\">{$funcao}</a>",
+					"<a href=\"educar_vps_visita_det.php?cod_vps_visita={$cod_vps_visita}\">{$nm_usuario}</a>",
 					"<a href=\"educar_vps_visita_det.php?cod_vps_visita={$cod_vps_visita}\">{$data_visita}</a>",
 					"<a href=\"educar_vps_visita_det.php?cod_vps_visita={$cod_vps_visita}\">{$avaliacao}</a>",
 				);

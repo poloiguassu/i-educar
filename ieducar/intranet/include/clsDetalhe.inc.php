@@ -130,7 +130,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
 		$templateText = $twig->render($this->template, array(
 			'titulo'		=> $this->titulo,
 			'localizacao'	=> $this->locale,
-			'linhas'		=> $this->detalhe
+			'detalhe'		=> $this->detalhe
 		));
 
 		$retorno .= $templateText;

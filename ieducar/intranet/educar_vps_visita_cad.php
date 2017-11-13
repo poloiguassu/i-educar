@@ -59,7 +59,6 @@ class indice extends clsCadastro
 	var $cod_vps_entrevista;
 	var $nm_aluno;
 	var $nm_situacao_vps;
-	var $nm_entrevista;
 	var $inicio_vps;
 	var $termino_vps;
 	var $insercao_vps;
@@ -85,7 +84,7 @@ class indice extends clsCadastro
 			$this->pessoa_logada = $_SESSION['id_pessoa'];
 		@session_write_close();
 
-		$this->cod_aluno = $_GET["cod_aluno"];
+		$this->cod_aluno = $_GET["ref_cod_aluno"];
 		$this->cod_vps_visita = $_GET["cod_vps_visita"];
 
 		$obj_permissoes = new clsPermissoes();
@@ -181,9 +180,34 @@ class indice extends clsCadastro
 			{
 				$entrevista = new clsPmieducarVPSEntrevista($this->cod_vps_entrevista);
 				$registroEntrevista = $entrevista->detalhe();
-				$nm_entrevista = $registroEntrevista["nm_entrevista"];
 
-				$this->campoRotulo("nm_entrevista", "Cumprindo VPS em", $nm_entrevista);
+				if(class_exists("clsPessoaFj"))
+				{
+					$obj_ref_idpes = new clsPessoaFj($registroEntrevista["ref_idpes"]);
+					$det_ref_idpes = $obj_ref_idpes->detalhe();
+					$registroEntrevista["ref_idpes"] = $det_ref_idpes["nome"];
+				}
+				else
+				{
+					$registro["ref_idpes"] = "Erro na geracao";
+					echo "<!--\nErro\nClasse nao existente: clsPessoaFj\n-->";
+				}
+
+				if(class_exists("clsPmieducarVPSFuncao"))
+				{
+					$obj_ref_cod_vps_funcao = new clsPmieducarVPSFuncao($registroEntrevista["ref_cod_vps_funcao"]);
+					$det_ref_cod_vps_funcao = $obj_ref_cod_vps_funcao->detalhe();
+					$registroEntrevista["ref_cod_vps_funcao"] = $det_ref_cod_vps_funcao["nm_funcao"];
+				}
+				else
+				{
+					$registro["ref_cod_vps_funcao"] = "Erro na geracao";
+					echo "<!--\nErro\nClasse nao existente: clsPmieducarVPSFuncao\n-->";
+				}
+
+				$entrevista = "{$registroEntrevista["ref_cod_vps_funcao"]} / {$registroEntrevista["ref_idpes"]}";
+
+				$this->campoRotulo("entrevista", "Cumprindo VPS em", $entrevista);
 			}
 
 			if($registroAlunoEntrevista["inicio_vps"])
@@ -220,7 +244,7 @@ class indice extends clsCadastro
 
 			$options = array(
 				'required'    => true,
-				'label'       => 'Data Entrevista',
+				'label'       => 'Data visita',
 				'placeholder' => '',
 				'value'       => Portabilis_Date_Utils::pgSQLToBr($this->data_visita),
 				'size'        => 7,
@@ -228,7 +252,7 @@ class indice extends clsCadastro
 
 			$this->inputsHelper()->date('data_visita', $options);
 
-			$this->campoHora('hora_visita', 'Hora entrevista', $this->hora_visita, false);
+			$this->campoHora('hora_visita', 'Hora visita', $this->hora_visita, false);
 
 			$options = array(
 				'required'    => false,

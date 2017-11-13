@@ -64,7 +64,6 @@ class indice extends clsCadastro
 	var $ref_cod_vps_jornada_trabalho;
 	var $ref_cod_tipo_contratacao;
 	var $empresa_id;
-	var $nm_entrevista;
 	var $descricao;
 	var $data_entrevista;
 	var $hora_entrevista;
@@ -174,9 +173,34 @@ class indice extends clsCadastro
 			{
 				$entrevista = new clsPmieducarVPSEntrevista($this->cod_vps_entrevista);
 				$registroEntrevista = $entrevista->detalhe();
-				$nm_entrevista = $registroEntrevista["nm_entrevista"];
 
-				$this->campoRotulo("nm_entrevista", "Cumprindo VPS em", $nm_entrevista);
+				if(class_exists("clsPmieducarVPSFuncao"))
+				{
+					$obj_ref_cod_vps_funcao = new clsPmieducarVPSFuncao($registroEntrevista["ref_cod_vps_funcao"]);
+					$det_ref_cod_vps_funcao = $obj_ref_cod_vps_funcao->detalhe();
+					$registroEntrevista["ref_cod_vps_funcao"] = $det_ref_cod_vps_funcao["nm_funcao"];
+				}
+				else
+				{
+					$registroEntrevista["ref_cod_vps_funcao"] = "Erro na geracao";
+					echo "<!--\nErro\nClasse nao existente: clsPmieducarVPSFuncao\n-->";
+				}
+
+				if(class_exists("clsPessoaFj"))
+				{
+					$obj_ref_idpes = new clsPessoaFj($registroEntrevista["ref_idpes"]);
+					$det_ref_idpes = $obj_ref_idpes->detalhe();
+					$registroEntrevista["ref_idpes"] = $det_ref_idpes["nome"];
+				}
+				else
+				{
+					$registroEntrevista["ref_idpes"] = "Erro na geracao";
+					echo "<!--\nErro\nClasse nao existente: clsPessoaFj\n-->";
+				}
+
+				$funcao_entrevista = "{$registroEntrevista["ref_cod_vps_funcao"]} / {$registroEntrevista["ref_idpes"]}";
+
+				$this->campoRotulo("funcao_entrevista", "Cumprindo VPS em", $funcao_entrevista);
 			}
 
 			if($registroAlunoEntrevista["inicio_vps"])

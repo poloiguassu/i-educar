@@ -76,7 +76,6 @@ class indice extends clsListagem
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
 	var $ref_cod_vps_entrevista_idioma;
-	var $nm_entrevista;
 	var $ano;
 	var $data_cadastro;
 	var $data_exclusao;
@@ -111,13 +110,12 @@ class indice extends clsListagem
 			$this->$var = ( $val === "" ) ? null: $val;
 
 		$this->addCabecalhos( array(
-			"Entrevista",
-			"Empresa",
 			"Ano",
+			"Empresa",
+			"Função",
 			"Número de vagas",
 			"Vagas Preenchidas",
 			"Data Entrevista",
-			"Função",
 			"Jornada de Trabalho",
 			"Situação"
 		) );
@@ -165,15 +163,13 @@ class indice extends clsListagem
 
 		$this->inputsHelper()->simpleSearchPessoaj('nome', $options, $helperOptions);
 
-		$this->campoTexto("nm_entrevista", "Entrevista", $this->nm_entrevista, 30, 255, false);
-
 		if($this->situacao_entrevista < App_Model_EntrevistaSituacao::EM_ANDAMENTO)
 			$this->situacao_entrevista = null;
 
 		$obj_entrevista = new clsPmieducarVPSEntrevista();
-		$obj_entrevista->setOrderby( "nm_entrevista ASC" );
+		$obj_entrevista->setOrderby( "data_entrevista ASC" );
 
-		$lista = $obj_entrevista->listaEntrevista($this->ref_cod_escola, $this->nm_entrevista, 1, null, null,
+		$lista = $obj_entrevista->listaEntrevista($this->ref_cod_escola, 1, null, null,
 			$this->empresa_id, $this->ref_cod_curso, $this->ano, $this->situacao_entrevista
 		);
 
@@ -256,13 +252,12 @@ class indice extends clsListagem
 				$registro["situacao_entrevista"] = App_Model_EntrevistaSituacao::getInstance()->getValue($registro["situacao_entrevista"]);
 
 				$lista_busca = array(
-					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}&cod_selecionados={$paramSelecionados}\">{$registro["nm_entrevista"]}</a>",
-					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}&cod_selecionados={$paramSelecionados}\">{$registro["ref_idpes"]}</a>",
 					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}&cod_selecionados={$paramSelecionados}\">{$registro["ano"]}</a>",
+					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}&cod_selecionados={$paramSelecionados}\">{$registro["ref_idpes"]}</a>",
+					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}&cod_selecionados={$paramSelecionados}\">{$registro["ref_cod_vps_funcao"]}</a>",
 					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}&cod_selecionados={$paramSelecionados}\">{$total_jovens}</a>",
 					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}&cod_selecionados={$paramSelecionados}\">{$numero_jovens}</a>",
 					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}&cod_selecionados={$paramSelecionados}\">{$registro["data_entrevista"]}</a>",
-					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}&cod_selecionados={$paramSelecionados}\">{$registro["ref_cod_vps_funcao"]}</a>",
 					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}&cod_selecionados={$paramSelecionados}\">{$registro["ref_cod_vps_jornada_trabalho"]}</a>",
 					"<a href=\"educar_atribuir_entrevista_cad.php?cod_vps_entrevista={$registro["cod_vps_entrevista"]}&cod_selecionados={$paramSelecionados}\">{$registro["situacao_entrevista"]}</a>"
 				);

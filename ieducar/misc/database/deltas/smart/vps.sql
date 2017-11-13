@@ -181,7 +181,6 @@ CREATE TABLE pmieducar.vps_entrevista (
 	ref_cod_vps_entrevista integer,
 	ref_usuario_exc integer,
 	ref_usuario_cad integer NOT NULL,
-	nm_entrevista character varying(255) NOT NULL,
 	salario double precision,
 	data_entrevista date,
 	hora_entrevista time without time zone,

@@ -57,7 +57,6 @@ class indice extends clsDetalhe
 	var $ref_cod_vps_jornada_trabalho;
 	var $ref_cod_tipo_contratacao;
 	var $empresa_id;
-	var $nm_entrevista;
 	var $descricao;
 	var $data_entrevista;
 	var $hora_entrevista;
@@ -142,16 +141,16 @@ class indice extends clsDetalhe
 			echo "<!--\nErro\nClasse nao existente: clsPmieducarCurso\n-->";
 		}
 
-		if(class_exists("clsPmieducarVPSEntrevista"))
+		if(class_exists("clsPmieducarVPSFuncao"))
 		{
-			$obj_ref_cod_vps_entrevista = new clsPmieducarVPSEntrevista($registro["ref_cod_vps_entrevista"]);
-			$det_ref_cod_vps_entrevista = $obj_ref_cod_vps_entrevista->detalhe();
-			$registro["ref_cod_vps_entrevista"] = $det_ref_cod_vps_entrevista["nm_entrevista"];
+			$obj_ref_cod_vps_funcao = new clsPmieducarVPSFuncao($registro["ref_cod_vps_funcao"]);
+			$det_ref_cod_vps_funcao = $obj_ref_cod_vps_funcao->detalhe();
+			$registro["ref_cod_vps_funcao"] = $det_ref_cod_vps_funcao["nm_funcao"];
 		}
 		else
 		{
-			$registro["ref_cod_vps_entrevista"] = "Erro na geracao";
-			echo "<!--\nErro\nClasse nao existente: clsPmieducarVPSEntrevista\n-->";
+			$registro["ref_cod_vps_funcao"] = "Erro na geracao";
+			echo "<!--\nErro\nClasse nao existente: clsPmieducarVPSFuncao\n-->";
 		}
 
 		if(class_exists("clsPmieducarVPSJornadaTrabalho"))
@@ -164,18 +163,6 @@ class indice extends clsDetalhe
 		{
 			$registro["ref_cod_vps_jornada_trabalho"] = "Erro na geracao";
 			echo "<!--\nErro\nClasse nao existente: clsPmieducarVPSJornadaTrabalho\n-->";
-		}
-
-		if(class_exists("clsPmieducarVPSFuncao"))
-		{
-			$obj_ref_cod_vps_funcao = new clsPmieducarVPSFuncao($registro["ref_cod_vps_funcao"]);
-			$det_ref_cod_vps_funcao = $obj_ref_cod_vps_funcao->detalhe();
-			$registro["ref_cod_vps_funcao"] = $det_ref_cod_vps_funcao["nm_funcao"];
-		}
-		else
-		{
-			$registro["ref_cod_vps_funcao"] = "Erro na geracao";
-			echo "<!--\nErro\nClasse nao existente: clsPmieducarVPSFuncao\n-->";
 		}
 
 		if(class_exists("clsPessoaFj"))
@@ -211,17 +198,13 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe(array("Empresa", "{$registro["ref_idpes"]}"));
 		}
-		if($registro["nm_entrevista"])
+		if($registro["ref_cod_vps_funcao"])
 		{
-			$this->addDetalhe(array("Título", "{$registro["nm_entrevista"]}"));
+			$this->addDetalhe(array("Função", "{$registro["ref_cod_vps_funcao"]}"));
 		}
 		if($registro["descricao"])
 		{
 			$this->addDetalhe(array("Descrição", "{$registro["descricao"]}"));
-		}
-		if($registro["ref_cod_vps_funcao"])
-		{
-			$this->addDetalhe(array("Função", "{$registro["ref_cod_vps_funcao"]}"));
 		}
 		if($registro["salario"])
 		{

@@ -56,7 +56,6 @@ class indice extends clsDetalhe
 	var $ref_cod_vps_funcao;
 	var $ref_cod_vps_jornada_trabalho;
 	var $ref_cod_tipo_contratacao;
-	var $nm_entrevista;
 	var $descricao;
 	var $data_entrevista;
 	var $hora_entrevista;
@@ -169,7 +168,18 @@ class indice extends clsDetalhe
 			{
 				$entrevista = new clsPmieducarVPSEntrevista($ref_cod_vps_entrevista);
 				$registroEntrevista = $entrevista->detalhe();
-				$nm_entrevista = $registroEntrevista["nm_entrevista"];
+
+				if(class_exists("clsPmieducarVPSFuncao"))
+				{
+					$obj_ref_cod_vps_funcao = new clsPmieducarVPSFuncao($registroEntrevista["ref_cod_vps_funcao"]);
+					$det_ref_cod_vps_funcao = $obj_ref_cod_vps_funcao->detalhe();
+					$registro["ref_cod_vps_funcao"] = $det_ref_cod_vps_funcao["nm_funcao"];
+				}
+				else
+				{
+					$registro["ref_cod_vps_funcao"] = "Erro na geracao";
+					echo "<!--\nErro\nClasse nao existente: clsPmieducarVPSFuncao\n-->";
+				}
 			}
 
 			if($registroAlunoEntrevista["inicio_vps"])
@@ -233,9 +243,9 @@ class indice extends clsDetalhe
 		{
 			$this->addDetalhe(array("Motivo Desligamento VPS", "{$registroVPS["motivo_desligamento"]}"));
 		}
-		if($nm_entrevista)
+		if($registro["ref_cod_vps_funcao"])
 		{
-			$this->addDetalhe(array("Entrevista início VPS", "<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$ref_cod_vps_entrevista}\" target=\"_blank\">{$nm_entrevista}</a>"));
+			$this->addDetalhe(array("Entrevista início VPS", "<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$ref_cod_vps_entrevista}\" target=\"_blank\">{$registro["ref_cod_vps_funcao"]}</a>"));
 		}
 		if($inicioVPS)
 		{
@@ -253,51 +263,57 @@ class indice extends clsDetalhe
 		$obj = new clsPmieducarVPSAlunoEntrevista();
 		$entrevistas = $obj->lista($this->cod_aluno);
 
-		if ($entrevistas) {
-			$tabela = "<TABLE>
-					       <TR align=center>
-					           <TD bgcolor=#A1B3BD><B>Entrevista</B></TD>
-					           <TD bgcolor=#A1B3BD><B>Data</B></TD>
-					       </TR>";
+		if ($entrevistas)
+		{
 			$cont = 0;
+
+			$this->addDetalhe(array("Todas as Entrevistas", ""));
 
 			foreach ($entrevistas AS $valor)
 			{
-				if (($cont % 2) == 0)
-				{
-					$color = " bgcolor=#E4E9ED ";
-				} else {
-					$color = " bgcolor=#FFFFFF ";
-				}
+				$entrevista = "";
 
 				$ref_cod_vps_entrevista = $valor["ref_cod_vps_entrevista"];
 				$obj = new clsPmieducarVPSEntrevista($ref_cod_vps_entrevista);
 				$det = $obj->detalhe();
 
-				$nm_entrevista = $det["nm_entrevista"];
+				if(class_exists("clsPmieducarVPSFuncao"))
+				{
+					$obj_ref_cod_vps_funcao = new clsPmieducarVPSFuncao($det["ref_cod_vps_funcao"]);
+					$det_ref_cod_vps_funcao = $obj_ref_cod_vps_funcao->detalhe();
+					$registro["ref_cod_vps_funcao"] = $det_ref_cod_vps_funcao["nm_funcao"];
+				}
+				else
+				{
+					$registro["ref_cod_vps_funcao"] = "Erro na geracao";
+					echo "<!--\nErro\nClasse nao existente: clsPmieducarVPSFuncao\n-->";
+				}
+
+				if(class_exists("clsPessoaFj"))
+				{
+					$obj_ref_idpes = new clsPessoaFj($det["ref_idpes"]);
+					$det_ref_idpes = $obj_ref_idpes->detalhe();
+					$registro["ref_idpes"] = $det_ref_idpes["nome"];
+				}
+				else
+				{
+					$registro["ref_idpes"] = "Erro na geracao";
+					echo "<!--\nErro\nClasse nao existente: clsPessoaFj\n-->";
+				}
+
 				$data_entrevista = Portabilis_Date_Utils::pgSQLToBr($det["data_entrevista"]);
 				$hora_entrevista = $det["hora_entrevista"];
 
-				$tabela .= "<TR>
-
-
-							    <TD {$color} align=left>
-									<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$ref_cod_vps_entrevista}\" target=\"_blank\">{$nm_entrevista}</a>
-								</TD>
-							    <TD {$color} align=left>
-									<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$ref_cod_vps_entrevista}\" target=\"_blank\">{$data_entrevista} às {$hora_entrevista}</a>
-								</TD>
-							</TR>";
+				$entrevista .= "<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$ref_cod_vps_entrevista}\" target=\"_blank\">
+									{$registro["ref_cod_vps_funcao"]} / {$registro["ref_idpes"]} - {$data_entrevista} às {$hora_entrevista}
+								</a>";
 				$cont++;
+				$this->addDetalhe(array(" - Entrevista {$cont}", "{$entrevista}"), "entrevistas");
 			}
-			$tabela .= "</TABLE>";
-		}
-		if($tabela)
-		{
-			$this->addDetalhe(array("Todas as Entrevistas", "{$tabela}"));
 		}
 
 		$obj_permissoes = new clsPermissoes();
+
 		if($obj_permissoes->permissao_cadastra(598, $this->pessoa_logada, 11))
 		{
 			$this->array_botao = array('Atualizar Situação', 'Agendar Visita VPS');

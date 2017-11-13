@@ -60,7 +60,6 @@ class indice extends clsCadastro
 	var $ref_cod_vps_jornada_trabalho;
 	var $ref_cod_tipo_contratacao;
 	var $empresa_id;
-	var $nm_entrevista;
 	var $descricao;
 	var $data_entrevista;
 	var $hora_entrevista;
@@ -213,18 +212,6 @@ class indice extends clsCadastro
 		$this->inputsHelper()->simpleSearchPessoaj('nome', $options, $helperOptions);
 
 		$opcoes = array("NULL" => "Selecione");
-
-		if($this->ref_cod_vps_entrevista && $this->ref_cod_vps_entrevista != "NULL")
-		{
-			$objTemp = new clsPmieducarVPSEntrevista($this->ref_cod_vps_entrevista);
-			$detalhe = $objTemp->detalhe();
-			if ($detalhe)
-			{
-				$opcoes["{$detalhe['cod_vps_entrevista']}"] = "{$detalhe['nm_entrevista']}";
-			}
-		}
-
-		$this->campoLista("ref_cod_vps_entrevista", "Entrevista de Referência", $opcoes,$this->ref_cod_vps_entrevista, "", false, "", "<img border=\"0\" onclick=\"pesquisa();\" id=\"ref_cod_vps_entrevista_lupa\" name=\"ref_cod_vps_entrevista_lupa\" src=\"imagens/lupa.png\"\/>", false, false);
 
 		// Coleção
 		$opcoes = array("" => "Selecione");
@@ -423,9 +410,6 @@ class indice extends clsCadastro
 		$this->campoQuebra();
 		//-----------------------FIM RESPONSAVEL------------------------//
 
-		// text
-		$this->campoTexto("nm_entrevista", "Entrevista", $this->nm_entrevista, 30, 255, true);
-
 		$this->campoMonetario('salario', 'Salário', number_format($this->salario, 2, ',', '.'), 7, 7, false);
 
 		$options = array(
@@ -489,7 +473,7 @@ class indice extends clsCadastro
 
 		$obj = new clsPmieducarVPSEntrevista(null, $this->ref_cod_tipo_contratacao, $this->ref_cod_vps_entrevista, null,
 			$this->pessoa_logada, $this->ref_cod_vps_funcao, $this->ref_cod_vps_jornada_trabalho,
-			$this->empresa_id, $this->nm_entrevista, $this->descricao, $this->ano, null, null, 1,
+			$this->empresa_id, $this->descricao, $this->ano, null, null, 1,
 			$this->ref_cod_escola, $this->ref_cod_curso, $salario, $data_entrevista, $this->hora_entrevista,
 			$this->numero_vagas, $this->numero_jovens
 		);
@@ -526,7 +510,7 @@ class indice extends clsCadastro
 			return true;
 		}
 		$this->mensagem  = "Cadastro não realizado.<br>";
-		$this->mensagem .= "<!--\nErro ao cadastrar clsPmieducarVPSEntrevista\nvalores obrigatorios\nis_numeric($this->ref_cod_escola) && is_numeric($this->pessoa_logada) && is_numeric($this->ref_cod_vps_funcao) && is_numeric($this->ref_cod_vps_jornada_trabalho) && is_numeric($this->empresa_id) && is_string($this->nm_entrevista) && is_numeric($this->ano)\n-->";
+		$this->mensagem .= "<!--\nErro ao cadastrar clsPmieducarVPSEntrevista\nvalores obrigatorios\nis_numeric($this->ref_cod_escola) && is_numeric($this->pessoa_logada) && is_numeric($this->ref_cod_vps_funcao) && is_numeric($this->ref_cod_vps_jornada_trabalho) && is_numeric($this->empresa_id) && is_numeric($this->ano)\n-->";
 		return false;
 	}
 
@@ -545,7 +529,7 @@ class indice extends clsCadastro
 		$this->vps_entrevista_responsavel = unserialize(urldecode($this->vps_entrevista_responsavel));
 		$obj = new clsPmieducarVPSEntrevista($this->cod_vps_entrevista, null, $this->ref_cod_vps_entrevista,
 			$this->pessoa_logada, null, $this->ref_cod_vps_funcao, $this->ref_cod_vps_jornada_trabalho,
-			$this->empresa_id, $this->nm_entrevista, $this->descricao, $this->ano, null, null, 1,
+			$this->empresa_id, $this->descricao, $this->ano, null, null, 1,
 			$this->ref_cod_escola, $this->ref_cod_curso, $salario, $this->data_entrevista,
 			$this->hora_entrevista, $this->numero_vagas, $this->numero_jovens);
 

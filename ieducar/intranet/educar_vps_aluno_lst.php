@@ -79,7 +79,6 @@ class indice extends clsListagem
 	var $ref_cod_vps_entrevista_colecao;
 	var $ref_cod_vps_entrevista_idioma;
 	var $ref_cod_vps_entrevista_editora;
-	var $nm_entrevista;
 	var $sub_titulo;
 	var $cdu;
 	var $cutter;
@@ -169,7 +168,7 @@ class indice extends clsListagem
 				$inicioVPS		= "";
 				$terminoVPS		= "";
 				$insercaoVPS	= "";
-				$nm_entrevista	= "";
+				$funcao			= "";
 
 				$ref_cod_aluno =  $registro["ref_cod_aluno"];
 
@@ -192,8 +191,21 @@ class indice extends clsListagem
 					{
 						$entrevista = new clsPmieducarVPSEntrevista($ref_cod_vps_entrevista);
 						$registroEntrevista = $entrevista->detalhe();
-						$nm_entrevista = $registroEntrevista["nm_entrevista"];
+
+						if(class_exists("clsPmieducarVPSFuncao"))
+						{
+							$obj_ref_cod_vps_funcao = new clsPmieducarVPSFuncao($registroEntrevista["ref_cod_vps_funcao"]);
+							$det_ref_cod_vps_funcao = $obj_ref_cod_vps_funcao->detalhe();
+							$funcao = $det_ref_cod_vps_funcao["nm_funcao"];
+						}
+						else
+						{
+							$funcao = "Erro na geracao";
+							echo "<!--\nErro\nClasse nao existente: clsPmieducarVPSFuncao\n-->";
+						}
 					}
+
+
 
 					if($registroAlunoEntrevista["inicio_vps"])
 						$inicioVPS = Portabilis_Date_Utils::pgSQLToBr($registroAlunoEntrevista["inicio_vps"]);
@@ -214,7 +226,7 @@ class indice extends clsListagem
 					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$numero_entrevistas}</a>",
 					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$situacaoVPS}</a>",
 					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$registroVPS["prioridade"]}</a>",
-					"<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$ref_cod_vps_entrevista}\" target=\"_blank\">{$nm_entrevista}</a>",
+					"<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$ref_cod_vps_entrevista}\" target=\"_blank\">{$funcao}</a>",
 					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$inicioVPS}</a>",
 					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$terminoVPS}</a>",
 					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$insercaoVPS}</a>",

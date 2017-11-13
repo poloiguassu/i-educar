@@ -63,7 +63,6 @@ class indice extends clsCadastro
 	var $ref_cod_vps_jornada_trabalho;
 	var $ref_cod_tipo_contratacao;
 	var $empresa_id;
-	var $nm_entrevista;
 	var $descricao;
 	var $data_entrevista;
 	var $hora_entrevista;
@@ -217,7 +216,6 @@ class indice extends clsCadastro
 
 		$this->inputsHelper()->simpleSearchPessoaj('nome', $options, $helperOptions);
 
-		// Coleï¿½ï¿½o
 		$opcoes = array("" => "Selecione");
 
 		if(class_exists("clsPmieducarVPSFuncao"))
@@ -329,9 +327,6 @@ class indice extends clsCadastro
 		}
 
 		$this->campoQuebra();
-
-		// text
-		$this->campoRotulo("nm_entrevista", "Entrevista", $this->nm_entrevista);
 
 		$this->campoMonetario('salario', 'Salário', number_format($this->salario, 2, ',', '.'), 7, 7, false, "", "", "onChange", true);
 
