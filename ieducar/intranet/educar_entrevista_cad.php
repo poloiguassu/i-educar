@@ -53,7 +53,6 @@ class indice extends clsCadastro
 
 	var $cod_vps_entrevista;
 	var $ref_cod_exemplar_tipo;
-	var $ref_cod_vps_entrevista;
 	var $ref_usuario_exc;
 	var $ref_usuario_cad;
 	var $ref_cod_vps_funcao;
@@ -471,7 +470,7 @@ class indice extends clsCadastro
 		$data_entrevista = Portabilis_Date_Utils::brToPgSQL($this->data_entrevista);
 		$salario = Portabilis_Utils_Float::brToPgSQL($this->salario);
 
-		$obj = new clsPmieducarVPSEntrevista(null, $this->ref_cod_tipo_contratacao, $this->ref_cod_vps_entrevista, null,
+		$obj = new clsPmieducarVPSEntrevista(null, $this->ref_cod_tipo_contratacao, null,
 			$this->pessoa_logada, $this->ref_cod_vps_funcao, $this->ref_cod_vps_jornada_trabalho,
 			$this->empresa_id, $this->descricao, $this->ano, null, null, 1,
 			$this->ref_cod_escola, $this->ref_cod_curso, $salario, $data_entrevista, $this->hora_entrevista,
@@ -527,8 +526,8 @@ class indice extends clsCadastro
 		$salario = Portabilis_Utils_Float::brToPgSQL($this->salario);
 
 		$this->vps_entrevista_responsavel = unserialize(urldecode($this->vps_entrevista_responsavel));
-		$obj = new clsPmieducarVPSEntrevista($this->cod_vps_entrevista, null, $this->ref_cod_vps_entrevista,
-			$this->pessoa_logada, null, $this->ref_cod_vps_funcao, $this->ref_cod_vps_jornada_trabalho,
+		$obj = new clsPmieducarVPSEntrevista($this->cod_vps_entrevista, null, $this->pessoa_logada,
+			null, $this->ref_cod_vps_funcao, $this->ref_cod_vps_jornada_trabalho,
 			$this->empresa_id, $this->descricao, $this->ano, null, null, 1,
 			$this->ref_cod_escola, $this->ref_cod_curso, $salario, $this->data_entrevista,
 			$this->hora_entrevista, $this->numero_vagas, $this->numero_jovens);
@@ -585,7 +584,7 @@ class indice extends clsCadastro
 		$obj_permissoes = new clsPermissoes();
 		$obj_permissoes->permissao_excluir(598, $this->pessoa_logada, 11,  "educar_entrevista_lst.php");
 
-		$obj = new clsPmieducarVPSEntrevista($this->cod_vps_entrevista, null, null, $this->pessoa_logada, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0, $this->ref_cod_escola);
+		$obj = new clsPmieducarVPSEntrevista($this->cod_vps_entrevista, null, $this->pessoa_logada, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0, $this->ref_cod_escola);
 		$excluiu = $obj->excluir();
 
 		if($excluiu)
@@ -863,12 +862,6 @@ $pagina->MakeAll();
 			xml_jornada_trabalho.envia("educar_entrevista_xml.php?esc=" + campoEscola + "&idpes=" + campoEmpresa);
 		}
 	}
-
-	function pesquisa()
-	{
-		pesquisa_valores_popless('educar_pesquisa_vps_entrevista_lst.php?campo1=ref_cod_vps_entrevista',  'ref_cod_vps_entrevista')
-	}
-
 
 	function fixupPrincipalCheckboxes() {
 		$j('#principal').hide();
