@@ -526,7 +526,99 @@ class clsPmieducarVPSAlunoEntrevista
 
 		$db->Consulta( $sql );
 
-		error_log($sql);
+		if( $countCampos > 1 )
+		{
+			while ( $db->ProximoRegistro() )
+			{
+				$tupla = $db->Tupla();
+
+				$tupla["_total"] = $this->_total;
+				$resultado[] = $tupla;
+			}
+		}
+		else
+		{
+			while ( $db->ProximoRegistro() )
+			{
+				$tupla = $db->Tupla();
+				$resultado[] = $tupla[$this->_campos_lista];
+			}
+		}
+		if( count( $resultado ) )
+		{
+			return $resultado;
+		}
+		return false;
+	}
+
+	/**
+	 * Retorna uma lista filtrados de acordo com os parametros
+	 *
+	 * @return array
+	 */
+	function listaMes($data_entrevista_mes = null, $data_entrevista_ano = null, $int_resultado_entrevista = null)
+	{
+		$filtros = '';
+		$this->resetCamposLista();
+
+		$this->_campos_lista .= "
+			, (
+				SELECT
+					nome
+				FROM
+					cadastro.pessoa, pmieducar.aluno
+				WHERE
+					idpes = ref_idpes and cod_aluno = ref_cod_aluno
+			) AS nome
+			, (
+				SELECT
+					data_entrevista
+				FROM
+					pmieducar.vps_entrevista a
+				WHERE
+					a.cod_vps_entrevista = ref_cod_vps_entrevista
+			) AS data_entrevista";
+
+		$sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+		$filtros = "";
+
+		$whereAnd = " WHERE ";
+
+		if(is_numeric($int_resultado_entrevista))
+		{
+			$filtros .= "{$whereAnd} resultado_entrevista = '{$int_resultado_entrevista}'";
+			$whereAnd = " AND ";
+		}
+
+		if(is_numeric($data_entrevista_mes) &&  is_numeric($data_entrevista_ano))
+		{
+			$filtrosData = "";
+			$whereAndData = " WHERE ";
+
+			if(is_numeric($data_entrevista_mes))
+			{
+				$filtrosData .= "{$whereAndData} EXTRACT(MONTH FROM data_entrevista) = '{$data_entrevista_mes}'";
+				$whereAndData = " AND ";
+			}
+
+			if(is_numeric($data_entrevista_ano))
+			{
+				$filtrosData .= "{$whereAndData} EXTRACT(YEAR FROM data_entrevista) = '{$data_entrevista_ano}'";
+				$whereAndData = " AND ";
+			}
+
+			$filtros .= "{$whereAnd} EXISTS (SELECT 1 FROM pmieducar.vps_entrevista {$filtrosData})";
+		}
+
+		$db = new clsBanco();
+		$countCampos = count( explode( ",", $this->_campos_lista ) );
+		$resultado = array();
+
+		$sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+		$this->_total = $db->CampoUnico( "SELECT COUNT(0) FROM {$this->_tabela} {$filtros}" );
+
+		$db->Consulta( $sql );
 
 		if( $countCampos > 1 )
 		{
