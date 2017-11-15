@@ -96,22 +96,17 @@ class indice extends clsListagem
 			// HACK: colocar campo para usuário selecionar o ano que quer buscar pelo ano letivo
 			$ano = 2017;
 			$registroMes = $obj->listaMes($index, $ano);
-			$total_alunos = $registroMes ? count($registroMes) : 0;
+			$numero_encaminhados = $registroMes ? count($registroMes) : 0;
 
 			$lista_busca = array(
 				"<a href=\"educar_vps_aluno_lst.php?situacao_vps=\" target=\"_blank\">$ano / {$mes}</a>",
-				"<a href=\"educar_vps_aluno_lst.php?situacao_vps=\" target=\"_blank\">{$total_alunos}</a>",
+				"<a href=\"educar_vps_aluno_lst.php?situacao_vps=\" target=\"_blank\">{$numero_encaminhados}</a>",
 			);
 
 			$this->addLinhas($lista_busca);
 		}
 
-		/*$lista_busca = array(
-			"<a href=\"educar_vps_aluno_lst.php?\" target=\"_blank\">Total</a>",
-			"<a href=\"educar_vps_aluno_lst.php?\" target=\"_blank\">{$total_alunos}</a>",
-		);
-
-		$this->addLinhas($lista_busca);*/
+		$this->addLinhas($lista_busca);
 
 		$localizacao = new LocalizacaoSistema();
 		$localizacao->entradaCaminhos( array(

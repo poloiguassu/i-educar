@@ -29,6 +29,7 @@ require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
 require_once ("include/pmieducar/geral.inc.php");
 require_once ("include/localizacaoSistema.php");
+require_once ("lib/App/Model/PrioridadeVPSHTML.php");
 require_once ("lib/App/Model/VivenciaProfissionalSituacao.php");
 
 class clsIndexBase extends clsBase
@@ -180,6 +181,9 @@ class indice extends clsListagem
 				if($registroVPS["situacao_vps"])
 					$situacaoVPS = App_Model_VivenciaProfissionalSituacao::getInstance()->getValue($registroVPS["situacao_vps"]);
 
+				if(is_numeric($registroVPS["prioridade"]))
+					$registroVPS["prioridade"] = App_Model_PrioridadeVPSHTML::getInstance()->getValue($registroVPS["prioridade"]);
+
 				if($registroVPS["ref_cod_vps_aluno_entrevista"])
 				{
 					$alunoEntrevista = new clsPmieducarVPSAlunoEntrevista($registroVPS["ref_cod_vps_aluno_entrevista"]);
@@ -225,7 +229,7 @@ class indice extends clsListagem
 					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$registro["nome"]}</a>",
 					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$numero_entrevistas}</a>",
 					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$situacaoVPS}</a>",
-					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$registroVPS["prioridade"]}</a>",
+					"{$registroVPS["prioridade"]}",
 					"<a href=\"educar_resultado_entrevista_cad.php?cod_vps_entrevista={$ref_cod_vps_entrevista}\" target=\"_blank\">{$funcao}</a>",
 					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$inicioVPS}</a>",
 					"<a href=\"educar_vps_aluno_det.php?cod_aluno={$ref_cod_aluno}\">{$terminoVPS}</a>",

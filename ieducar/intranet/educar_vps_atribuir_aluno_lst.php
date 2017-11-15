@@ -31,6 +31,7 @@ require_once ("include/pmieducar/geral.inc.php");
 require_once ("include/localizacaoSistema.php");
 require_once ("lib/App/Model/SerieEstudo.php");
 require_once ("lib/App/Model/TurnoEstudo.php");
+require_once ("lib/App/Model/PrioridadeVPSHTML.php");
 require_once ("lib/App/Model/VivenciaProfissionalSituacao.php");
 
 class clsIndexBase extends clsBase
@@ -248,6 +249,9 @@ class indice extends clsListagem
 					if($registroAlunoEntrevista["insercao_vps"])
 						$insercaoVPS = Portabilis_Date_Utils::pgSQLToBr($registroAlunoEntrevista["insercao_vps"]);
 				}
+
+				if(is_numeric($registro["prioridade"]))
+					$registro["prioridade"] = App_Model_PrioridadeVPSHTML::getInstance()->getValue($registro["prioridade"]);
 
 				$sql     = "SELECT COUNT(ref_cod_aluno) from pmieducar.vps_aluno_entrevista where ref_cod_aluno = $1";
 				$options = array('params' => $ref_cod_aluno, 'return_only' => 'first-field');
