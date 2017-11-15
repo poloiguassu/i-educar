@@ -303,7 +303,7 @@ class clsCadastro extends clsCampos
 		{
 			$retorno .= "
 				<div class='panel panel-default'>
-				<div class='panel-heading'>{$this->locale}</div>";
+				<div class='card-header'>{$this->locale}</div>";
 		}
 
 		$retorno .= "<center>\n<table class='table table-striped table-bordered' cellspacing='0' width='100%''>\n";
