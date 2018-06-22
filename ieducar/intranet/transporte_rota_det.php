@@ -36,6 +36,7 @@ require_once 'include/modules/clsModulesRotaTransporteEscolar.inc.php';
 require_once 'include/modules/clsModulesItinerarioTransporteEscolar.inc.php';
 require_once 'include/modules/clsModulesPontoTransporteEscolar.inc.php';
 require_once 'include/modules/clsModulesVeiculo.inc.php';
+require_once 'include/modules/clsModulesMotorista.inc.php';
 
 require_once 'Portabilis/Date/Utils.php';
 require_once 'Portabilis/View/Helper/Application.php';
@@ -87,7 +88,7 @@ class indice extends clsDetalhe
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
     $this->titulo = 'Rota - Detalhe';
-    
+
 
     $cod_rota_transporte_escolar = $_GET['cod_rota'];
 
@@ -110,7 +111,7 @@ class indice extends clsDetalhe
     if (trim($registro['km_npav'])!='')
       $this->addDetalhe( array("Percurso não pavimentado", $registro['km_npav'].' km'));
 
-    $this->addDetalhe( array("Terceirizado", ($registro['tercerizado'] == 'S' ? 'Sim' : 'Não' )));
+    $this->addDetalhe( array("Terceirizado", ($registro['tipo_rota'] == 'S' ? 'Sim' : 'Não' )));
 
     // Itinerário
 
@@ -123,18 +124,18 @@ class indice extends clsDetalhe
           <table>
           <tr colspan=\'5\'><td><a style=\' text-decoration: underline;\' href=\'/intranet/transporte_itinerario_cad.php?cod_rota='.$cod_rota_transporte_escolar.'\'>Editar itinerário</a></td></tr>
             <tr align="center">
-              <td bgcolor="#A1B3BD"><b>Sequencial</b></td>
-              <td bgcolor="#A1B3BD"><b>Ponto</b></td>
-              <td bgcolor="#A1B3BD"><b>Hora</b></td>
-              <td bgcolor="#A1B3BD"><b>Tipo</b></td>
-              <td bgcolor="#A1B3BD"><b>Veículo</b></td>
+              <td bgcolor="#ccdce6"><b>Sequencial</b></td>
+              <td bgcolor="#ccdce6"><b>Ponto</b></td>
+              <td bgcolor="#ccdce6"><b>Hora</b></td>
+              <td bgcolor="#ccdce6"><b>Tipo</b></td>
+              <td bgcolor="#ccdce6"><b>Veículo</b></td>
             </tr>';
 
         $cont = 0;
 
         foreach ($lst as $valor) {
           if (($cont % 2) == 0) {
-            $color = ' bgcolor="#E4E9ED" ';
+            $color = ' bgcolor="#f5f9fd" ';
           }
           else {
             $color = ' bgcolor="#FFFFFF" ';
@@ -142,7 +143,11 @@ class indice extends clsDetalhe
 
           $obj_veiculo = new clsModulesVeiculo($valor['ref_cod_veiculo']);
           $obj_veiculo = $obj_veiculo->detalhe();
-          $valor_veiculo = $obj_veiculo['descricao']==''?'':$obj_veiculo['descricao'].' - Placa: '.$obj_veiculo['placa'];
+
+          $motorista = new clsModulesMotorista($obj_veiculo['ref_cod_motorista']);
+          $motorista = $motorista->detalhe();
+
+          $valor_veiculo = $obj_veiculo['descricao']==''?'':$obj_veiculo['descricao'].' - Placa: '.$obj_veiculo['placa'] . ' - Motorista: ' . $motorista['nome_motorista'];
 
           $obj_ponto = new clsModulesPontoTransporteEscolar($valor['ref_cod_ponto_transporte_escolar']);
           $obj_ponto = $obj_ponto->detalhe();
@@ -164,15 +169,22 @@ class indice extends clsDetalhe
 
         $tabela .= '</table>';
 
-  
+
     }
-      if ($tabela) {
-        $this->addDetalhe(array('Itinerário', $tabela));
-      } else{ 
-        $this->addDetalhe(array('Itinerário', '<a style=\' text-decoration: underline; font-size: 12px;\' href=\'/intranet/transporte_itinerario_cad.php?cod_rota='.$cod_rota_transporte_escolar.'\'>Editar itinerário</a>'));
-      }
-    $this->url_novo = "../module/TransporteEscolar/Rota";
-    $this->url_editar = "../module/TransporteEscolar/Rota?id={$cod_rota_transporte_escolar}";
+    if ($tabela) {
+      $this->addDetalhe(array('Itinerário', $tabela));
+    } else{
+      $this->addDetalhe(array('Itinerário', '<a style=\' text-decoration: underline; font-size: 12px;\' href=\'/intranet/transporte_itinerario_cad.php?cod_rota='.$cod_rota_transporte_escolar.'\'>Editar itinerário</a>'));
+    }
+
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra(21238, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo = "../module/TransporteEscolar/Rota";
+      $this->url_editar = "../module/TransporteEscolar/Rota?id={$cod_rota_transporte_escolar}";
+    }
+
     $this->url_cancelar = "transporte_rota_lst.php";
 
     $this->largura = "100%";
@@ -180,10 +192,10 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_transporte_escolar_index.php"                  => "Transporte escolar",
          ""                                  => "Detalhe da rota"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

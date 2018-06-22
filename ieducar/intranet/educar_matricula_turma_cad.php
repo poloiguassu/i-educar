@@ -108,7 +108,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""        => "Enturma&ccedil;&atilde;o da matr&iacute;cula"
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -121,8 +121,8 @@ class indice extends clsCadastro
       elseif (! is_numeric($this->ref_cod_turma_origem))
         $this->novaEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
       else {
-        $this->transferirEnturmacao($this->ref_cod_matricula, 
-                                    $this->ref_cod_turma_origem, 
+        $this->transferirEnturmacao($this->ref_cod_matricula,
+                                    $this->ref_cod_turma_origem,
                                     $this->ref_cod_turma_destino);
       }
 
@@ -140,9 +140,9 @@ class indice extends clsCadastro
     $enturmacaoExists = new clsPmieducarMatriculaTurma();
     $enturmacaoExists = $enturmacaoExists->lista($matriculaId,
                                                  $turmaDestinoId,
-                                                 NULL, 
                                                  NULL,
-                                                 NULL, 
+                                                 NULL,
+                                                 NULL,
                                                  NULL,
                                                  NULL,
                                                  NULL,
@@ -152,10 +152,10 @@ class indice extends clsCadastro
     if (! $enturmacaoExists) {
       $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
                                                    $turmaDestinoId,
-                                                   $this->pessoa_logada, 
-                                                   $this->pessoa_logada, 
+                                                   $this->pessoa_logada,
+                                                   $this->pessoa_logada,
                                                    NULL,
-                                                   NULL, 
+                                                   NULL,
                                                    1);
       $enturmacao->data_enturmacao = $this->data_enturmacao;
       return $enturmacao->cadastra();
@@ -163,31 +163,49 @@ class indice extends clsCadastro
     return false;
   }
 
-  
+
   function transferirEnturmacao($matriculaId, $turmaOrigemId, $turmaDestinoId) {
-    if($this->removerEnturmacao($matriculaId, $turmaOrigemId))
+    if($this->removerEnturmacao($matriculaId, $turmaOrigemId, TRUE))
       return $this->novaEnturmacao($matriculaId, $turmaDestinoId);
     return false;
   }
 
 
-  function removerEnturmacao($matriculaId, $turmaId) {
+  function removerEnturmacao($matriculaId, $turmaId, $remanejado = FALSE) {
+
+    if (!$this->data_enturmacao) {
+      $this->data_enturmacao = date('Y-m-d');
+    }
+
     $sequencialEnturmacao = $this->getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId);
     $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
                                                  $turmaId,
-                                                 $this->pessoa_logada, 
-                                                 NULL, 
+                                                 $this->pessoa_logada,
                                                  NULL,
-                                                 NULL, 
+                                                 NULL,
+                                                 $this->data_enturmacao,
                                                  0,
                                                  NULL,
                                                  $sequencialEnturmacao);
-    if ($enturmacao->edita()){
-      $enturmacao->marcaAlunoRemanejado($this->data_enturmacao);
-      return true;
-    } else {
-      return false;
+    $detEnturmacao = $enturmacao->detalhe();
+    $detEnturmacao = $detEnturmacao['data_enturmacao'];
+    $enturmacao->data_enturmacao = $detEnturmacao;
+
+    $instituicao = $enturmacao->getInstituicao($matriculaId);
+    $instituicao = new clsPmieducarInstituicao($instituicao);
+    $det_instituicao = $instituicao->detalhe();
+    $data_base_remanejamento = $det_instituicao['data_base_remanejamento'];
+    if (($data_base_remanejamento > $this->data_enturmacao) || (! $data_base_remanejamento)){
+      $enturmacao->removerSequencial = TRUE;
     }
+
+    if ($enturmacao->edita()){
+      if ($remanejado) {
+        $enturmacao->marcaAlunoRemanejado($this->data_enturmacao);
+      }
+      return true;
+    }else
+      return false;
   }
 
 

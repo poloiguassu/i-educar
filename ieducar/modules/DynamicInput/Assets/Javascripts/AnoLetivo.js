@@ -2,11 +2,33 @@
   $(document).ready(function(){
 
     var $escolaField       = getElementFor('escola');
-    var $anoLetivoField    = getElementFor('ano');
+    var $anoLetivoField    = getElementFor('ano_letivo');
 
     var handleGetAnoEscolares = function(response) {
       var selectOptions = jsonResourcesToSelectOptions(response['options']);
       updateSelect($anoLetivoField, selectOptions, "Selecione um ano escolar");
+
+$j('#ref_cod_curso').change(selecionaAno);
+
+
+
+
+            function selecionaAno(){
+var numeroElementos = $j('#ano option').length;
+posicaoElemento = numeroElementos - 1;
+     var ultimoAno = $('#ano option').eq(posicaoElemento).val();
+
+
+$j('#ano option').each(function(){
+    var $this = $(this); 
+
+    if ($this.val() == ultimoAno) { 
+        $this.prop('selected', true); 
+        return false; 
+    }
+});
+}
+
     }
 
     var updateAnoEscolares = function(){

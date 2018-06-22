@@ -1,11 +1,11 @@
 -- //
 
 --
--- Cria as tabelas para o mÛdulo Regra de AvaliaÁ„o. Esse mÛdulo È composto por
--- outros 4 mÛdulos interdependentes e por isso esse delta define a criaÁ„o
+-- Cria as tabelas para o m√≥dulo Regra de Avalia√ß√£o. Esse m√≥dulo √© composto por
+-- outros 4 m√≥dulos interdependentes e por isso esse delta define a cria√ß√£o
 -- das tabelas relacionadas.
 --
--- @author   Eriksen Costa Paix„o <eriksen.paixao_bs@cobra.com.br>
+-- @author   Eriksen Costa Paix√£o <eriksen.paixao_bs@cobra.com.br>
 -- @license  @@license@@
 -- @version  $Id$
 --
@@ -40,18 +40,20 @@ CREATE TABLE "modules"."formula_media"  (
   PRIMARY KEY("id","instituicao_id")
 );
 CREATE TABLE "modules"."regra_avaliacao"  ( 
-  "id"                        serial NOT NULL,
-  "instituicao_id"            int NOT NULL,
-  "formula_media_id"          int NOT NULL,
-  "formula_recuperacao_id"    int NULL DEFAULT 0,
-  "tabela_arredondamento_id"  int NULL,
-  "nome"                      varchar(50) NOT NULL,
-  "tipo_nota"                 smallint NOT NULL,
-  "tipo_progressao"           smallint NOT NULL,
-  "media"                     decimal(5,3) NULL DEFAULT 00.000,
-  "porcentagem_presenca"      decimal(6,3) NULL DEFAULT 00.000,
-  "parecer_descritivo"        smallint NULL DEFAULT 0,
-  "tipo_presenca"             smallint NOT NULL,
+  "id"                         serial NOT NULL,
+  "instituicao_id"             int NOT NULL,
+  "formula_media_id"           int NOT NULL,
+  "formula_recuperacao_id"     int NULL DEFAULT 0,
+  "tabela_arredondamento_id"   int NULL,
+  "nome"                       varchar(50) NOT NULL,
+  "tipo_nota"                  smallint NOT NULL,
+  "tipo_progressao"            smallint NOT NULL,
+  "media"                      decimal(5,3) NULL DEFAULT 00.000,
+  "porcentagem_presenca"       decimal(6,3) NULL DEFAULT 00.000,
+  "parecer_descritivo"         smallint NULL DEFAULT 0,
+  "tipo_presenca"              smallint NOT NULL,
+  "tipo_recuperacao_paralela"  smallint DEFAULT 0,
+  "media_recuperacao_paralela" smallint,
   PRIMARY KEY("id","instituicao_id")
 );
 CREATE TABLE "modules"."tabela_arredondamento"  ( 

@@ -1,23 +1,23 @@
 <?php
 /**
- * i-Educar - Sistema de gest�o escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja�
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
- * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
- * qualquer vers�o posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
- * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
- * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
- * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
@@ -28,6 +28,7 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsModulesPessoaTransporte class.
@@ -47,8 +48,10 @@ class clsModulesPessoaTransporte
   var $ref_cod_ponto_transporte_escolar;
   var $ref_idpes_destino;
   var $observacao;
+  var $turno;
+  var $pessoa_logada;
   /**
-   * Armazena o total de resultados obtidos na �ltima chamada ao m�todo lista().
+   * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
    */
   var $_total;
@@ -66,33 +69,33 @@ class clsModulesPessoaTransporte
   var $_tabela;
 
   /**
-   * Lista separada por v�rgula, com os campos que devem ser selecionados na
-   * pr�xima chamado ao m�todo lista().
+   * Lista separada por vírgula, com os campos que devem ser selecionados na
+   * próxima chamado ao método lista().
    * @var string
    */
   var $_campos_lista;
 
   /**
-   * Lista com todos os campos da tabela separados por v�rgula, padr�o para
-   * sele��o no m�todo lista.
+   * Lista com todos os campos da tabela separados por vírgula, padrão para
+   * seleção no método lista.
    * @var string
    */
   var $_todos_campos;
 
   /**
-   * Valor que define a quantidade de registros a ser retornada pelo m�todo lista().
+   * Valor que define a quantidade de registros a ser retornada pelo método lista().
    * @var int
    */
   var $_limite_quantidade;
 
   /**
-   * Define o valor de offset no retorno dos registros no m�todo lista().
+   * Define o valor de offset no retorno dos registros no método lista().
    * @var int
    */
   var $_limite_offset;
 
   /**
-   * Define o campo para ser usado como padr�o de ordena��o no m�todo lista().
+   * Define o campo para ser usado como padrão de ordenação no método lista().
    * @var string
    */
   var $_campo_order_by;
@@ -100,16 +103,17 @@ class clsModulesPessoaTransporte
   /**
    * Construtor.
    */
-  function clsModulesPessoaTransporte( $cod_pessoa_transporte = NULL, $ref_cod_rota_transporte_escolar = NULL,
+  function __construct( $cod_pessoa_transporte = NULL, $ref_cod_rota_transporte_escolar = NULL,
   $ref_idpes = null ,$ref_cod_ponto_transporte_escolar = NULL, $ref_idpes_destino = NULL,
-   $observacao = NULL)
+   $observacao = NULL, $turno = NULL)
   {
     $db = new clsBanco();
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}pessoa_transporte";
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
 
     $this->_campos_lista = $this->_todos_campos = "cod_pessoa_transporte, ref_cod_rota_transporte_escolar,
-                                                  ref_idpes, ref_cod_ponto_transporte_escolar, ref_idpes_destino, observacao"; 
+                                                  ref_idpes, ref_cod_ponto_transporte_escolar, ref_idpes_destino, observacao, turno"; 
 
     if (is_numeric($cod_pessoa_transporte)) {
       $this->cod_pessoa_transporte = $cod_pessoa_transporte;
@@ -133,6 +137,10 @@ class clsModulesPessoaTransporte
 
     if (is_string($observacao)) {
       $this->observacao = $observacao;
+    }
+
+    if (is_numeric($turno)) {
+      $this->turno = $turno;
     }
 
   }
@@ -188,8 +196,22 @@ class clsModulesPessoaTransporte
         $gruda = ", ";
     }
 
+    if (is_numeric($this->turno)) {
+        $campos .= "{$gruda}turno";
+        $valores .= "{$gruda}'{$this->turno}'";
+        $gruda = ", ";
+    }
+
     $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-    return $db->InsertId("{$this->_tabela}_seq");
+
+    $this->cod_pessoa_transporte = $db->InsertId("{$this->_tabela}_seq");
+
+    if($this->cod_pessoa_transporte){
+      $detalhe = $this->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("pessoa_transporte", $this->pessoa_logada, $this->cod_pessoa_transporte);
+      $auditoria->inclusao($detalhe);
+    }
+    return $this->cod_pessoa_transporte;
     }
 
     return FALSE;
@@ -238,8 +260,16 @@ class clsModulesPessoaTransporte
         $gruda = ", ";
     }
 
+    if (is_numeric($this->turno)) {
+        $set .= "{$gruda}turno = '{$this->turno}'";
+        $gruda = ", ";
+    }
+
      if ($set) {
+        $detalheAntigo = $this->detalhe();
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_pessoa_transporte = '{$this->cod_pessoa_transporte}'");
+        $auditoria = new clsModulesAuditoriaGeral("pessoa_transporte", $this->pessoa_logada,$this->cod_pessoa_transporte);
+        $auditoria->alteracao($detalheAntigo, $this->detalhe());
         return TRUE;
       }
     }
@@ -248,50 +278,51 @@ class clsModulesPessoaTransporte
   }
 
   /**
-   * Retorna uma lista de registros filtrados de acordo com os par�metros.
+   * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
-  function lista($cod_pessoa_transporte = NULL, $ref_idpes = NULL,
-    $ref_cod_rota_transporte_escolar = NULL,
-    $ref_cod_ponto_transporte_escolar = NULL, $ref_idpes_destino = NULL, $nome_pessoa = NULL, $nome_destino = NULL)
+  function lista($cod_pessoa_transporte = NULL,
+                 $ref_idpes = NULL,
+                 $ref_cod_rota_transporte_escolar = NULL,
+                 $ref_cod_ponto_transporte_escolar = NULL,
+                 $ref_idpes_destino = NULL,
+                 $nome_pessoa = NULL,
+                 $nome_destino = NULL,
+                 $ano_rota = NULL)
   {
     
-    $sql = "SELECT {$this->_campos_lista}, (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
-          WHERE
-            idpes = ref_idpes_destino
-         ) AS nome_destino, (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
-          WHERE
-            idpes = ref_idpes
-         ) AS nome_pessoa, (
-          SELECT
-            descricao 
-          FROM
-            modules.rota_transporte_escolar
-          WHERE
-            ref_cod_rota_transporte_escolar = cod_rota_transporte_escolar
-         ) AS nome_rota, (
-          SELECT
-            descricao 
-          FROM
-            modules.ponto_transporte_escolar
-          WHERE
-            ref_cod_ponto_transporte_escolar = cod_ponto_transporte_escolar
-         ) AS nome_ponto, (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa p, modules.rota_transporte_escolar rt
-          WHERE
-            p.idpes = rt.ref_idpes_destino and ref_cod_rota_transporte_escolar = rt.cod_rota_transporte_escolar
-         ) AS nome_destino2 FROM {$this->_tabela}";
+    $sql = "SELECT pt.cod_pessoa_transporte,
+                   pt.ref_cod_rota_transporte_escolar,
+                   pt.ref_idpes,
+                   pt.ref_cod_ponto_transporte_escolar,
+                   pt.ref_idpes_destino,
+                   pt.observacao,
+                   pt.turno,
+                   pd.nome AS nome_destino,
+                   p.nome AS nome_pessoa,
+                   rte.descricao AS nome_rota,
+                   pte.descricao AS nome_ponto,
+                   pd2.nome AS nome_destino2";
+
+    $sqlConditions = "
+      FROM {$this->_tabela} pt
+      LEFT JOIN cadastro.pessoa pd
+        ON (pd.idpes = pt.ref_idpes_destino)
+      LEFT JOIN cadastro.pessoa p
+        ON (p.idpes = pt.ref_idpes)
+      LEFT JOIN modules.rota_transporte_escolar rte
+        ON (rte.cod_rota_transporte_escolar = pt.ref_cod_rota_transporte_escolar)
+      LEFT JOIN modules.ponto_transporte_escolar pte
+        ON (pte.cod_ponto_transporte_escolar = pt.ref_cod_ponto_transporte_escolar)
+      LEFT JOIN cadastro.pessoa pd2
+        ON (
+          pd2.idpes = rte.ref_idpes_destino AND
+          pt.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar    
+        )
+    ";
+
+    $sql .= $sqlConditions;
+
     $filtros = "";
 
     $whereAnd = " WHERE ";
@@ -310,51 +341,54 @@ class clsModulesPessoaTransporte
     if (is_numeric($ref_cod_rota_transporte_escolar)) {
       $filtros .= "{$whereAnd} ref_cod_rota_transporte_escolar = '{$ref_cod_rota_transporte_escolar}'";
       $whereAnd = " AND ";
-    }    
+    }
 
     if (is_numeric($ref_cod_ponto_transporte_escolar)) {
       $filtros .= "{$whereAnd} ref_cod_ponto_transporte_escolar = '{$ref_cod_ponto_transporte_escolar}'";
       $whereAnd = " AND ";
-    }   
+    }
 
     if (is_numeric($ref_idpes_destino)) {
       $filtros .= "{$whereAnd} ref_idpes_destino = '{$ref_idpes_destino}'";
       $whereAnd = " AND ";
-    }       
+    }
 
     if (is_string($nome_pessoa)) {
         $filtros .= "
-        {$whereAnd} TO_ASCII(LOWER((
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
-          WHERE
-            idpes = ref_idpes
-         ))) LIKE TO_ASCII(LOWER('%{$nome_pessoa}%')) ";
+        {$whereAnd} translate(upper(p.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_pessoa}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = " AND ";
-    }       
+    }
 
     if (is_string($nome_destino)) {
         $filtros .= "
-        {$whereAnd} TO_ASCII(LOWER((
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
-          WHERE
-            idpes = ref_idpes_destino
-         ))) LIKE TO_ASCII(LOWER('%{$nome_destino}%')) ";
+        {$whereAnd} (translate(upper(pd.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_destino}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) OR (translate(upper(pd2.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_destino}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) ";
       $whereAnd = " AND ";
-    }             
+    }
+
+    if (is_numeric($ano_rota)) {
+      $filtros .= "{$whereAnd} rte.ano = '{$ano_rota}'";
+      $whereAnd = " AND ";
+    }
 
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista))+2;
     $resultado = array();
 
     $sql .= $filtros . $whereNomes. $this->getOrderby() . $this->getLimite();
+    
+    $sqlCount = "
+      SELECT COUNT(0) {$sqlConditions} {$filtros} {$whereNomes}
+    ";
 
-    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
+    $this->_total = $db->CampoUnico($sqlCount);
+    /*$this->_total = $db->CampoUnico("SELECT COUNT(0)
+                                       FROM {$this->_tabela} pt
+                                       LEFT JOIN cadastro.pessoa pd ON (pd.idpes = pt.ref_idpes_destino)
+                                       LEFT JOIN cadastro.pessoa p ON (p.idpes = pt.ref_idpes)
+                                       LEFT JOIN modules.rota_transporte_escolar rte ON (rte.cod_rota_transporte_escolar = pt.ref_cod_rota_transporte_escolar)
+                                       LEFT JOIN modules.ponto_transporte_escolar pte ON (pte.cod_ponto_transporte_escolar = pt.ref_cod_ponto_transporte_escolar)
+                                       LEFT JOIN cadastro.pessoa pd2 ON (pd2.idpes = rte.ref_idpes_destino
+                                                                     AND pt.ref_cod_rota_transporte_escolar = rte.cod_rota_transporte_escolar) {$filtros}");*/
 
     $db->Consulta($sql);
 
@@ -385,10 +419,10 @@ class clsModulesPessoaTransporte
   function detalhe()
   {
 
-    if (is_numeric($this->cod_pessoa_transporte)) {
+    if (is_numeric($this->cod_pessoa_transporte) || is_numeric($this->ref_idpes)) {
 
       $db = new clsBanco();
-      $db->Consulta("SELECT {$this->_todos_campos}, (
+      $sql = "SELECT {$this->_todos_campos}, (
           SELECT
             nome
           FROM
@@ -423,7 +457,14 @@ class clsModulesPessoaTransporte
             cadastro.pessoa p, modules.rota_transporte_escolar rt
           WHERE
             p.idpes = rt.ref_idpes_destino and ref_cod_rota_transporte_escolar = rt.cod_rota_transporte_escolar
-         ) AS nome_destino2 FROM {$this->_tabela} WHERE cod_pessoa_transporte = '{$this->cod_pessoa_transporte}'");
+         ) AS nome_destino2 FROM {$this->_tabela} WHERE ";
+      
+      if(is_numeric($this->cod_pessoa_transporte))
+        $sql .= " cod_pessoa_transporte = '{$this->cod_pessoa_transporte}'";
+      else
+        $sql .= " ref_idpes = '{$this->ref_idpes}' ORDER BY cod_pessoa_transporte DESC LIMIT 1 ";
+
+      $db->Consulta($sql);
       $db->ProximoRegistro();
       return $db->Tupla();
     }
@@ -452,16 +493,23 @@ class clsModulesPessoaTransporte
   function excluir()
   {    
     if (is_numeric($this->cod_pessoa_transporte)) {
+
+      $detalhe = $this->detalhe();
+
       $sql = "DELETE FROM {$this->_tabela} WHERE cod_pessoa_transporte = '{$this->cod_pessoa_transporte}'";
       $db = new clsBanco();
       $db->Consulta($sql);
+
+      $auditoria = new clsModulesAuditoriaGeral("pessoa_transporte", $this->pessoa_logada, $this->cod_pessoa_transporte);
+      $auditoria->exclusao($detalhe);
+
       return true;
     }
     return FALSE;
   }
 
   /**
-   * Define quais campos da tabela ser�o selecionados no m�todo Lista().
+   * Define quais campos da tabela serão selecionados no método Lista().
    */
   function setCamposLista($str_campos)
   {
@@ -469,7 +517,7 @@ class clsModulesPessoaTransporte
   }
 
   /**
-   * Define que o m�todo Lista() deverpa retornar todos os campos da tabela.
+   * Define que o método Lista() deverpa retornar todos os campos da tabela.
    */
   function resetCamposLista()
   {
@@ -477,7 +525,7 @@ class clsModulesPessoaTransporte
   }
 
   /**
-   * Define limites de retorno para o m�todo Lista().
+   * Define limites de retorno para o método Lista().
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -486,7 +534,7 @@ class clsModulesPessoaTransporte
   }
 
   /**
-   * Retorna a string com o trecho da query respons�vel pelo limite de
+   * Retorna a string com o trecho da query responsável pelo limite de
    * registros retornados/afetados.
    *
    * @return string
@@ -504,7 +552,7 @@ class clsModulesPessoaTransporte
   }
 
   /**
-   * Define o campo para ser utilizado como ordena��o no m�todo Lista().
+   * Define o campo para ser utilizado como ordenação no método Lista().
    */
   function setOrderby($strNomeCampo)
   {
@@ -514,7 +562,7 @@ class clsModulesPessoaTransporte
   }
 
   /**
-   * Retorna a string com o trecho da query respons�vel pela Ordena��o dos
+   * Retorna a string com o trecho da query responsável pela Ordenação dos
    * registros.
    *
    * @return string

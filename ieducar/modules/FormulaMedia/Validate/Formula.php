@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestדo escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaם
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa י software livre; vocך pode redistribuם-lo e/ou modificב-lo
- * sob os termos da Licenחa Pתblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versדo 2 da Licenחa, como (a seu critיrio)
- * qualquer versדo posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa י distribuם­do na expectativa de que seja תtil, porיm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implם­cita de COMERCIABILIDADE OU
- * ADEQUAֳַO A UMA FINALIDADE ESPECֽFICA. Consulte a Licenחa Pתblica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * Vocך deve ter recebido uma cףpia da Licenחa Pתblica Geral do GNU junto
- * com este programa; se nדo, escreva para a Free Software Foundation, Inc., no
- * endereחo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paixדo <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     FormulaMedia
  * @subpackage  Modules
- * @since       Arquivo disponםvel desde a versדo 1.1.0
+ * @since       Arquivo disponível desde a versão 1.1.0
  * @version     $Id$
  */
 
@@ -35,24 +35,24 @@ require_once 'FormulaMedia/Model/Formula.php';
 /**
  * FormulaMedia_Validate_Formula class.
  *
- * @author      Eriksen Costa Paixדo <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     FormulaMedia
  * @subpackage  Modules
- * @since       Classe disponםvel desde a versדo 1.1.0
+ * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
 class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
 {
   /**
-   * Referךncia para instגncia da classe FormulaMedia_Model_Formula do model.
+   * Referência para instância da classe FormulaMedia_Model_Formula do model.
    * @var FormulaMedia_Model_Formula
    */
   protected static $_model = NULL;
 
   /**
-   * Por padrדo, exclui o tokens de nota de recuperaחדo.
+   * Por padrão, exclui o tokens de nota de recuperação.
    *
    * @see CoreExt_Validate_Abstract#_getDefaultOptions()
    */
@@ -72,7 +72,7 @@ class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
       self::$_model = new FormulaMedia_Model_Formula();
     }
 
-    // Adiciona espaחos entre os parךnteses
+    // Adiciona espaços entre os parênteses
     $value = self::$_model->replaceAliasTokens($value);
 
     $tokensAvailable = $this->_getTokens();
@@ -80,7 +80,7 @@ class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
     $missingTokens   = array();
     $numericTokens   = array();
 
-    // Verifica se alguma token nדo permitida foi utilizada
+    // Verifica se alguma token não permitida foi utilizada
     foreach ($valueTokens as $tk) {
       if ('' == ($tk = trim($tk))) {
         continue;
@@ -92,8 +92,8 @@ class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
         }
       }
       elseif (self::$_model->isNumericToken($tk)) {
-        // Se for uma token numיrica, atribui um nתmero 1 para usar na fףrmula
-        // e avaliar se nדo lanחa um erro no PHP
+        // Se for uma token numérica, atribui um número 1 para usar na fórmula
+        // e avaliar se não lança um erro no PHP
         $numericTokens[$tk] = 1;
       }
     }
@@ -102,11 +102,11 @@ class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
       throw new Exception('As variáveis ou símbolos não são permitidos: ' . implode(', ', $missingTokens));
     }
 
-    // Verifica se a fףrmula י parseada corretamente pelo PHP
+    // Verifica se a fórmula é parseada corretamente pelo PHP
     $formula = self::$_model->replaceTokens($value, $numericTokens);
 
     /*
-     * Eval, com surpressדo de erro para evitar interrupחדo do script. Se
+     * Eval, com surpressão de erro para evitar interrupção do script. Se
      * retornar algum valor diferente de NULL, assume como erro de sintaxe.
      */
     $evaled = @eval('?><?php $result = ' . $formula . '; ?>');
@@ -121,8 +121,8 @@ class FormulaMedia_Validate_Formula extends CoreExt_Validate_Abstract
   }
 
   /**
-   * Retorna as tokens disponםveis para o validador. Uma token pode ser
-   * excluםda usando a opחדo excludeToken.
+   * Retorna as tokens disponíveis para o validador. Uma token pode ser
+   * excluída usando a opção excludeToken.
    *
    * @return array
    */

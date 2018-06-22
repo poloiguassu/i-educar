@@ -19,13 +19,13 @@
  * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
  * com este programa; se não, escreva para a Free Software Foundation, Inc., no
  * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
-
+ *
  * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     TabelaArredondamento
  * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.2.0
+ * @since       Arquivo disponível desde a versão 1.1.0
  * @version     $Id$
  */
 

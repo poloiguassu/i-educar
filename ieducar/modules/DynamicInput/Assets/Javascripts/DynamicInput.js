@@ -1,9 +1,9 @@
 function updateSelect($targetElement, options, emptyOptionHtml) {
   $targetElement.children().not('[value=""]').remove();
-  
+
   var groups = new Array();
   var optgroup = null;
-  
+
   $j.each(options, function(index, value){
     if ($j(value).data('group')) {
       if (groups.indexOf($j(value).data('group')) == -1) {
@@ -49,9 +49,9 @@ function xmlResourcesToSelectOptions(resources, parentNodeName, nodeIdAttrName, 
     $option.attr('value', $value.attr(nodeIdAttrName));
 
     if (typeof nodeValueAttrName != 'undefined')
-      text = safeCapitalize($value.attr(nodeValueAttrName));
+      text = ($value.attr(nodeValueAttrName));
     else
-      text = safeCapitalize($value.text());
+      text = ($value.text());
 
     $option.html(text);
     options.push($option);
@@ -61,7 +61,7 @@ function xmlResourcesToSelectOptions(resources, parentNodeName, nodeIdAttrName, 
 }
 
 
-function jsonResourcesToSelectOptions(resources) {
+function jsonResourcesToSelectOptions(resources, captalizeFirstCaracter) {
   var options = [];
 
   $j.each(resources, function(id, value) {
@@ -73,22 +73,25 @@ function jsonResourcesToSelectOptions(resources) {
 
     if (id.indexOf && id.substr && id.indexOf('__') == 0)
       id = id.substr(2);
-    
+
     var opt = $j('<option />').attr('value', id);
-    
+
     var newValue = value;
     if (typeof(value) == 'object') {
-    	$j.each(value, function(optId, optValue) {
-    		if (optId != 'value') {
-    			opt.data(optId, optValue);
-    		} else {
-    			newValue = optValue;
-    		}
-    	});
+      $j.each(value, function(optId, optValue) {
+        if (optId != 'value') {
+          opt.data(optId, optValue);
+        } else {
+          newValue = optValue;
+        }
+      });
     }
-    
-    opt.html(safeCapitalize(newValue));
-    
+
+    if (captalizeFirstCaracter)
+      opt.html((newValue));
+    else
+      opt.html(newValue);
+
     options.push(opt);
   });
 

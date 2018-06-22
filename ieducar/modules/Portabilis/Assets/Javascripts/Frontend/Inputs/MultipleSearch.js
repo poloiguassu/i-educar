@@ -1,7 +1,10 @@
 // multiple search input
-
+var arrayOptions = [];
 var defaultChosenOptions = {
-  no_results_text: "Sem resultados"
+  no_results_text: "Sem resultados para ",
+  width: '231px',
+  placeholder_text_multiple: "Selecione as opções",
+  placeholder_text_single: "Selecione uma opção"
 };
 
 var defaultMultipleSearchOptions = {
@@ -19,9 +22,10 @@ var defaultMultipleSearchOptions = {
   objectName    : undefined,
   attrName      : undefined,
   searchPath    : undefined,
+  typeSearch    : undefined,
 
   // options that can be overwritten
-  placeholder   : safeUtf8Decode('Selecione as opções')
+  // placeholder   : safeUtf8Decode('Selecione as opções')
 };
 
 var multipleSearch = {
@@ -29,34 +33,50 @@ var multipleSearch = {
     options = defaultMultipleSearchOptions.mergeWith(options);
     options.chosenOptions.url = options.get('searchPath');
 
+    var typeSearch = options.get('typeSearch');
     var attrName = options.get('attrName');
     if (attrName) { attrName = '_' + attrName; }
 
-    var $input  = $j(buildId(options.get('objectName') + attrName));
+    var objectId = buildId(options.get('objectName') + attrName);
+
+    var $input  = $j(objectId);
 
     // fixups for chosen
-    $input.attr('multiple', '');
-    $input.attr('data-placeholder', options.get('placeholder'));
+    if(typeSearch == 'multiple'){
+      $input.attr('multiple', '');
+    }
 
     var objectName = options.get('objectName');
 
     // jquery scope
-    $input.chosen(options.get('chosenOptions'), multipleSearch.handleSearch);
+    $input.chosen(options.get('chosenOptions'));
 
     // fixup to API receive all ids
-    $j("#"+objectName).attr('name', $j("#"+objectName).attr('name') + '[]');
+    $j(objectId).attr('name', $j(objectId).attr('name') + '[]');
   }
 };
 
 var multipleSearchHelper = {
-  setup : function(objectName, attrName, searchPath, searchResourceOptions) {
+  setup : function(objectName, attrName, searchPath, typeSearch, searchResourceOptions) {
     var defaultOptions = {
       searchPath : searchPath,
       objectName : objectName,
-      attrName   : attrName
+      attrName   : attrName,
+      typeSearch : typeSearch
     };
 
     var options = optionsUtils.merge(defaultOptions, searchResourceOptions);
     multipleSearch.setup(options);
   }
 };
+
+var updateChozen = function(input, values){
+  $j.each(values, function(index, value){
+    input.append('<option value="' + index + '"> ' + value + '</option>');
+  });
+  input.trigger("chosen:updated");
+};
+var clearValues = function(input){
+  input.empty();
+  input.trigger("chosen:updated");
+}

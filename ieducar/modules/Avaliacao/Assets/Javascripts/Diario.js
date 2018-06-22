@@ -7,6 +7,8 @@ var API_URL_BASE  = 'diarioApi';
 var RESOURCE_NAME  = 'matricula';
 var RESOURCES_NAME = 'matriculas';
 
+var REGRA_DIFERENCIADA_TEXT = '* Regra diferenciada para alunos com deficiência';
+
 var POST_LABEL   = '';
 var DELETE_LABEL = '';
 
@@ -19,8 +21,14 @@ var onClickSelectAllEvent = false;
 var onClickActionEvent    = false;
 var onClickDeleteEvent    = false;
 
-//url builders
+var sentidoTab;
+var showBotaoReplicarNotas;
 
+$(function() {
+    navegacaoTab(dataResponse.navegacao_tab);
+});
+
+//url builders
 var deleteResourceUrlBuilder = {
   buildUrl : function(urlBase, resourceName, additionalVars) {
 
@@ -88,6 +96,9 @@ var getResourceUrlBuilder = {
 
 
 function changeResource($resourceElement, postFunction, deleteFunction) {
+  //Substitui traveções por hífen antes de gravar
+  $resourceElement.val($resourceElement.val().replace(/\u2013|\u2014/g, "-"));
+
   if ($j.trim($resourceElement.val())  == '')
     deleteFunction($resourceElement);
   else
@@ -117,13 +128,25 @@ var changeNotaExame = function(event) {
   changeResource($element, postNotaExame, deleteNotaExame);
 };
 
+var changeNotaRecuperacaoParalela = function(event){
+  var $element = $j(this);
+  setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
+  changeResource($element, postNotaRecuperacaoParalela, deleteNotaRecuperacaoParalela);
+}
+
+var changeNotaRecuperacaoEspecifica = function(event){
+  var $element = $j(this);
+  setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
+  changeResource($element, postNotaRecuperacaoEspecifica, deleteNotaRecuperacaoEspecifica);
+}
 
 var changeFalta = function(event) {
   $element = $j(this);
+  var regra = $element.closest('tr').data('regra');
   changeResource($element, postFalta, deleteFalta);
 
   // se presenca geral, muda o valor em todas faltas da mesma matricula
-  if ($tableSearchDetails.data('details').tipo_presenca == 'geral') {
+  if (regra.tipo_presenca == 'geral') {
     var $fieldsFaltaMatricula = $element.closest('table').find('.falta-matricula-' + $element
                                                                .data('matricula_id') + '-cc')
                                                                .not($element);
@@ -136,11 +159,12 @@ var changeFalta = function(event) {
 
 var changeParecer = function(event) {
   var $element = $j(this);
+  var regra = $j(this).closest('tr').data('regra');
   setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
   changeResource($element, postParecer, deleteParecer);
 
   // se parecer geral, muda o valor em todos pareceres da mesma matricula
-  var parecerGeral = $j.inArray($tableSearchDetails.data('details').tipo_parecer_descritivo,
+  var parecerGeral = $j.inArray(regra.tipo_parecer_descritivo,
                                 ['etapa_geral', 'anual_geral']) > -1;
 
   if (parecerGeral) {
@@ -153,42 +177,64 @@ var changeParecer = function(event) {
   }
 };
 
+var changeNotaGeralEtapa = function(event) {
+  var $element = $j(this);
+  // setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
+  changeResource($element, postNotaGeral, deleteNotaGeral);
+
+  var $fieldsNotaGeral = $j('.nota-geral-etapa');
+
+  $fieldsNotaGeral.val($element.val());
+  $fieldsNotaGeral.data('old_value', $element.val());
+
+};
+var changeMedia = function(event){
+  var $element = $j(this);
+
+  changeResource($element, postMedia, deleteMedia);
+
+  $element.data('old_value', $element.val());
+};
+
+var changeSituacao = function(event){
+  var $element = $j(this);
+
+  if($element.val() != 0){
+    changeResource($element, postSituacao);
+    $element.data('old_value', $element.val());
+  }
+};
 
 function afterChangeResource($resourceElement) {
   $resourceElement.removeAttr('disabled').siblings('img').remove();
 
-  var resourceElementTabIndex    = $resourceElement.attr('tabindex');
-  var focusedElementTabIndex = $j('.tabable:focus').first().attr('tabindex');
-  var lastElementTabIndex        = $resourceElement.closest('form').find('.tabable').last().attr('tabindex');
+  var resourceElementTabIndex = parseInt($resourceElement.attr('tabindex'));
+  var focusedElementTabIndex  = parseInt($j('.tabable:focus').first().attr('tabindex'));
+  var lastElementTabIndex     = parseInt($resourceElement.closest('form').find('.tabable').last().attr('tabindex'));
 
   // percorre os proximos elementos enquanto não chegar no ultimo
   for(var nextTabIndex = resourceElementTabIndex + 1; nextTabIndex < lastElementTabIndex + 1; nextTabIndex++) {
     //var $nextElement = $j($resourceElement.closest('form').find('.tabable:[tabindex="'+nextTabIndex+'"]')).first();
     var $nextElement = $j($resourceElement.closest('form').find('.tabable[tabindex="'+nextTabIndex+'"]')).first();
-
-    // seta foco no proximo elemento, caso este seja visivel e o elemento alterado ainda esteja focado
-    if($nextElement.is(':visible')) {
-      if(resourceElementTabIndex == focusedElementTabIndex)
-        $nextElement.focus();
-
-      break;
-    }
+    var $nextNextElement = $j($resourceElement.closest('form').find('.tabable[tabindex="'+(nextTabIndex+1)+'"]')).first();
   }
 }
 
 function postNota($notaFieldElement) {
 
+  var regra = $notaFieldElement.closest('tr').data('regra');
   $notaFieldElement.val($notaFieldElement.val().replace(',', '.'));
 
   if (validatesIfValueIsNumeric($notaFieldElement.val(), $notaFieldElement.attr('id')) &&
-      validatesIfNumericValueIsInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), 0, 10) &&
-      validatesIfValueIsInSet($notaFieldElement.val(), $notaFieldElement.attr('id'), $tableSearchDetails.data('details').opcoes_notas)) {
+      validatesIfNumericValueIsInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), regra.nota_minima_geral, regra.nota_maxima_geral) &&
+      validatesIfDecimalPlacesInRange($notaFieldElement.val(), $notaFieldElement.attr('id'), 0, regra.qtd_casas_decimais)) {
 
     beforeChangeResource($notaFieldElement);
 
     var additionalVars = {
       matricula_id             : $notaFieldElement.data('matricula_id'),
-      componente_curricular_id : $notaFieldElement.data('componente_curricular_id')
+      componente_curricular_id : $notaFieldElement.data('componente_curricular_id'),
+      nota_original            : $notaFieldElement.val()
     };
 
     var options = {
@@ -198,6 +244,7 @@ function postNota($notaFieldElement) {
       success : function(dataResponse) {
         afterChangeResource($notaFieldElement);
         handleChange(dataResponse);
+        checkIfShowNotaRecuperacaoParalelaField($notaFieldElement.val(), dataResponse);
       }
     };
 
@@ -206,14 +253,42 @@ function postNota($notaFieldElement) {
   }
 }
 
+function checkIfShowNotaRecuperacaoParalelaField(notaLancada, dataResponse){
+  componente_curricular_id = dataResponse.componente_curricular_id;
+  matricula_id = dataResponse.matricula_id;
+  $jnotaRecuperacaoParalelaField = $j('#nota-recuperacao-paralela-' + matricula_id + '-cc-' + componente_curricular_id);
+
+  if(!$jnotaRecuperacaoParalelaField.length){
+    return false;
+  }
+
+  var regra = $jnotaRecuperacaoParalelaField.closest('tr').data('regra');
+  var usaRecuperacaoParalelaPorEtapa = (regra.tipo_recuperacao_paralela == 'por_etapa');
+  var mediaRecuperacaoParalela = regra.media_recuperacao_paralela;
+
+  if(usaRecuperacaoParalelaPorEtapa){
+    if((notaLancada < mediaRecuperacaoParalela) || (mediaRecuperacaoParalela == null)){
+      $jnotaRecuperacaoParalelaField.show();
+      // Somente seta o foco do campo quando o tab for horizontal,
+      // pois se for vertical não faz sentido e atrapalha a navegação
+      if(sentidoTab == "1"){
+        $jnotaRecuperacaoParalelaField.focus();
+      }
+    }else{
+      $jnotaRecuperacaoParalelaField.hide();
+    }
+  }
+}
+
 
 function postNotaExame($notaExameFieldElement) {
 
+  var regra = $notaExameFieldElement.closest('tr').data('regra');
   $notaExameFieldElement.val($notaExameFieldElement.val().replace(',', '.'));
 
   if (validatesIfValueIsNumeric($notaExameFieldElement.val(), $notaExameFieldElement.attr('id')) &&
-      validatesIfNumericValueIsInRange($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), 0, 10) &&
-      validatesIfValueIsInSet($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), $tableSearchDetails.data('details').opcoes_notas)) {
+      validatesIfNumericValueIsInRange($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), 0, regra.nota_maxima_exame_final) &&
+      validatesIfDecimalPlacesInRange($notaExameFieldElement.val(), $notaExameFieldElement.attr('id'), 0, regra.qtd_casas_decimais)) {
 
     beforeChangeResource($notaExameFieldElement);
 
@@ -238,6 +313,69 @@ function postNotaExame($notaExameFieldElement) {
   }
 }
 
+
+function postNotaRecuperacaoParalela($notaRecuperacaoParalelaElement) {
+
+  var regra = $notaRecuperacaoParalelaElement.closest('tr').data('regra');
+
+  $notaRecuperacaoParalelaElement.val($notaRecuperacaoParalelaElement.val().replace(',', '.'));
+
+  if (validatesIfValueIsNumeric($notaRecuperacaoParalelaElement.val(), $notaRecuperacaoParalelaElement.attr('id')) &&
+      validatesIfNumericValueIsInRange($notaRecuperacaoParalelaElement.val(), $notaRecuperacaoParalelaElement.attr('id'), regra.nota_minima_geral, regra.nota_maxima_geral) &&
+      validatesIfDecimalPlacesInRange($notaRecuperacaoParalelaElement.val(), $notaRecuperacaoParalelaElement.attr('id'), 0, regra.qtd_casas_decimais)) {
+
+    beforeChangeResource($notaRecuperacaoParalelaElement);
+
+    var additionalVars = {
+      matricula_id             : $notaRecuperacaoParalelaElement.data('matricula_id'),
+      componente_curricular_id : $notaRecuperacaoParalelaElement.data('componente_curricular_id')
+    };
+
+    var options = {
+      url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'nota_recuperacao_paralela', additionalVars),
+      dataType : 'json',
+      data : {att_value : $notaRecuperacaoParalelaElement.val()},
+      success : function(dataResponse) {
+        afterChangeResource($notaRecuperacaoParalelaElement);
+        handleChange(dataResponse);
+      }
+    };
+
+    $notaRecuperacaoParalelaElement.data('old_value', $notaRecuperacaoParalelaElement.val());
+    postResource(options, handleErrorOnPostResource);
+  }
+}
+
+function postNotaRecuperacaoEspecifica($notaRecuperacaoEspecificaElement) {
+  var regra = $notaRecuperacaoEspecificaElement.closest('tr').data('regra');
+
+  $notaRecuperacaoEspecificaElement.val($notaRecuperacaoEspecificaElement.val().replace(',', '.'));
+
+  if (validatesIfValueIsNumeric($notaRecuperacaoEspecificaElement.val(), $notaRecuperacaoEspecificaElement.attr('id')) &&
+      validatesIfNumericValueIsInRange($notaRecuperacaoEspecificaElement.val(), $notaRecuperacaoEspecificaElement.attr('id'), 0, regra.tipo_recuperacao_paralela_nota_maxima) &&
+      validatesIfDecimalPlacesInRange($notaRecuperacaoEspecificaElement.val(), $notaRecuperacaoEspecificaElement.attr('id'), 0, regra.qtd_casas_decimais)) {
+
+    beforeChangeResource($notaRecuperacaoEspecificaElement);
+
+    var additionalVars = {
+      matricula_id             : $notaRecuperacaoEspecificaElement.data('matricula_id'),
+      componente_curricular_id : $notaRecuperacaoEspecificaElement.data('componente_curricular_id')
+    };
+
+    var options = {
+      url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'nota_recuperacao_especifica', additionalVars),
+      dataType : 'json',
+      data : {att_value : $notaRecuperacaoEspecificaElement.val()},
+      success : function(dataResponse) {
+        afterChangeResource($notaRecuperacaoEspecificaElement);
+        handleChange(dataResponse);
+      }
+    };
+
+    $notaRecuperacaoEspecificaElement.data('old_value', $notaRecuperacaoEspecificaElement.val());
+    postResource(options, handleErrorOnPostResource);
+  }
+}
 
 function postFalta($faltaFieldElement) {
   $faltaFieldElement.val($faltaFieldElement.val().replace(',', '.'));
@@ -272,8 +410,8 @@ function postFalta($faltaFieldElement) {
 }
 
 
-function getEtapaParecer() {
-  if ($tableSearchDetails.data('details').tipo_parecer_descritivo.split('_')[0] == 'anual')
+function getEtapaParecer(regra) {
+  if (regra.tipo_parecer_descritivo.split('_')[0] == 'anual')
     var etapaParecer = 'An';
   else
     var etapaParecer = $j('#etapa').val();
@@ -283,23 +421,114 @@ function getEtapaParecer() {
 
 
 function postParecer($parecerFieldElement) {
-  var additionalVars = {
+  var regra = $parecerFieldElement.closest('tr').data('regra');
+  var data = {
     matricula_id             : $parecerFieldElement.data('matricula_id'),
     componente_curricular_id : $parecerFieldElement.data('componente_curricular_id'),
-    etapa : getEtapaParecer()
+    etapa                    : getEtapaParecer(regra),
+    ano_escolar              : $j('#ano').val(),
+    escola_id                : $j('#ref_cod_escola').val(),
+    oper: "post",
+    resource: "parecer",
+    att_value : $parecerFieldElement.val()
+  };
+
+  $j.post( API_URL_BASE, data)
+    .done(function(dataResponse) {
+      afterChangeResource($parecerFieldElement);
+      handleChange(dataResponse);
+    })
+    .fail(function() {
+      errorCallback || handleErrorOnDeleteResource;
+    });
+}
+
+function postNotaGeral($notaGeralElementField) {
+  var additionalVars = {
+    matricula_id             : $notaGeralElementField.data('matricula_id'),
+    componente_curricular_id : $notaGeralElementField.data('componente_curricular_id')
   };
 
   var options = {
-    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'parecer', additionalVars),
+    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'nota_geral', additionalVars),
     dataType : 'json',
-    data : {att_value : $parecerFieldElement.val()},
+    data : {att_value : $notaGeralElementField.val()},
     success : function(dataResponse) {
-      afterChangeResource($parecerFieldElement);
+      afterChangeResource($notaGeralElementField);
       handleChange(dataResponse);
     }
   };
 
-  $parecerFieldElement.data('old_value', $parecerFieldElement.val());
+  $notaGeralElementField.data('old_value', $notaGeralElementField.val());
+  postResource(options, handleErrorOnPostResource);
+}
+function postMedia($mediaElementField) {
+  var additionalVars = {
+    matricula_id             : $mediaElementField.data('matricula_id'),
+    componente_curricular_id : $mediaElementField.data('componente_curricular_id'),
+    etapa                    : $j('#etapa').val()
+  };
+
+  var options = {
+    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'media', additionalVars),
+    dataType : 'json',
+    data : {att_value : $mediaElementField.val()},
+    success : function(dataResponse) {
+      afterChangeResource($mediaElementField);
+      handleChange(dataResponse);
+    }
+  };
+
+  $mediaElementField.data('old_value', $mediaElementField.val());
+  postResource(options, handleErrorOnPostResource);
+}
+
+function deleteMedia($mediaFieldElement){
+
+  var resourceName = 'media';
+
+  var additionalVars = {
+    instituicao_id : $j('#ref_cod_instituicao').val(),
+    escola_id : $j('#ref_cod_escola').val(),
+    curso_id : $j('#ref_cod_curso').val(),
+    serie_id : $j('#ref_ref_cod_serie').val(),
+    turma_id : $j('#ref_cod_turma').val(),
+    ano_escolar : $j('#ano').val(),
+    componente_curricular_id : $mediaFieldElement.data('componente_curricular_id'),
+    etapa : $j('#etapa').val(),
+    matricula_id : $mediaFieldElement.data('matricula_id')
+   };
+
+  var options = {
+    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
+    dataType : 'json',
+    success : function(dataResponse) {
+      checkIfShowNotaRecuperacaoParalelaField($mediaFieldElement.val(), dataResponse);
+      afterChangeResource($mediaFieldElement);
+      handleChange(dataResponse);
+    }
+  };
+
+  deleteResource(resourceName, $mediaFieldElement, options, handleErrorOnDeleteResource);
+}
+
+function postSituacao($situacaoElementField) {
+
+  var additionalVars = {
+    matricula_id : $situacaoElementField.data('matricula_id')
+  };
+
+  var options = {
+    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'situacao', additionalVars),
+    dataType : 'json',
+    data : {att_value : $situacaoElementField.val()},
+    success : function(dataResponse) {
+      afterChangeResource($situacaoElementField);
+      handleChange(dataResponse);
+    }
+  };
+
+  $situacaoElementField.data('old_value', $situacaoElementField.val());
   postResource(options, handleErrorOnPostResource);
 }
 
@@ -342,12 +571,53 @@ function deleteNota($notaFieldElement) {
     url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
     dataType : 'json',
     success : function(dataResponse) {
+      checkIfShowNotaRecuperacaoParalelaField($notaFieldElement.val(), dataResponse);
       afterChangeResource($notaFieldElement);
       handleChange(dataResponse);
     }
   };
 
   deleteResource(resourceName, $notaFieldElement, options, handleErrorOnDeleteResource);
+};
+
+function deleteNotaRecuperacaoParalela($notaRecuperacaoParalelaElement) {
+  var resourceName = 'nota_recuperacao_paralela';
+
+  var additionalVars = {
+    componente_curricular_id : $notaRecuperacaoParalelaElement.data('componente_curricular_id'),
+    etapa : $j('#etapa').val(),
+    matricula_id : $notaRecuperacaoParalelaElement.data('matricula_id')
+   };
+
+  var options = {
+    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
+    dataType : 'json',
+    success : function(dataResponse) {
+      afterChangeResource($notaRecuperacaoParalelaElement);
+      handleChange(dataResponse);
+    }
+  };
+  deleteResource(resourceName, $notaRecuperacaoParalelaElement, options, handleErrorOnDeleteResource);
+};
+
+function deleteNotaRecuperacaoEspecifica($notaRecuperacaoEspecificaElement) {
+  var resourceName = 'nota_recuperacao_especifica';
+
+  var additionalVars = {
+    componente_curricular_id : $notaRecuperacaoEspecificaElement.data('componente_curricular_id'),
+    etapa : $j('#etapa').val(),
+    matricula_id : $notaRecuperacaoEspecificaElement.data('matricula_id')
+   };
+
+  var options = {
+    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
+    dataType : 'json',
+    success : function(dataResponse) {
+      afterChangeResource($notaRecuperacaoEspecificaElement);
+      handleChange(dataResponse);
+    }
+  };
+  deleteResource(resourceName, $notaRecuperacaoEspecificaElement, options, handleErrorOnDeleteResource);
 };
 
 
@@ -415,12 +685,13 @@ function deleteFalta($faltaFieldElement) {
 
 
 function deleteParecer($parecerFieldElement) {
+  var regra = $parecerFieldElement.closest('tr').data('regra');
   var resourceName = 'parecer';
 
   var additionalVars = {
     componente_curricular_id : $parecerFieldElement.data('componente_curricular_id'),
     matricula_id             : $parecerFieldElement.data('matricula_id'),
-    etapa                    : getEtapaParecer()
+    etapa                    : getEtapaParecer(regra)
    };
 
   var options = {
@@ -435,20 +706,59 @@ function deleteParecer($parecerFieldElement) {
   deleteResource(resourceName, $parecerFieldElement, options, handleErrorOnDeleteResource);
 }
 
+function deleteNotaGeral($notaGeralElementField) {
+  resourceName = 'nota_geral';
+
+  var additionalVars = {
+    matricula_id             : $notaGeralElementField.data('matricula_id')
+   };
+
+  var options = {
+    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
+    dataType : 'json',
+    success : function(dataResponse) {
+      afterChangeResource($notaGeralElementField);
+      handleChange(dataResponse);
+    }
+  };
+
+  deleteResource(resourceName, $notaGeralElementField, options, handleErrorOnDeleteResource);
+}
 
 //callback handlers
 
 function handleChange(dataResponse) {
-  var targetId = dataResponse.resource + '-matricula-' + dataResponse.matricula_id +
-                 '-cc-' + dataResponse.componente_curricular_id;
 
+  var componenteCurricularId = dataResponse.componente_curricular_id ? dataResponse.componente_curricular_id : "";
+
+  var targetId = dataResponse.resource + '-matricula-' + dataResponse.matricula_id +
+                 '-cc-' + componenteCurricularId;
   handleMessages(dataResponse.msgs, targetId);
   updateResourceRow(dataResponse);
 }
 
+var regraDiferenciadaId = undefined;
+
+var setRegraDiferenciadaId = function(regras){
+  regraDiferenciadaId = undefined;
+  if(regras && regras.length > 1){
+    $j.each(regras, function(){
+      var regraDiferenciadaAtual = this.regra_diferenciada_id;
+      if(regraDiferenciadaAtual){
+        var regrasDiferenciadas = regras.filter((regra)=>regra.id == regraDiferenciadaAtual);
+        if(regrasDiferenciadas.length){
+          regraDiferenciadaId = regrasDiferenciadas[0]['id'];
+        }
+      }
+    });
+  }
+}
 
 function setTableSearchDetails($tableSearchDetails, dataDetails) {
+  setRegraDiferenciadaId(dataDetails);
+
   var componenteCurricularSelected = ($j('#ref_cod_componente_curricular').val() != '');
+  showBotaoReplicarNotas = ($j('#mostrar_botao_replicar_todos').val() == "1");
 
   $j('<caption />').html('<strong>Lan&#231;amento de notas por turma</strong>').appendTo($tableSearchDetails);
 
@@ -456,7 +766,7 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   var $linha = $j('<tr />');
 
   if (componenteCurricularSelected) {
-	$j('<th />').html('&Aacute;rea de Conhecimento').appendTo($linha);
+    $j('<th />').html('&Aacute;rea de Conhecimento').appendTo($linha);
     $j('<th />').html('Componente curricular').appendTo($linha);
   }
 
@@ -469,44 +779,67 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   $j('<th />').html('Tipo nota').appendTo($linha);
   $j('<th />').html('Tipo presen&#231;a').appendTo($linha);
   $j('<th />').html('Tipo parecer').appendTo($linha);
+  $j('<th />').html(safeUtf8Decode('Recuperação paralela')).appendTo($linha);
+  $j('<th />').html(safeUtf8Decode('Nota geral por etapa')).appendTo($linha);
 
   $linha.appendTo($tableSearchDetails);
+  $j.each(dataDetails, function(){
+    var regra = this;
 
-  var $linha = $j('<tr />').addClass('cellColor');
+    var $linha = $j('<tr />').addClass('cellColor');
 
-  if (componenteCurricularSelected) {
-    $j('<td />').html(safeToUpperCase($j('#ref_cod_componente_curricular optgroup').children("[selected='selected']").parent().attr('label'))).appendTo($linha);
-    $j('<td />').html(safeToUpperCase($j('#ref_cod_componente_curricular optgroup').children("[selected='selected']").html())).appendTo($linha);
+    if (componenteCurricularSelected) {
+      $j('<td />').html(($j('#ref_cod_componente_curricular optgroup').children("[selected='selected']").parent().attr('label'))).appendTo($linha);
+      $j('<td />').html(($j('#ref_cod_componente_curricular optgroup').children("[selected='selected']").html())).appendTo($linha);
+    }
+
+    $j('<td />').html(safeToUpperCase($j('#etapa').children("[selected='selected']").html())).appendTo($linha);
+    $j('<td />').html(safeToUpperCase($j('#ref_cod_turma').children("[selected='selected']").html())).appendTo($linha);
+    $j('<td />').html(safeToUpperCase($j('#ref_cod_serie').children("[selected='selected']").html())).appendTo($linha);
+    $j('<td />').html($j('#ano').val()).appendTo($linha);
+
+    //field escola pode ser diferente de select caso usuario comum
+    var $htmlEscolaField = $j('#ref_cod_escola').children("[selected='selected']").html() ||
+                           $j('#tr_nm_escola span:last').html();
+
+    $j('<td />').html(safeToUpperCase($htmlEscolaField)).appendTo($linha);
+    var descricaoCompletaRegra = regra.id + ' - ' +safeToUpperCase(regra.nome);
+    if(regra.id == regraDiferenciadaId){
+      descricaoCompletaRegra = `* ${descricaoCompletaRegra}`;
+    }
+    $j('<td />').html(descricaoCompletaRegra).appendTo($linha);
+
+    //corrige acentuação
+    var tipoNota = regra.tipo_nota.replace('_', ' ');
+    if (tipoNota == 'numerica')
+      tipoNota = 'numérica';
+    $j('<td />').html(safeToUpperCase(safeUtf8Decode(tipoNota))).appendTo($linha);
+
+    $j('<td />').html(safeToUpperCase(regra.tipo_presenca.replace('_', ' '))).appendTo($linha);
+    $j('<td />').html(safeToUpperCase(regra.tipo_parecer_descritivo.replace('_', ' '))).appendTo($linha);
+    $j('<td />').html(safeToUpperCase(regra.tipo_recuperacao_paralela.replace('_', ' '))).appendTo($linha);
+    $j('<td />').html(safeToUpperCase(regra.nota_geral_por_etapa.replace('_', ' '))).appendTo($linha);
+    $linha.appendTo($tableSearchDetails);
+  });
+
+  if(regraDiferenciadaId){
+    var tfootColspan = $linha.find('th').length;
+    var $tfoot = $j('<tfoot/>').attr('style', 'position: absolute;margin-top: 30px;');
+    $j('<tr/>').append(
+      $j('<td/>').attr('style', 'text-align: left;')
+                 .attr('colspan', tfootColspan)
+                 .text(REGRA_DIFERENCIADA_TEXT)
+    ).appendTo($tfoot)
+
+    $tableSearchDetails.append($tfoot);
+    $tableSearchDetails.attr('style','border-bottom-width: 0px;')
   }
 
-  $j('<td />').html(safeToUpperCase($j('#etapa').children("[selected='selected']").html())).appendTo($linha);
-  $j('<td />').html(safeToUpperCase($j('#ref_cod_turma').children("[selected='selected']").html())).appendTo($linha);
-  $j('<td />').html(safeToUpperCase($j('#ref_cod_serie').children("[selected='selected']").html())).appendTo($linha);
-  $j('<td />').html($j('#ano').val()).appendTo($linha);
-
-  //field escola pode ser diferente de select caso usuario comum
-  var $htmlEscolaField = $j('#ref_cod_escola').children("[selected='selected']").html() ||
-                         $j('#tr_nm_escola span:last').html();
-
-  $j('<td />').html(safeToUpperCase($htmlEscolaField)).appendTo($linha);
-  $j('<td />').html(dataDetails.id + ' - ' +safeToUpperCase(dataDetails.nome)).appendTo($linha);
-
-  //corrige acentuação
-  var tipoNota = dataDetails.tipo_nota.replace('_', ' ');
-  if (tipoNota == 'numerica')
-    tipoNota = 'numérica';
-  $j('<td />').html(safeToUpperCase(safeUtf8Decode(tipoNota))).appendTo($linha);
-
-  $j('<td />').html(safeToUpperCase(dataDetails.tipo_presenca.replace('_', ' '))).appendTo($linha);
-  $j('<td />').html(safeToUpperCase(dataDetails.tipo_parecer_descritivo.replace('_', ' '))).appendTo($linha);
-
-  $linha.appendTo($tableSearchDetails);
   $tableSearchDetails.show();
 
-  nomenclatura_exame = dataDetails.nomenclatura_exame;
+  nomenclatura_exame = dataDetails[0].nomenclatura_exame;
 
-  //dataDetails.opcoes_notas = safeSortArray(dataDetails.opcoes_notas);
-  $tableSearchDetails.data('details', dataDetails);
+  $tableSearchDetails.data('regras', dataDetails);
 }
 
 var nextTabIndex = 1;
@@ -518,6 +851,12 @@ function setNextTabIndex($element) {
 }
 
 function handleSearch($resultTable, dataResponse) {
+
+  var regras = $tableSearchDetails.data('regras');
+  var useNota                 = regras.filter(function(regra){return regra.tipo_nota != 'nenhum'; }).length > 0;
+  var ultimaEtapa             = regras[0]['quantidade_etapas'] == $j('#etapa').val();
+  var definirComponentesEtapa = regras.filter(function(regra){return regra.definir_componente_por_etapa; }).length > 0;
+
   var componenteCurricularSelected = ($j('#ref_cod_componente_curricular').val() != '');
 
   // resets next tabindex
@@ -526,25 +865,31 @@ function handleSearch($resultTable, dataResponse) {
   //set headers
   var $linha = $j('<tr />');
   $j('<th />').html(safeUtf8Decode('Matrícula')).appendTo($linha);
-  $j('<th />').attr('colspan', componenteCurricularSelected ? 0 : 4).html('Aluno').appendTo($linha);
+  $j('<th />').attr('colspan', componenteCurricularSelected ? 0 : 5).html('Aluno').appendTo($linha);
 
   if (componenteCurricularSelected)
     updateComponenteCurricularHeaders($linha, $j('<th />'));
 
   $linha.appendTo($resultTable);
-
   //set (result) rows
   $j.each(dataResponse.matriculas, function(index, value) {
     var $linha = $j('<tr />').addClass(componenteCurricularSelected ? '' : 'strong');
 
+    $linha.data('regra', value.regra);
+
     $j('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
-    $j('<td />').html(value.aluno_id + ' - ' +safeToUpperCase(value.nome))
-                .attr('colspan', componenteCurricularSelected ? 0 : 4)
+
+    var descricaoAluno = `${value.aluno_id} - ${safeToUpperCase(value.nome)}`;
+    if(value.regra.id == regraDiferenciadaId){
+      descricaoAluno = `* ${descricaoAluno}`;
+    }
+    $j('<td />').html(descricaoAluno)
+                .attr('colspan', componenteCurricularSelected ? 0 : 5)
                 .appendTo($linha);
 
     if (value.componentes_curriculares){
       if (componenteCurricularSelected && value.componentes_curriculares.length > 0)
-        updateComponenteCurricular($linha, value.matricula_id, value.componentes_curriculares[0]);
+        updateComponenteCurricular($linha, value.matricula_id, value.componentes_curriculares[0], value.regra);
     }else{
       if(value.situacao_deslocamento){
         var $situacaoTdDeslocamento = $j('<td />').addClass('situacao-matricula-cc')
@@ -554,11 +899,14 @@ function handleSearch($resultTable, dataResponse) {
                                   .css('color', '#FF6600')
                                   .html(value.situacao_deslocamento)
                                   .appendTo($linha);
-        $j('<td />').html('-').addClass('center').appendTo($linha);
-        $j('<td />').html('-').addClass('center').appendTo($linha);
-        $j('<td />').html('-').addClass('center').appendTo($linha);
-        $j('<td />').html('-').addClass('center').appendTo($linha);
 
+        var colCount = 0;
+        $resultTable.find('tr:nth-child(1) th').each(function () {
+          colCount++;
+        });
+        for (var i = 0; i < colCount - 3; i++) {
+          $j('<td />').html('-').addClass('center').appendTo($linha);
+        };
       }
     }
 
@@ -566,13 +914,21 @@ function handleSearch($resultTable, dataResponse) {
     $linha.appendTo($resultTable);
 
     if (! componenteCurricularSelected && value.componentes_curriculares)
-      updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares);
+      updateComponenteCurriculares($resultTable, value.matricula_id, value.componentes_curriculares, value.regra);
+
+    if((value.regra.quantidade_etapas == $j('#etapa').val() ) && value.regra.progressao_manual && !componenteCurricularSelected){
+      situacaoFinalField(dataResponse.matricula_id, dataResponse.situacao).appendTo($resultTable);
+    }
+
+    if ((!componenteCurricularSelected) && (showBotaoReplicarNotas))
+      criaBotaoReplicarNotasPorArea(value.componentes_curriculares);
+
   });
 
   // seta colspan [th, td].aluno quando exibe nota exame
-  if ($tableSearchDetails.data('details').tipo_nota != 'nenhum' &&
-      $tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
-    $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 5);
+  if (useNota &&
+      (ultimaEtapa || definirComponentesEtapa)) {
+    $resultTable.find('[colspan]:not(.area-conhecimento)').attr('colspan', componenteCurricularSelected ? 1 : 10);
   }
 
   $resultTable.find('tr:even').addClass('even');
@@ -582,30 +938,57 @@ function handleSearch($resultTable, dataResponse) {
   var $notaExameFields = $resultTable.find('.nota-exame-matricula-cc');
   var $faltaFields = $resultTable.find('.falta-matricula-cc');
   var $parecerFields = $resultTable.find('.parecer-matricula-cc');
+  var $notaRecuperacaoParalelaFields = $resultTable.find('.nota-recuperacao-paralela-cc');
+  var $notaRecuperacaoEspecificaFields = $resultTable.find('.nota-recuperacao-especifica-matricula-cc');
+  var $notaGeralEtapaFields = $resultTable.find('.nota-geral-etapa');
+  var $mediaFields = $resultTable.find('.media-cc');
+  var $situacaoField = $resultTable.find('.situacao-cc');
+
   $notaFields.on('change', changeNota);
   $notaExameFields.on('change', changeNotaExame);
   $faltaFields.on('change', changeFalta);
   $parecerFields.on('change', changeParecer);
+  $notaRecuperacaoParalelaFields.on('change', changeNotaRecuperacaoParalela);
+  $notaRecuperacaoEspecificaFields.on('change', changeNotaRecuperacaoEspecifica);
+  $notaGeralEtapaFields.on('change', changeNotaGeralEtapa);
+  $mediaFields.on('change', changeMedia);
+  $situacaoField.on('change', changeSituacao);
 
   $resultTable.addClass('styled').find('.tabable:first').focus();
+  navegacaoTab(dataResponse.navegacao_tab);
+  if(!dataResponse.can_change){
+    $j('#form_resultado input').attr('disabled', 'disabled');
+    $j('#form_resultado select').attr('disabled', 'disabled');
+    $j('#form_resultado textarea').attr('disabled', 'disabled');
+  }else{
+    $j('#form_resultado input').removeAttr('disabled');
+    $j('#form_resultado select').removeAttr('disabled');
+    $j('#form_resultado textarea').removeAttr('disabled');
+  }
+  if ((componenteCurricularSelected) && (showBotaoReplicarNotas))
+    criaBotaoReplicarNotas();
+
 }
 
-function _notaField(matriculaId, componenteCurricularId, klass, id, value) {
-  if($tableSearchDetails.data('details').tipo_nota == 'conceitual') {
-    var opcoesNotas = $tableSearchDetails.data('details').opcoes_notas;
+function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength, tipoNota, regra) {
+  var notaConceitual = regra.tipo_nota == 'numericaconceitual' && tipoNota == 1;
+  var notaNumerica   = regra.tipo_nota == 'numericaconceitual' && tipoNota == 2;
+  var opcoesNotas    = notaConceitual ? regra.opcoes_notas_conceituais : regra.opcoes_notas;
 
+  if(regra.tipo_nota == 'conceitual' || notaConceitual) {
     var $notaField = $j('<select />')
                      .addClass(klass)
+                     .addClass(areaConhecimentoId)
                      .attr('id', id)
                      .data('matricula_id', matriculaId)
                      .data('componente_curricular_id', componenteCurricularId);
 
     // adiciona opcoes notas ao select
     var $option = $j('<option />').appendTo($notaField);
-    for(key in opcoesNotas) {
-      var $option = $j('<option />').val(key).html(opcoesNotas[key]);
+    for(var i = 0; i < opcoesNotas.length; i++) {
+      var $option = $j('<option />').val(opcoesNotas[i].valor_maximo).html(opcoesNotas[i].descricao);
 
-      if (value == key)
+      if (value == opcoesNotas[i].valor_maximo)
         $option.attr('selected', 'selected');
 
       $option.appendTo($notaField);
@@ -614,8 +997,8 @@ function _notaField(matriculaId, componenteCurricularId, klass, id, value) {
   else {
     var $notaField = $j('<input />').addClass(klass)
                                     .attr('id', id)
-                                    .attr('maxlength', '4')
-                                    .attr('size', '4')
+                                    .attr('maxlength', maxLength)
+                                    .attr('size', maxLength)
                                     .val(value)
                                     .data('matricula_id', matriculaId)
                                     .data('componente_curricular_id', componenteCurricularId);
@@ -627,22 +1010,91 @@ function _notaField(matriculaId, componenteCurricularId, klass, id, value) {
   return $j('<td />').html($notaField).addClass('center');
 }
 
+function _mediaField(matriculaId, componenteCurricularId, klass, id, value, areaConhecimentoId, maxLength, tipoNota, regra) {
+  var notaConceitual = regra.tipo_nota == 'numericaconceitual' && tipoNota == 1;
+  var notaNumerica   = regra.tipo_nota == 'numericaconceitual' && tipoNota == 2;
+  var opcoesNotas    = notaConceitual ? regra.opcoes_notas_conceituais : regra.opcoes_notas;
 
-function notaField(matriculaId, componenteCurricularId, value) {
+  if(regra.tipo_nota == 'conceitual' || notaConceitual) {
+    var $notaField = $j('<select />')
+                     .addClass(klass)
+                     .addClass(areaConhecimentoId)
+                     .attr('id', id)
+                     .data('matricula_id', matriculaId)
+                     .data('componente_curricular_id', componenteCurricularId);
+
+    // adiciona opcoes notas ao select
+    var $option = $j('<option />').appendTo($notaField);
+    var selected = false;
+    for(var i = 0; i < opcoesNotas.length; i++) {
+      var $option = $j('<option />').val(opcoesNotas[i].valor_maximo).html(opcoesNotas[i].descricao);
+
+      valorMinimo = parseFloat(opcoesNotas[i].valor_minimo);
+      valorMaximo = parseFloat(opcoesNotas[i].valor_maximo);
+
+      if ((valorMaximo == value) || ((value > valorMinimo && value < valorMaximo) && !selected)){
+        $option.attr('selected', 'selected');
+        selected = true;
+      }
+
+      $option.appendTo($notaField);
+    }
+  }
+  else {
+    var $notaField = $j('<input />').addClass(klass)
+                                    .attr('id', id)
+                                    .attr('maxlength', maxLength)
+                                    .attr('size', maxLength)
+                                    .val(value)
+                                    .data('matricula_id', matriculaId)
+                                    .data('componente_curricular_id', componenteCurricularId);
+  }
+
+  $notaField.data('old_value', value);
+  setNextTabIndex($notaField);
+
+  return $j('<td />').html($notaField).addClass('center');
+}
+
+function notaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength, tipoNota, regra) {
   return _notaField(matriculaId,
                     componenteCurricularId,
                     'nota-matricula-cc',
                     'nota-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
-                    value);
+                    value,
+                    'area-id-' + areaConhecimentoId,
+                    maxLength,
+                    tipoNota,
+                    regra);
 }
 
 
-function notaExameField(matriculaId, componenteCurricularId, value) {
+function notaExameField(matriculaId, componenteCurricularId, value, maxLength, tipoNota, regra) {
   return _notaField(matriculaId,
                     componenteCurricularId,
                     'nota-exame-matricula-cc',
                     'nota-exame-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
-                    value);
+                    value,
+                    null,
+                    maxLength,
+                    tipoNota,
+                    regra);
+}
+
+function notaGeralEtapaField(matriculaId, componenteCurricularId, value, maxLength){
+  var $notaField = $j('<input />').addClass('nota-geral-etapa')
+                                    .attr('id', 'nota-geral-etapa-' + matriculaId)
+                                    .attr('maxlength', maxLength)
+                                    .attr('size', maxLength)
+                                    .val(value)
+                                    .data('matricula_id', matriculaId)
+                                    .data('componente_curricular_id', componenteCurricularId);
+
+  $notaField.data('old_value', value);
+
+  setNextTabIndex($notaField);
+
+  return $j('<td />').html($notaField).addClass('center');
 }
 
 function notaNecessariaField(matriculaId, componenteCurricularId, value){
@@ -652,8 +1104,9 @@ function notaNecessariaField(matriculaId, componenteCurricularId, value){
                                    .attr('id', 'nn-matricula-' + matriculaId + '-cc-' + componenteCurricularId)
                                    .text(value);
   setNextTabIndex($notaNecessariaField);
-  return $j('<td />').html($notaNecessariaField).addClass('center');                                   
+  return $j('<td />').html($notaNecessariaField).addClass('center');
 }
+
 
 function faltaField(matriculaId, componenteCurricularId, value) {
   var $faltaField = $j('<input />').addClass('falta-matricula-cc')
@@ -685,9 +1138,69 @@ function parecerField(matriculaId, componenteCurricularId, value) {
   return $j('<td />').addClass('center').html($parecerField);
 }
 
-function updateComponenteCurricular($targetElement, matriculaId, cc) {
-  var useNota                = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
-  var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
+function notaRecuperacaoParalelaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength, regra) {
+  return _notaField(matriculaId,
+                    componenteCurricularId,
+                    'nota-recuperacao-paralela-cc',
+                    'nota-recuperacao-paralela-' + matriculaId + '-cc-' + componenteCurricularId,
+                    value,
+                    'area-id-' + areaConhecimentoId,
+                    maxLength,
+                    undefined,
+                    regra);
+}
+
+function notaRecuperacaoEspecificaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength, tipoNota, regra) {
+  return _notaField(matriculaId,
+                    componenteCurricularId,
+                    'nota-recuperacao-especifica-matricula-cc',
+                    'nota-recuperacao-especifica-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
+                    value,
+                    'area-id-' + areaConhecimentoId,
+                    maxLength,
+                    tipoNota,
+                    regra);
+}
+
+function mediaField(matriculaId, componenteCurricularId, value, maxLength, tipoNota, regra){
+  return _mediaField(matriculaId,
+                    componenteCurricularId,
+                    'media-cc',
+                    'media-matricula-' + matriculaId + '-cc-' + componenteCurricularId,
+                    value,
+                    0,
+                    maxLength,
+                    tipoNota,
+                    regra);
+}
+
+function getNotaGeralMaxLength(regra){
+  return regra.nota_maxima_geral.toString().length + regra.qtd_casas_decimais + 1;
+}
+
+function getNotaExameFinalMaxLength(regra){
+  return regra.nota_maxima_exame_final.toString().length + regra.qtd_casas_decimais + 1;
+}
+
+function getNotaRecuperacaoEspecificaMaxLength(regra){
+  return regra.tipo_recuperacao_paralela_nota_maxima.toString().length + regra.qtd_casas_decimais + 1;
+}
+
+
+function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
+  var usaRecuperacaoParalelaPorEtapa = (regra.tipo_recuperacao_paralela == 'por_etapa');
+  var useNota                = regra.tipo_nota != 'nenhum';
+  var useParecer             = regra.tipo_parecer_descritivo != 'nenhum';
+  var usaNotaGeralPorEtapa = regra.nota_geral_por_etapa == 'SIM';
+  var habilitaCampoEtapaEspecifica = regra.tipo_recuperacao_paralela == 'etapas_especificas' && regra.habilita_campo_etapa_especifica;
+  var progressaoManual = regra.progressao_manual;
+  var progressaoContinuada = regra.progressao_continuada;
+  var mediaRecuperacaoParalela = regra.media_recuperacao_paralela;
+  var ultimaEtapa = regra.quantidade_etapas == $j('#etapa').val();
+  var definirComponentesEtapa = regra.definir_componente_por_etapa;
+  var ultimaEtapaComponente = cc.ultima_etapa ==  $j('#etapa').val();
+
+  var $emptyTd = $j('<td/>').addClass('center');
 
   var $situacaoTd = $j('<td />').addClass('situacao-matricula-cc')
                                 .attr('id', 'situacao-matricula-' + matriculaId + '-cc-' + cc.id)
@@ -699,96 +1212,207 @@ function updateComponenteCurricular($targetElement, matriculaId, cc) {
 
   colorizeSituacaoTd($situacaoTd, cc.situacao);
 
-  if(useNota) {
-    notaField(matriculaId, cc.id, cc.nota_atual).appendTo($targetElement);
+  var consideraNotaOriginal = usaRecuperacaoParalelaPorEtapa || habilitaCampoEtapaEspecifica;
 
-    // mostra nota exame caso estiver selecionado a ultima etapa
-    if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()) {
-      var $fieldNotaExame = notaExameField(matriculaId, cc.id, cc.nota_exame);
+  if(useNota){
+    notaField(matriculaId, cc.id, consideraNotaOriginal ? cc.nota_original : cc.nota_atual, cc.area_id, getNotaGeralMaxLength(regra), cc.tipo_nota, regra).appendTo($targetElement);
+  }else if(hUseNota){
+    $emptyTd.clone().appendTo($targetElement);
+  }
 
-      var $fieldNN = notaNecessariaField(matriculaId, cc.id, cc.nota_necessaria_exame);
+  if(useNota && usaRecuperacaoParalelaPorEtapa){
+    hasNotaRecuperacaoParalela = (cc.nota_recuperacao_paralela != '');
+    hasMediaRecuperacaoParalela = (mediaRecuperacaoParalela != null);
+    hasNotaAtual = !!cc.nota_atual;
 
-      if (cc.nota_exame == '' && safeToLowerCase(cc.situacao) != 'em exame'){
-        $fieldNotaExame.children().hide();
-        $fieldNN.children().text('-');
-      }
+    $notaRecuperacaoParalelaField = notaRecuperacaoParalelaField(matriculaId, cc.id, cc.nota_recuperacao_paralela, cc.area_id, getNotaGeralMaxLength(regra), regra);
+    $notaRecuperacaoParalelaField.appendTo($targetElement);
 
-      $fieldNotaExame.appendTo($targetElement);
+    shouldShowNotaRecuperacaoParalela = (((hasNotaRecuperacaoParalela) ||
+                                         (cc.nota_original < mediaRecuperacaoParalela) ||
+                                         (!hasMediaRecuperacaoParalela)) &&
+                                         (hasNotaAtual));
 
-      // Adiciona campo com nota necessária      
-      $fieldNN.appendTo($targetElement);      
+    if(!shouldShowNotaRecuperacaoParalela){
+      $notaRecuperacaoParalelaField.children().hide();
+    }
+  }else if(hUseNota && hUsaRecuperacaoParalelaPorEtapa){
+    $emptyTd.clone().appendTo($targetElement);
+  }
+
+  if(useNota && habilitaCampoEtapaEspecifica){
+    $notaRecuperacaoEspecificaField = notaRecuperacaoEspecificaField(matriculaId, cc.id, cc.nota_recuperacao_especifica, cc.area_id, getNotaRecuperacaoEspecificaMaxLength(regra), cc.tipo_nota, regra);
+    $notaRecuperacaoEspecificaField.appendTo($targetElement);
+
+    var shouldShowNotaRecuperacaoEspecifica = cc.should_show_recuperacao_especifica;
+
+    if(!shouldShowNotaRecuperacaoEspecifica){
+      $notaRecuperacaoEspecificaField.children().hide();
+    }
+  }else if(hUseNota && hHabilitaCampoEtapaEspecifica){
+    $emptyTd.clone().appendTo($targetElement);
+  }
+
+  // mostra nota exame, média final e situação do aluno caso estiver selecionado a ultima etapa
+  if(useNota && (ultimaEtapa || (definirComponentesEtapa && !progressaoContinuada))){
+    var $fieldNotaExame = notaExameField(matriculaId, cc.id, cc.nota_exame, getNotaExameFinalMaxLength(regra), cc.tipo_nota, regra);
+
+    var $fieldNN = notaNecessariaField(matriculaId, cc.id, cc.nota_necessaria_exame);
+
+    if (cc.nota_exame == '' && safeToLowerCase(cc.situacao) != 'em exame'){
+      $fieldNotaExame.children().hide();
+      $fieldNN.children().text('-');
     }
 
+    if(ultimaEtapa || ultimaEtapaComponente) {
+      $fieldNotaExame.appendTo($targetElement);
+    }else {
+      $emptyTd.clone().appendTo($targetElement);
+    }
+
+    /* Adiciona campo com nota necessária, exeto em casos de componentes
+       específicos por etapa */
+    if (!definirComponentesEtapa) {
+      $fieldNN.appendTo($targetElement);
+    }else if(!hDefinirComponentesEtapa){
+      $emptyTd.clone().appendTo($targetElement);
+    }
+
+    if(progressaoManual){
+      if(regra.tipo_nota == 'numerica'){
+        var $fieldMedia = mediaField(matriculaId, cc.id, cc.media_arredondada, getNotaGeralMaxLength(regra), cc.tipo_nota, regra);
+      }else{
+        var $fieldMedia = mediaField(matriculaId, cc.id, cc.media, getNotaGeralMaxLength(regra), cc.tipo_nota, regra);
+      }
+
+      $fieldMedia.appendTo($targetElement);
+    }else if(hAlgumaProgressaoManual){
+      $emptyTd.clone().appendTo($targetElement);
+    }
+  }else if((hUseNota && (hUltimaEtapa || (hDefinirComponentesEtapa && !hProgressaoContinuada)))){
+    $emptyTd.clone().appendTo($targetElement);
+    if(!hDefinirComponentesEtapa){
+      $emptyTd.clone().appendTo($targetElement);
+    }
+    if(hAlgumaProgressaoManual){
+      $emptyTd.clone().appendTo($targetElement);
+    }
+  }
+
+  if(usaNotaGeralPorEtapa){
+    notaGeralEtapaField(matriculaId, cc.id, cc.nota_geral_etapa, 5).appendTo($targetElement);
+  } else if(hUsaNotaGeralPorEtapa){
+    $emptyTd.clone().appendTo($targetElement);
   }
 
   faltaField(matriculaId, cc.id, cc.falta_atual).appendTo($targetElement);
 
-  if (useParecer)
+  if (useParecer){
     parecerField(matriculaId, cc.id, cc.parecer_atual).appendTo($targetElement);
+  }else if(hUseParecer){
+    $emptyTd.clone().appendTo($targetElement);
+  }
 }
 
+var hHabilitaCampoEtapaEspecifica;
+var hUsaNotaGeralPorEtapa;
+var hUsaRecuperacaoParalelaPorEtapa;
+var hUseNota;
+var hUseParecer;
+var hUltimaEtapa;
+var hDefinirComponentesEtapa;
+var hProgressaoManual;
+var hProgressaoContinuada;
+var hAlgumaProgressaoManual;
+
 function updateComponenteCurricularHeaders($targetElement, $tagElement) {
-  var useNota                = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
-  var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
+  var regras = $tableSearchDetails.data('regras');
+  hHabilitaCampoEtapaEspecifica = regras.filter(function(regra){return regra.tipo_recuperacao_paralela == 'etapas_especificas' && regra.habilita_campo_etapa_especifica; }).length > 0;
+  hUsaNotaGeralPorEtapa = regras.filter(function(regra){return regra.nota_geral_por_etapa == 'SIM'; }).length > 0;
+  hUsaRecuperacaoParalelaPorEtapa = regras.filter(function(regra){return regra.tipo_recuperacao_paralela == 'por_etapa'; }).length > 0;
+  hUseNota                 = regras.filter(function(regra){return regra.tipo_nota != 'nenhum'; }).length > 0;
+  hUseParecer              = regras.filter(function(regra){return regra.tipo_parecer_descritivo != 'nenhum'; }).length > 0;
+  hUltimaEtapa             = regras[0]['quantidade_etapas'] == $j('#etapa').val();
+  hDefinirComponentesEtapa = regras.filter(function(regra){return regra.definir_componente_por_etapa; }).length > 0;
+  hProgressaoManual = regras.filter(function(regra){return regra.progressao_manual; }).length == regras.length;
+  hProgressaoContinuada = regras.filter(function(regra){return regra.progressao_continuada; }).length == regras.length;
+  hAlgumaProgressaoManual = regras.filter(function(regra){return regra.progressao_manual; }).length;
 
   $tagElement.clone().addClass('center').html(safeUtf8Decode('Situação')).appendTo($targetElement);
 
-  if (useNota) {
+  if (hUseNota) {
     $tagElement.clone().addClass('center').html('Nota').appendTo($targetElement);
 
-    if ($tableSearchDetails.data('details').quantidade_etapas == $j('#etapa').val()){
+    if(hUsaRecuperacaoParalelaPorEtapa){
+      $tagElement.clone().addClass('center').html(safeUtf8Decode('Recuperação paralela')).appendTo($targetElement);
+    }
+    if(hHabilitaCampoEtapaEspecifica){
+      var tipoRecuperacaoParalelaNome = regras.filter(function(regra){return regra.tipo_recuperacao_paralela == 'etapas_especificas' && regra.habilita_campo_etapa_especifica; })[0]['tipo_recuperacao_paralela_nome'];
+      $tagElement.clone().addClass('center').html(safeUtf8Decode(tipoRecuperacaoParalelaNome)).appendTo($targetElement);
+    }
+    if (hUltimaEtapa || (hDefinirComponentesEtapa && !hProgressaoContinuada)){
       $tagElement.clone().addClass('center').html('Nota '+nomenclatura_exame).appendTo($targetElement);
-      $tagElement.clone().addClass('center').html(safeUtf8Decode('Nota necessária no '+nomenclatura_exame)).appendTo($targetElement);
+      if (!hDefinirComponentesEtapa) {
+          $tagElement.clone().addClass('center').html(safeUtf8Decode('Nota necessária no ' + nomenclatura_exame)).appendTo($targetElement);
+      }
+      if(hAlgumaProgressaoManual){
+        $tagElement.clone().addClass('center').html(safeUtf8Decode('Média final')).appendTo($targetElement);
+      }
     }
   }
-
+  if(hUsaNotaGeralPorEtapa){
+    $tagElement.clone().addClass('center').html('Nota geral da etapa').appendTo($targetElement);
+  }
   $tagElement.clone().addClass('center').html('Falta').appendTo($targetElement);
 
-  if (useParecer)
+  if (hUseParecer)
     $tagElement.clone().addClass('center').html('Parecer descritivo').appendTo($targetElement);
 }
 
-function updateComponenteCurriculares($targetElement, matriculaId, componentesCurriculares) {
-  var useNota                = $tableSearchDetails.data('details').tipo_nota != 'nenhum';
-  var useParecer             = $tableSearchDetails.data('details').tipo_parecer_descritivo != 'nenhum';
+function updateComponenteCurriculares($targetElement, matriculaId, componentesCurriculares, regra) {
+  var useNota                = regra.tipo_nota != 'nenhum';
+  var useParecer             = regra.tipo_parecer_descritivo != 'nenhum';
 
   var areas = new Array();
-  
+
   var setaDireita = "<img src=\"imagens/mytdt/seta-preta-direita.png\" align=\"top\" class=\"area-conhecimento-seta seta-direita\" />";
   var setaBaixo   = "<img src=\"imagens/mytdt/seta-branca-baixo.png\" align=\"top\" class=\"area-conhecimento-seta seta-baixo\" />";
 
   $j.each(componentesCurriculares, function(index, cc) {
+
     if (areas.indexOf(cc.area_id) == -1) {
       areas.push(cc.area_id);
-      
+
       //primeiro o header para calcular o colspan
       var $ccHeader = $j('<tr />').addClass('strong').addClass('tr-componente-curricular').data('areaid', cc.area_id);
       $j('<td />').addClass('center').html('Componente curricular').appendTo($ccHeader);
       updateComponenteCurricularHeaders($ccHeader, $j('<td />'));
-      
+
       //pegando o colspan
       var areaColspan = $j('td', $ccHeader).length;
-      
+
       var $areaRow = $j('<tr />').addClass('tr-area-conhecimento').data('areaid', cc.area_id);
       var conteudo = setaDireita + setaBaixo + " " + cc.area_nome;
       $j('<td />').addClass('area-conhecimento').attr('colspan', areaColspan).html(conteudo).appendTo($areaRow);
 
-      //por fim adicionando primeiro a área depois o header
+      //por fim adicionando primeiro a área depois o heade
       $areaRow.appendTo($targetElement);
       $ccHeader.appendTo($targetElement);
-    }
-	    
+     }
+
     var $ccRow = $j('<tr />').addClass('tr-componente-curricular').data('areaid', cc.area_id);
+    $ccRow.data('regra', regra);
 
     $j('<td />').addClass('center').html(cc.nome).appendTo($ccRow);
-    updateComponenteCurricular($ccRow, matriculaId, cc);
+    updateComponenteCurricular($ccRow, matriculaId, cc, regra);
 
     $ccRow.appendTo($targetElement);
   });
-  
+
   $j('.tr-area-conhecimento').bind('click', function() {
-	$j('td', this).toggleClass('area-conhecimento-destaque');
-	
+
+    $j('td', this).toggleClass('area-conhecimento-destaque');
+
     var fechado = $j('.seta-baixo', this).is(':hidden');
     if (fechado) {
       $j('.seta-baixo', this).css('display', 'inline');
@@ -797,7 +1421,7 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
       $j('.seta-baixo', this).css('display', 'none');
       $j('.seta-direita', this).css('display', 'inline');
     }
-    
+
     var id = $j(this).data('areaid');
     $j('.tr-componente-curricular').each(function() {
       if ($j(this).data('areaid') == id) {
@@ -809,6 +1433,7 @@ function updateComponenteCurriculares($targetElement, matriculaId, componentesCu
       }
     });
   });
+  $j('.tr-area-conhecimento').first().trigger('click');
 }
 
 
@@ -818,24 +1443,91 @@ function updateResourceRow(dataResponse) {
 
   var $situacaoField  = $j('#situacao-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNotaExame = $j('#nota-exame-matricula-' + matriculaId + '-cc-' + ccId);
+  var $fieldNotaEspecifica = $j('#nota-recuperacao-especifica-matricula-' + matriculaId + '-cc-' + ccId);
   var $fieldNN = $j('#nn-matricula-' + matriculaId + '-cc-' + ccId);
+  var $fieldMedia = $j('#media-matricula-' + matriculaId + '-cc-' + ccId);
 
+  var regra = $situacaoField.closest('tr').data('regra');
+
+  var habilitaCampoEtapaEspecifica = regra.tipo_recuperacao_paralela == 'etapas_especificas' && regra.habilita_campo_etapa_especifica;
+  var usaNotaGeralPorEtapa = regra.nota_geral_por_etapa == 'SIM';
+
+  if(usaNotaGeralPorEtapa){
+    $situacaoField = $j('.situacao-matricula-cc');
+  }
   $situacaoField.html(dataResponse.situacao);
   colorizeSituacaoTd($situacaoField.closest('td'), dataResponse.situacao);
 
-  if (! $fieldNotaExame.is(':visible') &&
-     ($fieldNotaExame.val() != '' || safeToLowerCase(dataResponse.situacao) == 'em exame')) {
+  if(!$fieldNotaExame.is(':visible') &&
+    ($fieldNotaExame.val() != '' || safeToLowerCase(dataResponse.situacao) == 'em exame')) {
 
     $fieldNotaExame.show();
-    $fieldNotaExame.focus();
+
+    if(sentidoTab=="1"){
+      $fieldNotaExame.focus();
+    }
+
     $fieldNN.text(dataResponse.nota_necessaria_exame);
   }
   else if($fieldNotaExame.val() == '' && safeToLowerCase(dataResponse.situacao) != 'em exame'){
     $fieldNotaExame.hide();
     $fieldNN.text('-');
-  }else{
+  }else
     $fieldNN.text(dataResponse.nota_necessaria_exame);
+
+  if(dataResponse.resource != 'nota_exame' && dataResponse.resource != 'nota_recuperacao_especifica'){
+    if(habilitaCampoEtapaEspecifica && dataResponse.should_show_recuperacao_especifica ){
+      $fieldNotaEspecifica.show();
+      $fieldNotaEspecifica.focus();
+    }else
+      $fieldNotaEspecifica.hide();
   }
+  changeMediaValue($fieldMedia.attr('id'), dataResponse.media, dataResponse.media_arredondada, regra);
+}
+
+function changeMediaValue(elementId, nota, notaArredondada, regra){
+
+  if(nota != undefined){
+    if(regra.tipo_nota == 'conceitual'){
+        var valorSelecionado = 0;
+        var opcoesNotas = regra.opcoes_notas;
+        for(var i = 0 ; i < opcoesNotas.length; i++){
+
+          valorMinimo = parseFloat(opcoesNotas[i].valor_minimo);
+          valorMaximo = parseFloat(opcoesNotas[i].valor_maximo);
+
+          if ((valorMaximo == nota) || (nota > valorMinimo && nota < valorMaximo)){
+            valorSelecionado = valorMaximo;
+          }
+        };
+        $j('#' + elementId).val(valorSelecionado);
+
+    }else{
+      $j('#' + elementId).val(notaArredondada);
+    }
+  }
+}
+
+function situacaoFinalField($matriculaId, $situacao){
+
+  var $selectSituacao  = $j('<select />').attr('id', 'situacao' + '-matricula-' + $matriculaId + '-cc-').addClass('situacao-cc').data('matricula_id', $matriculaId);
+  var $optionDefault                = $j('<option />').html('').val(0).attr('selected', 'selected');
+  var $optionAprovado               = $j('<option />').html('Aprovado').val(1);
+  var $optionRetido                 = $j('<option />').html('Retido').val(2);
+  var $optionAprovadoPeloConselho   = $j('<option />').html('Aprovado pelo conselho').val(13);
+  var $optionAprovadoComDependencia = $j('<option />').html('Aprovado com dependência').val(12);
+
+  $optionDefault.appendTo($selectSituacao);
+  $optionAprovado.appendTo($selectSituacao);
+  $optionRetido.appendTo($selectSituacao);
+  $optionAprovadoPeloConselho.appendTo($selectSituacao);
+  $optionAprovadoComDependencia.appendTo($selectSituacao);
+
+  var $element = $j('<tr />').addClass('center resultado-final');
+  $j('<td />').addClass('center resultado-final').html(safeUtf8Decode('Situação final')).appendTo($element);
+  $j('<td />').addClass('resultado-final-esquerda').attr('colspan', '6').html($selectSituacao).appendTo($element);
+
+  return $element;
 }
 
 function colorizeSituacaoTd(tdElement, situacao) {
@@ -856,22 +1548,22 @@ function canSearch(){
 }
 
 function myNextValid($selectElement) {
-    var a = $selectElement.find('option:selected');
-    if (a.next('option').length == 0) {
-        b = a.parent();
-        if (b.prop('tagName').toUpperCase() == 'SELECT') {
-            return null;
-        } else {
-            return b.next().children('option:first');
-        }
+  var a = $selectElement.find('option:selected');
+  if (a.next('option').length == 0) {
+    b = a.parent();
+    if (b.prop('tagName').toUpperCase() == 'SELECT') {
+      return null;
     } else {
-        return a.next('option');
+      return b.next().children('option:first');
     }
+  } else {
+    return a.next('option');
+  }
 }
-	
+
 function selectNextOption($selectElement){
   var $nextOption = myNextValid($selectElement);
-  
+
   if ($nextOption.val() != undefined) {
     $selectElement.val($nextOption.val());
 
@@ -880,7 +1572,7 @@ function selectNextOption($selectElement){
   }
 
   else {
-    alert(safeUtf8Decode('Você chegou na ultima opção.'));
+    alert(safeUtf8Decode('Você chegou à última opção.'));
     showSearchForm();
   }
 }
@@ -898,123 +1590,211 @@ function showNextSelectionButton() {
   var $matriculaField = $j('#ref_cod_matricula');
 
   if ($ccField.val() != '') {
-    $j("<a href='#'>Proximo componente curricular</a>").bind('click', nextComponenteCurricular)
+    $j("<a href='#'>Pr&#243;ximo componente curricular</a>").bind('click', nextComponenteCurricular)
                                 .attr('style', 'text-decoration: underline')
                                 .appendTo($navActions);
   }
 
   if ($matriculaField.val() != '') {
-    $j("<a href='#'>Proxima matricula</a>").bind('click', nextMatricula)
+    $j("<a href='#'>Pr&#243;xima matr&#237;cula</a>").bind('click', nextMatricula)
                                 .attr('style', 'text-decoration: underline')
                                 .appendTo($navActions);
   }
 }
 
+function navegacaoTab(sentido){
+    //se for no sentido vertical
+    if(sentido=="2"){
+        i = 1;
+
+      $j(document).find('.nota-matricula-cc').each(function(){
+        $j(this).attr('tabindex', i);
+        i++;
+      });
+      $j(document).find('.nota-recuperacao-paralela-cc').each(function(){
+        $j(this).attr('tabindex', i);
+        i++;
+      });
+      $j(document).find('.nota-exame-matricula-cc').each(function(){
+        $j(this).attr('tabindex', i);
+        i++;
+      });
+      $j(document).find('.nn-matricula-cc').each(function(){
+        $j(this).attr('tabindex', i);
+        i++;
+      });
+      $j(document).find('.falta-matricula-cc').each(function(){
+        $j(this).attr('tabindex', i);
+        i++;
+      });
+      $j(document).find('.parecer-matricula-cc').each(function(){
+        $j(this).attr('tabindex', i);
+        i++;
+      });
+    }
+
+    sentidoTab = sentido;
+}
+
+function criaBotaoReplicarNotasPorArea(componentesCurriculares){
+
+  var uniqueAreaConhecimento = [];
+
+  $j.each(componentesCurriculares, function(index, element){
+    if ($j.inArray(element.area_id, uniqueAreaConhecimento) == -1) uniqueAreaConhecimento.push(element.area_id);
+  });
+
+  $j.each(uniqueAreaConhecimento, function(index, value) {
+
+    $j('<button/>').html('Replicar a todos')
+                   .attr('type','button')
+                   .attr('id','replicar-todas-notas-' + value)
+                   .addClass('submit')
+                   .appendTo($j('<p/>').insertAfter($j('.area-id-' + value)
+                                       .first()))
+                   .unbind();
+    $j('#replicar-todas-notas-' + value).on('click', function(){
+      if(confirm(safeUtf8Decode("Você deseja realmente modificar todos os conceitos desta área de conhecimento?"))){
+        var notaPadrao = $j('.area-id-' + value).first().val();
+        $j('.area-id-' + value).each(function(){
+          var regra = $j(this).closest('tr').data('regra');
+          if(regra.id != regraDiferenciadaId){
+            $j(this).val(notaPadrao).trigger('change');
+          }
+        });
+      }
+    });
+  });
+}
+function criaBotaoReplicarNotas(){
+  if($j('.nota-matricula-cc').length > 1){
+    $j('<button/>').html('Replicar a todos')
+                   .attr('type','button')
+                   .attr('id','replicar-todas-notas')
+                   .addClass('submit')
+                   .appendTo($j('<p/>').insertAfter($j('.nota-matricula-cc')
+                                       .first()))
+                   .unbind();
+    $j('#replicar-todas-notas').on('click', function(){
+      if(confirm(safeUtf8Decode("Você deseja realmente modificar todos os conceitos desta área de conhecimento?"))){
+          var notaPadrao = $j('.nota-matricula-cc').first().val();
+          $j('.nota-matricula-cc').each(function(){
+            var regra = $j(this).closest('tr').data('regra');
+            if(regra.id != regraDiferenciadaId){
+              $j(this).val(notaPadrao).trigger('change');
+            }
+          });
+        }
+    });
+  }
+}
+
+
 (function($) {
-	var sR = {
-	    defaults: {
-	        slideSpeed: 400,
-	        easing: false,
-	        callback: false     
-	    },
-	    thisCallArgs: {
-	        slideSpeed: 400,
-	        easing: false,
-	        callback: false
-	    },
-	    methods: {
-	        up: function (arg1,arg2,arg3) {
-	            if(typeof arg1 == 'object') {
-	                for(p in arg1) {
-	                    sR.thisCallArgs.eval(p) = arg1[p];
-	                }
-	            }else if(typeof arg1 != 'undefined' && (typeof arg1 == 'number' || arg1 == 'slow' || arg1 == 'fast')) {
-	                sR.thisCallArgs.slideSpeed = arg1;
-	            }else{
-	                sR.thisCallArgs.slideSpeed = sR.defaults.slideSpeed;
-	            }
+  var sR = {
+      defaults: {
+          slideSpeed: 400,
+          easing: false,
+          callback: false
+      },
+      thisCallArgs: {
+          slideSpeed: 400,
+          easing: false,
+          callback: false
+      },
+      methods: {
+          up: function (arg1,arg2,arg3) {
+              if(typeof arg1 == 'object') {
+                  for(p in arg1) {
+                      sR.thisCallArgs.eval(p) = arg1[p];
+                  }
+              }else if(typeof arg1 != 'undefined' && (typeof arg1 == 'number' || arg1 == 'slow' || arg1 == 'fast')) {
+                  sR.thisCallArgs.slideSpeed = arg1;
+              }else{
+                  sR.thisCallArgs.slideSpeed = sR.defaults.slideSpeed;
+              }
 
-	            if(typeof arg2 == 'string'){
-	                sR.thisCallArgs.easing = arg2;
-	            }else if(typeof arg2 == 'function'){
-	                sR.thisCallArgs.callback = arg2;
-	            }else if(typeof arg2 == 'undefined') {
-	                sR.thisCallArgs.easing = sR.defaults.easing;    
-	            }
-	            if(typeof arg3 == 'function') {
-	                sR.thisCallArgs.callback = arg3;
-	            }else if(typeof arg3 == 'undefined' && typeof arg2 != 'function'){
-	                sR.thisCallArgs.callback = sR.defaults.callback;    
-	            }
-	            var $cells = $(this).find('td');
-	            $cells.wrapInner('<div class="slideRowUp" />');
-	            var currentPadding = $cells.css('padding');
-	            $cellContentWrappers = $(this).find('.slideRowUp');
-	            $cellContentWrappers.slideUp(sR.thisCallArgs.slideSpeed,sR.thisCallArgs.easing).parent().animate({
-	                                                                                                                paddingTop: '0px',
-	                                                                                                                paddingBottom: '0px'},{
-	                                                                                                                complete: function () {
-	                                                                                                                    $(this).children('.slideRowUp').replaceWith($(this).children('.slideRowUp').contents());
-	                                                                                                                    $(this).parent().css({'display':'none'});
-	                                                                                                                    $(this).css({'padding': currentPadding});
-	                                                                                                                }});
-	            var wait = setInterval(function () {
-	                if($cellContentWrappers.is(':animated') === false) {
-	                    clearInterval(wait);
-	                    if(typeof sR.thisCallArgs.callback == 'function') {
-	                        sR.thisCallArgs.callback.call(this);
-	                    }
-	                }
-	            }, 100);                                                                                                    
-	            return $(this);
-	        },
-	        down: function (arg1,arg2,arg3) {
-	            if(typeof arg1 == 'object') {
-	                for(p in arg1) {
-	                    sR.thisCallArgs.eval(p) = arg1[p];
-	                }
-	            }else if(typeof arg1 != 'undefined' && (typeof arg1 == 'number' || arg1 == 'slow' || arg1 == 'fast')) {
-	                sR.thisCallArgs.slideSpeed = arg1;
-	            }else{
-	                sR.thisCallArgs.slideSpeed = sR.defaults.slideSpeed;
-	            }
+              if(typeof arg2 == 'string'){
+                  sR.thisCallArgs.easing = arg2;
+              }else if(typeof arg2 == 'function'){
+                  sR.thisCallArgs.callback = arg2;
+              }else if(typeof arg2 == 'undefined') {
+                  sR.thisCallArgs.easing = sR.defaults.easing;
+              }
+              if(typeof arg3 == 'function') {
+                  sR.thisCallArgs.callback = arg3;
+              }else if(typeof arg3 == 'undefined' && typeof arg2 != 'function'){
+                  sR.thisCallArgs.callback = sR.defaults.callback;
+              }
+              var $cells = $(this).find('td');
+              $cells.wrapInner('<div class="slideRowUp" />');
+              var currentPadding = $cells.css('padding');
+              $cellContentWrappers = $(this).find('.slideRowUp');
+              $cellContentWrappers.slideUp(sR.thisCallArgs.slideSpeed,sR.thisCallArgs.easing).parent().animate({
+                                                                                                                  paddingTop: '0px',
+                                                                                                                  paddingBottom: '0px'},{
+                                                                                                                  complete: function () {
+                                                                                                                      $(this).children('.slideRowUp').replaceWith($(this).children('.slideRowUp').contents());
+                                                                                                                      $(this).parent().css({'display':'none'});
+                                                                                                                      $(this).css({'padding': currentPadding});
+                                                                                                                  }});
+              var wait = setInterval(function () {
+                  if($cellContentWrappers.is(':animated') === false) {
+                      clearInterval(wait);
+                      if(typeof sR.thisCallArgs.callback == 'function') {
+                          sR.thisCallArgs.callback.call(this);
+                      }
+                  }
+              }, 100);
+              return $(this);
+          },
+          down: function (arg1,arg2,arg3) {
+              if(typeof arg1 == 'object') {
+                  for(p in arg1) {
+                      sR.thisCallArgs.eval(p) = arg1[p];
+                  }
+              }else if(typeof arg1 != 'undefined' && (typeof arg1 == 'number' || arg1 == 'slow' || arg1 == 'fast')) {
+                  sR.thisCallArgs.slideSpeed = arg1;
+              }else{
+                  sR.thisCallArgs.slideSpeed = sR.defaults.slideSpeed;
+              }
 
-	            if(typeof arg2 == 'string'){
-	                sR.thisCallArgs.easing = arg2;
-	            }else if(typeof arg2 == 'function'){
-	                sR.thisCallArgs.callback = arg2;
-	            }else if(typeof arg2 == 'undefined') {
-	                sR.thisCallArgs.easing = sR.defaults.easing;    
-	            }
-	            if(typeof arg3 == 'function') {
-	                sR.thisCallArgs.callback = arg3;
-	            }else if(typeof arg3 == 'undefined' && typeof arg2 != 'function'){
-	                sR.thisCallArgs.callback = sR.defaults.callback;    
-	            }
-	            var $cells = $(this).find('td');
-	            $cells.wrapInner('<div class="slideRowDown" style="display:none;" />');
-	            $cellContentWrappers = $cells.find('.slideRowDown');
-	            $(this).show();
-	            $cellContentWrappers.slideDown(sR.thisCallArgs.slideSpeed, sR.thisCallArgs.easing, function() { $(this).replaceWith( $(this).contents()); });
+              if(typeof arg2 == 'string'){
+                  sR.thisCallArgs.easing = arg2;
+              }else if(typeof arg2 == 'function'){
+                  sR.thisCallArgs.callback = arg2;
+              }else if(typeof arg2 == 'undefined') {
+                  sR.thisCallArgs.easing = sR.defaults.easing;
+              }
+              if(typeof arg3 == 'function') {
+                  sR.thisCallArgs.callback = arg3;
+              }else if(typeof arg3 == 'undefined' && typeof arg2 != 'function'){
+                  sR.thisCallArgs.callback = sR.defaults.callback;
+              }
+              var $cells = $(this).find('td');
+              $cells.wrapInner('<div class="slideRowDown" style="display:none;" />');
+              $cellContentWrappers = $cells.find('.slideRowDown');
+              $(this).show();
+              $cellContentWrappers.slideDown(sR.thisCallArgs.slideSpeed, sR.thisCallArgs.easing, function() { $(this).replaceWith( $(this).contents()); });
 
-	            var wait = setInterval(function () {
-	                if($cellContentWrappers.is(':animated') === false) {
-	                    clearInterval(wait);
-	                    if(typeof sR.thisCallArgs.callback == 'function') {
-	                        sR.thisCallArgs.callback.call(this);
-	                    }
-	                }
-	            }, 100);
-	            return $(this);
-	        }
-	    }
-	};
+              var wait = setInterval(function () {
+                  if($cellContentWrappers.is(':animated') === false) {
+                      clearInterval(wait);
+                      if(typeof sR.thisCallArgs.callback == 'function') {
+                          sR.thisCallArgs.callback.call(this);
+                      }
+                  }
+              }, 100);
+              return $(this);
+          }
+      }
+  };
 
-	$.fn.slideRow = function(method,arg1,arg2,arg3) {
-	    if(typeof method != 'undefined') {
-	        if(sR.methods[method]) {
-	            return sR.methods[method].apply(this, Array.prototype.slice.call(arguments,1));
-	        }
-	    }
-	};
+  $.fn.slideRow = function(method,arg1,arg2,arg3) {
+      if(typeof method != 'undefined') {
+          if(sR.methods[method]) {
+              return sR.methods[method].apply(this, Array.prototype.slice.call(arguments,1));
+          }
+      }
+  };
 })(jQuery);

@@ -22,7 +22,16 @@ function ajax( funcaoRetorno )
 			xml = new XMLHttpRequest();
 			xml.args = args;
 			xml.personalCallback = funcaoRetorno;
-			xml.onreadystatechange = function(){ if( xml.readyState > 3 ) { if ( xml.status == 200 ) { xml.personalCallback( xml.responseXML, xml.args ) } else { alert('Erro: '+xml.status); } } };
+			xml.onreadystatechange = function(){ 
+				if( xml.readyState > 3 ) { 
+					if ( xml.status == 200 ) { 
+						xml.personalCallback( xml.responseXML, xml.args ) 
+					} else if (xml.status == 500){
+						alert('N\u00e3o existem Componentes curriculares vinculados para a S\u00e9rie/Ano desta escola. Verifique em Cadastros > S\u00e9rie > Escola-s\u00e9rie se os Componentes curriculares foram selecionados/marcados para esta S\u00e9rie/Ano.');
+					}else { 
+						alert('Erro: '+xml.status); 
+					} 
+				} };
 			xml.envia = function(){xml.open("GET",addRandToURL(arguments[0]),true);xml.send(null)};
 			return xml;
 		} catch(e)
@@ -245,7 +254,7 @@ expansivel = document.getElementById( "DOM_expansivel" );
 	{
 		titulo = ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ';
 	}
-	conteudoMoldurado = '<table border="0" cellpadding="0" cellspacing="0" width="' + largura + '" height="' + altura + '"><tr><td width="9" height="44" valign="top"><img src="imagens/moldura/top_01.gif" border="0" width="9" height="44"></td><td background="imagens/moldura/top_04.gif" height="44" valign="top"><table border="0" cellpadding="0" cellspacing="0" height="44"><tr><td background="imagens/moldura/top_02.gif" height="44">' + titulo + '</td><td width="44" height="44" valign="top"><img src="imagens/moldura/top_03.gif" border="0" width="44" height="44"></td></tr></table></td><td background="imagens/moldura/top_04.gif" height="44" align="right"><a href="javascript: fechaExpansivel();"><img src="imagens/moldura/top_bot.jpg" border="0" width="17" height="17"></a></td><td width="9" height="44" valign="top"><img src="imagens/moldura/top_05.gif" border="0" width="9" height="44"></td></tr><tr><td background="imagens/moldura/meio_esq.jpg" width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2">';
+	conteudoMoldurado = '<table border="0" cellpadding="0" cellspacing="0" width="' + largura + '" height="' + altura + '"><tr><td width="9" height="44" valign="top"><img src="imagens/moldura/top_01.gif" border="0" width="9" height="44"></td><td background="imagens/moldura/top_04.gif" height="44" valign="top"><table border="0" cellpadding="0" cellspacing="0" height="44"><tr><td background="imagens/moldura/top_02.gif" height="44">' + titulo + '</td><td width="44" height="44" valign="top"><img src="imagens/moldura/top_03.gif" border="0" width="44" height="44"></td></tr></table></td><td background="imagens/moldura/top_04.gif" height="44" align="right"><a href="javascript: fechaExpansivel();"><img src="imagens/moldura/close.png" border="0" width="17" height="17"></a></td><td width="9" height="44" valign="top"><img src="imagens/moldura/top_05.gif" border="0" width="9" height="44"></td></tr><tr><td background="imagens/moldura/meio_esq.jpg" width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2">';
 	conteudoMoldurado += conteudo;
 	conteudoMoldurado += '</td><td background="imagens/moldura/meio_dir.jpg" width="9">&nbsp;</td></tr><tr><td width="9" height="20" valign="top"><img src="imagens/moldura/bottom_01.jpg" width="9" height="20"></td><td colspan="2" background="imagens/moldura/bottom_02.jpg" height="20">&nbsp;</td><td width="9" height="20" valign="top"><img src="imagens/moldura/bottom_03.jpg" width="9" height="20"></td></tr></table>';
 	expansivel.innerHTML = conteudoMoldurado;
@@ -295,15 +304,15 @@ function showExpansivel( largura, altura, conteudo )
 	{
 		titulo = ' &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ';
 	}
-	var cliqueFecha = '<a href="javascript:void(0);" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="imagens/moldura/top_bot.jpg" border="0" width="17" height="17"></a>';
+	var cliqueFecha = '<a href="javascript:void(0);" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="imagens/moldura/close.png" border="0" width="17" height="17"></a>';
 	if (typeof arguments[3] == "number")
 	{
 		cliqueFecha = '';
 	}
-//	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" width="100%"><tr><td width="9" height="44" valign="top"><img src="imagens/moldura/top_01.gif" border="0" width="9" height="44"></td><td background="imagens/moldura/top_04.gif" height="44" valign="top"><table border="0" cellpadding="0" cellspacing="0" height="44"><tr><td background="imagens/moldura/top_02.gif" height="44">' + titulo + '</td><td width="44" height="44" valign="top"><img src="imagens/moldura/top_03.gif" border="0" width="44" height="44"></td></tr></table></td><td background="imagens/moldura/top_04.gif" height="44" align="right"><a href="javascript:void(0);" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="imagens/moldura/top_bot.jpg" border="0" width="17" height="17"></a></td><td width="9" height="44" valign="top"><img src="imagens/moldura/top_05.gif" border="0" width="9" height="44"></td></tr><tr><td background="imagens/moldura/meio_esq.jpg" width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" style="overflow:auto;">';
-	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" width="100%"><tr><td width="9" height="44" valign="top"><img src="imagens/moldura/top_01.gif" border="0" width="9" height="44"></td><td background="imagens/moldura/top_04.gif" height="44" valign="top"><table border="0" cellpadding="0" cellspacing="0" height="44"><tr><td background="imagens/moldura/top_02.gif" height="44">' + titulo + '</td><td width="44" height="44" valign="top"><img src="imagens/moldura/top_03.gif" border="0" width="44" height="44"></td></tr></table></td><td background="imagens/moldura/top_04.gif" height="44" align="right">'+cliqueFecha+'</td><td width="9" height="44" valign="top"><img src="imagens/moldura/top_05.gif" border="0" width="9" height="44"></td></tr><tr><td background="imagens/moldura/meio_esq.jpg" width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" style="overflow:auto;">';
+//	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" width="100%"><tr><td width="9" height="44" valign="top"><img src="imagens/moldura/top_01.gif" border="0" width="9" height="44"></td><td background="imagens/moldura/top_04.gif" height="44" valign="top"><table border="0" cellpadding="0" cellspacing="0" height="44"><tr><td background="imagens/moldura/top_02.gif" height="44">' + titulo + '</td><td width="44" height="44" valign="top"><img src="imagens/moldura/top_03.gif" border="0" width="44" height="44"></td></tr></table></td><td background="imagens/moldura/top_04.gif" height="44" align="right"><a href="javascript:void(0);" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="imagens/moldura/close.png" border="0" width="17" height="17"></a></td><td width="9" height="44" valign="top"><img src="imagens/moldura/top_05.gif" border="0" width="9" height="44"></td></tr><tr><td background="imagens/moldura/meio_esq.jpg" width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" style="overflow:auto;">';
+	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" width="100%"><tr><td width="9" height="44" valign="top"></td><td id="modal-title" height="44" valign="top">'+ titulo + '</td><td id="modal-close" '+cliqueFecha+'</td><td width="9" height="44" valign="top"></td></tr><tr><td  width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" class="modal-domjs-conteudo" style="overflow:auto;">';
 	conteudoMoldurado += conteudo;
-	conteudoMoldurado += '</div></td><td background="imagens/moldura/meio_dir.jpg" width="9">&nbsp;</td></tr><tr><td width="9" height="20" valign="top"><img src="imagens/moldura/bottom_01.jpg" width="9" height="20"></td><td colspan="2" background="imagens/moldura/bottom_02.jpg" height="20">&nbsp;</td><td width="9" height="20" valign="top"><img src="imagens/moldura/bottom_03.jpg" width="9" height="20"></td></tr></table>';
+	conteudoMoldurado += '</div></td><td width="9">&nbsp;</td></tr><tr><td width="9" height="20" valign="top"></td><td colspan="2"  height="20">&nbsp;</td><td width="9" height="20" valign="top"></td></tr></table>';
 	expansivel.innerHTML = conteudoMoldurado;
 
 
@@ -361,6 +370,7 @@ function showExpansivelImprimir( largura, altura, arquivo, array,  titulo )
 	insertAfter(expansivel, document.getElementById("DOM_expansivel"));
 	DOM_divs[exp_id] = expansivel;
 	expansivel.style.position = "absolute";
+	expansivel.style.zIndex = 9;
 
 
 	url = '';
@@ -394,9 +404,9 @@ function showExpansivelImprimir( largura, altura, arquivo, array,  titulo )
 	}
 
 
-	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" ><tr><td width="9" height="44" valign="top"><img src="imagens/moldura/top_01.gif" border="0" width="9" height="44"></td><td background="imagens/moldura/top_04.gif" height="44" valign="top"><table border="0" cellpadding="0" cellspacing="0" height="44"><tr><td background="imagens/moldura/top_02.gif" height="44">' + titulo + '</td><td width="44" height="44" valign="top"><img src="imagens/moldura/top_03.gif" border="0" width="44" height="44"></td></tr></table></td><td background="imagens/moldura/top_04.gif" height="44" align="right"><a href="#" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="imagens/moldura/top_bot.jpg" border="0" width="17" height="17"></a></td><td width="9" height="44" valign="top"><img src="imagens/moldura/top_05.gif" border="0" width="9" height="44"></td></tr><tr><td background="imagens/moldura/meio_esq.jpg" width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" style="overflow:auto;"><div id="LoadImprimir"><img style="margin-bottom: -8px;" src=\'imagens/carregando1.gif\'>Carregando...</div>';
+	conteudoMoldurado = '<table border="0" id="tabela_conteudo" cellpadding="0" cellspacing="0" ><tr><td width="9" height="44" valign="top"></td><td height="44" valign="top">' + titulo + '</td><td height="44" align="right"><a href="#" id="linkFechar" onclick="fechaExpansivel( \'div_dinamico_'+exp_id+'\');" ><img src="imagens/moldura/close.png" border="0" width="17" height="17"></a></td><td width="9" height="44" valign="top"></td></tr><tr><td width="9">&nbsp;</td><td bgcolor="#FFFFFF" colspan="2"><div id="expansivel_conteudo" class="modal-domjs-conteudo" style="overflow:auto;"><div id="LoadImprimir"><img style="margin-bottom: -8px;" src=\'imagens/carregando1.gif\'>Carregando...</div>';
 	conteudoMoldurado += '<iframe name=\'miolo_' + exp_id + '\' id=\'miolo_' + exp_id + '\' frameborder=\'0\' height=\'100%\' width=\'100%\' marginheight=\'0\' marginwidth=\'0\' src=\''+arquivo+url+'\'></iframe>';
-	conteudoMoldurado += '</div></td><td background="imagens/moldura/meio_dir.jpg" width="9">&nbsp;</td></tr><tr><td width="9" height="20" valign="top"><img src="imagens/moldura/bottom_01.jpg" width="9" height="20"></td><td colspan="2" background="imagens/moldura/bottom_02.jpg" height="20">&nbsp;</td><td width="9" height="20" valign="top"><img src="imagens/moldura/bottom_03.jpg" width="9" height="20"></td></tr></table>';
+	conteudoMoldurado += '</div></td><td width="9">&nbsp;</td></tr><tr><td width="9" height="20" valign="top"></td><td colspan="2" height="20">&nbsp;</td><td width="9" height="20" valign="top"></td></tr></table>';
 	expansivel.innerHTML = conteudoMoldurado;
 
 
@@ -1539,7 +1549,7 @@ function getPDFouvidoriaEquipe()
 
 	Obj = document.getElementById('imprimir');
 	Obj.value = 'Gerando Arquivo...';
-	Obj.onclick = function() { alert('O sistema está gerando o arquivo. Aguarde!')};
+	Obj.onclick = function() { alert('O sistema est?gerando o arquivo. Aguarde!')};
 	//document.location.href = strURL;
 }
 
@@ -1566,7 +1576,7 @@ function getPDFouvidoriaTipoServico()
 	DOM_loadXMLDoc( strURL );
 	Obj = document.getElementById('imprimir');
 	Obj.value = 'Gerando Arquivo...';
-	Obj.onclick = function() { alert('O sistema está gerando o arquivo. Aguarde!')};
+	Obj.onclick = function() { alert('O sistema est?gerando o arquivo. Aguarde!')};
 	//document.location.href = strURL;
 }
 
@@ -1594,7 +1604,7 @@ function getPDFouvidoriaAtendimento()
 	DOM_loadXMLDoc( strURL );
 	Obj = document.getElementById('imprimir');
 	Obj.value = 'Gerando Arquivo...';
-	Obj.onclick = function() { alert('O sistema está gerando o arquivo. Aguarde!')};
+	Obj.onclick = function() { alert('O sistema est?gerando o arquivo. Aguarde!')};
 }
 
 function getPDFouvidoriaAtendimentoDone()
@@ -1626,7 +1636,7 @@ function getPDFestoquesaida()
 	DOM_loadXMLDoc( strURL );
 	Obj = document.getElementById('imprimir');
 	Obj.value = 'Gerando Arquivo...';
-	Obj.onclick = function() { alert('O sistema está gerando o arquivo. Aguarde!')};
+	Obj.onclick = function() { alert('O sistema est?gerando o arquivo. Aguarde!')};
 }
 
 function getPDFestoquesaidaDone()
@@ -1657,7 +1667,7 @@ function getPDFouvidoriaAtendimentoSetor()
 	DOM_loadXMLDoc( strURL );
 	Obj = document.getElementById('imprimir');
 	Obj.value = 'Gerando Arquivo...';
-	Obj.onclick = function() { alert('O sistema está gerando o arquivo. Aguarde!')};
+	Obj.onclick = function() { alert('O sistema est?gerando o arquivo. Aguarde!')};
 	
 }
 
@@ -1695,7 +1705,7 @@ function getPDFouvidoriaOrdem()
 	DOM_loadXMLDoc( strURL );
 	Obj = document.getElementById('imprimir');
 	Obj.value = 'Gerando Arquivo...';
-	Obj.onclick = function() { alert('O sistema está gerando o arquivo. Aguarde!')};
+	Obj.onclick = function() { alert('O sistema est?gerando o arquivo. Aguarde!')};
 	//document.location.href = strURL;
 }
 
@@ -1717,7 +1727,7 @@ function fecha_notificacao( id_notificacao )
 	{
 		if( DOM_itensArray[0].firstChild.data == 0 )
 		{
-			alert( 'Erro de permissão. A notificação não foi deletada.' );
+			alert( 'Erro de permiss?. A notifica?o n? foi deletada.' );
 			document.getElementById('notificacao_' + id_notificacao).style.display='block';
 		}
 	}

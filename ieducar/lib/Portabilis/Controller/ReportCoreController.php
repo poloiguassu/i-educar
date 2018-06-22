@@ -36,8 +36,7 @@ require_once 'Core/Controller/Page/EditController.php';
 require_once 'lib/Portabilis/View/Helper/Inputs.php';
 require_once 'Avaliacao/Model/NotaComponenteDataMapper.php';
 require_once 'lib/Portabilis/String/Utils.php';
-
-//require_once 'include/pmieducar/clsPermissoes.inc.php';
+require_once 'include/pmieducar/clsPermissoes.inc.php';
 
 /**
  * Portabilis_Controller_ReportCoreController class.
@@ -77,7 +76,7 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
 
   public function Gerar() {
-    if (count($_POST) < 1) {
+    if (count($_POST) < 1 && !isset($_GET['print_report_with_get'])) {
       $this->appendFixups();
       $this->renderForm();
     }
@@ -86,10 +85,17 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
       $this->beforeValidation();
 
-      $this->report->addArg('SUBREPORT_DIR', "modules/Reports/ReportSources/");
+      if (CORE_EXT_CONFIGURATION_ENV == "production") {
+        $this->report->addArg('SUBREPORT_DIR', "/sites_media_root/services/reports/jasper/");
+      } else if (CORE_EXT_CONFIGURATION_ENV == "development") {
+        $this->report->addArg('SUBREPORT_DIR', "modules/Reports/ReportSources/Portabilis/");
+      } else {
+        $this->report->addArg('SUBREPORT_DIR', "/sites_media_root/services-test/reports/jasper/");
+      }
 
-      $this->report->addArg('database', $GLOBALS['coreExt']['Config']->app->database->dbname);
+      $this->report->addArg('database', ($GLOBALS['coreExt']['Config']->app->database->dbname == 'test' ? (is_null($GLOBALS['coreExt']['Config']->report->database_teste) ? "" : $GLOBALS['coreExt']['Config']->report->database_teste)  : $GLOBALS['coreExt']['Config']->app->database->dbname ));
 
+      $this->report->addArg('data_emissao', (int) $GLOBALS['coreExt']['Config']->report->header->show_data_emissao);
       $this->validatesPresenseOfRequiredArgsInReport();
       $this->aftervalidation();
 
@@ -103,9 +109,15 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
 
 
   function headers($result) {
-    header('Content-type: application/pdf; charset=utf-8');
-    header('Content-Length: ' . strlen($result));
-    header('Content-Disposition: inline; filename=report.pdf');
+
+    header("Pragma: public");
+    header("Expires: 0");
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+    header("Cache-Control: private",false);
+    header("Content-Type: application/pdf;");
+    header("Content-Disposition: inline;");
+    header("Content-Transfer-Encoding: binary");
+    header("Content-Length: " . strlen($result));
   }
 
 
@@ -123,13 +135,19 @@ class Portabilis_Controller_ReportCoreController extends Core_Controller_Page_Ed
         throw new Exception('No report result to render!');
 
       $this->headers($result);
+      ob_clean();
+      flush();
       echo $result;
     }
     catch (Exception $e) {
-      if ($GLOBALS['coreExt']['Config']->report->show_error_details == true)
+
+      $nivelUsuario = (new clsPermissoes)->nivel_acesso($this->getSession()->id_pessoa);
+
+      if ((bool) $GLOBALS['coreExt']['Config']->report->show_error_details === true || (int) $nivelUsuario === 1) {
         $details = 'Detalhes: ' . $e->getMessage();
-      else
+      } else {
         $details = "Visualização dos detalhes sobre o erro desativada.";
+      }
 
       $this->renderError($details);
     }

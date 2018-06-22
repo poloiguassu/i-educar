@@ -84,7 +84,7 @@ class indice extends clsDetalhe
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
     $this->titulo = 'Veiculo - Detalhe';
-    
+
 
     $cod_veiculo = $_GET['cod_veiculo'];
 
@@ -95,7 +95,7 @@ class indice extends clsDetalhe
       header('Location: transporte_veiculo_lst.php');
       die();
     }
-    
+
     $this->addDetalhe( array("Código do veículo", $cod_veiculo));
     $this->addDetalhe( array("Descrição", $registro['descricao']) );
     $this->addDetalhe( array("Placa", $registro['placa']) );
@@ -127,19 +127,25 @@ class indice extends clsDetalhe
     $this->addDetalhe( array("Empresa", $registro['nome_empresa']) );
     $this->addDetalhe( array("Motorista responsável", $registro['nome_motorista']) );
     $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']));
-    $this->url_novo = "../module/TransporteEscolar/Veiculo";
-    $this->url_editar = "../module/TransporteEscolar/Veiculo?id={$cod_veiculo}";
     $this->url_cancelar = "transporte_veiculo_lst.php";
 
     $this->largura = "100%";
 
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra(21237, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo = "../module/TransporteEscolar/Veiculo";
+      $this->url_editar = "../module/TransporteEscolar/Veiculo?id={$cod_veiculo}";
+    }
+
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_transporte_escolar_index.php"                  => "Transporte escolar",
          ""                                  => "Detalhe do ve&iacute;culo"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

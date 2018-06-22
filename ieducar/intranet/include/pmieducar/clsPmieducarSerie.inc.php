@@ -1,5 +1,8 @@
 <?php
 
+// error_reporting(E_ERROR);
+// ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -58,11 +61,16 @@ class clsPmieducarSerie
   var $data_cadastro;
   var $data_exclusao;
   var $ativo;
-  var $intervalo;
   var $regra_avaliacao_id;
+  var $regra_avaliacao_diferenciada_id;
 
   var $idade_inicial;
   var $idade_final;
+  var $idade_ideal;
+
+  var $alerta_faixa_etaria;
+  var $bloquear_matricula_faixa_etaria;
+  var $exigir_inep;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -117,18 +125,17 @@ class clsPmieducarSerie
   /**
    * Construtor.
    */
-  function clsPmieducarSerie($cod_serie = NULL, $ref_usuario_exc = NULL,
+  function __construct($cod_serie = NULL, $ref_usuario_exc = NULL,
     $ref_usuario_cad = NULL, $ref_cod_curso = NULL, $nm_serie = NULL,
     $etapa_curso = NULL, $concluinte = NULL, $carga_horaria = NULL,
-    $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL, $intervalo = NULL,
+    $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL,
     $idade_inicial = NULL, $idade_final = NULL, $regra_avaliacao_id = NULL, $observacao_historico = null,
-    $dias_letivos = null)
+    $dias_letivos = null, $regra_avaliacao_diferenciada_id = null, $alerta_faixa_etaria = false, $bloquear_matricula_faixa_etaria = false,$idade_ideal = null, $exigir_inep = false)
   {
     $db = new clsBanco();
     $this->_schema = "pmieducar.";
     $this->_tabela = "{$this->_schema}serie";
-
-    $this->_campos_lista = $this->_todos_campos = "s.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.intervalo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos";
+    $this->_campos_lista = $this->_todos_campos = "s.cod_serie, s.ref_usuario_exc, s.ref_usuario_cad, s.ref_cod_curso, s.nm_serie, s.etapa_curso, s.concluinte, s.carga_horaria, s.data_cadastro, s.data_exclusao, s.ativo, s.idade_inicial, s.idade_final, s.regra_avaliacao_id, s.observacao_historico, s.dias_letivos, s.regra_avaliacao_diferenciada_id, s.alerta_faixa_etaria, s.bloquear_matricula_faixa_etaria, s.idade_ideal, s.exigir_inep";
 
     if (is_numeric($ref_cod_curso)) {
       if (class_exists("clsPmieducarCurso")) {
@@ -210,6 +217,28 @@ class clsPmieducarSerie
       }
     }
 
+    if (!is_null($regra_avaliacao_diferenciada_id) && is_numeric($regra_avaliacao_diferenciada_id)) {
+      $mapper = new RegraAvaliacao_Model_RegraDataMapper();
+
+      if (isset($curso)) {
+        $regras = $mapper->findAll(array(),
+          array('id' => $regra_avaliacao_diferenciada_id, 'instituicao' => $curso['ref_cod_instituicao'])
+        );
+
+        if (1 == count($regras)) {
+          $regra = $regras[0];
+        }
+      }
+      else {
+        $regra = $mapper->find($regra_avaliacao_diferenciada_id);
+      }
+
+      // Verificação fraca pois deixa ser uma regra de outra instituição
+      if (isset($regra)) {
+        $this->regra_avaliacao_diferenciada_id = $regra->id;
+      }
+    }
+
     if (is_numeric($cod_serie)) {
       $this->cod_serie = $cod_serie;
     }
@@ -242,16 +271,28 @@ class clsPmieducarSerie
       $this->ativo = $ativo;
     }
 
-    if (is_numeric($intervalo)) {
-      $this->intervalo = $intervalo;
-    }
-
     if (is_numeric($idade_inicial)) {
       $this->idade_inicial = $idade_inicial;
     }
 
     if (is_numeric($idade_final)) {
       $this->idade_final = $idade_final;
+    }
+
+    if (dbBool($alerta_faixa_etaria)) {
+      $this->alerta_faixa_etaria = $alerta_faixa_etaria;
+    }
+
+    if (dbBool($bloquear_matricula_faixa_etaria)) {
+      $this->bloquear_matricula_faixa_etaria = $bloquear_matricula_faixa_etaria;
+    }
+
+    if (is_numeric($idade_ideal)) {
+      $this->idade_ideal = $idade_ideal;
+    }
+
+    if (dbBool($exigir_inep)) {
+      $this->exigir_inep = $exigir_inep;
     }
 
     $this->observacao_historico = $observacao_historico;
@@ -267,7 +308,7 @@ class clsPmieducarSerie
     if (is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_curso) &&
       is_string($this->nm_serie) && is_numeric($this->etapa_curso) &&
       is_numeric($this->concluinte) && is_numeric($this->carga_horaria) &&
-      is_numeric($this->intervalo) && is_numeric($this->dias_letivos))
+      is_numeric($this->dias_letivos) )
     {
       $db = new clsBanco();
 
@@ -329,6 +370,12 @@ class clsPmieducarSerie
         $gruda = ", ";
       }
 
+      if (is_numeric($this->regra_avaliacao_diferenciada_id)) {
+        $campos .= "{$gruda}regra_avaliacao_diferenciada_id";
+        $valores .= "{$gruda}'{$this->regra_avaliacao_diferenciada_id}'";
+        $gruda = ", ";
+      }
+
       $campos .= "{$gruda}data_cadastro";
       $valores .= "{$gruda}NOW()";
       $gruda = ", ";
@@ -336,12 +383,6 @@ class clsPmieducarSerie
       $campos .= "{$gruda}ativo";
       $valores .= "{$gruda}'1'";
       $gruda = ", ";
-
-      if (is_numeric($this->intervalo)) {
-        $campos  .= "{$gruda}intervalo";
-        $valores .= "{$gruda}'{$this->intervalo}'";
-        $gruda    = ", ";
-      }
 
       if(is_string($this->observacao_historico)){
         $campos .= "{$gruda}observacao_historico";
@@ -353,6 +394,42 @@ class clsPmieducarSerie
         $campos  .= "{$gruda}dias_letivos";
         $valores .= "{$gruda}'{$this->dias_letivos}'";
         $gruda    = ", ";
+      }
+
+      if (is_numeric($this->idade_ideal)) {
+        $campos  .= "{$gruda}idade_ideal";
+        $valores .= "{$gruda}'{$this->idade_ideal}'";
+        $gruda    = ", ";
+      }
+
+      if (dbBool($this->alerta_faixa_etaria)) {
+        $campos .= "{$gruda}alerta_faixa_etaria";
+        $valores .= "{$gruda} true ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}alerta_faixa_etaria";
+        $valores .= "{$gruda} false ";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->bloquear_matricula_faixa_etaria)) {
+        $campos .= "{$gruda}bloquear_matricula_faixa_etaria";
+        $valores .= "{$gruda} true ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}bloquear_matricula_faixa_etaria";
+        $valores .= "{$gruda} false ";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->exigir_inep)) {
+        $campos .= "{$gruda}exigir_inep";
+        $valores .= "{$gruda} true ";
+        $gruda = ", ";
+      }else{
+        $campos .= "{$gruda}exigir_inep";
+        $valores .= "{$gruda} false ";
+        $gruda = ", ";
       }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -420,11 +497,6 @@ class clsPmieducarSerie
         $gruda = ", ";
       }
 
-      if (is_numeric($this->intervalo)) {
-        $set .= "{$gruda}intervalo = '{$this->intervalo}'";
-        $gruda = ", ";
-      }
-
       if (is_numeric($this->idade_inicial)) {
         $set .= "{$gruda}idade_inicial = '{$this->idade_inicial}'";
         $gruda = ", ";
@@ -448,6 +520,13 @@ class clsPmieducarSerie
         $gruda = ", ";
       }
 
+      if (is_numeric($this->regra_avaliacao_diferenciada_id))
+        $set .= "{$gruda}regra_avaliacao_diferenciada_id = '{$this->regra_avaliacao_diferenciada_id}' ";
+      else
+        $set .= "{$gruda}regra_avaliacao_diferenciada_id = NULL ";
+
+      $gruda = ", ";
+
       if(is_string($this->observacao_historico)){
         $set .= "{$gruda}observacao_historico = '{$this->observacao_historico}'";
         $gruda = ", ";
@@ -455,6 +534,39 @@ class clsPmieducarSerie
 
       if (is_numeric($this->dias_letivos)) {
         $set .= "{$gruda}dias_letivos = '{$this->dias_letivos}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->idade_ideal)) {
+        $set .= "{$gruda}idade_ideal = '{$this->idade_ideal}'";
+        $gruda = ", ";
+      }
+      else {
+        $set .= "{$gruda}idade_ideal = NULL";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->alerta_faixa_etaria)) {
+        $set .= "{$gruda}alerta_faixa_etaria = true ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}alerta_faixa_etaria = false ";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->bloquear_matricula_faixa_etaria)) {
+        $set .= "{$gruda}bloquear_matricula_faixa_etaria = true ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}bloquear_matricula_faixa_etaria = false ";
+        $gruda = ", ";
+      }
+
+      if (dbBool($this->exigir_inep)) {
+        $set .= "{$gruda}exigir_inep = true ";
+        $gruda = ", ";
+      }else{
+        $set .= "{$gruda}exigir_inep = false ";
         $gruda = ", ";
       }
 
@@ -476,9 +588,9 @@ class clsPmieducarSerie
     $int_etapa_curso = NULL, $int_concluinte = NULL, $int_carga_horaria = NULL,
     $date_data_cadastro_ini = NULL, $date_data_cadastro_fim = NULL,
     $date_data_exclusao_ini = NULL, $date_data_exclusao_fim = NULL,
-    $int_ativo = NULL, $int_ref_cod_instituicao = NULL, $int_intervalo = NULL,
+    $int_ativo = NULL, $int_ref_cod_instituicao = NULL,
     $int_idade_inicial = NULL, $int_idade_final = NULL, $int_ref_cod_escola = NULL,
-    $regra_avaliacao_id = NULL)
+    $regra_avaliacao_id = NULL, $int_idade_ideal = NULL)
   {
     $sql = "SELECT {$this->_campos_lista}, c.ref_cod_instituicao FROM {$this->_tabela} s, {$this->_schema}curso c";
 
@@ -506,7 +618,7 @@ class clsPmieducarSerie
     }
 
     if (is_string($str_nm_serie)) {
-      $filtros .= "{$whereAnd} s.nm_serie LIKE '%{$str_nm_serie}%'";
+      $filtros .= "{$whereAnd} translate(upper(s.nm_serie),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_serie}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = " AND ";
     }
 
@@ -564,13 +676,13 @@ class clsPmieducarSerie
       $whereAnd = " AND ";
     }
 
-    if (is_numeric($int_intervalo)) {
-      $filtros .= "{$whereAnd} intervalo = '{$int_intervalo}'";
+    if (is_numeric($int_idade_inicial)) {
+      $filtros .= "{$whereAnd} idade_inicial = '{$int_idade_inicial}'";
       $whereAnd = " AND ";
     }
 
-    if (is_numeric($int_idade_inicial)) {
-      $filtros .= "{$whereAnd} idade_inicial = '{$int_idade_inicial}'";
+    if (is_numeric($int_idade_ideal)) {
+      $filtros .= "{$whereAnd} idade_ideal = '{$int_idade_ideal}'";
       $whereAnd = " AND ";
     }
 
@@ -580,9 +692,81 @@ class clsPmieducarSerie
     }
 
     if (is_numeric($int_ref_cod_escola)) {
-      $filtros .= "{$whereAnd} EXISTS ( SELECT 1 FROM pmieducar.escola_serie es WHERE s.cod_serie = es.ref_cod_serie AND es.ref_cod_escola = '{$int_ref_cod_escola}') ";
+      $filtros .= "{$whereAnd} EXISTS (SELECT 1
+                                         FROM pmieducar.escola_serie es
+                                        WHERE s.cod_serie = es.ref_cod_serie
+                                          AND es.ativo = 1
+                                          AND es.ref_cod_escola = '{$int_ref_cod_escola}') ";
       $whereAnd = " AND ";
     }
+
+    $db = new clsBanco();
+    $countCampos = count(explode(',', $this->_campos_lista));
+    $resultado = array();
+
+    $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
+    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} s, "
+                        . "{$this->_schema}curso c {$filtros}");
+
+    $db->Consulta($sql);
+
+    if ($countCampos > 1) {
+      while ($db->ProximoRegistro()) {
+        $tupla = $db->Tupla();
+
+        $tupla["_total"] = $this->_total;
+        $resultado[] = $tupla;
+      }
+    }
+    else {
+      while ($db->ProximoRegistro()) {
+        $tupla = $db->Tupla();
+        $resultado[] = $tupla[$this->_campos_lista];
+      }
+    }
+    if (count($resultado)) {
+      return $resultado;
+    }
+
+    return FALSE;
+  }
+
+  function listaSeriesComComponentesVinculados($int_cod_serie = NULL,
+                                               $int_ref_cod_curso = NULL,
+                                               $int_ref_cod_instituicao = NULL,
+                                               $int_ativo = NULL)
+  {
+    $sql = "SELECT {$this->_campos_lista},
+                   c.ref_cod_instituicao FROM {$this->_tabela} s,
+                   {$this->_schema}curso c";
+
+    $whereAnd = " AND ";
+    $filtros = " WHERE s.ref_cod_curso = c.cod_curso";
+
+    if (is_numeric($int_cod_serie)) {
+      $filtros .= "{$whereAnd} s.cod_serie = '{$int_cod_serie}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_ref_cod_curso)) {
+      $filtros .= "{$whereAnd} s.ref_cod_curso = '{$int_ref_cod_curso}'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_numeric($int_ref_cod_instituicao)) {
+      $filtros .= "{$whereAnd} c.ref_cod_instituicao = '$int_ref_cod_instituicao'";
+      $whereAnd = " AND ";
+    }
+
+    if (is_null($int_ativo) || $int_ativo) {
+      $filtros .= "{$whereAnd} s.ativo = '1'";
+      $whereAnd = " AND ";
+    }
+
+    $filtros .= "{$whereAnd} s.cod_serie IN (SELECT DISTINCT ano_escolar_id
+                                               FROM modules.componente_curricular_ano_escolar)";
+    $whereAnd = " AND ";
 
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista));
@@ -765,4 +949,56 @@ class clsPmieducarSerie
 
     return $resultado;
   }
+
+  /**
+   * Verifica se a data de nascimento enviada por parâmetro está dentro do período de corte etário pré-definido.
+   *
+   * @param int $dataNascimento
+   * @return boolean
+   */
+  function verificaPeriodoCorteEtarioDataNascimento($dataNascimento, $ano){
+
+    $detSerie = $this->detalhe();
+    $idadeInicial = $detSerie["idade_inicial"];
+    $idadeFinal   = $detSerie["idade_final"];
+
+    $instituicaoId = $this->getInstituicaoByCurso($detSerie["ref_cod_curso"]);
+    $objInstituicao = new clsPmieducarInstituicao($instituicaoId);
+    $detInstituicao = $objInstituicao->detalhe();
+    $dataBaseMatricula = $detInstituicao["data_base_matricula"];
+
+    //Caso não tenha data base na matricula, não verifica se está dentro do periodo
+    if (!is_string($dataBaseMatricula)) return true;
+
+    $anoLimite = $ano;
+    $mesLimite = $dataBaseMatricula[1];
+    $diaLimite = $dataBaseMatricula[2];
+
+    $dataLimite = $anoLimite . '-' . $mesLimite . '-' . $diaLimite;
+
+    $dataNascimento = new DateTime($dataNascimento);
+    $dataLimite     = new DateTime($dataLimite);
+
+    $diferencaDatas = $dataNascimento->diff($dataLimite);
+
+    $idadeNaData = $diferencaDatas->y;
+    $idadesPermitidas = range($idadeInicial, $idadeFinal);
+
+    $idadeCompativel = false;
+    foreach($idadesPermitidas as $idade){
+      if($idade == $idadeNaData){
+        $idadeCompativel = true;
+      }
+    }
+
+    return $idadeCompativel;
+  }
+
+  function getInstituicaoByCurso($codCurso){
+    $objCurso = new clsPmieducarCurso($codCurso);
+    $detCurso = $objCurso->detalhe();
+
+    return $detCurso["ref_cod_instituicao"];
+  }
+
 }

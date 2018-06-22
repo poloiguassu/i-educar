@@ -35,6 +35,7 @@ require_once 'include/pmieducar/geral.inc.php';
 
 require_once 'App/Model/IedFinder.php';
 require_once 'Calendario/Model/TurmaDataMapper.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsIndexBase class.
@@ -268,7 +269,7 @@ class indice extends clsCadastro
 
     $seletor = '<label><input id="_turmas_sel" onclick="new ied_forms.checkAll(document, \'formcadastro\', \'turmas\')" type="checkbox" /> Selecionar todas</label>';
     $this->campoRotulo('turmas_rotulo', 'Turmas', $seletor);
-    $turmas = App_Model_IedFinder::getTurmas($ref_cod_escola);
+    $turmas = App_Model_IedFinder::getTurmas($ref_cod_escola, NULL, $this->ano);
 
     foreach ($turmas as $codTurma => $nomeTurma) {
       $checked = $this->_hasEntry($this->ref_cod_calendario_ano_letivo,
@@ -297,6 +298,9 @@ class indice extends clsCadastro
     );
 
     $cadastrou = $obj->cadastra();
+
+    $auditoria = new clsModulesAuditoriaGeral("calendario_dia", $this->pessoa_logada);
+    $auditoria->inclusao($obj->detalhe());
 
     foreach ($this->turmas as $codTurma => $turma) {
       $calendarioTurma = new Calendario_Model_Turma(array(
@@ -339,7 +343,11 @@ class indice extends clsCadastro
       $this->descricao, $this->data_cadastro, $this->data_exclusao, 1
     );
 
+    $detalheAntigo = $obj->detalhe();
     $editou = $obj->edita();
+
+    $auditoria = new clsModulesAuditoriaGeral("calendario_dia", $this->pessoa_logada);
+    $auditoria->alteracao($detalheAntigo, $obj->detalhe());
 
     // Inicialização de arrays
     $insert = $delete = $entries = $intersect = array();
@@ -408,7 +416,12 @@ class indice extends clsCadastro
       $this->data_cadastro, $this->data_exclusao, 0
     );
 
+    $detalhe = $obj->detalhe();
+
     $excluiu = $obj->edita();
+
+    $auditoria = new clsModulesAuditoriaGeral("calendario_dia", $this->pessoa_logada);
+    $auditoria->exclusao($detalhe);
 
     $entries = $this->_getEntries(
       $this->ref_cod_calendario_ano_letivo, $this->mes, $this->dia, $this->ano

@@ -47,9 +47,9 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Falta Atraso');
+    $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
     $this->processoAp = 635;
-    $this->addEstilo("localizacaoSistema");    
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -89,7 +89,7 @@ class indice extends clsDetalhe
     session_write_close();
 
     $this->titulo = 'Falta Atraso - Detalhe';
-    
+
 
     $this->ref_cod_servidor        = $_GET['ref_cod_servidor'];
     $this->ref_cod_escola          = $_GET['ref_cod_escola'];
@@ -109,12 +109,12 @@ class indice extends clsDetalhe
     else {
       $tabela = '<table>
                  <tr align=center>
-                     <td bgcolor="#a1b3bd"><b>Dia</b></td>
-                     <td bgcolor="#a1b3bd"><b>Tipo</b></td>
-                     <td bgcolor="#a1b3bd"><b>Qtd. Horas</b></td>
-                     <td bgcolor="#a1b3bd"><b>Qtd. Minutos</b></td>
-                     <td bgcolor="#a1b3bd"><b>Escola</b></td>
-                     <td bgcolor="#a1b3bd"><b>Instituição</b></td>
+                     <td bgcolor="#ccdce6"><b>Dia</b></td>
+                     <td bgcolor="#ccdce6"><b>Tipo</b></td>
+                     <td bgcolor="#ccdce6"><b>Qtd. Horas</b></td>
+                     <td bgcolor="#ccdce6"><b>Qtd. Minutos</b></td>
+                     <td bgcolor="#ccdce6"><b>Escola</b></td>
+                     <td bgcolor="#ccdce6"><b>Instituição</b></td>
                  </tr>';
 
       $cont  = 0;
@@ -122,7 +122,7 @@ class indice extends clsDetalhe
 
       foreach ($registro as $falta) {
         if (($cont % 2) == 0) {
-          $color = ' bgcolor="#E4E9ED" ';
+          $color = ' bgcolor="#f5f9fd" ';
         }
         else {
           $color = ' bgcolor="#FFFFFF" ';
@@ -164,10 +164,13 @@ class indice extends clsDetalhe
 
     if ($obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7)) {
       $this->caption_novo = 'Compensar';
-      $this->url_editar   = FALSE;
       $this->url_novo     = sprintf(
         'educar_falta_atraso_compensado_cad.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d',
         $this->ref_cod_servidor, $this->ref_cod_escola, $this->ref_ref_cod_instituicao
+      );
+      $this->url_editar   = sprintf(
+        'educar_falta_atraso_cad.php?ref_cod_servidor=%d&ref_cod_escola=%d&ref_cod_instituicao=%d&cod_falta_atraso=%d',
+        $this->ref_cod_servidor, $this->ref_cod_escola, $this->ref_ref_cod_instituicao, $this->cod_falta_atraso
       );
     }
 
@@ -181,10 +184,10 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_servidores_index.php"       => "Servidores",
          ""                                  => "Detalhe da falta/atraso do servidor"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

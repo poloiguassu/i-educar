@@ -36,6 +36,10 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 
+/**
+ * Class DeficienciaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class DeficienciaController extends ApiCoreController
 {
   // search options
@@ -48,9 +52,30 @@ class DeficienciaController extends ApiCoreController
     return $this->toUtf8($resource['name'], array('transform' => true));
   }
 
+  protected function getDeficiencias(){
+    $sql = " SELECT cod_deficiencia, nm_deficiencia
+              FROM cadastro.deficiencia ";
+
+    $deficiencias = $this->fetchPreparedQuery($sql);
+
+    foreach ($deficiencias as &$deficiencia)
+      $deficiencia['nm_deficiencia'] = Portabilis_String_Utils::toUtf8($deficiencia['nm_deficiencia']);
+
+    $attrs = array(
+        'cod_deficiencia' => 'id',
+        'nm_deficiencia' => 'nome'
+      );
+
+    $deficiencias = Portabilis_Array_Utils::filterSet($deficiencias, $attrs);
+
+    return array('deficiencias' => $deficiencias );
+  }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'deficiencia-search'))
       $this->appendResponse($this->search());
+    elseif ($this->isRequestFor('get', 'deficiencias'))
+      $this->appendResponse($this->getDeficiencias());
     else
       $this->notImplementedOperationError();
   }

@@ -4,10 +4,17 @@ var defaultJQueryAutocompleteOptions = {
   minLength   : 1,
   autoFocus   : true,
   source      : function(request, response) { return simpleSearch.search(this.element, request, response) },
-  select      : function(event, ui) { return simpleSearch.handleSelect(event, ui) }
+  select      : function(event, ui) { return simpleSearch.handleSelect(event, ui) },
 
   // options that can be overwritten
-  // change      : function (event, ui) {},
+  change      : function (event, ui) {
+    $element = $j(event.target);
+    $hiddenField = $element.data('hidden-input-id');
+
+    if($element.val() == ""){
+      $hiddenField.val("");
+    }
+  },
   // close      : function (event, ui) {},
 };
 
@@ -91,6 +98,11 @@ var simpleSearch = {
     $element.val(ui.item.label);
     $j(hiddenInputId).val(ui.item.value);
 
+    /* Alterar valor de hiddenInputs no jQuery não chama o método 'change' por padrão, então forçamos
+       o elemento a disparar esse método (caso estiver implementado) através do método trigger */
+    $j(hiddenInputId).trigger('change');
+
+
     return false;
   },
 
@@ -126,6 +138,13 @@ var simpleSearch = {
 
     if ($input.hasClass('obrigatorio'))
       $hiddenInput.addClass('obrigatorio required');
+
+    $input.keyup(function() {
+      $element = $j($hiddenInput.target);
+      if ($element.val() == '') {
+        $j(hiddenInputId).val('');
+      }
+    });
 
     $input.autocomplete(options.get('autocompleteOptions'));
   }

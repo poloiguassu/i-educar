@@ -41,6 +41,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_processoAp        = 21237;
+  protected $_deleteOption      = true;
 
   protected $_formMap    = array(
     'id' => array(
@@ -154,7 +155,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "transporte_index.php"                  => "M&oacute;dulo Transporte Escolar",
+         "educar_transporte_escolar_index.php"                  => "Transporte escolar",
          ""        => "$nomeMenu ve&iacute;culo"             
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -185,7 +186,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->text('descricao', $options);
 
     //placa
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('placa')), 'required' => true, 'size' => 10, 'max_length' => 10);
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('placa')), 'required' => false, 'size' => 10, 'max_length' => 10);
     $this->inputsHelper()->text('placa', $options);     
 
     //renavam
@@ -197,7 +198,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->text('chassi', $options);    
 
     //marca
-    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('marca')), 'required' => true, 'size' => 50, 'max_length' => 50);
+    $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('marca')), 'required' => false, 'size' => 50, 'max_length' => 50);
     $this->inputsHelper()->text('marca', $options);                    
 
     //Ano de fabricacao
@@ -263,7 +264,7 @@ class VeiculoController extends Portabilis_Controller_Page_EditController
     $this->inputsHelper()->simpleSearchEmpresa('empresa',$options);  
 
     // Codigo do motorista
-    $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('motorista')), 'required' => true);
+    $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('motorista')), 'required' => false);
     $this->inputsHelper()->simpleSearchMotorista('motorista',$options);      
 
     // observações    

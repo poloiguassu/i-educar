@@ -55,7 +55,8 @@ class IndexController extends Core_Controller_Page_ListController
     'Média aprovação' => 'media',
     'Média exame' => 'mediaRecuperacao',
     'Fórmula média' => 'formulaMedia',
-    'Fórmula recuperação' => 'formulaRecuperacao'
+    'Fórmula recuperação' => 'formulaRecuperacao',
+    'Recuperação paralela' => 'tipoRecuperacaoParalela'
   );
 
   protected function _preRender(){
@@ -68,7 +69,7 @@ class IndexController extends Core_Controller_Page_ListController
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""                                  => "Listagem de regras de avalia&ccedil;&otilde;es"
     ));
     $this->enviaLocalizacao($localizacao->montar());

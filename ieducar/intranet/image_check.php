@@ -39,7 +39,7 @@ class PictureController {
     var $suportedExtensions;
     var $imageName;
 
-    function PictureController($imageFile, $maxWidth = NULL, $maxHeight = NULL, $maxSize = NULL,
+    function __construct($imageFile, $maxWidth = NULL, $maxHeight = NULL, $maxSize = NULL,
                              $suportedExtensions = NULL){
 
         
@@ -76,11 +76,6 @@ class PictureController {
     function sendPicture($imageName){
 
         $this->imageName = $imageName;
-
-        if (! $this->hasExtension($this->imageName)) {
-            $this->imageName = $this->imageName . '.' . $this->getExtension();
-        }
-
         $tmp = $this->imageFile["tmp_name"];
         include('s3_config.php');
         //Rename image name.
@@ -115,21 +110,20 @@ class PictureController {
 
         if(strlen($name) > 0)
         {
-            // Verifica formato do arquivo
+            // File format validation
             if(in_array($ext,$this->suportedExtensions))
             {
-                // Verifica tamanho do arquivo
-                // @TODO Validar largura e altura da imagem
+                // File size validation
                 if($size < $this->maxSize){
                     return true;   
                 }
                 else{
-                    $this->errorMessage = "N&atilde;o &eacute; permitido fotos com mais de 150KB.";
+                    $this->errorMessage = "O cadastro n&atilde;o pode ser realizado, a foto possui um tamanho maior do que o permitido.";
                     return false;
                 }
             }
             else{
-                $this->errorMessage = "Deve ser enviado uma imagem do tipo jpeg, jpg, png ou gif.";
+                $this->errorMessage = "O cadastro n&atilde;o pode ser realizado, a foto possui um formato diferente daqueles permitidos.";
                 return false;
             }
         }
@@ -140,7 +134,6 @@ class PictureController {
         $this->errorMessage = "Imagem inv&aacute;lida."; 
         return false;
     }
-
     /**
     * Retorna a mensagem de erro
     *
@@ -152,12 +145,8 @@ class PictureController {
     }
 
 
-    function getExtension($name)
+    function getExtension($name) 
     {
-        if (is_null($name)) {
-            $name = $this->imageFile["name"];
-        }
-
         $i = strrpos($name,".");
         if (!$i)
           return "";
@@ -165,11 +154,6 @@ class PictureController {
         $ext = substr($name,$i+1,$l);
 
         return $ext;
-    }
-
-    function hasExtension($fileName) {
-        $lastThreeChars = substr($fileName, -3);
-        return in_array($lastThreeChars, $this->suportedExtensions);
     }
 }
 

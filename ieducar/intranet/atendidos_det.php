@@ -71,6 +71,10 @@ class indice extends clsDetalhe
 {
   function Gerar()
   {
+    @session_start();
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
+    session_write_close();
+        
     $this->titulo = 'Detalhe da Pessoa';
 
     $this->addBanner('imagens/nvp_top_intranet.jpg',
@@ -88,7 +92,6 @@ class indice extends clsDetalhe
       'ddd_fax', 'fone_fax', 'email', 'url', 'tipo', 'sexo', 'zona_localizacao'
     );
 
-
     $objFoto = new clsCadastroFisicaFoto($cod_pessoa);
     $caminhoFoto = $objFoto->detalhe();
     if ($caminhoFoto!=false)
@@ -96,7 +99,7 @@ class indice extends clsDetalhe
                                   <p><img height="117" src="'.$caminhoFoto['caminho'].'"/></p>'));
     else
       $this->addDetalhe(array('Nome', $detalhe['nome']));
-     
+
     $this->addDetalhe(array('CPF', int2cpf($detalhe['cpf'])));
 
     if ($detalhe['data_nasc']) {
@@ -184,12 +187,17 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('E-mail', $detalhe['email']));
     }
 
-    $sexo = $detalhe['sexo'] == 'M' ? 'Masculino' : 'Feminino';
+    if($detalhe['sexo'])
+      $this->addDetalhe(array('Sexo', $detalhe['sexo'] == 'M' ? 'Masculino' : 'Feminino'));
 
-    $this->addDetalhe(array('Sexo', $sexo));
+    $obj_permissao = new clsPermissoes();
 
-    $this->url_novo     = 'atendidos_cad.php';
-    $this->url_editar   = 'atendidos_cad.php?cod_pessoa_fj=' . $detalhe['idpes'];
+    if($obj_permissao->permissao_cadastra(43, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo     = 'atendidos_cad.php';
+      $this->url_editar   = 'atendidos_cad.php?cod_pessoa_fj=' . $detalhe['idpes'];
+    }
+
     $this->url_cancelar = 'atendidos_lst.php';
 
     $this->largura = '100%';
@@ -197,9 +205,10 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_pessoas_index.php"          => "Pessoas",
          ""                                  => "Detalhe da pessoa f&iacute;sica"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

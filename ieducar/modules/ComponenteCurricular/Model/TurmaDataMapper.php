@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa PaixÃ£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     ComponenteCurricular
  * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.2.0
+ * @since       Arquivo disponÃ­vel desde a versÃ£o 1.2.0
  * @version     $Id$
  */
 
@@ -35,12 +35,12 @@ require_once 'ComponenteCurricular/Model/Turma.php';
 /**
  * ComponenteCurricular_Model_TurmaDataMapper class.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa PaixÃ£o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     ComponenteCurricular
  * @subpackage  Modules
- * @since       Classe disponível desde a versão 1.2.0
+ * @since       Classe disponÃ­vel desde a versÃ£o 1.2.0
  * @version     @@package_version@@
  */
 class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
@@ -50,8 +50,8 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
   protected $_tableSchema = 'modules';
 
   /**
-   * Os atributos anoEscolar e escola estão presentes apenas para
-   * fins de desnormalização.
+   * Os atributos anoEscolar e escola estÃ£o presentes apenas para
+   * fins de desnormalizaÃ§Ã£o.
    * @var array
    */
   protected $_attributeMap = array(
@@ -59,24 +59,28 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
     'anoEscolar'           => 'ano_escolar_id',
     'escola'               => 'escola_id',
     'turma'                => 'turma_id',
-    'cargaHoraria'         => 'carga_horaria'
+    'cargaHoraria'         => 'carga_horaria',
+    'docenteVinculado'     => 'docente_vinculado',
+    'etapasEspecificas'    => 'etapas_especificas',
+    'etapasUtilizadas'     => 'etapas_utilizadas'
   );
 
   protected $_primaryKey = array(
-    'componenteCurricular', 'turma'
+    'componenteCurricular' => 'componente_curricular_id',
+    'turma'                => 'turma_id',
   );
 
   /**
-   * Realiza uma operação de atualização em todas as instâncias persistidas de
-   * ComponenteCurricular_Model_Turma. A atualização envolve criar, atualizar
-   * e/ou apagar instâncias persistidas.
+   * Realiza uma operaÃ§Ã£o de atualizaÃ§Ã£o em todas as instÃ¢ncias persistidas de
+   * ComponenteCurricular_Model_Turma. A atualizaÃ§Ã£o envolve criar, atualizar
+   * e/ou apagar instÃ¢ncias persistidas.
    *
-   * No exemplo de código a seguir, se uma instância de
-   * ComponenteCurricular_Model_Turma com uma referência a componenteCurricular
+   * No exemplo de cÃ³digo a seguir, se uma instÃ¢ncia de
+   * ComponenteCurricular_Model_Turma com uma referÃªncia a componenteCurricular
    * "1" existisse, esta teria seus atributos atualizados e persistidos
-   * novamente. Se a referência não existisse, uma nova instância de
+   * novamente. Se a referÃªncia nÃ£o existisse, uma nova instÃ¢ncia de
    * ComponenteCurricular_Model_Turma seria criada e persistida. Caso uma
-   * referência a "2" existisse, esta seria apagada por não estar referenciada
+   * referÃªncia a "2" existisse, esta seria apagada por nÃ£o estar referenciada
    * no array $componentes.
    *
    * <code>
@@ -89,9 +93,9 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
    *
    *
    *
-   * @param  int   $anoEscolar  O código do ano escolar/série.
-   * @param  int   $escola      O código da escola.
-   * @param  int   $turma       O código da turma.
+   * @param  int   $anoEscolar  O cÃ³digo do ano escolar/sÃ©rie.
+   * @param  int   $escola      O cÃ³digo da escola.
+   * @param  int   $turma       O cÃ³digo da turma.
    * @param  array $componentes (id => integer, cargaHoraria => float|null)
    * @throws Exception
    */
@@ -112,6 +116,9 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
       if (isset($objects[$id])) {
         $insert[$id] = $objects[$id];
         $insert[$id]->cargaHoraria = $componente['cargaHoraria'];
+        $insert[$id]->docenteVinculado = $componente['docenteVinculado'];
+        $insert[$id]->etapasEspecificas = $componente['etapasEspecificas'];
+        $insert[$id]->etapasUtilizadas = $componente['etapasUtilizadas'];
         continue;
       }
 
@@ -120,7 +127,10 @@ class ComponenteCurricular_Model_TurmaDataMapper extends CoreExt_DataMapper
         'anoEscolar'           => $anoEscolar,
         'escola'               => $escola,
         'turma'                => $turma,
-        'cargaHoraria'         => $componente['cargaHoraria']
+        'cargaHoraria'         => $componente['cargaHoraria'],
+        'docenteVinculado'     => $componente['docenteVinculado'],
+        'etapasEspecificas'    => $componente['etapasEspecificas'],
+        'etapasUtilizadas'     => $componente['etapasUtilizadas']
       ));
     }
 

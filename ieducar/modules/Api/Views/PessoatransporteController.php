@@ -40,6 +40,10 @@ require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 
+/**
+ * Class PessoatransporteController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class PessoatransporteController extends ApiCoreController
 {
   protected $_processoAp        = 21240; //verificar
@@ -65,11 +69,12 @@ class PessoatransporteController extends ApiCoreController
     $pt->cod_pessoa_transporte   = $id;
 
     // após cadastro não muda mais id pessoa
-    $pt->ref_idpes               = $this->getRequest()->pessoa_id; 
-    $pt->ref_idpes_destino       = $this->getRequest()->pessoaj_id; 
-    $pt->ref_cod_ponto_transporte_escolar       = $this->getRequest()->ponto; 
-    $pt->ref_cod_rota_transporte_escolar       = $this->getRequest()->rota; 
-    $pt->observacao                     = Portabilis_String_Utils::toLatin1($this->getRequest()->observacao);
+    $pt->ref_idpes                         = $this->getRequest()->pessoa_id; 
+    $pt->ref_idpes_destino                 = $this->getRequest()->pessoaj_id; 
+    $pt->ref_cod_ponto_transporte_escolar  = $this->getRequest()->ponto; 
+    $pt->ref_cod_rota_transporte_escolar   = $this->getRequest()->rota; 
+    $pt->observacao                        = Portabilis_String_Utils::toLatin1($this->getRequest()->observacao);
+    $pt->turno                             = $this->getRequest()->turno;
 
     return (is_null($id) ? $pt->cadastra() : $pt->edita());
   }
@@ -90,7 +95,8 @@ class PessoatransporteController extends ApiCoreController
         'ref_cod_ponto_transporte_escolar' => 'ponto',
         'ref_idpes_destino' => 'pessoaj',
         'ref_idpes' => 'pessoa',
-        'observacao' => 'observacao'
+        'observacao' => 'observacao',
+        'turno' => 'turno'
       );
 
       $pt = Portabilis_Array_Utils::filter($pt, $attrs);

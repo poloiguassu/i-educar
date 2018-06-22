@@ -32,6 +32,10 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
+require_once 'include/public/clsPublicDistrito.inc.php';
+require_once 'include/public/clsPublicSetorBai.inc.php';
+require_once ("include/pmieducar/geral.inc.php");
+require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 require_once 'App/Model/ZonaLocalizacao.php';
 
@@ -86,6 +90,7 @@ class indice extends clsCadastro
   var $idsis_rev;
   var $idsis_cad;
   var $zona_localizacao;
+  var $iddis;
 
   var $idpais;
   var $sigla_uf;
@@ -127,6 +132,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_enderecamento_index.php"    => "Endereçamento",
          ""        => "{$nomeMenu} bairro"             
     ));
     $this->enviaLocalizacao($localizacao->montar());    
@@ -199,6 +205,46 @@ class indice extends clsCadastro
 
     $this->campoLista('idmun', 'Município', $opcoes, $this->idmun);
 
+    $opcoes = array('' => 'Selecione');
+    if (class_exists('clsPublicDistrito')) {
+      if ($this->idmun) {
+        $objTemp = new clsPublicDistrito();
+        $objTemp->setOrderBy(' nome asc ');
+        $lista = $objTemp->lista($this->idmun);
+
+        if (is_array($lista) && count($lista)) {
+          foreach ($lista as $registro) {
+            $opcoes[$registro['iddis']] = $registro['nome'];
+          }
+        }
+      }
+    }
+    else {
+      echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
+      $opcoes = array("" => "Erro na geracao");
+    }
+
+    $this->campoLista('iddis', 'Distrito', $opcoes, $this->iddis);
+
+    $opcoes = array('' => 'Selecione');
+    if (class_exists('clsPublicSetorBai')) {
+      $objTemp = new clsPublicSetorBai();
+      $objTemp->setOrderBy(' nome asc ');
+      $lista = $objTemp->lista();
+
+      if (is_array($lista) && count($lista)) {
+        foreach ($lista as $registro) {
+          $opcoes[$registro['idsetorbai']] = $registro['nome'];
+        }
+      }      
+    }
+    else {
+      echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
+      $opcoes = array("" => "Erro na geracao");
+    }
+
+    $this->campoLista('idsetorbai', 'Setor', $opcoes, $this->idsetorbai, NULL, NULL, NULL, NULL, NULL, FALSE);
+
     $zona = App_Model_ZonaLocalizacao::getInstance();
     $this->campoLista('zona_localizacao', 'Zona Localização', $zona->getEnums(),
       $this->zona_localizacao);
@@ -214,10 +260,18 @@ class indice extends clsCadastro
 
     $obj = new clsPublicBairro($this->idmun, NULL, NULL, $this->nome, NULL,
       NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9,
-      $this->zona_localizacao);
+      $this->zona_localizacao, $this->iddis);
+    $obj->idsetorbai = $this->idsetorbai;
 
     $cadastrou = $obj->cadastra();
     if ($cadastrou) {
+
+      $enderecamento = new clsPublicBairro();
+      $enderecamento->idbai = $cadastrou;
+      $enderecamento = $enderecamento->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("Endereçamento de Bairro", $this->pessoa_logada, $cadastrou);
+      $auditoria->inclusao($enderecamento);
+
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
       header('Location: public_bairro_lst.php');
       die();
@@ -235,12 +289,23 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
+
+    $enderecamentoDetalhe = new clsPublicBairro(null, null, $this->idbai);
+    $enderecamentoDetalhe->cadastrou = $this->idbai;
+    $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
+
     $obj = new clsPublicBairro($this->idmun, NULL, $this->idbai, $this->nome,
       $this->pessoa_logada, NULL, 'U', NULL, NULL, 'I', NULL, 9,
-      $this->zona_localizacao);
+      $this->zona_localizacao, $this->iddis);
+    $obj->idsetorbai = $this->idsetorbai;
 
     $editou = $obj->edita();
     if ($editou) {
+
+      $enderecamentoDetalheDepois = $enderecamentoDetalhe->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("Endereçamento de Bairro", $this->pessoa_logada, $this->idbai);
+      $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
+
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
       header('Location: public_bairro_lst.php');
       die();
@@ -349,6 +414,43 @@ function getMunicipio(xml_municipio)
   }
   else {
     campoMunicipio.options[0].text = 'O estado não possui nenhum município';
+  }
+}
+
+document.getElementById('idmun').onchange = function()
+{
+  var campoMunicipio = document.getElementById('idmun').value;
+
+  var campoDistrito      = document.getElementById('iddis');
+  campoDistrito.length   = 1;
+  campoDistrito.disabled = true;
+
+  campoDistrito.options[0].text = 'Carregando distritos...';
+
+  var xml_distrito = new ajax(getDistrito);
+  xml_distrito.envia('public_distrito_xml.php?idmun=' + campoMunicipio);
+}
+
+function getDistrito(xml_distrito)
+{
+  var campoDistrito = document.getElementById('iddis');
+  var DOM_array      = xml_distrito.getElementsByTagName( "distrito" );
+  console.log(DOM_array);
+
+  if (DOM_array.length) {
+    campoDistrito.length          = 1;
+    campoDistrito.options[0].text = 'Selecione um distrito';
+    campoDistrito.disabled        = false;
+
+    for (var i = 0; i < DOM_array.length; i++) {
+      campoDistrito.options[campoDistrito.options.length] = new Option(
+        DOM_array[i].firstChild.data, DOM_array[i].getAttribute('iddis'),
+        false, false
+      );
+    }
+  }
+  else {
+    campoDistrito.options[0].text = 'O município não possui nenhum distrito';
   }
 }
 </script>

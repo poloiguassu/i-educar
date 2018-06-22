@@ -186,8 +186,8 @@ class AnoController extends Core_Controller_Page_EditController
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Editando anos escolares"
+         "educar_index.php"                  => "Escola",
+         ""                                  => "Carga horária dos anos escolares"
     ));
     $this->enviaLocalizacao($localizacao->montar());
   }

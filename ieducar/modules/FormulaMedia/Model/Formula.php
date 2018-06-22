@@ -64,8 +64,13 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
   protected $_tokens = array(
     'Se', 'Et', 'Rc',
     'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10',
+    'RSP1', 'RSP2', 'RSP3', 'RSP4', 'RSP5', 'RSP6', 'RSP7', 'RSP8', 'RSP9', 'RSP10',
+    'RSPS1', 'RSPS2', 'RSPS3', 'RSPS4', 'RSPS5', 'RSPS6', 'RSPS7', 'RSPS8', 'RSPS9', 'RSPS10',
+    'RSPM1', 'RSPM2', 'RSPM3', 'RSPM4', 'RSPM5', 'RSPM6', 'RSPM7', 'RSPM8', 'RSPM9', 'RSPM10',
     '/', '*', 'x', '+',
-    '(', ')'
+    '(', ')',
+    '?', ':',
+    '>', '<'
   );
 
   /**
@@ -74,6 +79,17 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
    */
   protected $_tokenNumerics = array(
     'Se', 'Et', 'Rc',
+    'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10',
+    'RSP1', 'RSP2', 'RSP3', 'RSP4', 'RSP5', 'RSP6', 'RSP7', 'RSP8', 'RSP9', 'RSP10',
+    'RSPS1', 'RSPS2', 'RSPS3', 'RSPS4', 'RSPS5', 'RSPS6', 'RSPS7', 'RSPS8', 'RSPS9', 'RSPS10',
+    'RSPM1', 'RSPM2', 'RSPM3', 'RSPM4', 'RSPM5', 'RSPM6', 'RSPM7', 'RSPM8', 'RSPM9', 'RSPM10'
+  );
+
+  /**
+   * Tokens que pode ser substituídos pelo parâmetro substituiMenorNotaRc.
+   * @var array
+   */
+  protected $_tokenEtapas = array(
     'E1', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10'
   );
 
@@ -85,7 +101,8 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
     'instituicao'  => NULL,
     'nome'         => NULL,
     'formulaMedia' => NULL,
-    'tipoFormula'  => NULL
+    'tipoFormula'  => NULL,
+    'substituiMenorNotaRc'  => NULL,
   );
 
   /**
@@ -121,6 +138,34 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
   }
 
   /**
+   * Verifica se uma token pode receber um valor numérico.
+   *
+   * @param string $token
+   * @return bool
+   */
+  private function isEtapaToken($token)
+  {
+    return in_array($token, $this->_tokenEtapas);
+  }
+
+  private function substituiMenorNotaPorRecuperacao($values){
+    $menorEtapa = null;
+    foreach (array_reverse($values) as $key => $value) {
+      if($this->isEtapaToken($key) ){
+        if(empty($menorEtapa)){
+          $menorEtapa = $key;
+        }elseif($value < $values[$menorEtapa]){
+          $menorEtapa = $key;
+        }
+      }
+    }
+    if($values['Rc'] > $values[$menorEtapa]){
+      $values[$menorEtapa] = $values['Rc'];
+    }
+    return $values;
+  }
+
+  /**
    * Substitui as tokens numéricas de uma fórmula, através de um array
    * associativo.
    *
@@ -146,6 +191,10 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
   public function replaceTokens($formula, $values = array())
   {
     $formula = $this->replaceAliasTokens($formula);
+
+    if($this->substituiMenorNotaRc && is_numeric($values['Rc'])){
+      $values = $this->substituiMenorNotaPorRecuperacao($values);
+    }
 
     $patterns = array();
     foreach ($values as $key => $value) {
@@ -184,6 +233,7 @@ class FormulaMedia_Model_Formula extends CoreExt_Entity
    */
   public function execFormulaMedia(array $values = array())
   {
+
     $formula = $this->replaceTokens($this->formulaMedia, $values);
     return $this->_exec($formula);
   }

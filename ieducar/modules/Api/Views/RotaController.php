@@ -40,6 +40,10 @@ require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 
+/**
+ * Class RotaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class RotaController extends ApiCoreController
 {
   protected $_processoAp        = 21238; //verificar
@@ -93,7 +97,7 @@ class RotaController extends ApiCoreController
   protected function sqlsForStringSearch() {
 
     $sqls[] = "select distinct cod_rota_transporte_escolar as id, descricao as name  from
-                 modules.rota_transporte_escolar where lower(to_ascii(descricao)) like '%'||lower(to_ascii($1))||'%'";
+                 modules.rota_transporte_escolar where lower((descricao)) like '%'||lower(($1))||'%'";
 
     return $sqls;
   }

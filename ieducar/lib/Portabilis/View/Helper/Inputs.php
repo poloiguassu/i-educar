@@ -133,6 +133,16 @@ class Portabilis_View_Helper_Inputs {
     $this->input('textArea', $attrName, $inputOptions, $helperOptions);
   }
 
+  public function booleanSelect($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $resources = array();
+    if (isset($inputOptions['prompt'])) {
+        $resources[''] = $inputOptions['prompt'];
+    }
+    $resources +=  array(0 => 'Não', 1 => 'Sim');
+    $inputOptions['resources'] = $resources;
+    $this->select($attrName, $inputOptions, $helperOptions);
+  }
+
 
   // simple search input helper
 
@@ -175,31 +185,31 @@ class Portabilis_View_Helper_Inputs {
 
   public function simpleSearchPessoaj($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->simpleSearchResourceInput('simpleSearchPessoaj', $attrName, $inputOptions, $helperOptions);
-  }  
+  }
 
   public function simpleSearchMotorista($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchMotorista', $attrName, $inputOptions, $helperOptions);
 
-  }  
+  }
 
   public function simpleSearchPonto($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchPonto', $attrName, $inputOptions, $helperOptions);
 
-  }  
+  }
 
   public function simpleSearchRota($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchRota', $attrName, $inputOptions, $helperOptions);
 
-  }    
+  }
 
   public function simpleSearchVeiculo($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchVeiculo', $attrName, $inputOptions, $helperOptions);
 
-  }      
+  }
 
   public function simpleSearchBairro($attrName, $inputOptions = array(), $helperOptions = array()) {
 
@@ -207,9 +217,69 @@ class Portabilis_View_Helper_Inputs {
 
   }
 
+  public function simpleSearchDistrito($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchDistrito', $attrName, $inputOptions, $helperOptions);
+
+  }
+
   public function simpleSearchLogradouro($attrName, $inputOptions = array(), $helperOptions = array()) {
 
     $this->simpleSearchResourceInput('simpleSearchLogradouro', $attrName, $inputOptions, $helperOptions);
+
+  }
+
+  public function simpleSearchIes($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchIes', $attrName, $inputOptions, $helperOptions);
+
+  }
+
+  public function simpleSearchCursoSuperior($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchCursoSuperior', $attrName, $inputOptions, $helperOptions);
+
+  }
+
+  public function simpleSearchCartorioInep($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchCartorioInep', $attrName, $inputOptions, $helperOptions);
+
+  }
+
+  public function simpleSearchServidor($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchServidor', $attrName, $inputOptions, $helperOptions);
+
+  }
+
+  public function simpleSearchEscola($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchEscola', $attrName, $inputOptions, $helperOptions);
+
+  }
+
+  public function simpleSearchProjeto($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchProjeto', $attrName, $inputOptions, $helperOptions);
+
+  }
+
+  public function simpleSearchMenu($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchMenu', $attrName, $inputOptions, $helperOptions);
+
+  }
+
+  public function simpleSearchCliente($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchCliente', $attrName, $inputOptions, $helperOptions);
+
+  }
+
+  public function simpleSearchAcervo($attrName, $inputOptions = array(), $helperOptions = array()) {
+
+    $this->simpleSearchResourceInput('simpleSearchAcervo', $attrName, $inputOptions, $helperOptions);
 
   }
 
@@ -226,7 +296,60 @@ class Portabilis_View_Helper_Inputs {
 
   public function multipleSearchAssuntos($attrName, $inputOptions = array(), $helperOptions = array()) {
     $this->multipleSearchResourceInput('multipleSearchAssuntos', $attrName, $inputOptions, $helperOptions);
-  }  
+  }
+
+  public function multipleSearchCategoriaObra($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchCategoriaObra', $attrName, $inputOptions, $helperOptions);
+  }
+
+  public function multipleSearchAutores($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchAutores', $attrName, $inputOptions, $helperOptions);
+  }
+
+  public function multipleSearchEtapacurso($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchEtapacurso', $attrName, $inputOptions, $helperOptions);
+  }
+
+  public function multipleSearchComponenteCurricular($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchComponenteCurricular', $attrName, $inputOptions, $helperOptions);
+  }
+
+  public function multipleSearchAreasConhecimento($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchAreasConhecimento', $attrName, $inputOptions, $helperOptions);
+  }
+
+  public function multipleSearchCursoAluno($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchCursoAluno', $attrName, $inputOptions, $helperOptions);
+  }
+
+  public function multipleSearchBeneficios($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchBeneficios', $attrName, $inputOptions, $helperOptions);
+  }
+
+  public function multipleSearchEscola($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchEscola', $attrName, $inputOptions, $helperOptions);
+  }
+
+  public function multipleSearchCurso($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchCurso', $attrName, $inputOptions, $helperOptions);
+  }
+
+  public function multipleSearchDocumentosAtestadoVaga($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchDocumentosAtestadoVaga', $attrName, $inputOptions, $helperOptions);
+  }
+
+  public function multipleSearchSerie($attrName, $inputOptions = array(), $helperOptions = array()) {
+      $this->multipleSearchResourceInput('multipleSearchSerie', $attrName, $inputOptions, $helperOptions);
+  }
+
+  public function multipleSearchCustom($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchCustom', $attrName, $inputOptions, $helperOptions);
+  }
+
+
+   /*public function multipleSearchAjaxAreasConhecimento($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchAjaxAreasConhecimento', $attrName, $inputOptions, $helperOptions);
+  }*/
 
   // resource input helpers
 
@@ -275,7 +398,7 @@ class Portabilis_View_Helper_Inputs {
     $helper = new $helperClassName($this->viewInstance, $this);
 
     $helper->$helperName($attrName, $options);
-    
+
 
   }
 

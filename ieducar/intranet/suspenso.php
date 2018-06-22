@@ -30,6 +30,13 @@
  * @since    Arquivo disponível desde a versão 1.0.1
  * @version  $Id$
  */
+
+require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
+require_once 'include/pmieducar/clsPmieducarConfiguracoesGerais.inc.php';
+
+$configuracoes = new clsPmieducarConfiguracoesGerais();
+$configuracoes = $configuracoes->detalhe();
+$reason = $configuracoes['ieducar_suspension_message'];
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
@@ -79,7 +86,14 @@
     <div id="error">
       <div class="content">
         <h1>Acesso suspenso</h1>
-        <p class="explanation">Desculpe-nos, o acesso ao sistema foi suspenso, por favor, entre em contato com o responsável pelo sistema em sua entidade, e tente novamente.</strong>
+        <p class="explanation">
+          <?PHP
+            if(!empty($reason)){
+              echo $reason;
+            }else{
+              echo "Desculpe, o sistema está temporariamente indisponível. Contate o responsável pelo sistema em seu município. Obrigado pela compreensão.";
+            }
+          ?>
         </p>
       </div>
     </div>

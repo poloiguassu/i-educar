@@ -65,18 +65,22 @@ class clsMenu
     $itens_menu      = array();
     $autorizado_menu = array();
 
-    @session_start();
+    if (!isset($_SESSION)) {
+      @session_start();
+    }
+
     $id_usuario  = $_SESSION['id_pessoa'];
     $opcoes_menu = $_SESSION['menu_opt'];
 
     $dba = new clsBanco();
     $dba->Consulta('
       SELECT
-        ref_cod_menu_submenu
+        mtu.ref_cod_menu_submenu
       FROM
-        menu_funcionario
-      WHERE
-        ref_ref_cod_pessoa_fj = ' . $id_usuario);
+      pmieducar.menu_tipo_usuario mtu
+      INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
+      INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
+      WHERE  u.cod_usuario = ' . $id_usuario);
 
     while ($dba->ProximoRegistro()) {
       list($aut) = $dba->Tupla();
@@ -112,27 +116,22 @@ class clsMenu
                 THEN 0
               ELSE
                 1
-            END AS ref_menu_pai
+            END AS ref_menu_pai,
+            pai.caminho,
+            pai.icon_class,
+            pai.ord_menu
           FROM
             menu_menu AS pai LEFT OUTER JOIN
               menu_menu AS filho ON (filho.ref_cod_menu_pai = pai.cod_menu_menu AND pai.ref_cod_menu_pai = NULL),
             menu_submenu AS sub,
             menu_menu as nome_menu
           WHERE
-            nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai,pai.cod_menu_menu)
+            pai.ativo = TRUE
+            AND nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai,pai.cod_menu_menu)
             AND sub.cod_sistema = '2'
             AND pai.cod_menu_menu = sub.ref_cod_menu_menu
-            AND sub.cod_menu_submenu NOT IN (
-              SELECT
-                ref_cod_menu_submenu
-              FROM
-                pmicontrolesis.menu
-              WHERE
-                suprime_menu = 1
-                AND ref_cod_menu_submenu IS NOT NULL
-            )
           ORDER BY
-            upper(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
+            pai.ord_menu, upper(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
       }
       else {
         $sql ="
@@ -150,18 +149,22 @@ class clsMenu
               ELSE
                 1
             END AS ref_menu_pai,
-            UPPER(nome_menu.nm_menu), UPPER(pai.nm_menu), sub.nm_submenu
+            pai.caminho,
+            pai.icon_class,
+            pai.ord_menu,
+            pai.ord_menu, UPPER(nome_menu.nm_menu), UPPER(pai.nm_menu), sub.nm_submenu
           FROM
             menu_menu AS pai LEFT OUTER JOIN
               menu_menu AS filho ON (filho.ref_cod_menu_pai = pai.cod_menu_menu),
             menu_submenu AS sub,
             menu_menu AS nome_menu
           WHERE
-            nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai, pai.cod_menu_menu)
+            pai.ativo = TRUE
+            AND nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai, pai.cod_menu_menu)
             AND sub.cod_sistema = '2'
             AND pai.cod_menu_menu = sub.ref_cod_menu_menu
           ORDER BY
-            UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
+            pai.ord_menu, UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
       }
     }
     else {
@@ -172,10 +175,6 @@ class clsMenu
       }
 
       $suspenso = '';
-
-      if ($_GET['suspenso'] == 1 || $_SESSION['suspenso'] == 1 || $_SESSION['tipo_menu'] == 1) {
-        $suspenso = " AND sub.cod_menu_submenu not in (select ref_cod_menu_submenu FROM pmicontrolesis.menu WHERE suprime_menu = 1 AND ref_cod_menu_submenu IS NOT NULL)";
-      }
 
       if ($strAutorizado == '999999') {
         $sql ="
@@ -192,13 +191,17 @@ class clsMenu
                 THEN 0
               ELSE
                1
-            END AS ref_menu_pai
+            END AS ref_menu_pai,
+            pai.caminho,
+            pai.icon_class,
+            pai.ord_menu
           FROM
             menu_menu AS pai LEFT OUTER JOIN menu_menu as filho ON (filho.ref_cod_menu_pai = pai.cod_menu_menu),
             menu_submenu AS sub,
             menu_menu AS nome_menu
           WHERE
-            nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai, pai.cod_menu_menu)
+            pai.ativo = TRUE
+            AND nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai, pai.cod_menu_menu)
             AND sub.cod_sistema = '2'
             AND pai.cod_menu_menu = sub.ref_cod_menu_menu
             AND ($query_lista
@@ -212,7 +215,7 @@ class clsMenu
               )
             )
           ORDER BY
-            UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
+            pai.ord_menu, UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu";
       }
       else {
         $sql ="
@@ -230,15 +233,19 @@ class clsMenu
               ELSE
                 1
             END AS ref_menu_pai,
+            pai.caminho,
+            pai.icon_class,
             UPPER(nome_menu.nm_menu),
-            UPPER(pai.nm_menu)
+            UPPER(pai.nm_menu),
+            pai.ord_menu
           FROM
             menu_menu AS pai
             LEFT OUTER JOIN menu_menu AS filho ON (filho.ref_cod_menu_pai = pai.cod_menu_menu),
             menu_submenu AS sub,
             menu_menu AS nome_menu
           WHERE
-            nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai, pai.cod_menu_menu)
+            pai.ativo = TRUE
+            AND nome_menu.cod_menu_menu = COALESCE(pai.ref_cod_menu_pai, pai.cod_menu_menu)
             AND sub.cod_sistema = '2'
             AND pai.cod_menu_menu = sub.ref_cod_menu_menu
             AND ($query_lista
@@ -250,9 +257,15 @@ class clsMenu
                 WHERE
                   sub2.nivel='2')
             )
+            AND EXISTS
+              (SELECT *
+                 FROM pmieducar.menu_tipo_usuario
+                INNER JOIN pmieducar.usuario ON (usuario.ref_cod_tipo_usuario = menu_tipo_usuario.ref_cod_tipo_usuario)
+                WHERE menu_tipo_usuario.ref_cod_menu_submenu = sub.cod_menu_submenu
+                  AND usuario.cod_usuario = $id_usuario)
             $suspenso
           ORDER BY
-            UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu
+            pai.ord_menu, UPPER(nome_menu.nm_menu), ref_menu_pai, UPPER(pai.nm_menu), sub.nm_submenu
         ";
       }
     }
@@ -261,10 +274,10 @@ class clsMenu
 
     while ($db->ProximoRegistro()) {
       list ($nome,$nomepai, $titlepai, $nomesub, $arquivo, $titlesub,
-        $cod_submenu, $ref_menu_pai) = $db->Tupla();
+        $cod_submenu, $ref_menu_pai, $caminho, $icon) = $db->Tupla();
 
       $itens_menu[] = array($nome, $nomepai, $titlepai, $nomesub, $arquivo,
-        $titlesub, $cod_submenu,$ref_menu_pai);
+        $titlesub, $cod_submenu,$ref_menu_pai, $caminho, $icon);
     }
 
     $saida = '';
@@ -272,7 +285,7 @@ class clsMenu
 
     foreach ($itens_menu as $item) {
       if ($item[0] != $menuPaiAtual) {
-        $estilo_linha = 'nvp_cor_sim';
+        $estilo_linha = 'nvp_sub';
 
         $this->aberto = 0;
         $menuPaiId = $item[6];
@@ -300,11 +313,15 @@ class clsMenu
         $saida    = str_replace('<!-- #&MENUS&# -->', $submenus, $saida);
         $submenus = '';
 
+        $faIcon = empty($item[9]) ? '' : '<i class="fa '. $item[9] .'" aria-hidden="true"></i>';
+
         // Adiciona um menu pai
         $aux_temp = $linha_nova_subtitulo;
         $aux_temp = str_replace('<!-- #&NOME&# -->',       $item[0], $aux_temp);
         $aux_temp = str_replace('<!-- #&ALT&# -->',        $item[3], $aux_temp);
         $aux_temp = str_replace('<!-- #&ID&# -->',         $item[6], $aux_temp);
+        $aux_temp = str_replace('<!-- #&CAMINHO&# -->',    $item[8], $aux_temp);
+        $aux_temp = str_replace('<!-- #&FAICON&# -->',     $faIcon, $aux_temp);
         $aux_temp = str_replace('<!-- #&ACAO&# -->',       $acao, $aux_temp);
         $aux_temp = str_replace('<!-- #&SIMBOLO&# -->',    $simbolo, $aux_temp);
         $aux_temp = str_replace('<!-- #&TITLE_ACAO&# -->', $title_acao, $aux_temp);
@@ -329,9 +346,6 @@ class clsMenu
       else {
         $target = '_top';
       }
-
-      $estilo_linha = $estilo_linha == 'nvp_cor_sim' ?
-        'nvp_cor_nao' : 'nvp_cor_sim';
 
       // Path do item de menu
       $path = $item[4];

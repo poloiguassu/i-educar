@@ -59,16 +59,14 @@ class Portabilis_View_Helper_DynamicInput_Turma extends Portabilis_View_Helper_D
     $userId        = $this->getCurrentUserId();
     $isProfessor   = Portabilis_Business_Professor::isProfessor($instituicaoId, $userId);
 
-    if ($escolaId and $serieId and empty($resources) and $isProfessor) {
-      $turmas    = Portabilis_Business_Professor::turmasAlocado($escolaId, $serieId, $userId);
-      $resources = Portabilis_Array_Utils::setAsIdValue($turmas, 'id', 'nome');
-    }
+    if ($escolaId and $serieId and empty($resources) and $isProfessor)
+      $resources    = Portabilis_Business_Professor::turmasAlocado($instituicaoId, $escolaId, $serieId, $userId);
     elseif ($escolaId && $serieId && empty($resources))
       $resources = App_Model_IedFinder::getTurmas($escolaId, $serieId);
 
 
     // caso no letivo esteja definido para filtrar turmas por ano,
-    // somente exibe as turmas do ano letivo.
+    // somente exibe as turmas do ano letivo.  
 
     if ($escolaId && $ano && !$naoFiltrarAno && $this->turmasPorAno($escolaId, $ano)) {
       foreach ($resources as $id => $nome) {

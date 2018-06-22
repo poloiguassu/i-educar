@@ -35,6 +35,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
@@ -74,7 +75,7 @@ class indice extends clsCadastro
 
     // Verifica se o usuário tem permissão para realizar o cadastro
     $obj_permissao = new clsPermissoes();
-    $obj_permissao->permissao_cadastra(554, $this->pessoa_logada, 1,
+    $obj_permissao->permissao_cadastra(554, $this->pessoa_logada, 7,
       'educar_tipo_usuario_lst.php', TRUE);
 
     $this->cod_tipo_usuario = $_GET['cod_tipo_usuario'];
@@ -91,7 +92,7 @@ class indice extends clsCadastro
           $this->$campo = $val;
         }
 
-        $this->fexcluir = $obj_permissao->permissao_excluir(554,$this->pessoa_logada,1,null,true);        
+        $this->fexcluir = $obj_permissao->permissao_excluir(554,$this->pessoa_logada,7,null,true);
 
         $retorno = "Editar";
       }
@@ -107,10 +108,10 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "{$nomeMenu} tipo de usu&aacute;rio"             
+           "educar_configuracoes_index.php"  => "Configurações",
+         ""                                  => "{$nomeMenu} tipo de usu&aacute;rio"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
   }
@@ -148,15 +149,17 @@ class indice extends clsCadastro
       WHERE
         sub.ref_cod_menu_menu = m.cod_menu_menu
         AND ((m.cod_menu_menu = 55 OR m.ref_cod_menu_pai = 55) OR
-        	 (m.cod_menu_menu = 69 OR m.ref_cod_menu_pai = 69) OR
-             (m.cod_menu_menu = 68 OR m.ref_cod_menu_pai = 68) OR
-             (m.cod_menu_menu = 7 OR m.ref_cod_menu_pai = 7) OR
-             (m.cod_menu_menu = 23 OR m.ref_cod_menu_pai = 23) OR
-             (m.cod_menu_menu = 5 OR m.ref_cod_menu_pai = 5) OR
-             (m.cod_menu_menu = 25 OR m.ref_cod_menu_pai = 25) OR
-             (m.cod_menu_menu = 38 OR m.ref_cod_menu_pai = 38) OR
-             (m.cod_menu_menu = 56 OR m.ref_cod_menu_pai = 56) OR
-             (m.cod_menu_menu = 57 OR m.ref_cod_menu_pai = 57))
+            (m.cod_menu_menu = 69 OR m.ref_cod_menu_pai = 69) OR
+            (m.cod_menu_menu = 68 OR m.ref_cod_menu_pai = 68) OR
+            (m.cod_menu_menu = 7 OR m.ref_cod_menu_pai = 7) OR
+            (m.cod_menu_menu = 23 OR m.ref_cod_menu_pai = 23) OR
+            (m.cod_menu_menu = 5 OR m.ref_cod_menu_pai = 5) OR
+            (m.cod_menu_menu = 25 OR m.ref_cod_menu_pai = 25) OR
+            (m.cod_menu_menu = 38 OR m.ref_cod_menu_pai = 38) OR
+            (m.cod_menu_menu = 57 OR m.ref_cod_menu_pai = 57) OR
+            (m.cod_menu_menu = 56 OR m.ref_cod_menu_pai = 56) OR
+            (m.cod_menu_menu = 70 OR m.ref_cod_menu_pai = 70) OR
+            (m.cod_menu_menu = 71 OR m.ref_cod_menu_pai = 71))
       ORDER BY
         cod_menu_menu, upper(sub.nm_submenu)
     ');
@@ -262,8 +265,14 @@ class indice extends clsCadastro
                                                $this->nm_tipo, $this->descricao, $this->nivel, NULL, NULL, 1);
     $this->cod_tipo_usuario = $tipoUsuario->cadastra();
 
-    if ($this->cod_tipo_usuario)
+    if ($this->cod_tipo_usuario){
+      $tipo_usuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario);
+      $tipo_usuario = $tipo_usuario->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario);
+      $auditoria->inclusao($tipo_usuario);
+
       $this->createMenuTipoUsuario();
+    }
 
     $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
     return FALSE;
@@ -277,8 +286,13 @@ class indice extends clsCadastro
     $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, NULL, $this->pessoa_logada,
                                                $this->nm_tipo, $this->descricao, $this->nivel, NULL, NULL, 1);
 
-    if ($tipoUsuario->edita())
+    $detalheAntigo = $tipoUsuario->detalhe();
+    if ($tipoUsuario->edita()){
+      $detalheAtual = $tipoUsuario->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
       $this->createMenuTipoUsuario();
+    }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
     return FALSE;
@@ -328,8 +342,11 @@ class indice extends clsCadastro
     session_write_close();
 
     $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, NULL, $this->pessoa_logada);
+    $detalhe = $tipoUsuario->detalhe();
 
     if ($tipoUsuario->excluir()) {
+      $auditoria = new clsModulesAuditoriaGeral("tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario);
+      $auditoria->exclusao($detalhe);
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
 
       $menuTipoUsuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario);
@@ -395,6 +412,7 @@ function selAction(menu_pai, tipo, acao)
   }
 
   for (var ct=0; ct < menu[menu_pai].length; ct++){
+    document.getElementsByName('permissoes[' + menu[menu_pai][ct]  + '][' + tipo + ']')[0].checked = state;
     document.getElementsByName('permissoes[' + menu[menu_pai][ct]  + '][' + tipo + ']')[0].value = ( state ? 'on' : '');
   }
 }

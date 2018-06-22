@@ -1,4 +1,5 @@
 <?php
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -27,39 +28,61 @@
  * @since   Arquivo disponível desde a versão ?
  * @version   $Id$
  */
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'intranet/include/clsBanco.inc.php';
+
+/**
+ * Class LogradouroController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class LogradouroController extends ApiCoreController
 {
+
   protected function searchOptions() {
     $municipioId = $this->getRequest()->municipio_id ? $this->getRequest()->municipio_id : 0;
     return array('sqlParams'    => array($municipioId), 'selectFields' => array('tipo_logradouro'));
-    
+
   }
+
   protected function sqlsForNumericSearch() {
-    $sqls[] = "select distinct idlog as id, nome as name, descricao as tipo_logradouro from
-                 public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog) 
-                 where idlog like $1||'%' and idmun = $2 ";
+
+    $sqls[] = "SELECT distinct l.idlog as id, l.nome as name, tl.descricao as tipo_logradouro, m.nome as municipio from
+                 public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog)
+                 INNER JOIN public.municipio m ON m.idmun = l.idmun
+                 where l.idlog::varchar like $1||'%' and (m.idmun = $2 OR $2 = 0)";
+
     return $sqls;
   }
+
+
   protected function sqlsForStringSearch() {
-    $sqls[] = "select distinct idlog as id, nome as name, descricao as tipo_logradouro from
-                 public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog) 
-                 where (lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%' 
-                 OR lower(to_ascii(descricao))|| ' ' ||lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%') 
-                 and idmun = $2 ";
+
+    $sqls[] = "SELECT distinct l.idlog as id, l.nome as name, tl.descricao as tipo_logradouro, m.nome as municipio FROM
+                 public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog)
+                 INNER JOIN public.municipio m ON m.idmun = l.idmun
+                 where (lower((l.nome)) like '%'||lower(($1))||'%'
+                 OR lower((tl.descricao))|| ' ' ||lower((l.nome)) like '%'||lower(($1))||'%')
+                 and (m.idmun = $2 OR $2 = 0)";
+
     return $sqls;
-  }  
+  }
+
   protected function formatResourceValue($resource) {
+    $id = $resource['id'];
     $tipo    = $resource['tipo_logradouro'];
     $nome    = $this->toUtf8($resource['name'], array('transform' => true));
-    return "$tipo $nome";
+    $municipio = $this->toUtf8($resource['municipio'], array('transform' => true));
+
+    return  $this->getRequest()->exibir_municipio ? "$id - $tipo $nome - $municipio": "$tipo $nome";
   }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'logradouro-search'))
       $this->appendResponse($this->search());
     else
       $this->notImplementedOperationError();
   }
+
 }

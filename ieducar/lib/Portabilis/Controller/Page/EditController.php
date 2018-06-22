@@ -153,15 +153,6 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
     return $this->_messenger;
   }
 
-
-  protected function mailer() {
-    if (! isset($this->_mailer))
-      $this->_mailer = new Portabilis_Mailer();
-
-    return $this->_mailer;
-  }
-
-
   protected function loadResourceAssets($dispatcher){
     $rootPath       = $_SERVER['DOCUMENT_ROOT'];
     $controllerName = ucwords($dispatcher->getControllerName());
@@ -178,7 +169,6 @@ class Portabilis_Controller_Page_EditController extends Core_Controller_Page_Edi
   }
 
   protected function loadAssets(){
-    Portabilis_View_Helper_Application::loadJQueryLib($this);
     Portabilis_View_Helper_Application::loadJQueryFormLib($this);
 
     $styles = array('/modules/Portabilis/Assets/Stylesheets/Frontend.css',

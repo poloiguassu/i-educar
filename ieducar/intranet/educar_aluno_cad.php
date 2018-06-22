@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestדo escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaם
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa י software livre; vocך pode redistribuם-lo e/ou modificב-lo
- * sob os termos da Licenחa Pתblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versדo 2 da Licenחa, como (a seu critיrio)
- * qualquer versדo posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa י distribuם­do na expectativa de que seja תtil, porיm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implם­cita de COMERCIABILIDADE OU
- * ADEQUAֳַO A UMA FINALIDADE ESPECֽFICA. Consulte a Licenחa Pתblica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * Vocך deve ter recebido uma cףpia da Licenחa Pתblica Geral do GNU junto
- * com este programa; se nדo, escreva para a Free Software Foundation, Inc., no
- * endereחo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaם <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Arquivo disponםvel desde a versדo 1.0.0
+ * @since     Arquivo disponível desde a versão 1.0.0
  * @version   $Id$
  */
 
@@ -42,11 +42,11 @@ require_once 'Transporte/Model/Responsavel.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaם <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponםvel desde a versדo 1.0.0
+ * @since     Classe disponível desde a versão 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -61,11 +61,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaם <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponםvel desde a versדo 1.0.0
+ * @since     Classe disponível desde a versão 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -538,13 +538,13 @@ class indice extends clsCadastro
     $this->campoTexto('nm_pai', 'Nome do Pai', $this->nm_pai, 30, 255, FALSE);
 
     $this->campoCpf('cpf_pai', 'CPF pai',$this->cpf_pai, FALSE,
-      $this->cpf_pai ? '': ' &nbsp; &nbsp; (preencher sempre que possםvel)');
+      $this->cpf_pai ? '': ' &nbsp; &nbsp; (preencher sempre que possível)');
 
     $this->campoTexto('nm_mae', 'Nome da M&atilde;e',$this->nm_mae, 30, 255, FALSE);
-    $this->campoCpf('cpf_mae', 'CPF mדe', $this->cpf_mae, FALSE,
-      $this->cpf_mae ? '': ' &nbsp; &nbsp; (preencher sempre que possםvel)');
+    $this->campoCpf('cpf_mae', 'CPF mãe', $this->cpf_mae, FALSE,
+      $this->cpf_mae ? '': ' &nbsp; &nbsp; (preencher sempre que possível)');
 
-    $lista = array('' => 'Responsבvel');
+    $lista = array('' => 'Responsável');
 
     if ($this->ref_idpes_responsavel != 'NULL') {
       $obj_pessoa_resp = new clsPessoaFj($this->ref_idpes_responsavel);
@@ -640,7 +640,7 @@ class indice extends clsCadastro
       TRUE, FALSE, FALSE, '', '', '', '', $disabled);
 
     $zl = App_Model_ZonaLocalizacao::getInstance();
-    $this->campoLista('zona_localizacao', 'Zona Localizaחדo', $zl->getEnums(),
+    $this->campoLista('zona_localizacao', 'Zona Localização', $zl->getEnums(),
       $this->zona_localizacao, FALSE, FALSE, FALSE, FALSE, $disabled);
 
     $this->campoNumero('numero', 'N&uacute;mero', $this->numero, 4, 6, FALSE, '',
@@ -683,7 +683,7 @@ class indice extends clsCadastro
       $this->nacionalidade, 'tmpObj = document.getElementById("pais_origem"); if(this.value != 1) { tmpObj.disabled = false; } else { tmpObj.selectedIndex = 27; tmpObj.disabled = true; }',
       TRUE, '', '', '', FALSE);
 
-    $lista_pais_origem = array('NULL' => 'Paםs de origem');
+    $lista_pais_origem = array('NULL' => 'País de origem');
     $obj_pais          = new clsPais();
     $obj_pais_lista    = $obj_pais->lista(NULL, NULL, NULL, '', '', 'nome asc');
 
@@ -696,7 +696,7 @@ class indice extends clsCadastro
     // se a nacionalidade for "BRASILEIRO" seleciona o brasil e deixa inativo
     $this->pais_origem = $this->nacionalidade == 1 ? 1 : $this->pais_origem;
 
-    $this->campoLista('pais_origem', ' &nbsp; Paםs de Origem', $lista_pais_origem,
+    $this->campoLista('pais_origem', ' &nbsp; País de Origem', $lista_pais_origem,
       $this->pais_origem, '', '', '', '', $this->nacionalidade == 1, FALSE);
 
     $this->campoQuebra2('#224488');
@@ -716,7 +716,7 @@ class indice extends clsCadastro
       !is_null($transporte) ? 1 : 0, 'transporteResponsavel();');
 
     $responsavel = Transporte_Model_Responsavel::getInstance();
-    $this->campoLista('transporte_responsavel', 'Responsבvel', $responsavel->getEnums(),
+    $this->campoLista('transporte_responsavel', 'Responsável', $responsavel->getEnums(),
       !is_null($transporte) ? $transporte->get('responsavel') : 0);
 
     $this->campoQuebra2('#224488');
@@ -874,13 +874,13 @@ class indice extends clsCadastro
 
     $this->campoTexto('nm_pai', 'Nome do Pai', $this->nm_pai, 30, 255, FALSE);
     $this->campoCpf('cpf_pai', 'CPF pai', $this->cpf_pai, FALSE,
-      $this->cpf_pai ? '': ' &nbsp; &nbsp; (preencher sempre que possםvel)');
+      $this->cpf_pai ? '': ' &nbsp; &nbsp; (preencher sempre que possível)');
 
     $this->campoTexto('nm_mae', 'Nome da M&atilde;e', $this->nm_mae, 30, 255, FALSE);
-    $this->campoCpf('cpf_mae', 'CPF mדe', $this->cpf_mae, FALSE,
-      $this->cpf_mae ? '': ' &nbsp; &nbsp; (preencher sempre que possםvel)');
+    $this->campoCpf('cpf_mae', 'CPF mãe', $this->cpf_mae, FALSE,
+      $this->cpf_mae ? '': ' &nbsp; &nbsp; (preencher sempre que possível)');
 
-    $lista = array('' => 'Responsבvel');
+    $lista = array('' => 'Responsável');
 
     if ($this->ref_idpes_responsavel != 'NULL') {
       $obj_pessoa_resp = new clsPessoaFj($this->ref_idpes_responsavel);
@@ -913,7 +913,7 @@ class indice extends clsCadastro
     }
 
     $opcoes = array(
-      ''  => 'Sem Responsבvel',
+      ''  => 'Sem Responsável',
       'p' => 'Pai',
       'm' => 'M&atilde;e',
       'r' => 'Respons&aacute;vel'
@@ -1005,7 +1005,7 @@ class indice extends clsCadastro
       $this->nacionalidade, "tmpObj = document.getElementById('pais_origem'); if (this.value!=1) { tmpObj.disabled = false; } else { tmpObj.selectedIndex = 27; tmpObj.disabled = true; }",
       TRUE, '', '', '', FALSE);
 
-    $lista_pais_origem = array('NULL' => 'Paםs de origem');
+    $lista_pais_origem = array('NULL' => 'País de origem');
     $obj_pais = new clsPais();
     $obj_pais_lista = $obj_pais->lista(null,null,null,'','','nome asc');
 
@@ -1017,7 +1017,7 @@ class indice extends clsCadastro
 
     // se a nacionalidade for "BRASILEIRO" seleciona o brasil e deixa inativo
     $this->pais_origem = $this->nacionalidade == 1 ? 1 : $this->pais_origem;
-    $this->campoLista('pais_origem',' &nbsp; Paםs de Origem', $lista_pais_origem,
+    $this->campoLista('pais_origem',' &nbsp; País de Origem', $lista_pais_origem,
       $this->pais_origem, '', '', '', '', $this->nacionalidade == 1, FALSE);
 
     $this->campoQuebra2('#224488');
@@ -1067,7 +1067,7 @@ class indice extends clsCadastro
     $this->campoOculto('ref_sigla_uf', $this->ref_sigla_uf);
     $this->campoOculto('cpf', $this->cpf);
 
-    $this->campoAdicionaTab('Deficiךncia', $this->tab_habilitado);
+    $this->campoAdicionaTab('Deficiência', $this->tab_habilitado);
 
     if ($this->ref_idpes) {
       $obj_deficiencia_pessoa = new clsCadastroFisicaDeficiencia();
@@ -1104,12 +1104,12 @@ class indice extends clsCadastro
     $oculto = $tabela = '';
     if ($deficiencia_aluno) {
       foreach ($deficiencia_aluno as $indice => $valor) {
-        $cor_fundo = $cor_fundo == '#D1DADF' ? '#E4E9ED' : '#D1DADF';
+        $cor_fundo = $cor_fundo == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
         $tabela .= "<tr id=\"tr_{$indice}\" bgcolor=\"{$cor_fundo}\" style=\"padding-right: 10px;\">";
         $tabela .= "<td>{$valor}</td>";
         $tabela .= "<td align=\"right\" style=\"padding-right: 10px;\">";
         $tabela .= "<img border=\"0\" onclick=\"excluirLinhaDeficiencia({$indice})\"
-                      style=\"cursor: pointer;\" src=\"imagens/banco_imagens/excluirrr.gif\"
+                      style=\"cursor: pointer;\" src=\"imagens/banco_imagens/excluirrr.png\"
                       title=\"Excluir\">";
         $tabela .= "</td></tr>";
         $oculto .= "<input type=\"hidden\" id=\"oc_defic[{$indice}]\" name=\"oc_defic[{$indice}]\" value=\"{$indice}\">";
@@ -1122,7 +1122,7 @@ class indice extends clsCadastro
     $this->campoRotulo('incluir2', 'Incluir defici&ecirc;ncia',
       "<a href='#' onclick=\"adicionaDeficiencia();\"><img src='imagens/banco_imagens/entrada2.gif' title='Incluir' border=0></a>");
 
-    $this->campoRotulo("tab_defic", "Deficiךncias", "<table id='tabela_deficiencia' cellspacing='0' cellpadding='2'><tbody>{$tabela}</tbody></table><div id='ocultos_defic'>{$oculto}</div>");
+    $this->campoRotulo("tab_defic", "Deficiências", "<table id='tabela_deficiencia' cellspacing='0' cellpadding='2'><tbody>{$tabela}</tbody></table><div id='ocultos_defic'>{$oculto}</div>");
 
     $this->campoOculto('inc', '');
     $this->campoOculto('exc', '');
@@ -1191,9 +1191,9 @@ class indice extends clsCadastro
     $this->campoOculto('idpes', $this->idpes);
 
     $this->campoTexto('rg', 'Rg', $this->rg, '10', '10', FALSE);
-    $this->campoData('data_exp_rg', 'Data Expediחדo RG', $this->data_exp_rg, FALSE);
+    $this->campoData('data_exp_rg', 'Data Expedição RG', $this->data_exp_rg, FALSE);
 
-    $this->campoLista('idorg_exp_rg', '׃rgדo Expediחדo RG', $listaOrgao,
+    $this->campoLista('idorg_exp_rg', 'Órgão Expedição RG', $listaOrgao,
       $this->idorg_exp_rg, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
 
     $this->campoLista('sigla_uf_exp_rg', 'Estado Expedidor', $listaEstado,
@@ -1212,26 +1212,26 @@ class indice extends clsCadastro
     $this->campoTexto('num_livro', 'Livro', $this->num_livro, '8', '8', FALSE);
     $this->campoTexto('num_folha', 'Folha', $this->num_folha, '4', '4', FALSE);
 
-    $this->campoData('data_emissao_cert_civil', 'Emissדo Certidדo Civil',
+    $this->campoData('data_emissao_cert_civil', 'Emissão Certidão Civil',
       $this->data_emissao_cert_civil, FALSE);
 
-    $this->campoLista('sigla_uf_cert_civil', 'Sigla Certidדo Civil',
+    $this->campoLista('sigla_uf_cert_civil', 'Sigla Certidão Civil',
       $listaEstado, $this->sigla_uf_cert_civil, FALSE, FALSE, FALSE, FALSE,
       FALSE, FALSE);
 
-    $this->campoMemo('cartorio_cert_civil', 'Cartףrio', $this->cartorio_cert_civil,
+    $this->campoMemo('cartorio_cert_civil', 'Cartório', $this->cartorio_cert_civil,
       '35', '4', FALSE, FALSE);
 
-    $this->campoTexto('num_tit_eleitor', 'Tםtulo de Eleitor', $this->num_tit_eleitor,
+    $this->campoTexto('num_tit_eleitor', 'Título de Eleitor', $this->num_tit_eleitor,
       '13', '13', FALSE);
 
     $this->campoTexto('zona_tit_eleitor', 'Zona', $this->zona_tit_eleitor, '4',
       '4', FALSE);
 
-    $this->campoTexto('secao_tit_eleitor', 'Seחדo', $this->secao_tit_eleitor,
+    $this->campoTexto('secao_tit_eleitor', 'Seção', $this->secao_tit_eleitor,
       '10', '10', FALSE);
 
-    // Adiciona uma aba com dados do Inep/Educacenso caso aluno tenha cףdigo Inep.
+    // Adiciona uma aba com dados do Inep/Educacenso caso aluno tenha código Inep.
     if (isset($this->cod_aluno)) {
       $alunoMapper = new Educacenso_Model_AlunoDataMapper();
 
@@ -1245,7 +1245,7 @@ class indice extends clsCadastro
       if ($alunoInep) {
         $this->campoAdicionaTab('Educacenso/Inep', $this->tab_habilitado);
 
-        $this->campoRotulo('_inep_cod_aluno', 'Cףdigo do aluno no Educacenso/Inep',
+        $this->campoRotulo('_inep_cod_aluno', 'Código do aluno no Educacenso/Inep',
           $alunoInep->alunoInep);
 
         if (isset($alunoInep->nomeInep)) {
@@ -1270,11 +1270,11 @@ class indice extends clsCadastro
       $lst_pessoa_fisica = $obj_pessoa_fisica->lista(NULL, $cpf);
 
       if ($lst_pessoa_fisica) {
-        $this->mensagem = 'CPF Jב Cadastrado';
+        $this->mensagem = 'CPF Já Cadastrado';
         return FALSE;
       }
       else {
-        die('CPF Nדo Existente');
+        die('CPF Não Existente');
       }
     }
 
@@ -1678,7 +1678,7 @@ class indice extends clsCadastro
       }
     }
 
-    // Atualiza a informaחדo de uso de transporte escolar.
+    // Atualiza a informação de uso de transporte escolar.
     $this->_cadastraTransporte($this->cod_aluno, $this->transporte_aluno,
       $this->transporte_responsavel, $this->pessoa_logada);
 
@@ -1815,18 +1815,18 @@ class indice extends clsCadastro
   }
 
   /**
-   * Cadastra ou atualiza a informaחדo de uso de transporte escolar.
+   * Cadastra ou atualiza a informação de uso de transporte escolar.
    *
    * @access protected
-   * @param  int  $codAluno     Cףdigo do aluno
+   * @param  int  $codAluno     Código do aluno
    * @param  bool $transporte   [Opcional] TRUE para cadastrar/atualizar e FALSE
-   *   para remover a informaחדo de uso de transporte escolar
-   * @param  int  $responsavel  [Opcional] Cףdigo do responsבvel pelo transporte
+   *   para remover a informação de uso de transporte escolar
+   * @param  int  $responsavel  [Opcional] Código do responsável pelo transporte
    *   escolar, valor mapeado para o enum Transporte_Model_Responsavel. Apenas
-   *   obrigatףrio caso $transporte = TRUE
-   * @param  int  $user         Cףdigo do usuבrio a alterar o registroo
+   *   obrigatório caso $transporte = TRUE
+   * @param  int  $user         Código do usuário a alterar o registroo
    * @return bool TRUE caso tenha criado/editado/apagado o registro com sucesso
-   * @since  Mיtodo disponםvel desde a versדo 1.2.0
+   * @since  Método disponível desde a versão 1.2.0
    */
   function _cadastraTransporte($codAluno, $transporte = TRUE, $responsavel = NULL,
     $user)
@@ -1862,16 +1862,16 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de pבgina
+// Instancia objeto de página
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteתdo
+// Instancia objeto de conteúdo
 $miolo = new indice();
 
-// Atribui o conteתdo א  pבgina
+// Atribui o conteúdo à  página
 $pagina->addForm($miolo);
 
-// Gera o cףdigo HTML
+// Gera o código HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
@@ -1902,7 +1902,7 @@ $pagina->MakeAll();
           case 'm':
             id_check = 2;
             if (!campo_mae.value) {
-              alert("Preencha o campo 'Nome da Mדe' para poder seleciona-lo!");
+              alert("Preencha o campo 'Nome da Mãe' para poder seleciona-lo!");
               campo_mae.focus();
               id_check = 0;
             }
@@ -1911,7 +1911,7 @@ $pagina->MakeAll();
           case 'r':
             id_check = 3;
             if (!campo_resp.value) {
-              alert("Preencha o campo 'Responsבvel' para poder seleciona-lo!");
+              alert("Preencha o campo 'Responsável' para poder seleciona-lo!");
               campo_resp.focus();
               id_check = 0;
             }
@@ -1991,7 +1991,7 @@ $pagina->MakeAll();
   function adicionaDeficiencia()
   {
     if ($F('ref_cod_pessoa_deficiencia') == '') {
-      alert('Selecione uma deficiךncia para adicionar');
+      alert('Selecione uma deficiência para adicionar');
     }
     else {
       var tabela = $('tabela_deficiencia');
@@ -2002,7 +2002,7 @@ $pagina->MakeAll();
       nm_deficiencia  = $('ref_cod_pessoa_deficiencia').options[$('ref_cod_pessoa_deficiencia').selectedIndex].text;
 
       if (!$('tr_'+cod_deficiencia)) {
-        cor_fundo = cor_fundo == '#D1DADF' ? '#E4E9ED' : '#D1DADF';
+        cor_fundo = cor_fundo == '#D1DADF' ? '#f5f9fd' : '#D1DADF';
         var row = document.createElement('tr');
         row.setAttribute('id', 'tr_'+cod_deficiencia);
         row.setAttribute('align', 'center');
@@ -2014,7 +2014,7 @@ $pagina->MakeAll();
 
         var cell2 = document.createElement('td');
 
-        var img = "<img border='0' title='Excluir' src='imagens/banco_imagens/excluirrr.gif' style='cursor:pointer' onclick='excluirLinhaDeficiencia(" + cod_deficiencia + ")'>";
+        var img = "<img border='0' title='Excluir' src='imagens/banco_imagens/excluirrr.png' style='cursor:pointer' onclick='excluirLinhaDeficiencia(" + cod_deficiencia + ")'>";
 
         var text = document.createTextNode(nm_deficiencia);
 
@@ -2033,7 +2033,7 @@ $pagina->MakeAll();
         area.appendChild(input);
       }
       else {
-        alert('Deficiךncia jב selecionada');
+        alert('Deficiência já selecionada');
       }
     }
   }
@@ -2053,7 +2053,7 @@ $pagina->MakeAll();
 
         if(cor != '' && tabela.childNodes[i] && tabela.childNodes[i].tagName == 'TR') {
           tabela.childNodes[i].bgColor = cor;
-          cor = (cor == '#d1dadf') ? '#e4e9ed' : '#d1dadf';
+          cor = (cor == '#d1dadf') ? '#f5f9fd' : '#d1dadf';
         }
       }
     }
@@ -2115,7 +2115,7 @@ if (!$_GET['cod_aluno']) {
       $('btn_enviar').className = 'botaolistagem';
     }
     else {
-      alert('Vocך deve preencher o campo CPF');
+      alert('Você deve preencher o campo CPF');
     }
   }
 

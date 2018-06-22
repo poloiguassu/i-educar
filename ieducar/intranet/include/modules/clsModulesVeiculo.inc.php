@@ -1,24 +1,24 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest�o escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja�
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
- * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
- * qualquer vers�o posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
- * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
- * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
- * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
@@ -29,6 +29,7 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsModulesVeiculo class.
@@ -60,9 +61,10 @@ class clsModulesVeiculo
   var $ref_cod_empresa_transporte_escolar;
   var $ref_cod_motorista;
   var $observacao;
+  var $pessoa_logada;
 
   /**
-   * Armazena o total de resultados obtidos na �ltima chamada ao m�todo lista().
+   * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
    */
   var $_total;
@@ -80,33 +82,33 @@ class clsModulesVeiculo
   var $_tabela;
 
   /**
-   * Lista separada por v�rgula, com os campos que devem ser selecionados na
-   * pr�xima chamado ao m�todo lista().
+   * Lista separada por vírgula, com os campos que devem ser selecionados na
+   * próxima chamado ao método lista().
    * @var string
    */
   var $_campos_lista;
 
   /**
-   * Lista com todos os campos da tabela separados por v�rgula, padr�o para
-   * sele��o no m�todo lista.
+   * Lista com todos os campos da tabela separados por vírgula, padrão para
+   * seleção no método lista.
    * @var string
    */
   var $_todos_campos;
 
   /**
-   * Valor que define a quantidade de registros a ser retornada pelo m�todo lista().
+   * Valor que define a quantidade de registros a ser retornada pelo método lista().
    * @var int
    */
   var $_limite_quantidade;
 
   /**
-   * Define o valor de offset no retorno dos registros no m�todo lista().
+   * Define o valor de offset no retorno dos registros no método lista().
    * @var int
    */
   var $_limite_offset;
 
   /**
-   * Define o campo para ser usado como padr�o de ordena��o no m�todo lista().
+   * Define o campo para ser usado como padrão de ordenação no método lista().
    * @var string
    */
   var $_campo_order_by;
@@ -114,7 +116,7 @@ class clsModulesVeiculo
   /**
    * Construtor.
    */
-  function clsModulesVeiculo($cod_veiculo = NULL, $descricao = NULL, $placa = NULL, $renavam = NULL,
+  function __construct($cod_veiculo = NULL, $descricao = NULL, $placa = NULL, $renavam = NULL,
                              $chassi = NULL, $marca = NULL, $ano_fabricacao = NULL, 
                              $ano_modelo = NULL, $passageiros = NULL, $malha = NULL, $ref_cod_tipo_veiculo = NULL,
                              $exclusivo_transporte_escolar = NULL, $adaptado_necessidades_especiais = NULL,
@@ -124,6 +126,7 @@ class clsModulesVeiculo
     $db = new clsBanco();
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}veiculo";
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
 
     $this->_campos_lista = $this->_todos_campos = " cod_veiculo, descricao, placa, renavam, chassi, marca, ano_fabricacao, 
        ano_modelo, passageiros, malha, ref_cod_tipo_veiculo, exclusivo_transporte_escolar, 
@@ -209,10 +212,9 @@ class clsModulesVeiculo
   {
 
 
-    if (is_string($this->descricao) && is_string($this->placa) && is_string($this->renavam)
-      && is_numeric($this->passageiros) && is_string($this->malha) && is_string($this->adaptado_necessidades_especiais)
-      && is_string($this->exclusivo_transporte_escolar) && is_numeric($this->ref_cod_empresa_transporte_escolar)
-      && is_numeric($this->ref_cod_motorista))
+    if (is_string($this->descricao) && is_string($this->renavam) && is_numeric($this->passageiros) 
+      && is_string($this->malha) && is_string($this->adaptado_necessidades_especiais)
+      && is_string($this->exclusivo_transporte_escolar) && is_numeric($this->ref_cod_empresa_transporte_escolar))
     {
 
       $db = new clsBanco();
@@ -332,7 +334,14 @@ class clsModulesVeiculo
     }
 
     $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-    return $db->InsertId("{$this->_tabela}_seq");
+    $this->cod_veiculo = $db->InsertId("{$this->_tabela}_seq");
+
+      if($this->cod_veiculo){
+        $detalhe = $this->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("veiculo", $this->pessoa_logada, $this->cod_veiculo);
+        $auditoria->inclusao($detalhe);
+      }
+      return $this->cod_veiculo;
     }
 
     return FALSE;
@@ -428,6 +437,9 @@ class clsModulesVeiculo
     if (is_numeric($this->ref_cod_motorista)) {
         $set .= "{$gruda}ref_cod_motorista = '{$this->ref_cod_motorista}'";
         $gruda = ", ";
+    }else{
+        $set .= "{$gruda}ref_cod_motorista = NULL ";
+        $gruda = ", ";
     }
         
     if (is_string($this->observacao)) {
@@ -435,7 +447,10 @@ class clsModulesVeiculo
         $gruda = ", ";
     }
       if ($set) {
+        $detalheAntigo = $this->detalhe();
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_veiculo = '{$this->cod_veiculo}'");
+        $auditoria = new clsModulesAuditoriaGeral("veiculo", $this->pessoa_logada,$this->cod_veiculo);
+        $auditoria->alteracao($detalheAntigo, $this->detalhe());
         return TRUE;
       }
     }
@@ -444,7 +459,7 @@ class clsModulesVeiculo
   }
 
   /**
-   * Retorna uma lista de registros filtrados de acordo com os par�metros.
+   * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
   function lista($cod_veiculo = NULL, $descricao = NULL,
@@ -470,7 +485,7 @@ class clsModulesVeiculo
 
     if (is_string($descricao)) {
       $filtros .= "
-        {$whereAnd} TO_ASCII(LOWER(descricao)) LIKE TO_ASCII(LOWER('%{$descricao}%')) ";
+        {$whereAnd} translate(upper(descricao),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$descricao}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 
       $whereAnd = ' AND ';
     }      
@@ -487,12 +502,7 @@ class clsModulesVeiculo
 
     if (is_string($nome_motorista)) {
       $whereNomes .= "
-        {$whereAnd} TO_ASCII(LOWER((SELECT
-            nome
-          FROM
-            modules.motorista m,cadastro.pessoa p
-          WHERE
-            ref_cod_motorista = cod_motorista AND p.idpes = m.ref_idpes))) LIKE TO_ASCII(LOWER('%{$nome_motorista}%')) ";
+        {$whereAnd} translate(upper((SELECT nome FROM modules.motorista m,cadastro.pessoa p WHERE ref_cod_motorista = cod_motorista AND p.idpes = m.ref_idpes)),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$nome_motorista}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
 
       $whereAnd = ' AND ';
     }
@@ -514,7 +524,7 @@ class clsModulesVeiculo
 
     if (is_string($marca)) {
         $filtros .= "
-        {$whereAnd} TO_ASCII(LOWER(marca)) LIKE TO_ASCII(LOWER('%{$marca}%')) ";
+        {$whereAnd} translate(upper(marca),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$marca}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = " AND ";
     }       
 
@@ -601,9 +611,15 @@ class clsModulesVeiculo
   function excluir()
   {
     if (is_numeric($this->cod_veiculo)) {
+      $detalhe = $this->detalhe();
+
       $sql = "DELETE FROM {$this->_tabela} WHERE cod_veiculo = '{$this->cod_veiculo}'";
       $db = new clsBanco();
       $db->Consulta($sql);
+
+      $auditoria = new clsModulesAuditoriaGeral("veiculo", $this->pessoa_logada, $this->cod_veiculo);
+      $auditoria->exclusao($detalhe);
+
       return true;
     }
 
@@ -611,7 +627,7 @@ class clsModulesVeiculo
   }
 
   /**
-   * Define quais campos da tabela ser�o selecionados no m�todo Lista().
+   * Define quais campos da tabela serão selecionados no método Lista().
    */
   function setCamposLista($str_campos)
   {
@@ -619,7 +635,7 @@ class clsModulesVeiculo
   }
 
   /**
-   * Define que o m�todo Lista() deverpa retornar todos os campos da tabela.
+   * Define que o método Lista() deverpa retornar todos os campos da tabela.
    */
   function resetCamposLista()
   {
@@ -627,7 +643,7 @@ class clsModulesVeiculo
   }
 
   /**
-   * Define limites de retorno para o m�todo Lista().
+   * Define limites de retorno para o método Lista().
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -636,7 +652,7 @@ class clsModulesVeiculo
   }
 
   /**
-   * Retorna a string com o trecho da query respons�vel pelo limite de
+   * Retorna a string com o trecho da query responsável pelo limite de
    * registros retornados/afetados.
    *
    * @return string
@@ -654,7 +670,7 @@ class clsModulesVeiculo
   }
 
   /**
-   * Define o campo para ser utilizado como ordena��o no m�todo Lista().
+   * Define o campo para ser utilizado como ordenação no método Lista().
    */
   function setOrderby($strNomeCampo)
   {
@@ -664,7 +680,7 @@ class clsModulesVeiculo
   }
 
   /**
-   * Retorna a string com o trecho da query respons�vel pela Ordena��o dos
+   * Retorna a string com o trecho da query responsável pela Ordenação dos
    * registros.
    *
    * @return string

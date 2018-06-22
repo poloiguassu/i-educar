@@ -1,29 +1,29 @@
 <?php
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   Module
- * @since     ?
+ * @since     11/2013
  * @version   $Id$
  */
 
@@ -36,302 +36,302 @@ require_once( "include/pmieducar/geral.inc.php" );
  * @category  i-Educar
  * @license   @@license@@
  * @package   Module
- * @since     ?
+ * @since     11/2013
  * @version   @@package_version@@
  */
 
 class clsModulesNotaExame
 {
-  var $ref_cod_matricula;
-  var $ref_cod_componente_curricular;
-  var $nota_exame;
+    var $ref_cod_matricula;
+    var $ref_cod_componente_curricular;
+    var $nota_exame;
 
-  // propriedades padrao
+    // propriedades padrao
 
-  /**
-   * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
-   *
-   * @var int
-   */
-  var $_total;
+    /**
+     * Armazena o total de resultados obtidos na ultima chamada ao metodo lista
+     *
+     * @var int
+     */
+    var $_total;
 
-  /**
-   * Nome do schema
-   *
-   * @var string
-   */
-  var $_schema;
+    /**
+     * Nome do schema
+     *
+     * @var string
+     */
+    var $_schema;
 
-  /**
-   * Nome da tabela
-   *
-   * @var string
-   */
-  var $_tabela;
+    /**
+     * Nome da tabela
+     *
+     * @var string
+     */
+    var $_tabela;
 
-  /**
-   * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
-   *
-   * @var string
-   */
-  var $_campos_lista;
+    /**
+     * Lista separada por virgula, com os campos que devem ser selecionados na proxima chamado ao metodo lista
+     *
+     * @var string
+     */
+    var $_campos_lista;
 
-  /**
-   * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
-   *
-   * @var string
-   */
-  var $_todos_campos;
+    /**
+     * Lista com todos os campos da tabela separados por virgula, padrao para selecao no metodo lista
+     *
+     * @var string
+     */
+    var $_todos_campos;
 
-  /**
-   * Valor que define a quantidade de registros a ser retornada pelo metodo lista
-   *
-   * @var int
-   */
-  var $_limite_quantidade;
+    /**
+     * Valor que define a quantidade de registros a ser retornada pelo metodo lista
+     *
+     * @var int
+     */
+    var $_limite_quantidade;
 
-  /**
-   * Define o valor de offset no retorno dos registros no metodo lista
-   *
-   * @var int
-   */
-  var $_limite_offset;
+    /**
+     * Define o valor de offset no retorno dos registros no metodo lista
+     *
+     * @var int
+     */
+    var $_limite_offset;
 
-  /**
-   * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
-   *
-   * @var string
-   */
-  var $_campo_order_by;
+    /**
+     * Define o campo padrao para ser usado como padrao de ordenacao no metodo lista
+     *
+     * @var string
+     */
+    var $_campo_order_by;
 
 
-  /**
-   * Construtor (PHP 4)
-   *
-   * @return object
-   */
-  function clsModulesNotaExame($ref_cod_matricula = NULL , $ref_cod_componente_curricular = NULL, $nota_exame = NULL)
-  {
-    $db = new clsBanco();
-    $this->_schema = "modules.";
-    $this->_tabela = "{$this->_schema}nota_exame";
-
-    $this->_campos_lista = $this->_todos_campos = "ref_cod_matricula, ref_cod_componente_curricular, nota_exame";
-
-    if( is_numeric( $ref_cod_matricula ) )
+    /**
+     * Construtor (PHP 4)
+     *
+     * @return object
+     */
+    function __construct($ref_cod_matricula = NULL , $ref_cod_componente_curricular = NULL, $nota_exame = NULL)
     {
-      $this->ref_cod_matricula = $ref_cod_matricula;
+        $db = new clsBanco();
+        $this->_schema = "modules.";
+        $this->_tabela = "{$this->_schema}nota_exame";
+
+        $this->_campos_lista = $this->_todos_campos = "ref_cod_matricula, ref_cod_componente_curricular, nota_exame";
+
+        if( is_numeric( $ref_cod_matricula ) )
+        {
+            $this->ref_cod_matricula = $ref_cod_matricula;
+        }
+        if( is_numeric( $ref_cod_componente_curricular ) )
+        {
+            $this->ref_cod_componente_curricular = $ref_cod_componente_curricular;
+        }
+        if( is_numeric( $nota_exame ) )
+        {
+            $this->nota_exame = $nota_exame;
+        }       
     }
-    if( is_numeric( $ref_cod_componente_curricular ) )
+
+    /**
+     * Cria um novo registro
+     *
+     * @return bool
+     */
+    function cadastra()
     {
-      $this->ref_cod_componente_curricular = $ref_cod_componente_curricular;
+        if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) && is_numeric( $this->nota_exame ) )
+        {
+            $db = new clsBanco();
+
+            $campos = "";
+            $valores = "";
+            $gruda = "";
+
+            if( is_numeric( $this->ref_cod_matricula ) )
+            {
+                $campos .= "{$gruda}ref_cod_matricula";
+                $valores .= "{$gruda}'{$this->ref_cod_matricula}'";
+                $gruda = ", ";
+            }
+            if( is_numeric( $this->ref_cod_componente_curricular ) )
+            {
+                $campos .= "{$gruda}ref_cod_componente_curricular";
+                $valores .= "{$gruda}'{$this->ref_cod_componente_curricular}'";
+                $gruda = ", ";
+            }
+            if( is_numeric( $this->nota_exame ) )
+            {
+                $campos .= "{$gruda}nota_exame";
+                $valores .= "{$gruda}'{$this->nota_exame}'";
+                $gruda = ", ";
+            }
+            
+            $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
+            return $this->ref_cod_matricula;
+        }
+        return false;
     }
-    if( is_numeric( $nota_exame ) )
+
+    /**
+     * Edita os dados de um registro
+     *
+     * @return bool
+     */
+    function edita()
     {
-      $this->nota_exame = $nota_exame;
-    }   
-  }
+        if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) && is_numeric( $this->nota_exame ) )
+        {
 
-  /**
-   * Cria um novo registro
-   *
-   * @return bool
-   */
-  function cadastra()
-  {
-    if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) && is_numeric( $this->nota_exame ) )
-    {
-      $db = new clsBanco();
+            $db = new clsBanco();
+            $set = "";
 
-      $campos = "";
-      $valores = "";
-      $gruda = "";
+            if( is_numeric( $this->nota_exame ) )
+            {
+                $set .= "{$gruda}nota_exame = '{$this->nota_exame}'";
+                $gruda = ", ";
+            }
 
-      if( is_numeric( $this->ref_cod_matricula ) )
-      {
-        $campos .= "{$gruda}ref_cod_matricula";
-        $valores .= "{$gruda}'{$this->ref_cod_matricula}'";
-        $gruda = ", ";
-      }
-      if( is_numeric( $this->ref_cod_componente_curricular ) )
-      {
-        $campos .= "{$gruda}ref_cod_componente_curricular";
-        $valores .= "{$gruda}'{$this->ref_cod_componente_curricular}'";
-        $gruda = ", ";
-      }
-      if( is_numeric( $this->nota_exame ) )
-      {
-        $campos .= "{$gruda}nota_exame";
-        $valores .= "{$gruda}'{$this->nota_exame}'";
-        $gruda = ", ";
-      }
-      
-      $db->Consulta( "INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )" );
-      return $this->ref_cod_matricula;
+            if( $set )
+            {
+                $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'" );
+                return true;
+            }
+        }
+        return false;
     }
-    return false;
-  }
 
-  /**
-   * Edita os dados de um registro
-   *
-   * @return bool
-   */
-  function edita()
-  {
-    if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) && is_numeric( $this->nota_exame ) )
+    /**
+     * Retorna um array com os dados de um registro
+     *
+     * @return array
+     */
+    function detalhe()
     {
+        if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) )
+        {
 
-      $db = new clsBanco();
-      $set = "";
-
-      if( is_numeric( $this->nota_exame ) )
-      {
-        $set .= "{$gruda}nota_exame = '{$this->nota_exame}'";
-        $gruda = ", ";
-      }
-
-      if( $set )
-      {
-        $db->Consulta( "UPDATE {$this->_tabela} SET $set WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'" );
-        return true;
-      }
+            $db = new clsBanco();
+            $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'" );
+            $db->ProximoRegistro();
+            return $db->Tupla();
+        }
+        return false;
     }
-    return false;
-  }
 
-  /**
-   * Retorna um array com os dados de um registro
-   *
-   * @return array
-   */
-  function detalhe()
-  {
-    if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) )
+    /**
+     * Retorna um array com os dados de um registro
+     *
+     * @return array
+     */
+    function existe()
     {
+        if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) )
+        {
 
-      $db = new clsBanco();
-      $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'" );
-      $db->ProximoRegistro();
-      return $db->Tupla();
+            $db = new clsBanco();
+            $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'" );
+            $db->ProximoRegistro();
+            return $db->Tupla();
+        }
+        return false;
     }
-    return false;
-  }
 
-  /**
-   * Retorna um array com os dados de um registro
-   *
-   * @return array
-   */
-  function existe()
-  {
-    if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) )
+    /**
+     * Exclui um registro
+     *
+     * @return bool
+     */
+    function excluir()
     {
+        if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) )
+        {
 
-      $db = new clsBanco();
-      $db->Consulta( "SELECT 1 FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'" );
-      $db->ProximoRegistro();
-      return $db->Tupla();
+            $db = new clsBanco();
+            $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'" );
+            return true;
+        }
+        return false;
     }
-    return false;
-  }
 
-  /**
-   * Exclui um registro
-   *
-   * @return bool
-   */
-  function excluir()
-  {
-    if( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_componente_curricular ) )
+    /**
+     * Define quais campos da tabela serao selecionados na invocacao do metodo lista
+     *
+     * @return null
+     */
+    function setCamposLista( $str_campos )
     {
-
-      $db = new clsBanco();
-      $db->Consulta( "DELETE FROM {$this->_tabela} WHERE ref_cod_matricula = '{$this->ref_cod_matricula}' AND ref_cod_componente_curricular = '{$this->ref_cod_componente_curricular}'" );
-      return true;
+        $this->_campos_lista = $str_campos;
     }
-    return false;
-  }
 
-  /**
-   * Define quais campos da tabela serao selecionados na invocacao do metodo lista
-   *
-   * @return null
-   */
-  function setCamposLista( $str_campos )
-  {
-    $this->_campos_lista = $str_campos;
-  }
-
-  /**
-   * Define que o metodo Lista devera retornoar todos os campos da tabela
-   *
-   * @return null
-   */
-  function resetCamposLista()
-  {
-    $this->_campos_lista = $this->_todos_campos;
-  }
-
-  /**
-   * Define limites de retorno para o metodo lista
-   *
-   * @return null
-   */
-  function setLimite( $intLimiteQtd, $intLimiteOffset = null )
-  {
-    $this->_limite_quantidade = $intLimiteQtd;
-    $this->_limite_offset = $intLimiteOffset;
-  }
-
-  /**
-   * Retorna a string com o trecho da query resposavel pelo Limite de registros
-   *
-   * @return string
-   */
-  function getLimite()
-  {
-    if( is_numeric( $this->_limite_quantidade ) )
+    /**
+     * Define que o metodo Lista devera retornoar todos os campos da tabela
+     *
+     * @return null
+     */
+    function resetCamposLista()
     {
-      $retorno = " LIMIT {$this->_limite_quantidade}";
-      if( is_numeric( $this->_limite_offset ) )
-      {
-        $retorno .= " OFFSET {$this->_limite_offset} ";
-      }
-      return $retorno;
+        $this->_campos_lista = $this->_todos_campos;
     }
-    return "";
-  }
 
-  /**
-   * Define campo para ser utilizado como ordenacao no metolo lista
-   *
-   * @return null
-   */
-  function setOrderby( $strNomeCampo )
-  {
-    // limpa a string de possiveis erros (delete, insert, etc)
-    //$strNomeCampo = eregi_replace();
-
-    if( is_string( $strNomeCampo ) && $strNomeCampo )
+    /**
+     * Define limites de retorno para o metodo lista
+     *
+     * @return null
+     */
+    function setLimite( $intLimiteQtd, $intLimiteOffset = null )
     {
-      $this->_campo_order_by = $strNomeCampo;
+        $this->_limite_quantidade = $intLimiteQtd;
+        $this->_limite_offset = $intLimiteOffset;
     }
-  }
 
-  /**
-   * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
-   *
-   * @return string
-   */
-  function getOrderby()
-  {
-    if( is_string( $this->_campo_order_by ) )
+    /**
+     * Retorna a string com o trecho da query resposavel pelo Limite de registros
+     *
+     * @return string
+     */
+    function getLimite()
     {
-      return " ORDER BY {$this->_campo_order_by} ";
+        if( is_numeric( $this->_limite_quantidade ) )
+        {
+            $retorno = " LIMIT {$this->_limite_quantidade}";
+            if( is_numeric( $this->_limite_offset ) )
+            {
+                $retorno .= " OFFSET {$this->_limite_offset} ";
+            }
+            return $retorno;
+        }
+        return "";
     }
-    return "";
-  }
+
+    /**
+     * Define campo para ser utilizado como ordenacao no metolo lista
+     *
+     * @return null
+     */
+    function setOrderby( $strNomeCampo )
+    {
+        // limpa a string de possiveis erros (delete, insert, etc)
+        //$strNomeCampo = eregi_replace();
+
+        if( is_string( $strNomeCampo ) && $strNomeCampo )
+        {
+            $this->_campo_order_by = $strNomeCampo;
+        }
+    }
+
+    /**
+     * Retorna a string com o trecho da query resposavel pela Ordenacao dos registros
+     *
+     * @return string
+     */
+    function getOrderby()
+    {
+        if( is_string( $this->_campo_order_by ) )
+        {
+            return " ORDER BY {$this->_campo_order_by} ";
+        }
+        return "";
+    }
 
 }
 ?>

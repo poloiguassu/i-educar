@@ -177,13 +177,13 @@ class indice extends clsDetalhe
     if ($lst) {
       $tabela = '<TABLE>
                  <TR align=center>
-                     <TD bgcolor=#A1B3BD><B>Nome</B></TD>
+                     <TD bgcolor=#ccdce6><B>Nome</B></TD>
                  </TR>';
       $cont = 0;
 
       foreach ($lst as $valor) {
         if (($cont % 2) == 0) {
-          $color = ' bgcolor=#E4E9ED ';
+          $color = ' bgcolor=#f5f9fd ';
         }
         else {
           $color = ' bgcolor=#FFFFFF ';
@@ -236,8 +236,8 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "Detalhe do curso"
+         "educar_index.php"                  => "Escola",
+         ""        => "Detalhe do curso"             
     ));
     $this->enviaLocalizacao($localizacao->montar());
   }

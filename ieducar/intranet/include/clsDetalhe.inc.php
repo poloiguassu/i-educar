@@ -66,7 +66,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
   var $array_botao_url_script;
 
   function addBanner($strBannerUrl = '', $strBannerLateralUrl = '',
-    $strBannerTitulo = '', $boolFechaBanner = TRUE)
+    $strBannerTitulo = '', $boolFechaBanner = FALSE)
   {
     if ($strBannerUrl != '') {
       $this->banner = $strBannerUrl;
@@ -91,7 +91,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
   function enviaLocalizacao($localizao){
     if($localizao)
       $this->locale = $localizao;
-  }
+  }  
 
   function Gerar() {
     return FALSE;
@@ -107,7 +107,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
     $retorno = '';
     if ($this->banner) {
       $retorno .= "<table width='100%' style=\"height:100%\" border='0' cellpadding='0' cellspacing='0'><tr>";
-      $retorno .= "<td class=\"barraLateral\" width=\"21\" valign=\"top\"><a href='#'><img src=\"{$this->bannerLateral}\" align=\"right\" border=\"0\" alt=\"$this->titulo_barra\" title=\"$this->titulo_barra\"></a></td><td valign='top'>";
+      $retorno .= "<td valign='top'>";
     }
 
     $script = explode('/', $_SERVER['PHP_SELF']);
@@ -119,7 +119,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
      * adiciona os botoes de help para a pagina atual
      */
     $url = parse_url($_SERVER['REQUEST_URI']);
-    $url = preg_match( "^/", "", $url["path"] );
+    $url = preg_replace('/^\//', "", $url["path"] );
 
     if (strpos($url, '_det.php') !== FALSE) {
       $tipo = "det";
@@ -162,7 +162,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
                     </tr>";
 
       $retorno .= "</table>";
-    }
+    }    
 
     $retorno .= "
       <!-- detalhe begin -->
@@ -238,7 +238,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
             </script>";
 
       if ($this->url_novo) {
-        $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"$this->url_novo\" );' value=' {$this->caption_novo} '>&nbsp;\n";
+        $retorno .= "&nbsp;<input type='button' class='btn-green botaolistagem' onclick='javascript:go( \"$this->url_novo\" );' value=' {$this->caption_novo} '>&nbsp;\n";
       }
 
       if ($this->url_editar) {
@@ -251,17 +251,17 @@ class clsDetalhe extends Core_Controller_Page_Abstract
       $retorno .= "</td></tr>";
 
       if ($this->array_botao_url || $this->array_botao_url_script) {
-        $retorno .= "<tr><td colspan=2><table width='100%' summary=''><tr><td></td><td height='1' width='90%' bgcolor='#858585' style='font-size: 0px;'>&nbsp;</td><td></td></tr></table></td></tr><tr><td colspan='2' align='center'>";
+        $retorno .= "<tr><td colspan=2><table width='100%' summary=''><tr><td></td><td height='1' width='95%'  style='font-size: 0px;'>&nbsp;</td><td></td></tr></table></td></tr><tr><td colspan='2' align='center'>";
       }
 
       if ($this->array_botao_url) {
         for ($i = 0, $total = count($this->array_botao); $i < $total; $i++) {
-          $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."'>&nbsp;\n";
+          $retorno .= "&nbsp;<input type='button' class='btn_small' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."'>&nbsp;\n";
         }
       }
       elseif ($this->array_botao_url_script) {
         for ($i = 0, $total = count($this->array_botao); $i < $total; $i++) {
-          $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='{$this->array_botao_url_script[$i]}' value='".$this->array_botao[$i]."'>&nbsp;\n";
+          $retorno .= "&nbsp;<input type='button' class='btn_small' onclick='{$this->array_botao_url_script[$i]}' value='".$this->array_botao[$i]."'>&nbsp;\n";
         }
       }
 
@@ -269,7 +269,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
         $retorno .= "</td></tr>";
       }
 
-      $retorno .= "<tr><td colspan='2' height='1' bgcolor='black' style='font-size: 0px;'>&nbsp;</td></tr>";
+      $retorno .= "<tr><td colspan='2' height='1' bgcolor='#ccdce6' style='font-size: 0px;'>&nbsp;</td></tr>";
     }
 
     $retorno .= "

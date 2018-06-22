@@ -34,7 +34,7 @@ require_once 'include/pmieducar/geral.inc.php';
 
 class clsIndexBase extends clsBase {
   public function Formular() {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Afastamento');
+    $this->SetTitulo($this->_instituicao . ' Servidores - Servidor Afastamento');
     $this->processoAp = '635';
     $this->addEstilo('localizacaoSistema');
   }
@@ -145,7 +145,7 @@ class indice extends clsCadastro {
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_servidores_index.php"       => "Servidores",
          ""        => "Afastar servidor"             
     ));
     $this->enviaLocalizacao($localizacao->montar());    
@@ -207,7 +207,6 @@ class indice extends clsCadastro {
 
     $det_servidor = $obj_servidor->detalhe();
 
-
     if ($det_servidor) {
       $obj_funcao = new clsPmieducarFuncao($det_servidor['ref_cod_funcao'],
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, $this->ref_cod_instituicao);
@@ -219,7 +218,7 @@ class indice extends clsCadastro {
         // Pega a lista de aulas alocadas para este servidor
         $lista = $obj->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL,
           $this->ref_cod_instituicao, NULL, $this->ref_cod_servidor, NULL,
-          NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL);
+          NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, true);
 
         if ($lista) {
 
@@ -232,6 +231,9 @@ class indice extends clsCadastro {
             $temp['ref_cod_escola']     = $val['ref_cod_escola'];
             $temp['ref_cod_disciplina'] = $val['ref_cod_disciplina'];
             $temp['ref_cod_substituto'] = $val['ref_servidor_substituto'];
+            $objTemp = new ClsPmieducarSerie($val['ref_cod_serie']);
+            $detalheTemp = $objTemp->detalhe();
+            $temp['ref_cod_curso']      = $detalheTemp['ref_cod_curso'];
             $this->alocacao_array[]     = $temp;
           }
 
@@ -280,7 +282,7 @@ class indice extends clsCadastro {
 
                 $this->campoTextoInv("ref_cod_servidor_substituto_{$key}_",
                   '', $det_subst['nome'], 30, 255, FALSE, FALSE, FALSE, '',
-                  "<span name=\"ref_cod_servidor_substituto\" id=\"ref_cod_servidor_substituicao_{$key}\"><img border='0'  onclick=\"pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_substituto[{$key}]&campo2=ref_cod_servidor_substituto_{$key}_&ref_cod_instituicao={$this->ref_cod_instituicao}&dia_semana={$alocacao["dia_semana"]}&hora_inicial={$alocacao["hora_inicial"]}&hora_final={$alocacao["hora_final"]}&ref_cod_servidor={$this->ref_cod_servidor}&professor=1&ref_cod_escola={$alocacao['ref_cod_escola']}&horario=S&ref_cod_disciplina={$alocacao['ref_cod_disciplina']}', 'nome')\" src=\"imagens/lupa.png\" ></span>",
+                  "<span name=\"ref_cod_servidor_substituto\" id=\"ref_cod_servidor_substituicao_{$key}\"><img border='0'  onclick=\"pesquisa_valores_popless('educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_substituto[{$key}]&campo2=ref_cod_servidor_substituto_{$key}_&ref_cod_instituicao={$this->ref_cod_instituicao}&dia_semana={$alocacao["dia_semana"]}&hora_inicial={$alocacao["hora_inicial"]}&hora_final={$alocacao["hora_final"]}&ref_cod_servidor={$this->ref_cod_servidor}&professor=1&ref_cod_escola={$alocacao['ref_cod_escola']}&horario=S&ref_cod_disciplina={$alocacao['ref_cod_disciplina']}&ref_cod_curso={$alocacao['ref_cod_curso']}', 'nome')\" src=\"imagens/lupa.png\" ></span>",
                   '', '', 'ref_cod_servidor_substituto');
               }
 
@@ -326,6 +328,12 @@ class indice extends clsCadastro {
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
+
+    $this->data_retorno = dataToBanco($this->data_retorno);
+    $this->data_saida = dataToBanco($this->data_saida);
+
+
+    // echo"<pre>";var_dump($this->data_retorno);die;
 
     $this->ref_cod_servidor = isset($_POST['ref_cod_servidor']) ?
       $_POST['ref_cod_servidor'] : NULL;
@@ -427,7 +435,7 @@ class indice extends clsCadastro {
 
     $obj = new clsPmieducarServidorAfastamento($this->ref_cod_servidor,
       $this->sequencial, $this->ref_cod_motivo_afastamento, $this->pessoa_logada,
-      NULL, NULL, NULL, $this->data_retorno, unserialize($this->data_saida), 0,
+      NULL, NULL, NULL, dataToBanco($this->data_retorno), unserialize($this->data_saida), 0,
       $this->ref_cod_instituicao);
 
     $editou = $obj->edita();

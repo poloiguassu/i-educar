@@ -1,44 +1,48 @@
 <?php
 
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
 /**
- * i-Educar - Sistema de gest�o escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itaja�
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
- * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
- * qualquer vers�o posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
- * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
- * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
- * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Cadastro
- * @since     Arquivo dispon�vel desde a vers�o 1.0.0
+ * @since     Arquivo disponível desde a versão 1.0.0
  * @version   $Id$
  */
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsPessoaFisica class.
  *
- * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Cadastro
- * @since     Classe dispon�vel desde a vers�o 1.0.0
+ * @since     Classe disponível desde a versão 1.0.0
  * @version   @@package_version@@
  */
 class clsPessoaFisica extends clsPessoaFj
@@ -68,6 +72,9 @@ class clsPessoaFisica extends clsPessoaFj
   var $cpf;
   var $ref_cod_religiao;
   var $tipo_endereco;
+  var $ativo;
+  var $data_exclusao;
+  var $zona_localizacao_censo;
 
   var $banco           = 'pmi';
   var $schema_cadastro = 'cadastro';
@@ -75,7 +82,7 @@ class clsPessoaFisica extends clsPessoaFj
   /**
    * Construtor.
    */
-  function  clsPessoaFisica($int_idpes = FALSE, $numeric_cpf = FALSE,
+  function __construct($int_idpes = FALSE, $numeric_cpf = FALSE,
     $date_data_nasc = FALSE, $str_sexo = FALSE, $int_idpes_mae = FALSE,
     $int_idpes_pai = FALSE)
   {
@@ -92,7 +99,9 @@ class clsPessoaFisica extends clsPessoaFj
 
     if (is_string($str_nome) && $str_nome != '') {
       $str_nome = str_replace(' ', '%', $str_nome);
-      $where   .= "{$whereAnd} nome ILIKE '%{$str_nome}%' ";
+      $str_nome = pg_escape_string($str_nome);
+
+      $where   .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = ' AND ';
     }
 
@@ -147,8 +156,7 @@ class clsPessoaFisica extends clsPessoaFj
 
   function lista($str_nome = FALSE, $numeric_cpf = FALSE, $inicio_limite = FALSE,
     $qtd_registros = FALSE, $str_orderBy = FALSE, $int_ref_cod_sistema = FALSE,
-    $int_idpes = FALSE
-  ) {
+    $int_idpes = FALSE, $ativo = 1) {
     $whereAnd = '';
     $where    = '';
 
@@ -156,14 +164,14 @@ class clsPessoaFisica extends clsPessoaFj
       $str_nome = addslashes($str_nome);
       $str_nome = str_replace(' ', '%', $str_nome);
 
-      $where   .= "{$whereAnd} nome ILIKE E'%{$str_nome}%' ";
+      $where   .= "{$whereAnd} translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = ' AND ';
     }
 
     if (is_string($numeric_cpf)) {
       $numeric_cpf = addslashes($numeric_cpf);
 
-      $where   .= "{$whereAnd} cpf ILIKE E'%{$numeric_cpf}%' ";
+      $where   .= "{$whereAnd} cpf::varchar ILIKE E'%{$numeric_cpf}%' ";
       $whereAnd = ' AND ';
     }
 
@@ -174,6 +182,11 @@ class clsPessoaFisica extends clsPessoaFj
 
     if (is_numeric($int_idpes)) {
       $where   .= "{$whereAnd} idpes = '$int_idpes'";
+      $whereAnd = ' AND ';
+    }
+
+    if (is_numeric($ativo)) {
+      $where   .= "{$whereAnd} ativo = $ativo";
       $whereAnd = ' AND ';
     }
 
@@ -298,6 +311,17 @@ class clsPessoaFisica extends clsPessoaFj
         $this->ref_cod_religiao         = $detalhe_fisica['ref_cod_religiao'];
         $this->sus                      = $detalhe_fisica['sus'];
         $this->nis_pis_pasep            = $detalhe_fisica['nis_pis_pasep'];
+        $this->ocupacao                 = $detalhe_fisica['ocupacao'];
+        $this->empresa                  = $detalhe_fisica['empresa'];
+        $this->ddd_telefone_empresa     = $detalhe_fisica['ddd_telefone_empresa'];
+        $this->telefone_empresa         = $detalhe_fisica['telefone_empresa'];
+        $this->pessoa_contato           = $detalhe_fisica['pessoa_contato'];
+        $this->renda_mensal             = $detalhe_fisica['renda_mensal'];
+        $this->data_admissao            = $detalhe_fisica['data_admissao'];
+        $this->falecido                 = $detalhe_fisica['falecido'];
+        $this->ativo                    = $detalhe_fisica['ativo'];
+        $this->data_exclusao            = $detalhe_fisica['data_exclusao'];
+        $this->zona_localizacao_censo   = $detalhe_fisica['zona_localizacao_censo'];
 
         $tupla['idpes'] = $this->idpes;
         $tupla[]        = & $tupla['idpes'];
@@ -371,6 +395,18 @@ class clsPessoaFisica extends clsPessoaFj
         $tupla['justificativa_provisorio'] = $this->justificativa_provisorio;
         $tupla[]                           = & $tupla['justificativa_provisorio'];
 
+        $tupla['falecido'] = $this->falecido;
+        $tupla[]           = & $tupla['falecido'];
+
+        $tupla['ativo'] = $this->ativo;
+        $tupla[] = & $tupla['ativo'];
+
+        $tupla['data_exclusao'] = $this->data_exclusao;
+        $tupla[] = & $tupla['data_exclusao'];
+
+        $tupla['zona_localizacao_censo'] = $this->zona_localizacao_censo;
+        $tupla[]                         = & $tupla['zona_localizacao_censo'];
+
         return $tupla;
       }
     }
@@ -412,6 +448,15 @@ class clsPessoaFisica extends clsPessoaFj
           $this->nome_responsavel         = $detalhe_fisica['nome_responsavel'];
           $this->justificativa_provisorio = $detalhe_fisica['justificativa_provisorio'];
           $this->cpf                      = $detalhe_fisica['cpf'];
+          $this->ocupacao                 = $detalhe_fisica['ocupacao'];
+          $this->empresa                  = $detalhe_fisica['empresa'];
+          $this->ddd_telefone_empresa     = $detalhe_fisica['ddd_telefone_empresa'];
+          $this->telefone_empresa         = $detalhe_fisica['telefone_empresa'];
+          $this->renda_mensal             = $detalhe_fisica['renda_mensal'];
+          $this->data_admissao            = $detalhe_fisica['data_admissao'];
+          $this->ativo                    = $detalhe_fisica['ativo'];
+          $this->data_exclusao            = $detalhe_fisica['data_exclusao'];
+          $this->zona_localizacao_censo   = $detalhe_fisica['zona_localizacao_censo'];
 
           $tupla['idpes'] = $this->idpes;
           $tupla[]        = & $tupla['idpes'];
@@ -482,6 +527,15 @@ class clsPessoaFisica extends clsPessoaFj
           $tupla['justificativa_provisorio'] = $this->justificativa_provisorio;
           $tupla[]                           = & $tupla['justificativa_provisorio'];
 
+          $tupla['ativo'] = $this->ativo;
+          $tupla[] = & $tupla['ativo'];
+
+          $tupla['data_exclusao'] = $this->data_exclusao;
+          $tupla[] = & $tupla['data_exclusao'];
+
+          $tupla['zona_localizacao_censo'] = $this->zona_localizacao_censo;
+          $tupla[] = & $tupla['zona_localizacao_censo'];
+
           return $tupla;
         }
       }
@@ -539,18 +593,16 @@ class clsPessoaFisica extends clsPessoaFj
   function excluir()
   {
     if ($this->idpes) {
+      $this->pessoa_logada = $_SESSION['id_pessoa'];
       $db  = new clsBanco();
-      $obj = new clsFuncionario($this->idpes);
+      $detalheAntigo = $this->detalheSimples();
+      $excluir = $db->Consulta('UPDATE cadastro.fisica SET ativo = 0 WHERE idpes = ' . $this->idpes);
 
-      if (! $obj->detalhe()) {
-        $db->Consulta('DELETE FROM cadastro.fone_pessoa WHERE idpes = ' . $this->idpes);
-        $db->Consulta('DELETE FROM cadastro.fisica WHERE idpes = ' . $this->idpes);
-        $db->Consulta('DELETE FROM cadastro.documento WHERE idpes = ' . $this->idpes);
-        $db->Consulta('DELETE FROM cadastro.endereco_pessoa WHERE idpes = ' . $this->idpes);
-        $db->Consulta('DELETE FROM cadastro.endereco_externo WHERE idpes = ' . $this->idpes);
-        $db->Consulta('DELETE FROM cadastro.documento WHERE idpes = ' . $this->idpes);
-        $db->Consulta('DELETE FROM cadastro.documento WHERE idpes = ' . $this->idpes);
-        $db->Consulta('DELETE FROM cadastro.pessoa WHERE idpes = ' . $this->idpes);
+      if($excluir){
+        $db->Consulta("UPDATE cadastro.fisica SET ref_usuario_exc = $this->pessoa_logada, data_exclusao = NOW() WHERE idpes = $this->idpes");
+
+        $auditoria = new clsModulesAuditoriaGeral("fisica", $this->pessoa_logada, $this->idpes);
+        $auditoria->exclusao($detalheAntigo, $this->detalheSimples());
       }
     }
   }
@@ -560,5 +612,35 @@ class clsPessoaFisica extends clsPessoaFj
     if (is_numeric($endereco)) {
       $this->tipo_endereco = $endereco;
     }
+  }
+
+  function getNomeUsuario(){
+    if($this->idpes){
+      $db = new clsBanco();
+
+      $db->Consulta("SELECT pessoa.nome, funcionario.matricula, usuario.cod_usuario
+                       FROM cadastro.fisica
+                 INNER JOIN pmieducar.usuario ON (fisica.ref_usuario_exc = usuario.cod_usuario)
+                 INNER JOIN portal.funcionario ON (usuario.cod_usuario = funcionario.ref_cod_pessoa_fj)
+                 INNER JOIN cadastro.pessoa ON (pessoa.idpes = funcionario.ref_cod_pessoa_fj)
+                      WHERE fisica.idpes = $this->idpes");
+      if($db->ProximoRegistro()){
+        $tupla = $db->Tupla();
+        return $tupla['matricula'];
+      }
+    }
+  }
+
+    function detalheSimples()
+  {
+    if (is_numeric($this->idpes)) {
+      $sql = "SELECT * FROM cadastro.fisica WHERE idpes = '{$this->idpes}' AND ativo = 1;";
+
+      $db = new clsBanco();
+      $db->Consulta($sql);
+      $db->ProximoRegistro();
+      return $db->Tupla();
+    }
+    return FALSE;
   }
 }

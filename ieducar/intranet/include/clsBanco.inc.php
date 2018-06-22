@@ -46,7 +46,7 @@ class clsBanco extends clsBancoSQL_
   /**
    * Construtor (PHP 4).
    */
-  public function clsBanco($strDataBase = FALSE)
+  public function __construct($strDataBase = FALSE)
   {
     parent::__construct($strDataBase);
 
@@ -114,6 +114,7 @@ class clsBanco extends clsBancoSQL_
     }
     return $db;
   }
+
 
   /**
    * Retorna um valor formatado de acordo com o tipo output do tipo booleano

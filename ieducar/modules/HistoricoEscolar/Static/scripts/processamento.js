@@ -1,6 +1,7 @@
 (function($){
 
   $(function(){
+    $("tr#tr_alunos_dependencia td:first-child").width("455px");
     var $formFilter = $('#formcadastro');
     var $submitButton = $('#botao_busca');
     var $resultTable = $('#form_resultado .tablelistagem').addClass('horizontal-expand');
@@ -44,7 +45,7 @@
 
     function resetAutoCompleteNomeDisciplinaEvent($element){
       var handleSelect = function(event, ui){
-        $j(event.target).val(ui.item.label);
+        $(event.target).val(ui.item.label);
         return false;
       };
 
@@ -52,7 +53,7 @@
         var searchPath = '/module/Api/ComponenteCurricular?oper=get&resource=componente_curricular-search';
         var params     = { query : request.term };
 
-        $j.get(searchPath, params, function(dataResponse) {
+        $.get(searchPath, params, function(dataResponse) {
           simpleSearch.handleSearch(dataResponse, response);
         });
       };
@@ -135,13 +136,13 @@
                               .attr('id', 'search-details')
                               .addClass('styled')
                               .addClass('horizontal-expand')
-                              .addClass('center')
+                              .addClass('left')
                               .hide()
                               .prependTo($formFilter.parent()).hide();
 
     var $feedbackMessages = $('<div />').attr('id', 'feedback-messages').appendTo($formFilter.parent());
 
-    var $additionalFields = $j('#resource-options select, #resource-options input[type="text"]');
+    var $additionalFields = $('#resource-options select, #resource-options input[type="text"]');
     fixupFieldsWidth($additionalFields);
 
     //url builders
@@ -199,7 +200,8 @@
           serie_id : $('#ref_cod_serie').val(),
           turma_id : $('#ref_cod_turma').val(),
           ano : $('#ano').val(),
-          etapa : $('#etapa').val()
+          etapa : $('#etapa').val(),
+          dependencia : document.getElementById("alunos_dependencia").checked ? 't' : 'f'
         };
 
         return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
@@ -242,7 +244,7 @@
     function handleDelete(dataResponse){
       try{
         var $checkbox = $('matricula-' + dataResponse.matricula_id);
-        var $targetElement = $j('#matricula-'+dataResponse.matricula_id).closest('tr').first();
+        var $targetElement = $('#matricula-'+dataResponse.matricula_id).closest('tr').first();
         handleMessages(dataResponse.msgs, $targetElement);
         updateFieldSituacao(dataResponse.link_to_historico, dataResponse.matricula_id, dataResponse.situacao_historico);
       }
@@ -274,9 +276,9 @@
       $('<th />').html('Ano').appendTo($linha);
       $('<th />').html('Escola').appendTo($linha);
       $('<th />').html('Curso').appendTo($linha);
-      $('<th />').html('Serie').appendTo($linha);
+      $('<th />').html('S&eacute;rie').appendTo($linha);
       $('<th />').html('Turma').appendTo($linha);
-      $('<th />').html('Matricula').appendTo($linha);
+      $('<th />').html('Matr&iacute;cula').appendTo($linha);
 
       $linha.appendTo($tableSearchDetails);
 
@@ -286,7 +288,7 @@
 
       //field escola pode ser diferente de select caso usuario comum
       var $htmlEscolaField = $('#ref_cod_escola').children("[selected='selected']").html() ||
-                             $j('#tr_nm_escola span:last').html();
+                             $('#tr_nm_escola span:last').html();
       $('<td />').html(safeToUpperCase($htmlEscolaField)).appendTo($linha);
 
       $('<td />').html(safeToUpperCase($('#ref_cod_curso').children("[value!=''][selected='selected']").html()  || 'Todos')).appendTo($linha);
@@ -344,14 +346,14 @@
         {
            $('<td />')
             .html('As matriculas n&#227;o poderam ser recuperadas, verifique as mensagens de erro ou tente <a alt="Recarregar página" href="/" style="text-decoration:underline">recarregar</a>.')
-            .addClass('center')
+            .addClass('left')
             .appendTo($('<tr />').appendTo($resultTable));
         }
         else if (dataResponse.matriculas.length < 1)
         {
            $('<td />')
             .html('Sem matriculas em andamento nesta turma.')
-            .addClass('center')
+            .addClass('left')
             .appendTo($('<tr />').appendTo($resultTable));
         }
         else
@@ -363,7 +365,7 @@
           $('<th />').html('Curso').appendTo($linha);
           $('<th />').html(safeUtf8Decode('Série')).appendTo($linha);
           $('<th />').html('Turma').appendTo($linha);
-          $('<th />').html('Matricula').appendTo($linha);
+          $('<th />').html('Matr&iacute;cula').appendTo($linha);
           $('<th />').html('Aluno').appendTo($linha);
           $('<th />').html('Situa&#231;&#227;o').appendTo($linha);
           $linha.appendTo($resultTable);
@@ -380,16 +382,16 @@
                             .data('matricula_id', value.matricula_id);
 
             var $linha = $('<tr />');
-            $('<td />').html($checkbox).addClass('center').appendTo($linha);
-            $('<td />').html(value.nome_curso).addClass('center').appendTo($linha);
-            $('<td />').html(safeUtf8Decode(value.nome_serie)).addClass('center').appendTo($linha);
-            $('<td />').html(safeUtf8Decode(value.nome_turma)).addClass('center').appendTo($linha);
-            $('<td />').html(value.matricula_id).addClass('center').appendTo($linha);
+            $('<td />').html($checkbox).addClass('left').appendTo($linha);
+            $('<td />').html(value.nome_curso).addClass('left').appendTo($linha);
+            $('<td />').html(safeUtf8Decode(value.nome_serie)).addClass('left').appendTo($linha);
+            $('<td />').html(safeUtf8Decode(value.nome_turma)).addClass('left').appendTo($linha);
+            $('<td />').html(value.matricula_id).addClass('left').appendTo($linha);
             $('<td />').html(value.aluno_id + " - " + safeToUpperCase(value.nome)).appendTo($linha);
 
             var situacaoHistorico = safeUtf8Decode(value.situacao_historico);
             var $htmlSituacao = getLinkToHistorico(value.link_to_historico, situacaoHistorico);
-            $('<td />').html($htmlSituacao).data('situacao_historico', situacaoHistorico).attr('id', 'situacao-matricula-' + value.matricula_id).addClass('situacao').addClass('center').appendTo($linha);
+            $('<td />').html($htmlSituacao).data('situacao_historico', situacaoHistorico).attr('id', 'situacao-matricula-' + value.matricula_id).addClass('situacao').addClass('left').appendTo($linha);
 
             $linha.fadeIn('slow').appendTo($resultTable);
           });//fim each matriculas
@@ -423,6 +425,7 @@
 
     //change submit button
     var onClickSearchEvent = function(event){
+
       if (validatesPresenseOfValueInRequiredFields())
       {
         matriculasSearchOptions.url = getResourceUrlBuilder.buildUrl(ApiUrlBase, 'matriculas', {matricula_id : $('#ref_cod_matricula').val()});
@@ -441,6 +444,7 @@
 
         resetAutoCompleteNomeDisciplinaEvent($disciplinasManualTable.find('input.nome'));
       }
+      updateAreaConhecimento();
     };
     $submitButton.val('Carregar');
     $submitButton.attr('onclick', '');
@@ -530,6 +534,8 @@
           dias_letivos : $('#dias-letivos').val(),
           situacao : $('#situacao').val(),
           extra_curricular : $('#extra-curricular').is(':checked') ? 1 : 0,
+          media_area_conhecimento : $('#media-area-conhecimento').is(':checked') ? 1 : 0,
+          processar_media_geral : $('#processar-media-geral').is(':checked') ? 1 : 0,
           grade_curso_id : $('#grade-curso').val(),
           percentual_frequencia : percentualFrequencia,
           notas : notas,
@@ -538,7 +544,11 @@
           registro : $('#registro').val(),
           livro : $('#livro').val(),
           folha : $('#folha').val(),
-          disciplinas : disciplinas
+          disciplinas : disciplinas,
+          turma_id : $('#ref_cod_turma').val(),
+          dependencia : document.getElementById("alunos_dependencia").checked ? 't' : 'f',
+          posicao : $('#posicao').val(),
+          area_conhecimento : $('#area-conhecimento').val()
         },
         success : function(dataResponse){
           afterChangeResource($resourceElement, postProcessamento);
@@ -580,7 +590,7 @@
     function handlePostProcessamento(dataResponse){
       try{
         var $checkbox = $('matricula-' + dataResponse.matricula_id);
-        var $targetElement = $j('#matricula-'+dataResponse.matricula_id).closest('tr').first();
+        var $targetElement = $('#matricula-'+dataResponse.matricula_id).closest('tr').first();
         handleMessages(dataResponse.msgs, $targetElement);
         updateFieldSituacao(dataResponse.link_to_historico, dataResponse.matricula_id, dataResponse.situacao_historico);
       }
@@ -646,4 +656,83 @@
     $('#tableLocalizacao').prependTo($formFilter.parent());
 
   });
+
+  $("#alunos_dependencia").click(function(){
+    if ((this).checked) {
+      $('.tr_posicao').hide();
+    } else{
+      $('.tr_posicao').show();
+    }
+  });
+
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    };
+
+    function getAreaConhecimento(response) {
+      var areaConhecimentoField = $('#area-conhecimento');
+      var selectOptions = {};
+      var areasConhecimentoInstituicao = response['areas'];
+      var areasConhecimentoSerie = response.options;
+
+      if (areasConhecimentoInstituicao) {
+        areasConhecimentoInstituicao.forEach((area) => {
+          selectOptions[area.id] = area.nome
+        });
+      }
+
+      if (areasConhecimentoSerie) {
+        selectOptions = areasConhecimentoSerie;
+      }
+
+      updateChozen(areaConhecimentoField, selectOptions);
+    }
+
+    function updateAreaConhecimento() {
+      var instituicao_id  = getUrlParameter('instituicao_id');
+      var serie_id  = getUrlParameter('serie_id');
+      var url = getResourceUrlBuilder.buildUrl('/module/Api/AreaConhecimento', 'areas-de-conhecimento', {
+        instituicao_id : instituicao_id
+      });
+
+      if (serie_id != '') {
+        var url = getResourceUrlBuilder.buildUrl('/module/Api/AreaConhecimento', 'areaconhecimento-serie', {
+          serie_id : serie_id
+        });
+      }
+
+      var options = {
+        url : url,
+        dataType : 'json',
+        success  : getAreaConhecimento
+      };
+
+      getResources(options);
+    }
+
+
+    $j('#media-area-conhecimento').change(function() {
+        $j('#tr-area-conhecimento').show();
+        $j('#area-conhecimento').chosen();
+
+        if($j('#media-area-conhecimento').is(':checked') == true){
+            $j('#area-conhecimento').chosen('destroy');
+            $j('#tr-area-conhecimento').hide();
+            $j('#area-conhecimento option:selected').removeAttr("selected");
+        }
+    });
+
+    $('#area-conhecimento').chosen();
+
 })(jQuery);

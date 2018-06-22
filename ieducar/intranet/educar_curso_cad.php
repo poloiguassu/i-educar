@@ -1,5 +1,8 @@
 <?php
 
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -32,6 +35,9 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'lib/Portabilis/Utils/Database.php';
+require_once 'Portabilis/View/Helper/Application.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsIndexBase class.
@@ -94,6 +100,7 @@ class indice extends clsCadastro
   var $curso_sem_avaliacao  = true;
 
   var $multi_seriado;
+  var $modalidade_curso;
 
   function Inicializar()
   {
@@ -131,8 +138,8 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "{$nomeMenu} curso"             
+         "educar_index.php"                  => "Escola",
+         ""        => "{$nomeMenu} curso"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -271,7 +278,7 @@ class indice extends clsCadastro
     // Outros campos
     $this->campoTexto('nm_curso', 'Curso', $this->nm_curso, 30, 255, TRUE);
 
-    $this->campoTexto('sgl_curso', 'Sigla Curso', $this->sgl_curso, 15, 15, TRUE);
+    $this->campoTexto('sgl_curso', 'Sigla Curso', $this->sgl_curso, 15, 15, false);
 
     $this->campoNumero('qtd_etapas', 'Quantidade Etapas', $this->qtd_etapas, 2, 2, TRUE);
 
@@ -362,6 +369,21 @@ class indice extends clsCadastro
     // Público alvo
     $this->campoMemo('publico_alvo', 'P&uacute;blico Alvo', $this->publico_alvo,
       60, 5, FALSE);
+
+    $resources = array(null => 'Selecione',
+                       1 => Portabilis_String_Utils::toLatin1('Ensino regular'),
+                       2 => Portabilis_String_Utils::toLatin1('Educação especial'),
+                       3 => Portabilis_String_Utils::toLatin1('Educação jovens e adultos'),
+                       4 => Portabilis_String_Utils::toLatin1('Educação profissional'));
+
+    $options = array('label' => Portabilis_String_Utils::toLatin1('Modalidade do curso'), 'resources' => $resources, 'value' => $this->modalidade_curso);
+    $this->inputsHelper()->select('modalidade_curso', $options);
+
+    $helperOptions = array('objectName' => 'etapacurso');
+    $options       = array('label' => 'Etapas que o curso contêm', 'size' => 50, 'required' => false,
+                           'options' => array('value' => null));
+
+    $this->inputsHelper()->multipleSearchEtapacurso('', $options, $helperOptions);
   }
 
   function Novo()
@@ -386,10 +408,17 @@ class indice extends clsCadastro
         $this->ato_poder_publico, NULL, $this->objetivo_curso,
         $this->publico_alvo, NULL, NULL, 1, NULL, $this->ref_cod_instituicao,
         $this->padrao_ano_escolar, $this->hora_falta, NULL, $this->multi_seriado);
+      $obj->modalidade_curso = $this->modalidade_curso;
 
-      $cadastrou = $obj->cadastra();
+      $this->cod_curso = $cadastrou = $obj->cadastra();
       if ($cadastrou) {
+        $curso = new clsPmieducarCurso($this->cod_curso);
+        $curso = $curso->detalhe();
 
+        $auditoria = new clsModulesAuditoriaGeral("curso", $this->pessoa_logada, $this->cod_curso);
+        $auditoria->inclusao($curso);
+
+        $this->gravaEtapacurso($cadastrou);
         $this->habilitacao_curso = unserialize(urldecode($this->habilitacao_curso));
 
         if ($this->habilitacao_curso) {
@@ -442,9 +471,17 @@ class indice extends clsCadastro
         $this->objetivo_curso, $this->publico_alvo, NULL, NULL, 1,
         $this->pessoa_logada, $this->ref_cod_instituicao,
         $this->padrao_ano_escolar, $this->hora_falta, NULL, $this->multi_seriado);
+      $obj->modalidade_curso = $this->modalidade_curso;
 
+      $detalheAntigo = $obj->detalhe();
       $editou = $obj->edita();
       if ($editou) {
+
+        $detalheAtual = $obj->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("curso", $this->pessoa_logada, $this->cod_curso);
+        $auditoria->alteracao($detalheAntigo, $detalheAtual);
+
+        $this->gravaEtapacurso($this->cod_curso);
         $this->habilitacao_curso = unserialize(urldecode($this->habilitacao_curso));
         $obj  = new clsPmieducarHabilitacaoCurso(NULL, $this->cod_curso);
         $excluiu = $obj->excluirTodos();
@@ -490,8 +527,12 @@ class indice extends clsCadastro
       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
       NULL, NULL, 0, $this->pessoa_logada);
 
+    $curso = $obj->detalhe();
     $excluiu = $obj->excluir();
     if ($excluiu) {
+
+      $auditoria = new clsModulesAuditoriaGeral("curso", $this->pessoa_logada, $this->cod_curso);
+      $auditoria->exclusao($curso);
       $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
       header("Location: educar_curso_lst.php");
       die();
@@ -500,6 +541,15 @@ class indice extends clsCadastro
     $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
     echo "<!--\nErro ao excluir clsPmieducarCurso\nvalores obrigat&oacute;rios\nif( is_numeric( $this->cod_curso ) && is_numeric( $this->pessoa_logada ) )\n-->";
     return FALSE;
+  }
+
+  function gravaEtapacurso($cod_curso){
+    Portabilis_Utils_Database::fetchPreparedQuery('DELETE FROM etapas_curso_educacenso WHERE curso_id = $1', array('params' => array($cod_curso)));
+    foreach ($this->getRequest()->etapacurso as $etapaId) {
+      if (! empty($etapaId)) {
+        Portabilis_Utils_Database::fetchPreparedQuery('INSERT INTO etapas_curso_educacenso VALUES ($1 , $2)', array('params' => array($etapaId, $cod_curso) ));
+      }
+    }
   }
 }
 
@@ -652,4 +702,51 @@ document.getElementById('ref_cod_instituicao').onchange = function()
     $('img_tipo_ensino').style.display    = '';
   }
 }
+
+function fixupEtapacursoSize(){
+  $j('.search-field input').css('height', '30px')
+}
+
+  $etapacurso = $j('#etapacurso');
+
+  $etapacurso.trigger('chosen:updated');
+  var testezin;
+
+var handleGetEtapacurso = function(dataResponse) {
+  testezin = dataResponse['etapacurso'];
+
+  $j.each(dataResponse['etapacurso'], function(id, value) {
+
+    $etapacurso.children("[value=" + value + "]").attr('selected', '');
+  });
+
+  $etapacurso.trigger('chosen:updated');
+}
+
+var getEtapacurso = function() {
+
+  if ($j('#cod_curso').val()!='') {
+
+    var additionalVars = {
+      curso_id : $j('#cod_curso').val(),
+    };
+
+    var options = {
+      url      : getResourceUrlBuilder.buildUrl('/module/Api/etapacurso', 'etapacurso', additionalVars),
+      dataType : 'json',
+      data     : {},
+      success  : handleGetEtapacurso,
+    };
+
+    getResource(options);
+  }
+}
+
+getEtapacurso();
+
+$j(document).ready( function(){
+
+  fixupEtapacursoSize();
+});
+
 </script>

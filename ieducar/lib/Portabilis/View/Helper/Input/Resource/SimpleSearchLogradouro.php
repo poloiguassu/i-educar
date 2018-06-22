@@ -28,9 +28,11 @@
  * @since     Arquivo disponível desde a versão ?
  * @version   $Id$
  */
+
 require_once 'lib/Portabilis/View/Helper/Input/SimpleSearch.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/String/Utils.php';
+
 /**
  * Portabilis_View_Helper_Input_SimpleSearchLogradouro class.
  *
@@ -42,12 +44,16 @@ require_once 'lib/Portabilis/String/Utils.php';
  * @version   @@package_version@@
  */
 class Portabilis_View_Helper_Input_Resource_SimpleSearchLogradouro extends Portabilis_View_Helper_Input_SimpleSearch {
+
+
   public function simpleSearchLogradouro($attrName, $options = array()) {
     $defaultOptions = array('objectName'    => 'logradouro',
                             'apiController' => 'Logradouro',
                             'apiResource'   => 'logradouro-search',
                             'showIdOnValue' => false);
+
     $options        = $this->mergeOptions($options, $defaultOptions);
+
     parent::simpleSearch($options['objectName'], $attrName, $options);
   }
   
@@ -64,9 +70,11 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchLogradouro extends Porta
       return Portabilis_String_Utils::toLatin1($tipo.' '.$nome, array('transform' => true, 'escape' => false));
     }
   }  
+
   protected function inputPlaceholder($inputOptions) {
     return 'Informe o nome do logradouro';
   }
+
   protected function loadAssets() {
     $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchLogradouro.js';
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);

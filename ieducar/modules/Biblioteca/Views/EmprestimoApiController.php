@@ -84,6 +84,35 @@ class EmprestimoApiController extends ApiCoreController
     return true;
   }
 
+  protected function validateLimiteEmprestimoCliente() {
+
+    $objExemplar = new clsPmieducarExemplarEmprestimo();
+    $exemplaresEmprestadosDoCliente = $objExemplar->lista(null,
+                                                          null,
+                                                          null,
+                                                          $this->getRequest()->cliente_id,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          null,
+                                                          false,
+                                                          $this->getRequest()->biblioteca_id);
+    $qtdExemplaresEmprestadosDoCliente = count($exemplaresEmprestadosDoCliente);
+
+    $objBiblioteca = new clsPmieducarBiblioteca($this->getRequest()->biblioteca_id);
+    $detBiblioteca = $objBiblioteca->detalhe();
+    $limiteEmprestimoBiblioteca = $detBiblioteca['max_emprestimo'];
+
+    if ($qtdExemplaresEmprestadosDoCliente >= $limiteEmprestimoBiblioteca) {
+        $this->messenger->append("Empréstimo não realizado, cliente já atingiu o máximo de empréstimos disponíveis.", 'error');
+        return false;
+    }
+
+    return true;
+  }
+
 
   protected function validatesSituacaoExemplarIsIn($expectedSituacoes) {
     if (! is_array($expectedSituacoes))
@@ -116,7 +145,8 @@ class EmprestimoApiController extends ApiCoreController
     return $this->validatesPresenceOf(array('exemplar_id'))
            && $this->validatesExistenceOfExemplar()
            && $this->validatesClienteIsNotSuspenso()
-           && $this->validatesSituacaoExemplarIsIn('disponivel');
+           && $this->validatesSituacaoExemplarIsIn('disponivel')
+           && $this->validateLimiteEmprestimoCliente();
 
            /*
             #TODO validar:
@@ -146,16 +176,16 @@ class EmprestimoApiController extends ApiCoreController
       $id = $this->getRequest()->cliente_id;
 
     // load cliente
-		$cliente = new clsPmieducarCliente($id);
-		$cliente = $cliente->detalhe();
+    $cliente = new clsPmieducarCliente($id);
+    $cliente = $cliente->detalhe();
 
     if ($cliente) {
       $cliente = Portabilis_Array_Utils::filter($cliente, array('cod_cliente' => 'id',
                                                                 'ref_idpes'   => 'pessoa_id'));
 
       // load pessoa
-		  $pessoa          = new clsPessoa_($cliente['pessoa_id']);
-		  $pessoa          = $pessoa->detalhe();
+      $pessoa          = new clsPessoa_($cliente['pessoa_id']);
+      $pessoa          = $pessoa->detalhe();
       $cliente['nome'] = $this->toUtf8($pessoa["nome"]);
 
       // load suspensao
@@ -174,7 +204,7 @@ class EmprestimoApiController extends ApiCoreController
     $exemplarTipoId     = $acervo['exemplar_tipo_id'];
 
     // obtem id tipo de cliente
-		$clienteTipoCliente = new clsPmieducarClienteTipoCliente();
+    $clienteTipoCliente = new clsPmieducarClienteTipoCliente();
     $clienteTipoCliente = $clienteTipoCliente->lista(null,
                                                      $this->getRequest()->cliente_id,
                                                      null,
@@ -188,13 +218,13 @@ class EmprestimoApiController extends ApiCoreController
     $clienteTipoId           = $clienteTipoCliente[0]['ref_cod_cliente_tipo'];
 
     // obtem quantidade dias emprestimo
-		$clienteTipoExemplarTipo = new clsPmieducarClienteTipoExemplarTipo($clienteTipoId, $exemplarTipoId);
-		$clienteTipoExemplarTipo = $clienteTipoExemplarTipo->detalhe();
+    $clienteTipoExemplarTipo = new clsPmieducarClienteTipoExemplarTipo($clienteTipoId, $exemplarTipoId);
+    $clienteTipoExemplarTipo = $clienteTipoExemplarTipo->detalhe();
 
     if (! $clienteTipoExemplarTipo || ! is_numeric($clienteTipoExemplarTipo["dias_emprestimo"]))
       throw new CoreExt_Exception("Aparentemente não foi definido a quantidade de dias de emprestimo para o tipo de cliente '$clienteTipoId' e tipo de exemplar '$exemplarTipoId'.");
 
-		return $clienteTipoExemplarTipo["dias_emprestimo"];
+    return $clienteTipoExemplarTipo["dias_emprestimo"];
   }
 
 
@@ -208,7 +238,7 @@ class EmprestimoApiController extends ApiCoreController
       list($diaInicio, $mesInicio, $anoInicio) = explode("/", $dataInicio);
       $dataInicio = "$mesInicio/$diaInicio/$anoInicio";
     }
-   
+
     // soma dias emprestimo
     $date = date('Y-m-d', strtotime("+$qtdDiasEmprestimo days", strtotime($dataInicio)));
 
@@ -267,8 +297,8 @@ class EmprestimoApiController extends ApiCoreController
 
   protected function loadReservasForExemplar($exemplar, $clienteId = null, $reload = false) {
     if ($reload || ! isset($this->_reservas)) {
-		  $reservas = new clsPmieducarReservas();
-		  $reservas = $reservas->lista(null,
+      $reservas = new clsPmieducarReservas();
+      $reservas = $reservas->lista(null,
                                    null,
                                    null,
                                    $clienteId,
@@ -341,7 +371,7 @@ class EmprestimoApiController extends ApiCoreController
                                      $this->getRequest()->escola_id);
 
     if($emprestimo) {
-  	  $emprestimo = array_shift($emprestimo);
+      $emprestimo = array_shift($emprestimo);
       $emprestimo = Portabilis_Array_Utils::filter($emprestimo, array('cod_emprestimo'  => 'id',
                                                                       'data_retirada'   => 'data',
                                                                       'ref_cod_cliente' => 'cliente_id'));
@@ -414,7 +444,7 @@ class EmprestimoApiController extends ApiCoreController
       $exemplar = $this->loadExemplar();
 
     if ($exemplar['situacao']['flag'] == 'reservado')
-      $exemplar['situacao']['flag'] = $this->validateReservaOfExemplar($exemplar);    
+      $exemplar['situacao']['flag'] = $this->validateReservaOfExemplar($exemplar);
 
     return $exemplar['situacao'];
   }
@@ -425,13 +455,14 @@ class EmprestimoApiController extends ApiCoreController
     if (is_null($exemplar))
       $exemplar = $this->loadExemplar();
 
+
     $reservas = $this->loadReservasForExemplar($exemplar);
     $cont = 0;
     $clientePossuiReserva = false;
     $codReserva = 0;
     if (is_array($reservas) && count($reservas)){
       foreach ($reservas as $registro) {
-        $cont;
+        $cont++;
         if ($registro['cliente_id'] == $this->getRequest()->cliente_id){
           $clientePossuiReserva = true;
           $codReserva = $registro['id'];
@@ -447,15 +478,15 @@ class EmprestimoApiController extends ApiCoreController
         $return = 'disponivel';
       }else{ 
 
-        $this->messenger->append("Outros clientes já haviam reservado o exemplar anteriormente.".$cont, 'success');
+        $this->messenger->append("Outros clientes já haviam reservado o exemplar.", 'error');
         $return = 'reservado';
       }
     }else if($cont>0){
-      $this->messenger->append("Outros clientes já haviam reservado o exemplar.", 'success');
+      $this->messenger->append("Outros clientes já haviam reservado o exemplar.", 'error');
       $return = 'reservado';
     }
-    
-    return $return;
+
+    return $return;      
   }
 
 
@@ -527,7 +558,7 @@ class EmprestimoApiController extends ApiCoreController
 
   protected function loadExemplares($reload = false, $id = null) {
     if ($reload || ! isset($this->_exemplares)) {
-		  $exemplares = new clsPmieducarExemplar();
+      $exemplares = new clsPmieducarExemplar();
 
       // filtra por acervo_id e/ou tombo_exemplar (caso tenha recebido tais parametros)
       $exemplares = $exemplares->lista($id,
@@ -650,12 +681,20 @@ class EmprestimoApiController extends ApiCoreController
     $exemplar->ref_cod_situacao = $newSituacao['id'];
     $exemplar->ref_usuario_exc  = $this->getSession()->id_pessoa;
 
-		return $exemplar->edita();
+    return $exemplar->edita();
   }
 
 
   protected function postEmprestimo() {
     if ($this->canPostEmprestimo()) {
+      $emprestimo = new clsPmieducarExemplarEmprestimo();
+      if ($this->verificaEmprestimoEmAtraso($emprestimo)){
+        $this->messenger->append("Operação não realizada, pois o cliente possui empréstimos em atraso de devolução.", 'error');
+        return;
+      }
+      $emprestimo->ref_usuario_cad  = $this->getSession()->id_pessoa;
+      $emprestimo->ref_cod_cliente  = $this->getRequest()->cliente_id;
+      $emprestimo->ref_cod_exemplar = $this->getRequest()->exemplar_id;
       // altera situacao exemplar para emprestado
       $situacaoEmprestimo = $this->loadSituacaoExemplar($permiteEmprestimo = false, $padrao = null, $emprestada = true);
 
@@ -665,12 +704,7 @@ class EmprestimoApiController extends ApiCoreController
         $this->messenger->append("Não foi encontrado uma situação cadastrada para emprestimo.", 'error');
 
       // grava emprestimo
-		  if(! $this->messenger->hasMsgWithType('error')) {
-        $emprestimo                   = new clsPmieducarExemplarEmprestimo();
-        $emprestimo->ref_usuario_cad  = $this->getSession()->id_pessoa;
-        $emprestimo->ref_cod_cliente  = $this->getRequest()->cliente_id;
-        $emprestimo->ref_cod_exemplar = $this->getRequest()->exemplar_id;
-
+      if(! $this->messenger->hasMsgWithType('error')) {
         if ($emprestimo->cadastra())
           $this->messenger->append("Emprestimo realizado com sucesso.", 'success');
         else
@@ -679,6 +713,17 @@ class EmprestimoApiController extends ApiCoreController
     }
 
     $this->appendResponse('exemplar', $this->loadExemplar($reload = true));
+  }
+
+  protected function verificaEmprestimoEmAtraso($emprestimo){
+    $emprestimo->em_atraso = true;
+    $emprestimosEmAtraso = $emprestimo->lista(null, null, null, $this->getRequest()->cliente_id);
+    foreach ($emprestimosEmAtraso as $emprestimo){
+      if (dbBool($emprestimo['bloqueia_emprestimo_em_atraso'])){
+        return $emprestimo;
+      }
+    }
+    return;
   }
 
 
@@ -694,7 +739,7 @@ class EmprestimoApiController extends ApiCoreController
         $this->messenger->append("Não foi encontrado uma situação padrão cadastrada para exemplar disponivel.", 'error');
 
       // grava emprestimo
-		  if(! $this->messenger->hasMsgWithType('error')) {
+      if(! $this->messenger->hasMsgWithType('error')) {
 
         $_emprestimo                        = $this->loadEmprestimoForExemplar();
         $emprestimo                         = new clsPmieducarExemplarEmprestimo();

@@ -47,7 +47,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Servidor Substituição');
+    $this->SetTitulo($this->_instituicao . ' Servidores - Servidor Substituição');
     $this->processoAp = 635;
     $this->addEstilo('localizacaoSistema');
   }
@@ -148,10 +148,10 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "Substituir servidor"             
+         "educar_servidores_index.php"       => "Servidores",
+         ""        => "Substituir servidor"
     ));
-    $this->enviaLocalizacao($localizacao->montar());     
+    $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
   }
@@ -175,10 +175,9 @@ class indice extends clsCadastro
       }
 
       if ($this->ref_cod_servidor) {
-        $objTemp = new clsFuncionario($this->ref_cod_servidor);
-        $detalhe = $objTemp->detalhe();
-        $detalhe = $detalhe['idpes']->detalhe();
-        $nm_servidor = $detalhe['nome'];
+        $objPessoa     = new clsPessoa_($this->ref_cod_servidor);
+        $detalhePessoa = $objPessoa->detalhe();
+        $nm_servidor = $detalhePessoa['nome'];
       }
     }
 
@@ -188,7 +187,7 @@ class indice extends clsCadastro
     $this->campoOculto('professor',$this->professor);
 
     $url = sprintf(
-      'educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_todos&campo2=ref_cod_servidor_todos_&ref_cod_instituicao=%d&ref_cod_servidor=%d&tipo=livre&professor=%d',
+      'educar_pesquisa_servidor_lst.php?campo1=ref_cod_servidor_todos_&campo2=ref_cod_servidor_todos&ref_cod_instituicao=%d&ref_cod_servidor=%d&tipo=livre&professor=%d',
       $this->ref_ref_cod_instituicao, $this->ref_cod_servidor, $this->professor
     );
 

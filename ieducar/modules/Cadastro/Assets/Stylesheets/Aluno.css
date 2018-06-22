@@ -14,8 +14,15 @@
   cursor: pointer;
 }
 
-
 #deficiencias_chzn ul {
+  width: 307px;
+}
+
+#beneficios_chzn ul {
+  width: 307px;
+}
+
+#beneficios {
   width: 307px;
 }
 
@@ -73,7 +80,7 @@
   top: 2px;
   width: 100px;
   height: 25px;
-  background-color: #e4e9ed;
+  background-color: #f5f9fd;
   text-align: center;
   cursor: pointer;
 }
@@ -97,7 +104,7 @@
   top: 3px;
   width: 100px;
   height: 25px;
-  background-color: #e4e9ed;
+  background-color: #f5f9fd;
   text-align: center;
   font-weight: bold;
 }
@@ -140,6 +147,7 @@
   font-size: 11px;
 }
 
+
 /*  MODAL TESTE :p
 
 #dialog-form-pessoa-aluno { font-size: 62.5%; }
@@ -164,8 +172,8 @@
 
 .ui-button span{
 
-  color: #495C67 !important;
-  border: 1px solid #495C67 !important;
+  color: #ffffff ;
+  border: 1px solid #495C67;
 
 }
 
@@ -191,10 +199,10 @@ tr td:first-child legend{
 }
 
 .ui-button-text {
-   font-size: 12px !important;
+   font-size: 13px !important;
 }
 
-div p a{
+div p a{;
   color: blue !important;
   cursor: pointer;
 }
@@ -211,4 +219,18 @@ div p a{
 
 .ui-dialog-content, .ui-widget-content{
   padding: 0px !important;
+}
+.select {
+  border: 1px solid #ffffff; background: #ffffff; color: #000000;
+}
+input{
+  font-size: 11px;
+}
+
+#data_emissao_rg, #uf_emissao_rg {
+  width: 135px !important;
+}
+
+#orgao_emissao_rg {
+  width: 184px !important;
 }

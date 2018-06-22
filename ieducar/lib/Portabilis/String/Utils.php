@@ -67,7 +67,8 @@ class Portabilis_String_Utils {
 
     foreach ($divisors as $divisor) {
       if (is_numeric(strpos($string, $divisor))) {
-        $result = split($divisor, $string, $options['limit']);
+        $divisor = '/' . $divisor . '/';
+        $result = preg_split($divisor, $string, $options['limit']);
         break;
       }
     }
@@ -130,7 +131,7 @@ class Portabilis_String_Utils {
     //   $str = utf8_decode($str);
     //
     // if ($options['convert_html_special_chars'])
-    //   $str = htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+    //   $str = htmlspecialchars($str, ENT_QUOTES, '');
 
     return $str;
   }
@@ -142,7 +143,7 @@ class Portabilis_String_Utils {
 
 
   public static function encoding($str) {
-    return mb_detect_encoding($str, 'UTF-8, UTF-8', $strict = true);
+    return mb_detect_encoding($str, 'UTF-8, ', $strict = true);
   }
 
   public static function camelize($str) {
@@ -163,5 +164,9 @@ class Portabilis_String_Utils {
       $str = str_replace($word, '', $str);
 
     return str_replace('_', ' ', ucwords($str));
+  }
+
+  public static function emptyOrNull($str){
+    return is_null($str) || empty($str);
   }
 }

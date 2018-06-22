@@ -1,7 +1,7 @@
 // before page is ready
 
-$deleteButton = $j('<input value=" Excluir " type="button" style="display: inline; margin-left: 6px;">').html('')
-                              .addClass('botaolistagem').insertAfter('#btn_enviar');
+// $deleteButton = $j('<input value=" Excluir " type="button" style="display: inline; margin-left: 6px;">').html('')
+                              // .addClass('botaolistagem').insertAfter('#btn_enviar');
 var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');
 
@@ -64,19 +64,21 @@ resourceOptions.handleGet = function(dataResponse) {
 
   if (dataResponse.ativo == 'N'){
     $j('#ativo').attr('checked',false);  
-    $j('#ativo').val('');   
-  }  
-  
-  $j('#motorista_motorista').val(dataResponse.motorista+' - '+dataResponse.motoristaNome);  
-  $j('#motorista_id').val(dataResponse.motorista);  
-  
-  $j('#descricao_ativo').val(dataResponse.descricao_ativo);  
+    $j('#ativo').val('');
+    $j('#descricao_inativo').closest('tr').show();
+  }else{
+    $j('#descricao_inativo').closest('tr').hide();
+  }
+
+  if (dataResponse.motorista){
+    $j('#motorista_motorista').val(dataResponse.motorista+' - '+dataResponse.motoristaNome);  
+    $j('#motorista_id').val(dataResponse.motorista);  
+  }
+
+  $j('#descricao_inativo').val(dataResponse.descricao_inativo);  
   $j('#empresa_empresa').val(dataResponse.empresa+' - '+dataResponse.empresaNome);  
   $j('#empresa_id').val(dataResponse.empresa);
   $j('#observacao').val(dataResponse.observacao);  
-
-  
-  
 
 };
 
@@ -157,7 +159,6 @@ function afterChangePessoa(targetWindow, pessoaId) {
   $(document).ready(function() {
 
     // pessoa
-
     var $pessoaActionBar  = $j('<span>').html('')
                                         .addClass('pessoa-links')
                                         .width($nomeField.outerWidth() - 12)
@@ -184,6 +185,19 @@ function afterChangePessoa(targetWindow, pessoaId) {
     else
       $nomeField.attr('disabled', 'disabled');
 
+    $j('#ativo').on('click', function(){
+      if($j('#ativo').val() == 'on'){
+        $j('#descricao_inativo').closest('tr').hide();
+      }else{
+        $j('#descricao_inativo').closest('tr').show();
+      }
+    });
+
+    if($j('#ativo').is(":checked")){
+      $j('#descricao_inativo').closest('tr').hide();
+    }else{
+      $j('#descricao_inativo').closest('tr').show();
+    }
 
   }); // ready
 })(jQuery);

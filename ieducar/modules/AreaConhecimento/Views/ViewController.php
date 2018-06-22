@@ -50,7 +50,7 @@ class ViewController extends Core_Controller_Page_ViewController
   protected $_processoAp = 945;
   protected $_tableMap   = array(
     'Nome' => 'nome',
-    'Seção' => 'secao'
+    'Seção' => 'secao',
   );
 
 
@@ -64,7 +64,7 @@ class ViewController extends Core_Controller_Page_ViewController
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""                                  => "Detalhe da &aacute;rea de conhecimento"
     ));
     $this->enviaLocalizacao($localizacao->montar());

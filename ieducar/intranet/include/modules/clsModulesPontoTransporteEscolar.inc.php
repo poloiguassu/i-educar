@@ -1,24 +1,24 @@
 <?php
 
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
@@ -29,10 +29,11 @@
  */
 
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 /**
  * clsModulesPontoTransporteEscolar class.
- * 
+ *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
  * @license   @@license@@
@@ -44,9 +45,17 @@ class clsModulesPontoTransporteEscolar
 {
   var $cod_ponto_transporte_escolar;
   var $descricao;
+  var $cep;
+  var $idbai;
+  var $idlog;
+  var $complemento;
+  var $numero;
+  var $latitude;
+  var $longitude;
+  var $pessoa_logada;
 
   /**
-   * Armazena o total de resultados obtidos na ˙ltima chamada ao mÈtodo lista().
+   * Armazena o total de resultados obtidos na √∫ltima chamada ao m√©todo lista().
    * @var int
    */
   var $_total;
@@ -64,33 +73,33 @@ class clsModulesPontoTransporteEscolar
   var $_tabela;
 
   /**
-   * Lista separada por vÌrgula, com os campos que devem ser selecionados na
-   * prÛxima chamado ao mÈtodo lista().
+   * Lista separada por v√≠rgula, com os campos que devem ser selecionados na
+   * pr√≥xima chamado ao m√©todo lista().
    * @var string
    */
   var $_campos_lista;
 
   /**
-   * Lista com todos os campos da tabela separados por vÌrgula, padr„o para
-   * seleÁ„o no mÈtodo lista.
+   * Lista com todos os campos da tabela separados por v√≠rgula, padr√£o para
+   * sele√ß√£o no m√©todo lista.
    * @var string
    */
   var $_todos_campos;
 
   /**
-   * Valor que define a quantidade de registros a ser retornada pelo mÈtodo lista().
+   * Valor que define a quantidade de registros a ser retornada pelo m√©todo lista().
    * @var int
    */
   var $_limite_quantidade;
 
   /**
-   * Define o valor de offset no retorno dos registros no mÈtodo lista().
+   * Define o valor de offset no retorno dos registros no m√©todo lista().
    * @var int
    */
   var $_limite_offset;
 
   /**
-   * Define o campo para ser usado como padr„o de ordenaÁ„o no mÈtodo lista().
+   * Define o campo para ser usado como padr√£o de ordena√ß√£o no m√©todo lista().
    * @var string
    */
   var $_campo_order_by;
@@ -98,14 +107,15 @@ class clsModulesPontoTransporteEscolar
   /**
    * Construtor.
    */
-  function clsModulesPontoTransporteEscolar($cod_ponto_transporte_escolar = NULL, $descricao = NULL)
+  function __construct($cod_ponto_transporte_escolar = NULL, $descricao = NULL)
   {
 
     $db = new clsBanco();
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}ponto_transporte_escolar";
+    $this->pessoa_logada = $_SESSION['id_pessoa'];
 
-    $this->_campos_lista = $this->_todos_campos = " cod_ponto_transporte_escolar, descricao"; 
+    $this->_campos_lista = $this->_todos_campos = " cod_ponto_transporte_escolar, descricao, cep, idlog, idbai, complemento, numero, latitude, longitude ";
 
     if (is_numeric($cod_ponto_transporte_escolar)) {
       $this->cod_ponto_transporte_escolar = $cod_ponto_transporte_escolar;
@@ -123,7 +133,7 @@ class clsModulesPontoTransporteEscolar
    */
   function cadastra()
   {
-    
+
     if (is_string($this->descricao))
     {
       $db = new clsBanco();
@@ -138,8 +148,59 @@ class clsModulesPontoTransporteEscolar
       $gruda = ", ";
     }
 
+    if (is_numeric($this->cep)) {
+      $campos .= "{$gruda}cep";
+      $valores .= "{$gruda} {$this->cep}";
+      $gruda = ", ";
+    }
+
+    if (is_numeric($this->idlog)) {
+      $campos .= "{$gruda}idlog";
+      $valores .= "{$gruda} {$this->idlog}";
+      $gruda = ", ";
+    }
+
+
+    if (is_numeric($this->idbai)) {
+      $campos .= "{$gruda}idbai";
+      $valores .= "{$gruda} {$this->idbai}";
+      $gruda = ", ";
+    }
+
+    if (is_numeric($this->numero)) {
+      $campos .= "{$gruda}numero";
+      $valores .= "{$gruda}'{$this->numero}'";
+      $gruda = ", ";
+    }
+
+    if (is_string($this->complemento)) {
+      $campos .= "{$gruda}complemento";
+      $valores .= "{$gruda}'{$this->complemento}'";
+      $gruda = ", ";
+    }
+
+    if (is_numeric($this->latitude)) {
+      $campos .= "{$gruda}latitude";
+      $valores .= "{$gruda}'{$this->latitude}'";
+      $gruda = ", ";
+    }
+
+    if (is_numeric($this->longitude)) {
+      $campos .= "{$gruda}longitude";
+      $valores .= "{$gruda}'{$this->longitude}'";
+      $gruda = ", ";
+    }
+
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-      return $db->InsertId("{$this->_tabela}_seq");
+
+      $this->cod_ponto_transporte_escolar = $db->InsertId("{$this->_tabela}_seq");
+
+      if($this->cod_ponto_transporte_escolar){
+        $detalhe = $this->detalhe();
+        $auditoria = new clsModulesAuditoriaGeral("ponto_transporte_escolar", $this->pessoa_logada, $this->cod_ponto_transporte_escolar);
+        $auditoria->inclusao($detalhe);
+      }
+      return $this->cod_ponto_transporte_escolar;
     }
 
     return FALSE;
@@ -162,8 +223,46 @@ class clsModulesPontoTransporteEscolar
         $gruda = ", ";
     }
 
+    if (is_numeric($this->cep)) {
+        $set .= "{$gruda}cep = '{$this->cep}'";
+        $gruda = ", ";
+    }
+
+    if (is_numeric($this->idlog)) {
+        $set .= "{$gruda}idlog = '{$this->idlog}'";
+        $gruda = ", ";
+    }
+
+    if (is_numeric($this->idbai)) {
+        $set .= "{$gruda}idbai = '{$this->idbai}'";
+        $gruda = ", ";
+    }
+
+    if (is_string($this->complemento)) {
+        $set .= "{$gruda}complemento = '{$this->complemento}'";
+        $gruda = ", ";
+    }
+
+    if (is_numeric($this->numero)) {
+        $set .= "{$gruda}numero = '{$this->numero}'";
+        $gruda = ", ";
+    }
+
+    if (is_numeric($this->latitude)) {
+        $set .= "{$gruda}latitude = '{$this->latitude}'";
+        $gruda = ", ";
+    }
+
+    if (is_numeric($this->longitude)) {
+        $set .= "{$gruda}longitude = '{$this->longitude}'";
+        $gruda = ", ";
+    }
+
       if ($set) {
+        $detalheAntigo = $this->detalhe();
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_ponto_transporte_escolar = '{$this->cod_ponto_transporte_escolar}'");
+        $auditoria = new clsModulesAuditoriaGeral("ponto_transporte_escolar", $this->pessoa_logada,$this->cod_ponto_transporte_escolar);
+        $auditoria->alteracao($detalheAntigo, $this->detalhe());
         return TRUE;
       }
     }
@@ -172,12 +271,36 @@ class clsModulesPontoTransporteEscolar
   }
 
   /**
-   * Retorna uma lista de registros filtrados de acordo com os par‚metros.
+   * Retorna uma lista de registros filtrados de acordo com os par√¢metros.
    * @return array
    */
   function lista($cod_ponto_transporte_escolar = NULL, $descricao = NULL)
   {
-    $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+    $sql = "SELECT {$this->_campos_lista},
+
+              (SELECT l.nome FROM public.logradouro l WHERE l.idlog = ponto_transporte_escolar.idlog) as logradouro,
+
+              (SELECT l.idtlog FROM public.logradouro l WHERE l.idlog = ponto_transporte_escolar.idlog) as idtlog,
+
+              (SELECT b.nome FROM public.bairro b WHERE b.idbai = ponto_transporte_escolar.idbai) as bairro,
+
+              (SELECT b.zona_localizacao FROM public.bairro b WHERE b.idbai = ponto_transporte_escolar.idbai) as zona_localizacao,
+
+              (SELECT m.nome FROM public.municipio m, public.logradouro l WHERE m.idmun = l.idmun AND l.idlog = ponto_transporte_escolar.idlog) as municipio,
+
+              (SELECT m.sigla_uf FROM public.municipio m, public.logradouro l WHERE m.idmun = l.idmun AND l.idlog = ponto_transporte_escolar.idlog) as sigla_uf,
+
+              (SELECT l.idmun FROM public.logradouro l WHERE l.idlog = ponto_transporte_escolar.idlog) as idmun,
+
+              (SELECT bairro.iddis FROM public.bairro
+                WHERE idbai = ponto_transporte_escolar.idbai) as iddis,
+
+              (SELECT distrito.nome FROM public.distrito
+                INNER JOIN public.bairro ON (bairro.iddis = distrito.iddis)
+                WHERE idbai = ponto_transporte_escolar.idbai) as distrito
+
+            FROM {$this->_tabela}
+    ";
     $filtros = "";
 
     $whereAnd = " WHERE ";
@@ -188,7 +311,7 @@ class clsModulesPontoTransporteEscolar
     }
 
     if (is_string($descricao)) {
-      $filtros .= "{$whereAnd} TO_ASCII(LOWER(descricao)) LIKE TO_ASCII(LOWER('%{$descricao}%'))";
+      $filtros .= "{$whereAnd} translate(upper(descricao),'√Ö√Å√Ä√É√Ç√Ñ√â√à√ä√ã√ç√å√é√è√ì√í√ï√î√ñ√ö√ô√õ√ú√á√ù√ë','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$descricao}%'),'√Ö√Å√Ä√É√Ç√Ñ√â√à√ä√ã√ç√å√é√è√ì√í√ï√î√ñ√ö√ô√õ√ú√á√ù√ë','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = " AND ";
     }
 
@@ -231,7 +354,30 @@ class clsModulesPontoTransporteEscolar
 
     if (is_numeric($this->cod_ponto_transporte_escolar)) {
       $db = new clsBanco();
-      $db->Consulta("SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE cod_ponto_transporte_escolar = '{$this->cod_ponto_transporte_escolar}'");
+      $db->Consulta("SELECT {$this->_campos_lista},
+
+              (SELECT l.nome FROM public.logradouro l WHERE l.idlog = ponto_transporte_escolar.idlog) as logradouro,
+
+              (SELECT l.idtlog FROM public.logradouro l WHERE l.idlog = ponto_transporte_escolar.idlog) as idtlog,
+
+              (SELECT b.nome FROM public.bairro b WHERE b.idbai = ponto_transporte_escolar.idbai) as bairro,
+
+              (SELECT b.zona_localizacao FROM public.bairro b WHERE b.idbai = ponto_transporte_escolar.idbai) as zona_localizacao,
+
+              (SELECT m.nome FROM public.municipio m, public.logradouro l WHERE m.idmun = l.idmun AND l.idlog = ponto_transporte_escolar.idlog) as municipio,
+
+              (SELECT m.sigla_uf FROM public.municipio m, public.logradouro l WHERE m.idmun = l.idmun AND l.idlog = ponto_transporte_escolar.idlog) as sigla_uf,
+
+              (SELECT l.idmun FROM public.logradouro l WHERE l.idlog = ponto_transporte_escolar.idlog) as idmun,
+
+              (SELECT bairro.iddis FROM public.bairro
+                WHERE idbai = ponto_transporte_escolar.idbai) as iddis,
+
+              (SELECT distrito.nome FROM public.distrito
+                INNER JOIN public.bairro ON (bairro.iddis = distrito.iddis)
+                WHERE idbai = ponto_transporte_escolar.idbai) as distrito
+
+            FROM {$this->_tabela} WHERE cod_ponto_transporte_escolar = '{$this->cod_ponto_transporte_escolar}'");
       $db->ProximoRegistro();
       return $db->Tupla();
     }
@@ -261,9 +407,15 @@ class clsModulesPontoTransporteEscolar
   function excluir()
   {
     if (is_numeric($this->cod_ponto_transporte_escolar)) {
+      $detalhe = $this->detalhe();
+
       $sql = "DELETE FROM {$this->_tabela} WHERE cod_ponto_transporte_escolar = '{$this->cod_ponto_transporte_escolar}'";
       $db = new clsBanco();
       $db->Consulta($sql);
+
+      $auditoria = new clsModulesAuditoriaGeral("ponto_transporte_escolar", $this->pessoa_logada, $this->cod_ponto_transporte_escolar);
+      $auditoria->exclusao($detalhe);
+
       return true;
     }
 
@@ -271,7 +423,7 @@ class clsModulesPontoTransporteEscolar
   }
 
   /**
-   * Define quais campos da tabela ser„o selecionados no mÈtodo Lista().
+   * Define quais campos da tabela ser√£o selecionados no m√©todo Lista().
    */
   function setCamposLista($str_campos)
   {
@@ -279,7 +431,7 @@ class clsModulesPontoTransporteEscolar
   }
 
   /**
-   * Define que o mÈtodo Lista() deverpa retornar todos os campos da tabela.
+   * Define que o m√©todo Lista() deverpa retornar todos os campos da tabela.
    */
   function resetCamposLista()
   {
@@ -287,7 +439,7 @@ class clsModulesPontoTransporteEscolar
   }
 
   /**
-   * Define limites de retorno para o mÈtodo Lista().
+   * Define limites de retorno para o m√©todo Lista().
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -296,7 +448,7 @@ class clsModulesPontoTransporteEscolar
   }
 
   /**
-   * Retorna a string com o trecho da query respons·vel pelo limite de
+   * Retorna a string com o trecho da query respons√°vel pelo limite de
    * registros retornados/afetados.
    *
    * @return string
@@ -314,7 +466,7 @@ class clsModulesPontoTransporteEscolar
   }
 
   /**
-   * Define o campo para ser utilizado como ordenaÁ„o no mÈtodo Lista().
+   * Define o campo para ser utilizado como ordena√ß√£o no m√©todo Lista().
    */
   function setOrderby($strNomeCampo)
   {
@@ -324,7 +476,7 @@ class clsModulesPontoTransporteEscolar
   }
 
   /**
-   * Retorna a string com o trecho da query respons·vel pela OrdenaÁ„o dos
+   * Retorna a string com o trecho da query respons√°vel pela Ordena√ß√£o dos
    * registros.
    *
    * @return string

@@ -114,6 +114,10 @@ class indice extends clsDetalhe
     $zona = $zona->getValue($registro['zona_localizacao']);
     $this->addDetalhe(array('Zona Localização', $zona));
 
+    if ($registro['nm_distrito']) {
+      $this->addDetalhe(array('Distrito', $registro['nm_distrito']));
+    }
+
     if ($registro['nm_municipio']) {
       $this->addDetalhe(array("Município", $registro['nm_municipio']));
     }
@@ -126,8 +130,13 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Pais', $registro['nm_pais']));
     }
 
-    $this->url_novo   = 'public_bairro_cad.php';
-    $this->url_editar = 'public_bairro_cad.php?idbai=' . $registro['idbai'];
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra(756, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo   = 'public_bairro_cad.php';
+      $this->url_editar = 'public_bairro_cad.php?idbai=' . $registro['idbai'];      
+    }
 
     $this->url_cancelar = 'public_bairro_lst.php';
     $this->largura      = '100%';
@@ -135,6 +144,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_enderecamento_index.php"    => "Endereçamento",
          ""                                  => "Detalhe do bairro"
     ));
     $this->enviaLocalizacao($localizacao->montar());    

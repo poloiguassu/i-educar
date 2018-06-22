@@ -48,12 +48,16 @@ class clsPmieducarServidorAlocacao
   var $ref_usuario_cad;
   var $ref_cod_escola;
   var $ref_cod_servidor;
+  var $ref_cod_servidor_funcao;
   var $data_cadastro;
   var $data_exclusao;
   var $ativo;
   var $carga_horaria;
   var $periodo;
-
+  var $ref_cod_funcionario_vinculo;
+  var $ano;
+  var $codUsuario;
+  var $dataAdmissao;
   /**
    * Carga horária máxima para um período de alocação (em horas).
    * @var float
@@ -119,16 +123,29 @@ class clsPmieducarServidorAlocacao
   /**
    * Construtor.
    */
-  function clsPmieducarServidorAlocacao($cod_servidor_alocacao = NULL,
-    $ref_ref_cod_instituicao = NULL, $ref_usuario_exc = NULL, $ref_usuario_cad = NULL,
-    $ref_cod_escola = NULL, $ref_cod_servidor = NULL, $data_cadastro = NULL,
-    $data_exclusao = NULL, $ativo = NULL, $carga_horaria = NULL, $periodo = NULL)
+  function __construct(
+    $cod_servidor_alocacao = NULL,
+    $ref_ref_cod_instituicao = NULL,
+    $ref_usuario_exc = NULL,
+    $ref_usuario_cad = NULL,
+    $ref_cod_escola = NULL,
+    $ref_cod_servidor = NULL,
+    $data_cadastro = NULL,
+    $data_exclusao = NULL,
+    $ativo = NULL,
+    $carga_horaria = NULL,
+    $periodo = NULL,
+    $ref_cod_servidor_funcao = NULL,
+    $ref_cod_funcionario_vinculo = NULL,
+    $ano = NULL,
+    $dataAdmissao = NULL
+    )
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'servidor_alocacao';
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_servidor_alocacao, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_escola, ref_cod_servidor, data_cadastro, data_exclusao, ativo, carga_horaria, periodo';
+    $this->_campos_lista = $this->_todos_campos = 'cod_servidor_alocacao, ref_ref_cod_instituicao, ref_usuario_exc, ref_usuario_cad, ref_cod_escola, ref_cod_servidor, data_cadastro, data_exclusao, ativo, carga_horaria, periodo, ref_cod_servidor_funcao, ref_cod_funcionario_vinculo, ano, data_admissao ';
 
     if (is_numeric($ref_usuario_cad)) {
       $usuario = new clsPmieducarUsuario($ref_usuario_cad);
@@ -177,6 +194,14 @@ class clsPmieducarServidorAlocacao
       $this->ativo = $ativo;
     }
 
+    if (is_numeric($ref_cod_servidor_funcao)) {
+      $this->ref_cod_servidor_funcao = $ref_cod_servidor_funcao;
+    }
+
+    if (is_numeric($ref_cod_funcionario_vinculo)) {
+      $this->ref_cod_funcionario_vinculo = $ref_cod_funcionario_vinculo;
+    }
+
     // Valida a carga horária
     if (is_string($carga_horaria)) {
       $datetime = explode(':', $carga_horaria);
@@ -189,6 +214,13 @@ class clsPmieducarServidorAlocacao
 
     if (is_numeric($periodo)) {
       $this->periodo = $periodo;
+    }
+
+    if (is_numeric($ano)) {
+      $this->ano = $ano;
+    }
+    if (is_string($dataAdmissao)) {
+      $this->dataAdmissao = $dataAdmissao;
     }
   }
 
@@ -232,6 +264,18 @@ class clsPmieducarServidorAlocacao
         $gruda    = ', ';
       }
 
+      if (is_numeric($this->ref_cod_servidor_funcao)) {
+        $campos  .= "{$gruda}ref_cod_servidor_funcao";
+        $valores .= "{$gruda}'{$this->ref_cod_servidor_funcao}'";
+        $gruda    = ', ';
+      }
+
+      if (is_numeric($this->ref_cod_funcionario_vinculo)) {
+        $campos  .= "{$gruda}ref_cod_funcionario_vinculo";
+        $valores .= "{$gruda}'{$this->ref_cod_funcionario_vinculo}'";
+        $gruda    = ', ';
+      }
+
       if (is_string($this->carga_horaria)) {
         $campos  .= "{$gruda}carga_horaria";
         $valores .= "{$gruda}'{$this->carga_horaria}'";
@@ -241,6 +285,18 @@ class clsPmieducarServidorAlocacao
       if (($this->periodo)) {
         $campos  .= "{$gruda}periodo";
         $valores .= "{$gruda}'{$this->periodo}'";
+        $gruda    = ', ';
+      }
+
+      if (is_numeric($this->ano)) {
+        $campos  .= "{$gruda}ano";
+        $valores .= "{$gruda}'{$this->ano}'";
+        $gruda    = ', ';
+      }
+
+      if (is_string($this->dataAdmissao) && !empty($this->dataAdmissao)) {
+        $campos  .= "{$gruda}data_admissao";
+        $valores .= "{$gruda}'{$this->dataAdmissao}'";
         $gruda    = ', ';
       }
 
@@ -255,7 +311,6 @@ class clsPmieducarServidorAlocacao
       $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
       return $db->InsertId("{$this->_tabela}_cod_servidor_alocacao_seq");
     }
-
     return FALSE;
   }
 
@@ -299,6 +354,16 @@ class clsPmieducarServidorAlocacao
         $gruda = ', ';
       }
 
+      if (is_numeric($this->ref_cod_servidor_funcao)) {
+        $set  .= "{$gruda}ref_cod_servidor_funcao = '{$this->ref_cod_servidor_funcao}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->ref_cod_funcionario_vinculo)) {
+        $set  .= "{$gruda}ref_cod_funcionario_vinculo = '{$this->ref_cod_funcionario_vinculo}'";
+        $gruda = ', ';
+      }
+
       if (($this->periodo)) {
         $set  .= "{$gruda}periodo = '{$this->periodo}'";
         $gruda = ', ';
@@ -314,6 +379,14 @@ class clsPmieducarServidorAlocacao
 
       if (is_numeric($this->ativo)) {
         $set .= "{$gruda}ativo = '{$this->ativo}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->dataAdmissao) && !empty($this->dataAdmissao)) {
+        $set .= "{$gruda}data_admissao = '{$this->dataAdmissao}'";
+        $gruda = ', ';
+      } else {
+        $set .= "{$gruda}data_admissao = NULL ";
         $gruda = ', ';
       }
 
@@ -335,7 +408,7 @@ class clsPmieducarServidorAlocacao
     $int_ref_cod_servidor = NULL, $date_data_cadastro_ini = NULL,
     $date_data_cadastro_fim = NULL, $date_data_exclusao_ini = NULL,
     $date_data_exclusao_fim = NULL, $int_ativo = NULL, $int_carga_horaria = NULL,
-    $int_periodo = NULL, $bool_busca_nome = FALSE, $boo_professor = NULL)
+    $int_periodo = NULL, $bool_busca_nome = FALSE, $boo_professor = NULL, $ano = NULL)
   {
     $filtros  = '';
     $whereAnd = ' WHERE ';
@@ -371,6 +444,12 @@ class clsPmieducarServidorAlocacao
     if (is_numeric($int_ref_cod_escola)) {
       $filtros .= "{$whereAnd} sa.ref_cod_escola = '{$int_ref_cod_escola}'";
       $whereAnd = ' AND ';
+    }elseif ($this->codUsuario) {
+      $filtros .= "{$whereAnd} EXISTS (SELECT 1
+                                         FROM pmieducar.escola_usuario
+                                        WHERE escola_usuario.ref_cod_escola = sa.ref_cod_escola
+                                          AND escola_usuario.ref_cod_usuario = '{$this->codUsuario}')";
+      $whereAnd = " AND ";
     }
 
     if (is_numeric($int_ref_cod_servidor)) {
@@ -408,6 +487,11 @@ class clsPmieducarServidorAlocacao
       $whereAnd = ' AND ';
     }
 
+    if (is_numeric($ano)) {
+      $filtros .= "{$whereAnd} sa.ano = '{$ano}'";
+      $whereAnd = ' AND ';
+    }
+
     if (is_null($int_ativo) || $int_ativo) {
       $filtros .= "{$whereAnd} sa.ativo = '1'";
       $whereAnd = ' AND ';
@@ -419,7 +503,7 @@ class clsPmieducarServidorAlocacao
 
     if (is_bool($boo_professor)) {
       $not = $boo_professor? "=" : "!=";
-      $filtros .= "{$whereAnd} EXISTS(SELECT 1 FROM pmieducar.servidor_funcao,pmieducar.funcao WHERE ref_cod_funcao = cod_funcao AND ref_cod_servidor = sa.ref_cod_servidor AND sa.ref_ref_cod_instituicao = ref_ref_cod_instituicao AND professor $not 1)";
+      $filtros .= "{$whereAnd} EXISTS(SELECT 1 FROM pmieducar.servidor_funcao,pmieducar.funcao WHERE ref_cod_servidor_funcao = cod_funcao AND ref_cod_servidor = sa.ref_cod_servidor AND sa.ref_ref_cod_instituicao = ref_ref_cod_instituicao AND professor $not 1)";
       $whereAnd = ' AND ';
     }
 
@@ -519,9 +603,10 @@ class clsPmieducarServidorAlocacao
    */
   function excluir()
   {
-    if (is_numeric($this->cod_servidor_alocacao) && is_numeric($this->ref_usuario_exc)) {
-      $this->ativo = 0;
-      return $this->edita();
+    if (is_numeric($this->cod_servidor_alocacao)) {
+      $db = new clsBanco();
+      $db->Consulta("DELETE FROM {$this->_tabela} WHERE cod_servidor_alocacao = '{$this->cod_servidor_alocacao}'");
+      return TRUE;
     }
 
     return FALSE;
@@ -542,6 +627,14 @@ class clsPmieducarServidorAlocacao
     }
 
     return FALSE;
+  }
+
+  function excluiAlocacoesServidor($ref_cod_servidor)
+  {
+
+    $db = new clsBanco();
+    $db->Consulta("DELETE FROM {$this->_tabela} WHERE ref_cod_servidor = '{$ref_cod_servidor}'");
+    return TRUE;
   }
 
   /**
@@ -680,4 +773,56 @@ class clsPmieducarServidorAlocacao
     }
     return '';
   }
+
+  /**
+   * Retorna a string com a soma da carga horária já alocada do servidor em determinado ano
+   *
+   * @return string
+   */
+  function getCargaHorariaAno() {
+
+    if (is_numeric($this->ref_cod_servidor) && is_numeric($this->ano)) {
+      $db = new clsBanco();
+      $sql = "SELECT SUM(carga_horaria::interval)
+                FROM pmieducar.servidor_alocacao
+               WHERE ref_cod_servidor = {$this->ref_cod_servidor}
+                 AND ano = {$this->ano}";
+
+      if ($this->cod_servidor_alocacao) {
+        $sql .= "AND cod_servidor_alocacao != {$this->cod_servidor_alocacao}";
+      }
+      $db->Consulta($sql);
+      $db->ProximoRegistro();
+      $registro = $db->Tupla();
+      return $registro[0];
+    }
+    return '';
+  }
+
+  function periodoAlocado() {
+    if (is_numeric($this->ref_cod_escola) && is_numeric($this->periodo)
+        && is_numeric($this->ano) && is_numeric($this->ref_cod_servidor)){
+
+      $db = new clsBanco();
+      $sql = "SELECT *
+                FROM pmieducar.servidor_alocacao
+               WHERE ref_cod_escola = {$this->ref_cod_escola}
+                 AND ref_cod_servidor = {$this->ref_cod_servidor}
+                 AND ano = {$this->ano}
+                 AND periodo = {$this->periodo}
+                 AND ativo = 1";
+
+      if (is_numeric($this->cod_servidor_alocacao)) {
+       $sql .= " AND cod_servidor_alocacao <> {$this->cod_servidor_alocacao}";
+      }
+
+      $db->Consulta($sql);
+      $db->ProximoRegistro();
+      $registro = $db->Tupla();
+      return $registro ? true : false;
+    }
+
+    return false;
+  }
+
 }

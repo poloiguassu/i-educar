@@ -59,7 +59,7 @@ class clsMenuSuspenso
   /**
    * Construtor.
    */
-  function clsMenuSuspenso($cod_menu = FALSE, $ref_cod_menu_submenu = FALSE,
+  function __construct($cod_menu = FALSE, $ref_cod_menu_submenu = FALSE,
     $ref_cod_menu_pai = FALSE, $tt_menu = FALSE, $ref_cod_ico = FALSE,
     $ord_menu = FALSE, $caminho = FALSE, $alvo = FALSE, $suprime_menu = FALSE,
     $ref_cod_tutormenu = FALSE)
@@ -74,6 +74,7 @@ class clsMenuSuspenso
     $this->alvo                 = $alvo;
     $this->suprime_menu         = $suprime_menu;
     $this->ref_cod_tutormenu    = $ref_cod_tutormenu;
+    // $this->tipo_menu         = $tipo_menu;
 
     $this->tabela = "menu";
     $this->schema = "pmicontrolesis";
@@ -393,7 +394,7 @@ class clsMenuSuspenso
   {
     if ($this->cod_menu) {
       $db = new clsBanco();
-      $db->Consulta("SELECT cod_menu, ref_cod_menu_submenu, ref_cod_menu_pai, tt_menu, ref_cod_ico, ord_menu, caminho, alvo, suprime_menu, ref_cod_tutormenu FROM {$this->schema}.{$this->tabela} WHERE cod_menu = '$this->cod_menu'");
+      $db->Consulta("SELECT cod_menu, ref_cod_menu_submenu, ref_cod_menu_pai, tt_menu, ref_cod_ico, ord_menu, caminho, alvo, suprime_menu, ref_cod_tutormenu, tipo_menu FROM {$this->schema}.{$this->tabela} WHERE cod_menu = '$this->cod_menu'");
 
       if ($db->ProximoRegistro()) {
         $tupla = $db->Tupla();
@@ -418,7 +419,10 @@ class clsMenuSuspenso
   {
     $db = new clsBanco();
 
-    if ($db->UnicoCampo("SELECT 1 FROM menu_funcionario WHERE ref_ref_cod_pessoa_fj = '$idpes' AND ref_cod_menu_submenu ='0'")) {
+    if ($db->UnicoCampo("SELECT 1 FROM pmieducar.menu_tipo_usuario mtu 
+                                INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
+                                INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
+                                WHERE mtu.ref_cod_menu_submenu = 0 AND u.cod_usuario = {$idpes}")) {
       $menu_pai = "
           , (
             SELECT
@@ -434,7 +438,7 @@ class clsMenuSuspenso
       $sql = "
         SELECT
           cod_menu, ref_cod_menu_submenu, ref_cod_menu_pai, tt_menu, ref_cod_ico,
-          ord_menu, caminho, alvo, suprime_menu, ref_cod_tutormenu, 1 AS nivel
+          ord_menu, caminho, alvo, suprime_menu, ref_cod_tutormenu, 1 AS nivel, tipo_menu
           $menu_pai
         FROM
           pmicontrolesis.menu m
@@ -445,7 +449,7 @@ class clsMenuSuspenso
           SELECT
             cod_menu, ref_cod_menu_submenu, ref_cod_menu_pai, tt_menu,
             ref_cod_ico, ord_menu, caminho, alvo, suprime_menu,
-            ref_cod_tutormenu, 2 AS nivel
+            ref_cod_tutormenu, 2 AS nivel, tipo_menu
             $menu_pai
           FROM
             pmicontrolesis.menu m
@@ -463,7 +467,7 @@ class clsMenuSuspenso
           SELECT
             cod_menu, ref_cod_menu_submenu, ref_cod_menu_pai, tt_menu,
             ref_cod_ico, ord_menu, caminho, alvo, suprime_menu,
-            ref_cod_tutormenu, 3 AS nivel
+            ref_cod_tutormenu, 3 AS nivel, tipo_menu
             $menu_pai
           FROM
             pmicontrolesis.menu m
@@ -488,7 +492,7 @@ class clsMenuSuspenso
           SELECT
             cod_menu, ref_cod_menu_submenu, ref_cod_menu_pai, tt_menu,
             ref_cod_ico, ord_menu, caminho, alvo, suprime_menu,
-            ref_cod_tutormenu, 4 AS nivel
+            ref_cod_tutormenu, 4 AS nivel, tipo_menu
             $menu_pai
           FROM
             pmicontrolesis.menu m
@@ -516,12 +520,21 @@ class clsMenuSuspenso
                 )
             )
             AND ref_cod_tutormenu = '$ref_cod_tutormenu'
-          ORDER BY nivel ASC, ord_menu ASC";
+          ORDER BY nivel ASC, tipo_menu ASC, ord_menu ASC, tt_menu ASC";
     }
     else {
       $menus = '';
       $juncao = '';
-      $db->Consulta("SELECT ref_cod_menu_submenu FROM menu_funcionario WHERE ref_ref_cod_pessoa_fj = '$idpes' UNION SELECT cod_menu_submenu FROM menu_submenu WHERE nivel ='2' UNION SELECT cod_menu_submenu FROM menu_submenu WHERE nivel ='2'");
+      $db->Consulta("SELECT mtu.ref_cod_menu_submenu FROM pmieducar.menu_tipo_usuario mtu 
+                      INNER JOIN pmieducar.tipo_usuario tu ON mtu.ref_cod_tipo_usuario = tu.cod_tipo_usuario
+                      INNER JOIN pmieducar.usuario u ON tu.cod_tipo_usuario = u.ref_cod_tipo_usuario
+                      WHERE u.cod_usuario = {$idpes} 
+                      UNION 
+                      SELECT cod_menu_submenu 
+                        FROM menu_submenu 
+                        WHERE nivel ='2' 
+                      UNION                       
+                      SELECT cod_menu_submenu FROM menu_submenu WHERE nivel ='2'");
 
       while ($db->ProximoRegistro()) {
         $tupla = $db->Tupla();
@@ -532,7 +545,7 @@ class clsMenuSuspenso
       $sql = "
         SELECT
           cod_menu, ref_cod_menu_submenu, ref_cod_menu_pai, tt_menu, ref_cod_ico,
-          ord_menu, caminho, alvo, suprime_menu, ref_cod_tutormenu, 1 AS nivel
+          ord_menu, caminho, alvo, suprime_menu, ref_cod_tutormenu, 1 AS nivel, tipo_menu
         FROM
           pmicontrolesis.menu m
         WHERE
@@ -543,7 +556,7 @@ class clsMenuSuspenso
           SELECT
             cod_menu, ref_cod_menu_submenu, ref_cod_menu_pai, tt_menu,
             ref_cod_ico, ord_menu, caminho, alvo, suprime_menu,
-            ref_cod_tutormenu, 2 AS nivel
+            ref_cod_tutormenu, 2 AS nivel, tipo_menu
           FROM
             pmicontrolesis.menu m
           WHERE
@@ -562,7 +575,7 @@ class clsMenuSuspenso
           SELECT
             cod_menu, ref_cod_menu_submenu, ref_cod_menu_pai, tt_menu,
             ref_cod_ico, ord_menu, caminho, alvo, suprime_menu,
-            ref_cod_tutormenu, 3 AS nivel
+            ref_cod_tutormenu, 3 AS nivel, tipo_menu
           FROM
             pmicontrolesis.menu m
           WHERE
@@ -589,7 +602,7 @@ class clsMenuSuspenso
             SELECT
               cod_menu, ref_cod_menu_submenu, ref_cod_menu_pai, tt_menu,
               ref_cod_ico, ord_menu, caminho, alvo, suprime_menu,
-              ref_cod_tutormenu, 4 AS nivel
+              ref_cod_tutormenu, 4 AS nivel, tipo_menu
             FROM
               pmicontrolesis.menu m
             WHERE
@@ -619,7 +632,7 @@ class clsMenuSuspenso
                 AND ((ref_cod_menu_submenu IS NULL) OR (ref_cod_menu_submenu IN ($menus)))
             )
             AND ((ref_cod_menu_submenu IS NULL) OR (ref_cod_menu_submenu IN ($menus)))
-            ORDER BY nivel ASC, ord_menu ASC";
+            ORDER BY nivel ASC, tipo_menu ASC, ord_menu ASC, tt_menu ASC";
     }
 
     $db->Consulta($sql);

@@ -41,6 +41,7 @@ class RotaController extends Portabilis_Controller_Page_EditController
 
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_processoAp        = 21238;
+  protected $_deleteOption      = true;
 
   protected $_formMap    = array(
 
@@ -90,7 +91,7 @@ class RotaController extends Portabilis_Controller_Page_EditController
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "transporte_index.php"                  => "M&oacute;dulo Transporte Escolar",
+         "educar_transporte_escolar_index.php"                  => "Transporte escolar",
          ""        => "$nomeMenu rota"             
     ));
     $this->enviaLocalizacao($localizacao->montar());    

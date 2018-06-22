@@ -2,9 +2,10 @@
 
   $j('<a>') .html('N&atilde;o sei meu CEP')
                .attr('target', '_blank')
+               .attr('id', 'span-busca-cep')
                .css('color', 'blue')
                .css('margin-left', '10px')
-               .attr('href', 'http://www.buscacep.correios.com.br/servicos/dnec/menuAction.do?Metodo=menuLogradouro')
+               .attr('href', 'http://www.buscacep.correios.com.br/sistemas/buscacep/')
                .appendTo($j('#cep_').closest('td'));
 
 function hideEnderecoFields(){
@@ -18,12 +19,12 @@ function hideEnderecoFields(){
     if ($j('#logradouro_id').val())
       bloqueiaCadastroLogradouro();
     else
-      bloqueiaBuscaLogradouro();
+      bloqueiaBuscaLogradouro();      
 
   }else{
 
-    $j('#bairro').closest('tr').hide();
-    $j('#logradouro').closest('tr').hide();
+    $j('#bairro').closest('tr').hide(); 
+    $j('#logradouro').closest('tr').hide(); 
   }
 }
 
@@ -40,14 +41,18 @@ var handleGetCep = function(dataResponse) {
   if (dataResponse['cep']){
     $j('#municipio_id').val(dataResponse['idmun']);
     $j('#municipio_municipio').val(dataResponse['idmun'] + ' - ' + dataResponse['nome'] + ' (' + dataResponse['sigla_uf'] + ')');
+    $j('#distrito_id').val(dataResponse['iddis']);
+    $j('#distrito_distrito').val(dataResponse['iddis'] + ' - ' + dataResponse['nome_distrito']);    
     $j('#bairro_id').val(dataResponse['idbai']);
     $j('#bairro_bairro').val(dataResponse['nome_bairro']+' / Zona '+(dataResponse['zona_localizacao'] == 1 ? 'Urbana' : 'Rural'));
     $j('#logradouro_id').val(dataResponse['idlog']);
-    $j('#logradouro_logradouro').val(dataResponse['tipo_logradouro']+' '+dataResponse['nome_logradouro']);
-
+    $j('#logradouro_logradouro').val(dataResponse['tipo_logradouro']+' '+dataResponse['nome_logradouro']);   
+     
   }else{
     $j('#municipio_id').val('');
     $j('#municipio_municipio').val('');
+    $j('#distrito_id').val('');
+    $j('#distrito_distrito').val('');    
     $j('#bairro_id').val('');
     $j('#bairro_bairro').val('');
     $j('#logradouro_id').val('');
@@ -55,6 +60,7 @@ var handleGetCep = function(dataResponse) {
   }
 
   $j('#municipio_municipio').removeAttr('disabled');
+  $j('#distrito_distrito').removeAttr('disabled');
   $j('#bairro_bairro').removeAttr('disabled');
   $j('#logradouro_logradouro').removeAttr('disabled');
   $j('#bairro').removeAttr('disabled');
@@ -70,8 +76,8 @@ var handleGetCep = function(dataResponse) {
 var searchCep = function() {
 
   var cep = $j('#cep_').val();
-
-  if (checkCepFields(cep)) {
+  
+  if (checkCepFields(cep)) {    
 
     var additionalVars = {
       cep : cep,
@@ -87,7 +93,7 @@ var searchCep = function() {
     getResource(options);
   }else
     clearEnderecoFields();
-
+  
 }
 // Ao digitar um cep inválido todos os campos de endereçamento são bloqueados e limpados
 function clearEnderecoFields(){
@@ -98,27 +104,30 @@ function clearEnderecoFields(){
   $j('#idtlog').attr('disabled','disabled');
   $j('#logradouro').attr('disabled','disabled');
   $j('#municipio_municipio').attr('disabled','disabled');
+  $j('#distrito_distrito').attr('disabled','disabled');
   $j('#bairro').val('');
   $j('#zona_localizacao').val('');
   $j('#bairro_bairro').val('');
   $j('#logradouro_logradouro').val('');
   $j('#idtlog').val('');
-  $j('#logradouro').val('');
-  $j('#bairro_id').val('');
-  $j('#logradouro_id').val('');
-  $j('#municipio_municipio').val('');
-  $j('#municipio_id').val('');
+  $j('#logradouro').val('');  
+  $j('#bairro_id').val('');  
+  $j('#logradouro_id').val('');  
+  $j('#municipio_municipio').val('');  
+  $j('#distrito_distrito').val('');  
+  $j('#municipio_id').val('');  
+  $j('#distrito_id').val('');  
 }
 // Verifica se o formato do cep é válido
 function checkCepFields(cep) {
-    var regexp = /[0-9]{5}\-[0-9]{3}/;
+    var regexp = /[0-9]{5}\-[0-9]{3}/; 
     var valid = regexp.test(cep);
     return valid;
 }
 
 // Eventos que escondem//apagam campos não usados na alternância entre cadastro/busca
 function bloqueiaCadastroBairro(){
-  if (checkCepFields($j('#cep_').val())){
+  if (checkCepFields($j('#cep_').val())){ 
     $j('#bairro').closest('tr').hide();
     $j('#bairro_bairro').closest('tr').show();
     $j('#zona_localizacao').val('');
@@ -129,34 +138,51 @@ function bloqueiaCadastroBairro(){
 }
 
 function bloqueiaBuscaBairro(){
-  if (checkCepFields($j('#cep_').val())){
-    $j('#bairro_bairro').closest('tr').hide();
-    $j('#bairro').closest('tr').show();
+  if (checkCepFields($j('#cep_').val())){ 
+    $j('#bairro_bairro').closest('tr').hide(); 
+    $j('#bairro').closest('tr').show(); 
     $j('#bairro').val($j('#bairro').val() ? $j('#bairro').val() :$j('#bairro_bairro').val());
-    $j('#bairro_bairro').val('');
-    $j('#bairro_id').val('');
+    clearBairroFields();
   }
   else
     preenchaCampoCepPrimeiro();
 }
 
+function permiteEditarEndereco(){
+
+  var options = {
+    url      : getResourceUrlBuilder.buildUrl('/module/Api/endereco', 'permissao_editar'),
+    dataType : 'json',
+    data     : {},
+    success  : handleGetPermissaoEditar
+  };
+  getResource(options);
+}
+
+var handleGetPermissaoEditar = function(dataResponse) {
+  if (dataResponse.permite_editar == 0) {
+    $j('#span-busca-logradouro').hide();
+    $j('#span-busca-bairro').hide();
+  }
+}
+
 function bloqueiaCadastroLogradouro(){
-  if (checkCepFields($j('#cep_').val())){
-    $j('#idtlog').closest('tr').hide();
+  if (checkCepFields($j('#cep_').val())){ 
+    $j('#idtlog').closest('tr').hide();   
     $j('#logradouro_logradouro').closest('tr').show();
     $j('#idtlog').val('');
-    $j('#logradouro').val('');
+    $j('#logradouro').val('');  
   }else
     preenchaCampoCepPrimeiro();
 }
 
 function bloqueiaBuscaLogradouro(){
-  if (checkCepFields($j('#cep_').val())){
-    $j('#logradouro_logradouro').closest('tr').hide();
-    $j('#idtlog').closest('tr').show();
+  if (checkCepFields($j('#cep_').val())){ 
+    $j('#logradouro_logradouro').closest('tr').hide();   
+    $j('#idtlog').closest('tr').show();  
     $j('#logradouro').val($j('#logradouro').val() ? $j('#logradouro').val() :$j('#logradouro_logradouro').val());
     $j('#logradouro_logradouro').val('');
-    $j('#logradouro_id').val('');
+    $j('#logradouro_id').val('');   
   }else{
     preenchaCampoCepPrimeiro();
   }
@@ -167,14 +193,21 @@ $j('#cep_').keyup(searchCep);
 $j('#cep_').change(searchCep);
 
 // Limpa campos logradouro e bairro simpleSearch
-function clearLogradouroAndBairroFields(){
+function clearLogradouroAndBairroAndDistritoFields(){
   $j('#logradouro_logradouro').val('');
   $j('#logradouro_id').val('');
-  $j('#bairro_bairro').val('');
-  $j('#bairro_id').val('');
+  $j('#distrito_id').val('');  
+  $j('#distrito_distrito').val('');
+  clearBairroFields();
 }
 
-// Adiciona links para Informar/Atualizar troca entre cadastro ou busca
+// Lmpa campos bairro simpleSearch
+function clearBairroFields(){
+  $j('#bairro_bairro').val('');
+  $j('#bairro_id').val('');  
+}
+
+// Adiciona links para Informar/Atualizar troca entre cadastro ou busca 
 function addLinksEnderecamento(){
   $j('<span>') .html('ou cadastre um novo bairro')
                .attr('id', 'span-busca-bairro')
@@ -190,7 +223,7 @@ function addLinksEnderecamento(){
               .css('margin-left','5px')
               .css('cursor','pointer')
               .addClass('decorated')
-              .appendTo($j('#zona_localizacao').closest('td'));
+              .appendTo($j('#zona_localizacao').closest('td')); 
 
   $j('<span>').html('ou cadastre um novo logradouro')
               .attr('id', 'span-busca-logradouro')
@@ -206,7 +239,7 @@ function addLinksEnderecamento(){
               .css('margin-left','5px')
               .css('cursor','pointer')
               .addClass('decorated')
-              .appendTo($j('#idtlog').closest('td'));
+              .appendTo($j('#idtlog').closest('td'));      
 }
 
 addLinksEnderecamento();
@@ -248,6 +281,11 @@ $j('#municipio_municipio').keyup( function(){
     $j('#municipio_id').val('').trigger('change');
 });
 
+$j('#distrito_distrito').keyup( function(){
+  if ($j('#distrito_distrito').val() == '')
+    $j('#distrito_id').val('').trigger('change');
+});
+
 $j('#bairro_bairro').focusout( function(){
   if ($j('#bairro_bairro').val() == '')
     $j('#bairro_id').val('');
@@ -258,12 +296,15 @@ $j('#logradouro_logradouro').focusout( function(){
     $j('#logradouro_id').val('');
 });
 
-/* Como os campos SimpleSearchBairro e SimpleSearchLogradouro dependem do valor do municipio_id,
-   quando o mesmo for alterado dispara um evento para apagar esses campos dependentes */
-$j('#municipio_id').change(clearLogradouroAndBairroFields);
+/* Como os campos SimpleSearchBairro, SimpleSearchLogradouro, SimpleSearchDistrito dependem do valor do municipio_id,
+   quando o mesmo for alterado dispara um evento para apagar esses campos dependentes 
+   O campo SimpleSearchBairro também depende do distrito_id */ 
+$j('#municipio_id').change(clearLogradouroAndBairroAndDistritoFields);
+$j('#distrito_id').change(clearBairroFields);
 
 function fixUpPlaceholderEndereco(){
   $j('#municipio_municipio').attr('placeholder' , 'Digite o nome de um munic\u00edpio para buscar');
+  $j('#distrito_distrito').attr('placeholder' , 'Digite o nome de um distrito para buscar');
   $j('#bairro_bairro').attr('placeholder' , 'Digite o nome de um bairro para buscar');
   $j('#logradouro_logradouro').attr('placeholder' , 'Digite o nome de um logradouro para buscar');
   $j('#bairro').attr('placeholder' , 'Digite o nome do novo bairro');
@@ -283,12 +324,20 @@ function validateEndereco(){
 
   }
 
+
   if (!$j('#municipio_id').val()){
     $j('#municipio_municipio').addClass('error');
     $j('#municipio_id').addClass('error');
     messageUtils.error('Selecione um município corretamente.');
-    err = true;
+    err = true;    
   }
+
+  if (!$j('#distrito_id').val()){
+    $j('#distrito_distrito').addClass('error');
+    $j('#distrito_id').addClass('error');
+    messageUtils.error('Selecione um distrito corretamente.');
+    err = true;    
+  }    
 
   if ($j('#logradouro_logradouro').closest('tr').is(':visible')){
 
@@ -327,11 +376,11 @@ function validateEndereco(){
     }
 
     if (!$j('#zona_localizacao').val()){
-      $j('#zona_localizacao').addClass('error');
-      messageUtils.error('Selecione a zona de localização.');
+      $j('#zona_localizacao').addClass('error'); 
+      messageUtils.error('Selecione a zona de localização.');     
       err = true;
     }
-  }
+  }  
 
   return !err;
 

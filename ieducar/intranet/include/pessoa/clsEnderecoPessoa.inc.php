@@ -23,7 +23,7 @@ class clsPessoaEndereco
   var $schema_cadastro = 'cadastro';
   var $tabela          = 'endereco_pessoa';
 
-  function clsPessoaEndereco($int_idpes = FALSE, $numeric_cep = FALSE,
+  function __construct($int_idpes = FALSE, $numeric_cep = FALSE,
     $int_idlog = FALSE, $int_idbai = FALSE, $numeric_numero = FALSE,
     $str_complemento = FALSE, $date_reside_desde = FALSE, $str1_letra = FALSE,
     $str_bloco = FALSE, $int_apartamento = FALSE, $int_andar = FALSE,
@@ -53,8 +53,10 @@ class clsPessoaEndereco
 
   function cadastra()
   {
+
+
     if ($this->idpes && $this->cep && $this->idlog && $this->idbai &&
-      $this->idpes_cad) {
+      $this->idpes_cad) {      
 
       $campos  = '';
       $valores = '';
@@ -100,7 +102,7 @@ class clsPessoaEndereco
         '\'%s\', \'%s\', \'%d\', \'M\', 17, NOW(), \'I\', \'%d\' %s)',
         $this->schema_cadastro, $this->tabela, $campos, $this->idpes,
         $this->cep, $this->idlog, $this->idbai, $this->idpes_cad, $valores
-      );
+      );      
 
       $db = new clsBanco();
       $db->Consulta($sql);

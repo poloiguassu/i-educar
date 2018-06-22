@@ -108,12 +108,12 @@ class CoreExt_Locale extends CoreExt_Singleton
    * Configura o locale para uma cultura especifica ou usa o valor corrente
    * da classe.
    *
-   * Tenta usar um locale UTF-8 (por ser padr�o do banco de dados e da
+   * Tenta usar um locale  (por ser padr�o do banco de dados e da
    * aplica��o). Como fallback, usa o locale gen�rico C e um UTF-8 para
    * LC_NUMERIC.
    *
    * Como n�o existe consist�ncia na nomenclarura dos encodings entre os
-   * sistemas operacionais, tenta varia��es como UTF-8 e ISO_8859_1.
+   * sistemas operacionais, tenta varia��es como  e ISO_8859_1.
    *
    * @link http://linux.die.net/man/3/setlocale Linux setlocale(3) man page
    * @param string|NULL $culture
@@ -124,16 +124,16 @@ class CoreExt_Locale extends CoreExt_Singleton
       $culture = $this->getCulture();
     }
 
-    // Nos velhos tempos, o Linux vinha com locales UTF-8 (European LATIN1)
-    $actualCulture = $this->_setLocale(LC_ALL, array($culture . '.UTF-8',
-      $culture . '.UTF-8', $culture . '.ISO88591', $culture . '.iso88591',
+    // Nos velhos tempos, o Linux vinha com locales  (European LATIN1)
+    $actualCulture = $this->_setLocale(LC_ALL, array($culture . '.',
+      $culture . '.', $culture . '.ISO88591', $culture . '.iso88591',
       $culture . '.ISO8859-1', $culture . '.iso8859-1', $culture . 'ISO_8859_1',
       $culture . '.iso_8859_1', $culture . '.ISO8859_1', $culture . '.iso8859_1'));
 
-    // Fallback. Caso n�o encontre um locale UTF-8, usa um C (ASCII-like)
+    // Fallback. Caso n�o encontre um locale , usa um C (ASCII-like)
     // e um UTF-8 somente para num�ricos. No final, tudo � manuseado em C
     // pelas fun��es de formata��o de string, e como usam o locale C, ser�
-    // compat�vel com a defini��o UTF-8.
+    // compat�vel com a defini��o .
     if (FALSE == $actualCulture) {
       $actualCulture = array();
       $actualCulture['LC_ALL']     = $this->_setlocale(LC_ALL, array('C'));

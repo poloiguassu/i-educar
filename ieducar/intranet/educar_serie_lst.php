@@ -32,7 +32,6 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
-require_once ("include/localizacaoSistema.php");
 
 /**
  * clsIndexBase class.
@@ -50,7 +49,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
     $this->processoAp = '583';
-    $this->addEstilo( "localizacaoSistema" );
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -116,9 +115,7 @@ class indice extends clsListagem
 
     $this->addCabecalhos($lista_busca);
 
-    // Filtros de Foreign Keys
-    $get_curso = true;
-    include('include/pmieducar/educar_campo_lista.php');
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso'));
 
     // outros Filtros
     $this->campoTexto('nm_serie', 'S&eacute;rie', $this->nm_serie, 30, 255, FALSE);
@@ -189,10 +186,11 @@ class indice extends clsListagem
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "Listagem de s&eacute;ries"
+         "educar_index.php"                  => "Escola",
+         ""        => "Listagem de s&eacute;ries"             
     ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->enviaLocalizacao($localizacao->montar());  
+
   }
 }
 

@@ -1,47 +1,48 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestדo escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaם
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa י software livre; vocך pode redistribuם-lo e/ou modificב-lo
- * sob os termos da Licenחa Pתblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versדo 2 da Licenחa, como (a seu critיrio)
- * qualquer versדo posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa י distribuם­do na expectativa de que seja תtil, porיm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implם­cita de COMERCIABILIDADE OU
- * ADEQUAֳַO A UMA FINALIDADE ESPECֽFICA. Consulte a Licenחa Pתblica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * Vocך deve ter recebido uma cףpia da Licenחa Pתblica Geral do GNU junto
- * com este programa; se nדo, escreva para a Free Software Foundation, Inc., no
- * endereחo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paixדo <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     TabelaArredondamento
  * @subpackage  Modules
- * @since       Arquivo disponםvel desde a versדo 1.1.0
+ * @since       Arquivo disponível desde a versão 1.1.0
  * @version     $Id$
  */
 
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'TabelaArredondamento/Model/TabelaDataMapper.php';
 require_once 'TabelaArredondamento/Model/TabelaValor.php';
+require_once 'TabelaArredondamento/Model/TipoArredondamentoMedia.php';
 
 /**
  * EditController class.
  *
- * @author      Eriksen Costa Paixדo <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     TabelaArredondamento
  * @subpackage  Modules
- * @since       Classe disponםvel desde a versדo 1.1.0
+ * @since       Classe disponível desde a versão 1.1.0
  * @version     @@package_version@@
  */
 class EditController extends Core_Controller_Page_EditController
@@ -55,38 +56,50 @@ class EditController extends Core_Controller_Page_EditController
 
   protected $_formMap = array(
     'instituicao' => array(
-      'label' => 'Instituiחדo',
+      'label' => 'Instituição',
       'help'  => ''
     ),
     'nome' => array(
       'label'  => 'Nome',
-      'help'   => 'Um nome para a tabela. Exemplo: "<em>Tabela genיrica de conceitos</em>".'
+      'help'   => 'Um nome para a tabela. Exemplo: "<em>Tabela genérica de conceitos</em>".'
     ),
     'tipoNota' => array(
       'label'  => 'Tipo de nota',
       'help'   => ''
     ),
     'valor_nome' => array(
-      'label'  => 'Rףtulo da nota:',
+      'label'  => 'Rótulo da nota:',
       'help'   => 'Exemplos: A, B, C (conceituais)<br />
-                  <b>6,5<b>, <b>7,5<b> (numיricas)'
+                  <b>6,5<b>, <b>7,5<b> (numéricas)'
     ),
     'valor_descricao' => array(
-      'label'  => '<span style="padding-left: 10px"></span>Descriחדo:',
+      'label'  => '<span style="padding-left: 10px"></span>Descrição:',
       'help'   => 'Exemplos: Bom, Regular, Em Processo.'
     ),
     'valor_valor_minimo' => array(
-      'label'  => '<span style="padding-left: 10px"></span>Valor mםnimo:',
-      'help'   => 'O valor numיrico mםnimo da nota.'
+      'label'  => '<span style="padding-left: 10px"></span>Valor mínimo:',
+      'help'   => 'O valor numérico mínimo da nota.'
     ),
     'valor_valor_maximo' => array(
-      'label'  => '<span style="padding-left: 10px"></span>Valor mבximo:',
-      'help'   => 'O valor numיrico mבximo da nota.'
+      'label'  => '<span style="padding-left: 10px"></span>Valor máximo:',
+      'help'   => 'O valor numérico máximo da nota.'
+    ),
+    'acao' => array(
+      'label'  => '<span style="padding-left: 10px"></span>Ação:',
+      'help'   => 'A ação de arredondamento da nota.'
+    ),
+    'casa_decimal' => array(
+      'label'  => '<span style="padding-left: 10px"></span>Casa decimal:',
+      'help'   => 'A casa decimal exata para qual a nota deve ser arredondada.'
+    ),
+    'casa_decimal_exata' => array(
+      'label'  => '<span style="padding-left: 10px"></span>Casa decimal exata:',
+      'help'   => 'A casa decimal a ser arredondada.'
     )
   );
 
   /**
-   * Array de instגncias TabelaArredondamento_Model_TabelaValor.
+   * Array de instâncias TabelaArredondamento_Model_TabelaValor.
    * @var array
    */
   protected $_valores = array();
@@ -94,7 +107,7 @@ class EditController extends Core_Controller_Page_EditController
   /**
    * Setter.
    * @param array $valores
-   * @return Core_Controller_Page_Abstract Provך interface fluםda
+   * @return Core_Controller_Page_Abstract Provê interface fluída
    */
   protected function _setValores(array $valores = array())
   {
@@ -125,7 +138,7 @@ class EditController extends Core_Controller_Page_EditController
 
   /**
    * @see Core_Controller_Page_EditController#_preConstruct()
-   * @todo Interaחדo com a API estב errada. Isso jב י feito em _initNovo()
+   * @todo Interação com a API está errada. Isso já é feito em _initNovo()
    *   na superclasse. VER.
    */
   protected function _preConstruct()
@@ -140,13 +153,15 @@ class EditController extends Core_Controller_Page_EditController
 
     parent::_preRender();
 
+    Portabilis_View_Helper_Application::loadJavascript($this, '/modules/RegraAvaliacao/Assets/Javascripts/TabelaArredondamento.js');
+
     Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
 
     $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""        => "$nomeMenu tabela de arredondamento"
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -159,7 +174,7 @@ class EditController extends Core_Controller_Page_EditController
   {
     $this->campoOculto('id', $this->getEntity()->id);
 
-    // Instituiחדo
+    // Instituição
     $instituicoes = App_Model_IedFinder::getInstituicoes();
     $this->campoLista('instituicao', $this->_getLabel('instituicao'),
       $instituicoes, $this->getEntity()->instituicao);
@@ -172,64 +187,22 @@ class EditController extends Core_Controller_Page_EditController
     $notaTipoValor = RegraAvaliacao_Model_Nota_TipoValor::getInstance();
     $notaTipos = $notaTipoValor->getEnums();
     unset($notaTipos[RegraAvaliacao_Model_Nota_TipoValor::NENHUM]);
+    unset($notaTipos[RegraAvaliacao_Model_Nota_TipoValor::NUMERICACONCEITUAL]);
+    
     if ($this->getEntity()->id!='')
-      $this->campoTexto('tipNota',$this->_getLabel('tipoNota'),$notaTipos[$this->getEntity()->get('tipoNota')],
-                            40,40,false,false,false,'','','','',true);
+      $this->campoTexto('tipNota',$this->_getLabel('tipoNota'),$notaTipos[$this->getEntity()->get('tipoNota')],40,40,false,false,false,'','','','',true);
     else
       $this->campoRadio('tipoNota', $this->_getLabel('tipoNota'), $notaTipos,
-                          $this->getEntity()->get('tipoNota'), '', $this->_getHelp('tipoNota'));
+        $this->getEntity()->get('tipoNota'), '', $this->_getHelp('tipoNota'));
 
     // Parte condicional
     if (!$this->getEntity()->isNew()) {
       // Quebra
       $this->campoQuebra();
-
-      // Ajuda
-      $help = 'Caso seja necessבrio adicionar mais notas, '
-            . 'salve o formulבrio. Automaticamente 3 campos '
-            . 'novos ficarדo disponםveis.<br /><br />';
-
-      $this->campoRotulo('__help1', '<strong>Notas para arredondamento</strong><br />', $help, FALSE, '', '');
-
-      // Cria campos para a postagem de notas
-      $valores = $this->getDataMapper()->findTabelaValor($this->getEntity());
-
-      for ($i = 0, $loop = count($valores); $i < ($loop == 0 ? 5 : $loop + 3); $i++) {
-        $valorNota = $valores[$i];
-
-        $valor_label        = sprintf("valor[label][%d]", $i);
-        $valor_id           = sprintf("valor[id][%d]", $i);
-        $valor_nome         = sprintf("valor[nome][%d]", $i);
-        $valor_descricao    = sprintf("valor[descricao][%d]", $i);
-        $valor_valor_minimo = sprintf("valor[valor_minimo][%d]", $i);
-        $valor_valor_maximo = sprintf("valor[valor_maximo][%d]", $i);
-
-        $this->campoRotulo($valor_label, 'Arredondamento ' . ($i + 1),
-          $this->_getLabel(''), TRUE);
-
-        // Id
-        $this->campoOculto($valor_id, $valorNota->id);
-
-        // Nome
-        $this->campoTexto($valor_nome, $this->_getLabel('valor_nome'),
-          $valorNota->nome, 5, 5, FALSE, FALSE, TRUE, $this->_getHelp('valor_nome'));
-
-        // Descriחדo (se conceitual)
-        if (RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL == $this->getEntity()->get('tipoNota')) {
-          $this->campoTexto($valor_descricao, $this->_getLabel('valor_descricao'),
-            $valorNota->descricao, 15, 25, FALSE, FALSE, TRUE,
-            $this->_getHelp('valor_descricao'));
-        }
-
-        // Valor mםnimo
-        $this->campoTexto($valor_valor_minimo, $this->_getLabel('valor_valor_minimo'),
-          $valorNota->valorMinimo, 6, 6, FALSE, FALSE, TRUE,
-          $this->_getHelp('valor_valor_minimo'));
-
-        // Valor mבximo
-        $this->campoTexto($valor_valor_maximo, $this->_getLabel('valor_valor_maximo'),
-          $valorNota->valorMaximo, 6, 6, FALSE, FALSE, FALSE,
-          $this->_getHelp('valor_valor_maximo'));
+      if (RegraAvaliacao_Model_Nota_TipoValor::CONCEITUAL == $this->getEntity()->get('tipoNota')) {
+        $this->carregaCamposNotasConceituais();
+      }elseif(RegraAvaliacao_Model_Nota_TipoValor::NUMERICA == $this->getEntity()->get('tipoNota')){
+        $this->carregaCamposNotasNumericas();
       }
 
       // Quebra
@@ -237,65 +210,184 @@ class EditController extends Core_Controller_Page_EditController
     }
   }
 
+  private function carregaCamposNotasConceituais(){
+      // Cria campos para a postagem de notas
+    $valores = $this->getDataMapper()->findTabelaValor($this->getEntity());
+
+    for ($i = 0, $loop = count($valores); $i < $loop; $i++) {
+      $valorNota = $valores[$i];
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->id;
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->nome;
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->descricao;
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->valorMinimo;
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->valorMaximo;
+    }
+
+      // Inicio da tabela
+      $this->campoTabelaInicio("tabela_arredondamento", "Notas para arredondamento", array("ID","Rótulo da nota", "Descrição", "Valor mínimo", "Valor máximo"), $this->tabela_arredondamento_valor);
+
+      // Id
+      $this->campoTexto('valor_id', 'id',
+        $valorNota->id, 5, 5, FALSE, FALSE, FALSE);
+
+      // Nome
+      $this->campoTexto('valor_nome', 'valor_nome',
+        $valorNota->nome, 5, 5, TRUE, FALSE, FALSE, $this->_getHelp('valor_nome'));
+
+      // Descrição (se conceitual)
+      $this->campoTexto('valor_descricao', 'valor_descricao',
+        $valorNota->descricao, 15, 25, TRUE, FALSE, FALSE,
+        $this->_getHelp('valor_descricao'));
+
+      // Valor mínimo
+      $this->campoTexto('valor_minimo', 'valor_valor_minimo',
+        $valorNota->valorMinimo, 6, 6, TRUE, FALSE, FALSE,
+        $this->_getHelp('valor_valor_minimo'));
+
+      // Valor máximo
+      $this->campoTexto('valor_maximo', 'valor_valor_maximo',
+        $valorNota->valorMaximo, 6, 6, TRUE, FALSE, FALSE,
+        $this->_getHelp('valor_valor_maximo'));
+
+      // Fim da tabela
+      $this->campoTabelaFim();
+  }
+
+  private function carregaCamposNotasNumericas(){
+    // Cria campos para a postagem de notas
+    $valores = $this->getDataMapper()->findTabelaValor($this->getEntity());
+
+    for ($i = 0; $i <= 9; $i++) {
+      $valorNota = $valores[$i];
+      $acao = 0;
+
+      switch ($valorNota->acao) {
+        case 'Arredondar para o n&uacute;mero inteiro imediatamente inferior':
+           $acao = 1;
+          break;
+        case 'Arredondar para o n&uacute;mero inteiro imediatamente superior':
+          $acao = 2;
+          break;
+        case 'Arredondar para a casa decimal espec&iacute;fica':
+          $acao = 3;
+          break;
+        default:
+           $acao = 0;
+          break;
+      }
+
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->id;
+      $this->tabela_arredondamento_valor[$i][] = $i;
+      $this->tabela_arredondamento_valor[$i][] = $i;
+      $this->tabela_arredondamento_valor[$i][] = $acao;
+      $this->tabela_arredondamento_valor[$i][] = $valorNota->casaDecimalExata;
+
+    };
+
+      // Inicio da tabela
+      $this->campoTabelaInicio("tabela_arredondamento_numerica", "Notas para arredondamento", array("ID","Nome", "Casa decimal", "Ação", "Casa decimal exata"), $this->tabela_arredondamento_valor);
+
+      // Id
+      $this->campoTexto('valor_id', 'id',
+        $valorNota->id, 5, 5, FALSE, FALSE, FALSE);
+
+
+      // Foi feito um campo oculto com a informação a ser gravada pois o framework não grava informações de campos desabilitados
+        $this->campoTexto('valor_nome', 'casa_decimal',
+        $valorNota->nome, 1, 1, FALSE, FALSE, FALSE, '', '', '', 'onKeyUp', FALSE);
+
+      // Este campo serve apenas para ser exibido ao usuário, ele não grava a informação no banco, pois o framework não grava campos desabilitados
+      $this->campoTexto('valor_nome_fake', 'casa_decimal_fake',
+        $valorNota->nome, 1, 1, FALSE, FALSE, FALSE, '', '', '', 'onKeyUp', TRUE);
+
+      // Tipo de arredondamento de média (ou ação)
+      $tipoArredondamentoMedia = TabelaArredondamento_Model_TipoArredondamentoMedia::getInstance();
+      $this->campoLista('valor_acao', 'acao', $tipoArredondamentoMedia->getEnums(),
+       $valorNota->acao, '', FALSE, $this->_getHelp('tipoRecuperacaoParalela'), '', FALSE, FALSE);
+
+      // Casa decimal exata para o caso de arredondamento deste tipo
+      $this->campoTexto('valor_casa_decimal_exata', 'valor_casa_decimal_exata',
+        $valorNota->casaDecimalExata, 1, 1, FALSE, FALSE, FALSE, '', '', '', 'onKeyUp', FALSE);
+
+      // Fim da tabela
+      $this->campoTabelaFim();
+
+  }
+
   protected function _save()
   {
-    // Verifica pela existךncia do field identity
+    // Verifica pela existência do field identity
     if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
       $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
       $entity = $this->getEntity();
     }
 
+    // A contagem usa um dos índices do formulário, senão ia contar sempre 4.
+    $loop    = count($this->valor_id);
+
+    // Verifica se existe valor acima de 100
+    for ($i = 0; $i < $loop; $i++) {
+      if (($this->valor_maximo[$i] >= 100) || ($this->valor_minimo[$i] >= 100)){
+        $this->mensagem = 'Erro no formulário';
+        return FALSE;
+      }
+    }
     // Se existir, chama _save() do parent
     if (!isset($entity)) {
       return parent::_save();
     }
 
-    // Processa os dados da requisiחדo, apenas os valores para a tabela de valores.
-    $valores = $this->getRequest()->valor;
+    //Exclui todos os valores para inserir corretamente
+    $entity->deleteAllValues();
 
-    // A contagem usa um dos םndices do formulבrio, senדo ia contar sempre 4.
-    $loop    = count($valores['id']);
+    // Processa os dados da requisição, apenas os valores para a tabela de valores.
+    // Mescla arrays
+    for ($i = 0; $i < $loop; $i++) {
+      $valores[] = array('id'           => $this->valor_id[$i],
+                         'nome'         => $this->valor_nome[$i],
+                         'descricao'    => $this->valor_descricao[$i],
+                         'valor_minimo' => $this->valor_minimo[$i],
+                         'valor_maximo' => $this->valor_maximo[$i],
+                         'valor_acao'   => $this->valor_acao[$i],
+                         'valor_casa_decimal_exata' => $this->valor_casa_decimal_exata[$i]);
+    }
 
     // Array de objetos a persistir
     $insert  = array();
 
     // Cria um array de objetos a persistir
     for ($i = 0; $i < $loop; $i++) {
-      $id = $valores['id'][$i];
+      $id = $valores[$i]['id'];
 
-      // Nדo atribui a instגncia de $entity senדo nדo teria sucesso em verificar
-      // se a instגncia י isNull().
+      // Não atribui a instância de $entity senão não teria sucesso em verificar
+      // se a instância é isNull().
       $data = array(
-        'id' => $id,
-        'nome' => $valores['nome'][$i],
-        'descricao' => $valores['descricao'][$i],
-        'valorMinimo' => $valores['valor_minimo'][$i],
-        'valorMaximo' => $valores['valor_maximo'][$i]
+        // 'id'               => $id,
+        'nome'             => $valores[$i]['nome'],
+        'descricao'        => $valores[$i]['descricao'],
+        'valorMinimo'      => str_replace(",", ".", $valores[$i]['valor_minimo']),
+        'valorMaximo'      => str_replace(",", ".", $valores[$i]['valor_maximo']),
+        'acao'             => $valores[$i]['valor_acao'],
+        'casaDecimalExata' => $valores[$i]['valor_casa_decimal_exata']
       );
 
-      // Se a instגncia jב existir, use-a para garantir UPDATE
-      if (NULL != ($instance = $this->_getValor($id))) {
-        $insert[$id] = $instance->setOptions($data);
-      }
-      else {
-        $instance = new TabelaArredondamento_Model_TabelaValor($data);
-        if (!$instance->isNull()) {
-          $insert['new_' . $i] = $instance;
-        }
+      $instance = new TabelaArredondamento_Model_TabelaValor($data);
+      if (!$instance->isNull()) {
+        $insert['new_' . $i] = $instance;
       }
     }
 
     // Persiste
     foreach ($insert as $tabelaValor) {
-      // Atribui uma tabela de arredondamento a instגncia de tabela valor
+      // Atribui uma tabela de arredondamento a instância de tabela valor
       $tabelaValor->tabelaArredondamento = $entity;
 
-      // Se nדo tiver nome, passa para o prףximo
+      // Se não tiver nome, passa para o próximo
       if ($tabelaValor->isValid()) {
         $this->getDataMapper()->getTabelaValorDataMapper()->save($tabelaValor);
       }
       else {
-        $this->mensagem = 'Erro no formulבrio';
+        $this->mensagem = 'Erro no formulário';
         return FALSE;
       }
     }

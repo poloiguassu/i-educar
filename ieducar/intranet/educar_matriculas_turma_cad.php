@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃÃO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponÃ­vel desde a versÃ£o 1.0.0
  * @version   $Id$
  */
 
@@ -37,11 +37,11 @@ require_once 'lib/Portabilis/Date/Utils.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -57,11 +57,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -96,6 +96,7 @@ class indice extends clsCadastro
     @session_write_close();
 
     $this->ref_cod_turma = $_GET['ref_cod_turma'];
+    $this->ano = $_GET['ano'];
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(659, $this->pessoa_logada, 7,
@@ -124,14 +125,22 @@ class indice extends clsCadastro
 
       $this->nome_url_cancelar = 'Cancelar';
 
+      $db = new clsBanco();
+      $existe_entrumacao = $db->CampoUnico("select * from matricula_turma where ref_cod_turma = $this->ref_cod_turma");
+
+      if ($retorno == 'Editar' and $existe_entrumacao){
+        $this->url_copiar_enturmacoes = sprintf('educar_matricula_cad.php?ref_cod_turma_copiar_enturmacoes=%d', $this->ref_cod_turma);
+        $this->nome_url_copiar_enturmacoes = 'Copiar enturmações';
+      }
+
       $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
       $localizacao = new LocalizacaoSistema();
       $localizacao->entradaCaminhos( array(
            $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-           "educar_index.php"                  => "i-Educar - Escola",
-           ""        => "{$nomeMenu} matr&iacute;culas da turma"             
+           "educar_index.php"                  => "Escola",
+           ""        => "{$nomeMenu} matr&iacute;culas da turma"
       ));
-      $this->enviaLocalizacao($localizacao->montar());      
+      $this->enviaLocalizacao($localizacao->montar());
       return $retorno;
     }
 
@@ -194,7 +203,7 @@ class indice extends clsCadastro
         $ano_letivo = $det_ano_letivo['ano'];
       }
       else {
-        $this->mensagem = 'Não foi possível encontrar o ano letivo em andamento da escola.';
+        $this->mensagem = 'N&acirc;o foi possÃ­vel encontrar o ano letivo em andamento da escola.';
         return FALSE;
       }
     }
@@ -205,6 +214,9 @@ class indice extends clsCadastro
       $nm_turma = $det_turma['nm_turma'];
       $this->campoRotulo('nm_turma', 'Turma', $nm_turma);
     }
+    if ($this->ano) {
+      $this->campoRotulo('ano', 'Ano', $this->ano);
+    }
 
     // Inlui o aluno
     $this->campoQuebra();
@@ -212,15 +224,13 @@ class indice extends clsCadastro
     if ($_POST['matriculas_turma']) {
       $this->matriculas_turma = unserialize(urldecode($_POST['matriculas_turma']));
     }
-
     $alunosEnturmados = false;
-
     if (is_numeric($this->ref_cod_turma) && !$_POST) {
       $obj_matriculas_turma = new clsPmieducarMatriculaTurma();
       $obj_matriculas_turma->setOrderby('sequencial_fechamento, nome_aluno');
       $lst_matriculas_turma = $obj_matriculas_turma->lista(NULL, $this->ref_cod_turma,
          NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL,
-         array(1, 2, 3), NULL, NULL, $ano_letivo, NULL, TRUE, NULL, 1, TRUE);
+         array(1, 2, 3), NULL, NULL, $this->ano, NULL, TRUE, NULL, 1, TRUE);
 
       if (is_array($lst_matriculas_turma)) {
         $alunosEnturmados = true;
@@ -241,7 +251,7 @@ class indice extends clsCadastro
     }
 
     if ($this->matriculas_turma) {
-      $this->campoRotulo('titulo', 'Matr&iacute;culas', "<b>&nbsp;Alunos matriculados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque alunos para desenturmar</b><label style='display: block; width: 350px; margin-left: 196px;'><input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"check_desenturma[]"'.");'/>Marcar Todos</label>");
+      $this->campoRotulo('tituloUm', 'Matr&iacute;culas', "<b>&nbsp;Alunos j&aacute; matriculados e enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque o(s) aluno(s) para desenturmar</b><label style='display: block; width: 350px; margin-left: 256px;'>&nbsp;&nbsp;&nbsp;<input type='checkbox' name='CheckTodos' onClick='marcarCheck(".'"check_desenturma[]"'.");'/>Marcar todos</label>");
       foreach ($this->matriculas_turma as $matricula => $campo) {
         $obj_matricula = new clsPmieducarMatricula($matricula);
         $det_matricula = $obj_matricula->detalhe();
@@ -252,7 +262,7 @@ class indice extends clsCadastro
         $nm_aluno = $det_aluno['nome_aluno'];
 
         $this->campoTextoInv('ref_cod_matricula_' . $matricula, '', $nm_aluno,
-          30, 255, FALSE, FALSE, TRUE, '', '', '', '', 'ref_cod_matricula');
+          40, 255, FALSE, FALSE, TRUE, '', '', '', '', 'ref_cod_matricula');
 
         $this->campoCheck('check_desenturma['.$matricula.']','',$matricula);
       }
@@ -264,7 +274,7 @@ class indice extends clsCadastro
     $opcoes = array();
     $obj_matriculas_turma = new clsPmieducarMatriculaTurma();
     $alunos = $obj_matriculas_turma->alunosNaoEnturmados($this->ref_ref_cod_escola,
-      $this->ref_ref_cod_serie, $this->ref_cod_curso, $ano_letivo);
+      $this->ref_ref_cod_serie, $this->ref_cod_curso, $this->ano);
 
     if (is_array($alunos)) {
       for ($i = 0; $i < count($alunos); $i++) {
@@ -280,17 +290,22 @@ class indice extends clsCadastro
     }
 
     if (count($opcoes)) {
-      $this->inputsHelper()->date('data_enturmacao', array('label' => 'Data da enturmação', 'value' => date('Y-m-d')));
+      $this->inputsHelper()->date('data_enturmacao', array('label' => 'Data da enturma&ccedil;&acirc;o', 'value' => date('Y-m-d')));
       asort($opcoes);
+    $this->campoRotulo('tituloDois', 'Matr&iacute;culas', "<b>&nbsp;Alunos j&aacute; matriculados e n&atilde;o enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque o(s) aluno(s) para enturmar</b><label style='display: block; width: 350px; margin-left: 256px;'>&nbsp;&nbsp;&nbsp;<input checked type='checkbox' name='CheckTodosDois' onClick='marcarCheckDois(".'"ref_cod_matricula[]"'.");'/>Marcar todos</label>");
       foreach ($opcoes as $key => $aluno) {
-        $this->campoCheck('ref_cod_matricula[' . $key . ']', 'Aluno', $key,
-          $aluno, NULL, NULL, NULL);
+        $this->campoRotulo($key,'','<table  style="font-size:11px; font-family: arial, verdana, lucida, helvetica, sans-serif;" border="0px"><tr><td width="258px">'.$aluno.'</td><td><input value="$key" type="checkbox" name="ref_cod_matricula['.$key.']" id="ref_cod_matricula[]"></td></tr></table>
+','');
+
+// $nome, $campo, $valor, $duplo = FALSE, $descricao = '', $separador = ':'
+
+// $nome, $campo, $valor, $desc = '',      $duplo = FALSE, $script = FALSE, $disable = FALSE, $dica = NULL
       }
     }
-    else if($alunosEnturmados){
-      $this->campoRotulo('rotulo_1', '-', 'Todos os alunos matriculados na série já se encontram enturmados.');
-    }else {      
-      $this->campoRotulo('rotulo_1', '-', 'Não há alunos enturmados.');
+    else if ($alunosEnturmados){
+      $this->campoRotulo('rotulo_1', '-', 'Todos os alunos matriculados na s&eacute;rie j&aacute; se encontram enturmados.');
+    }else{
+      $this->campoRotulo('rotulo_1', '-', 'N&acirc;o h&aacute; alunos enturmados.');
     }
 
     $this->campoQuebra();
@@ -307,27 +322,47 @@ class indice extends clsCadastro
     $this->data_enturmacao = Portabilis_Date_Utils::brToPgSQL($this->data_enturmacao);
     @session_write_close();
 
-    // realiza desenturmações
+    // realiza desenturmaÃ§Ãµes
     foreach ($this->check_desenturma as $matricula) {
       $this->removerEnturmacao($matricula,$this->ref_cod_turma);
-    }    
+    }
 
     if ($this->matriculas_turma) {
-      foreach ($this->ref_cod_matricula as $matricula => $campo) {
-        $obj = new clsPmieducarMatriculaTurma($matricula, $this->ref_cod_turma,
-          NULL, $this->pessoa_logada, NULL, NULL, 1, NULL, $campo['sequencial_']);
 
-        $existe = $obj->existe();
+      $totalAlunosParaEnturmar = count($this->ref_cod_matricula);
+      $objTurma = new clsPmieducarTurma();
+      $dadosTurma = $objTurma->lista($this->ref_cod_turma);
+      $maxAlunos = $dadosTurma[0]['max_aluno'];
+      $objEnturmacoes = new clsPmieducarMatriculaTurma();
+      $alunosEnturmados = $objEnturmacoes->enturmacoesSemDependencia($this->ref_cod_turma);
+      $vagasDisponiveis = $maxAlunos - $alunosEnturmados[0];
+      $objEscolaSerie = new clsPmieducarEscolaSerie();
+      $dadosEscolaSerie = $objEscolaSerie->lista($this->ref_ref_cod_escola, $this->ref_ref_cod_serie);
 
-        if (!$existe) {
-          $obj->data_enturmacao = $this->data_enturmacao;
-          $cadastrou = $obj->cadastra();
+      if ($vagasDisponiveis >= $totalAlunosParaEnturmar || !$dadosEscolaSerie[0]['bloquear_enturmacao_sem_vagas']) {
+        foreach ($this->ref_cod_matricula as $matricula => $campo) {
+          $obj = new clsPmieducarMatriculaTurma($matricula, $this->ref_cod_turma,
+            NULL, $this->pessoa_logada, NULL, NULL, 1, NULL, $campo['sequencial_']);
 
-          if (!$cadastrou) {
-            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-            return FALSE;
+          $existe = $obj->existeEnturmacaoAtiva();
+
+          if (!$existe) {
+            $obj->data_enturmacao = $this->data_enturmacao;
+            $cadastrou = $obj->cadastra();
+
+            if (!$cadastrou) {
+              $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+              return FALSE;
+            }
           }
         }
+      }else{
+        if ($vagasDisponiveis > 0) {
+          $this->mensagem = 'Cadastro n&atilde;o realizado. H&aacute; apenas '. $vagasDisponiveis . ' vagas restantes para esta turma.';
+        }else{
+          $this->mensagem = 'Cadastro n&atilde;o realizado. N&atilde;o h&aacute; mais vagas dispon&iacute;veis para esta turma.';
+        }
+        return false;
       }
 
       $this->mensagem .= 'Cadastro efetuada com sucesso.<br>';
@@ -347,14 +382,13 @@ class indice extends clsCadastro
     $sequencialEnturmacao = $this->getSequencialEnturmacaoByTurmaId($matriculaId, $turmaId);
     $enturmacao = new clsPmieducarMatriculaTurma($matriculaId,
                                                  $turmaId,
-                                                 $this->pessoa_logada, 
-                                                 NULL, 
+                                                 $this->pessoa_logada,
                                                  NULL,
-                                                 NULL, 
+                                                 NULL,
+                                                 date('Y-m-d'),
                                                  0,
                                                  NULL,
                                                  $sequencialEnturmacao);
-
     if ($enturmacao->edita()){
       $enturmacao->marcaAlunoRemanejado($this->data_enturmacao);
       return true;
@@ -373,19 +407,19 @@ class indice extends clsCadastro
       return $sequencial[0];
     }
     return 1;
-  }  
+  }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pÃ¡gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteÃºdo
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteÃºdo Ã   pÃ¡gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cÃ³digo HTML
 $pagina->MakeAll();
 
 ?>
@@ -410,6 +444,28 @@ $pagina->MakeAll();
             if (campo.elements[i].id == idValue) {
 
                 campo.elements[i].checked = campo.CheckTodos.checked;
+            }
+        }
+  }
+
+  function fixUpCheckBoxesDois(){
+    $j('input[name^=ref_cod_matricula]').each(function(index, element){
+      element.id = 'ref_cod_matricula[]';
+      element.checked = true;
+    });
+  }
+
+  fixUpCheckBoxesDois();
+
+  function marcarCheckDois(idValueDois) {
+      // testar com formcadastro
+      var contaFormDois = document.formcadastro.elements.length;
+      var campoDois = document.formcadastro;
+      var i;
+        for (i=0; i<contaFormDois; i++) {
+            if (campoDois.elements[i].id == idValueDois) {
+
+                campoDois.elements[i].checked = campoDois.CheckTodosDois.checked;
             }
         }
   }

@@ -41,6 +41,10 @@ require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 
+/**
+ * Class MotoristaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class MotoristaController extends ApiCoreController
 {
   protected $_processoAp        = 578; //verificar
@@ -76,7 +80,7 @@ class MotoristaController extends ApiCoreController
 
     $sqls[] = "select distinct cod_motorista as id, nome as name from
                  modules.motorista, cadastro.pessoa where idpes = ref_idpes
-                 and lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%'";
+                 and lower((nome)) like '%'||lower(($1))||'%'";
 
     return $sqls;
   }

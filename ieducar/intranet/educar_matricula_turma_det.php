@@ -79,9 +79,11 @@ class indice extends clsDetalhe
   var $ref_cod_escola;
   var $ref_cod_turma_origem;
   var $ref_cod_curso;
-  var $data_enturmacao;
+  var $ano_letivo;
 
   var $sequencial;
+
+  var $data_enturmacao;
 
   function Gerar()
   {
@@ -90,7 +92,6 @@ class indice extends clsDetalhe
     session_write_close();
 
     $this->titulo = 'Matricula Turma - Detalhe';
-    
 
     foreach ($_POST as $key =>$value) {
       $this->$key = $value;
@@ -132,7 +133,7 @@ class indice extends clsDetalhe
     $db = new clsBanco();
 
     $ano = $db->CampoUnico("select ano from pmieducar.matricula where cod_matricula = $this->ref_cod_matricula");
-    $sql = "select count(cod_matricula) as qtd_matriculas from pmieducar.matricula, pmieducar.matricula_turma, pmieducar.aluno where aluno.cod_aluno = matricula.ref_cod_aluno and ano = {$ano} and aluno.ativo = 1 and matricula.ativo = 1 and matricula_turma.ativo = matricula.ativo and cod_matricula = ref_cod_matricula and ref_cod_turma = $this->ref_cod_turma";
+    $sql = "select count(cod_matricula) as qtd_matriculas from pmieducar.matricula, pmieducar.matricula_turma, pmieducar.aluno where aluno.cod_aluno = matricula.ref_cod_aluno and ano = {$ano} and aluno.ativo = 1 and matricula.ativo = 1 and matricula_turma.ativo = matricula.ativo and matricula.dependencia = 'f' and cod_matricula = ref_cod_matricula and ref_cod_turma = $this->ref_cod_turma";
 
     $total_alunos = $db->CampoUnico($sql);
 
@@ -143,6 +144,8 @@ class indice extends clsDetalhe
       die();
     }
 
+
+
     // Tipo da turma
     $obj_ref_cod_turma_tipo = new clsPmieducarTurmaTipo($registro['ref_cod_turma_tipo']);
     $det_ref_cod_turma_tipo = $obj_ref_cod_turma_tipo->detalhe();
@@ -152,6 +155,8 @@ class indice extends clsDetalhe
     $obj_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
     $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
     $registro['ref_cod_instituicao'] = $obj_cod_instituicao_det['nm_instituicao'];
+
+    $habilita_enturmar = ($obj_cod_instituicao_det['restringir_multiplas_enturmacoes'] != "t");
 
     // Nome da escola
     $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_ref_cod_escola']);
@@ -199,20 +204,38 @@ class indice extends clsDetalhe
     }
 
     //(enturmações) turma atual
-    $enturmacoes = new clsPmieducarMatriculaTurma();
-    $enturmacoes = $enturmacoes->lista($this->ref_cod_matricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    $objEnturmacoes = new clsPmieducarMatriculaTurma();
+    $enturmacoes = $objEnturmacoes->lista($this->ref_cod_matricula, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
     $this->possuiEnturmacao = ! empty($enturmacoes);
+
+    if ($this->possuiEnturmacao) {
+      $dependente = $objEnturmacoes->verficaEnturmacaoDeDependencia($this->ref_cod_matricula, $enturmacoes[0]['ref_cod_turma']);
+    }
+
     $this->possuiEnturmacaoTurmaDestino = false;
     $this->turmaOrigemMesmaDestino = false;
 
     $this->addDetalhe(array('<b>Turma selecionada</b>' , '<b>' . $registro['nm_turma'] . '</b>'));
 
-    $this->addDetalhe(array('Total de vagas', $registro['max_aluno']));
+    $objTurma = new clsPmiEducarTurma($this->ref_cod_turma);
+
+    $capacidadeMaximaAlunosSala = $objTurma->maximoAlunosSala();
+
+    if($capacidadeMaximaAlunosSala){
+      $totalVagas = $capacidadeMaximaAlunosSala < $registro['max_aluno'] ? $capacidadeMaximaAlunosSala : $registro['max_aluno'];
+    }else{
+      $totalVagas = $registro['max_aluno'];
+    }
+
+    $this->addDetalhe(array('Total de vagas', $totalVagas));
 
     if (is_numeric($total_alunos)) {
       $this->addDetalhe(array('Alunos enturmados', $total_alunos));
-      $this->addDetalhe(array('Vagas disponíveis', $registro['max_aluno'] - $total_alunos));
+      $this->addDetalhe(array('Vagas disponíveis', $totalVagas - $total_alunos));
+    }
+    if(is_numeric($capacidadeMaximaAlunosSala)){
+      $this->addDetalhe(array('Capacidade máxima de alunos na sala', $capacidadeMaximaAlunosSala));
     }
 
     if ($this->possuiEnturmacao) {
@@ -238,11 +261,11 @@ class indice extends clsDetalhe
         $selectEnturmacoes = "<input id='ref_cod_turma_origem' type='hidden' value = '{$enturmacoes[0]['ref_cod_turma']}'/>{$enturmacoes[0]['nm_turma']}";
       }
 
-      $this->addDetalhe(array('<b>Enturmação</b>', $selectEnturmacoes));
-    }
+      $this->addDetalhe(array('<b>Enturmação atual</b>', $selectEnturmacoes));
+    }    
 
     if(!$this->possuiEnturmacaoTurmaDestino)
-      $this->addDetalhe(array('Data da enturmação', '<input onkeypress="formataData(this,event);" value="'.date('d/m/Y').'" class="geral" type="text" name="data_enturmacao" id="data_enturmacao" size="9" maxlength="10"/>'));    
+      $this->addDetalhe(array('Data da enturmação', '<input onkeypress="formataData(this,event);" value="'.date('d/m/Y').'" class="geral" type="text" name="data_enturmacao" id="data_enturmacao" size="9" maxlength="10"/>'));
 
     $this->addDetalhe(array(
       '-',
@@ -259,7 +282,7 @@ class indice extends clsDetalhe
       ', $this->ref_cod_turma_origem, $this->sequencial)
     ));
 
-    if ($registro['max_aluno'] - $total_alunos <= 0) {
+    if (($totalVagas - $total_alunos <= 0) && !$dependente) {
 
       $escolaSerie = $this->getEscolaSerie($det_ref_cod_escola['cod_escola'], $det_ser['cod_serie']);
 
@@ -271,14 +294,28 @@ class indice extends clsDetalhe
         $msg = sprintf('Enturmação não pode ser realizada,\n\no limite de vagas da turma já foi atingido e para esta série e escola foi definido bloqueio de enturmação após atingir tal limite.');
         $jsEnturmacao = sprintf('alert("%s"); return false;', $msg);
       }
+
+      if($capacidadeMaximaAlunosSala - $total_alunos <= 0){
+        $msg = sprintf('Atenção! A capacidade da sala foi atingida. Não é possível enturmar mais alunos.');
+        $jsEnturmacao = sprintf('alert("%s"); return false;', $msg);
+      }
     }
     else
-      $jsEnturmacao = 'if (!confirm("Confirma a enturmação?")) return false;';
+
+    $jsEnturmacao = 'if (!confirm("Confirma a enturmação?")) return false;';
 
     $script = sprintf('
       <script type="text/javascript">
 
         function enturmar(ref_cod_matricula, ref_cod_turma_destino, tipo){
+          var data = $j("#data_enturmacao").val();
+          var array_data = data.split("/");
+          var data_valida = IsDate(array_data[0], array_data[1], array_data[2]);
+          if (data_valida == false) {
+            alert("Informe a data corretamente");
+            return false;
+          }
+
           document.formcadastro.ref_cod_turma_origem.value = "";
 
           if(tipo == "transferir") {
@@ -299,7 +336,23 @@ class indice extends clsDetalhe
           document.formcadastro.submit();
         }
 
-        function removerEnturmacao(ref_cod_matricula, ref_cod_turma_destino) {
+        function IsDate(day, month, year) {
+          var date = new Date();
+          var blnRet = false;
+          var blnDay;
+          var blnMonth;
+          var blnYear;
+          date.setFullYear(year, month -1, day);
+          blnDay   = (date.getDate()      == day);
+          blnMonth = (date.getMonth()     == month -1);
+          blnYear  = (date.getFullYear()  == year);
+          if (blnDay && blnMonth && blnYear) {
+            blnRet = true;
+          }
+          return blnRet;
+        }
+
+        function removerEnturmacao(ref_cod_matricula, ref_cod_turma_destino, data_enturmacao) {
 
           if (! confirm("Confirma remoção da enturmação?"))
             return false;
@@ -316,10 +369,11 @@ class indice extends clsDetalhe
 
     $canCreate = new clsPermissoes();
     $canCreate = $canCreate->permissao_cadastra(578, $this->pessoa_logada, 7);
+    $this->data_enturmacao = $enturmacoes[0]['data_enturmacao'];
 
     if ($this->possuiEnturmacaoTurmaDestino && $canCreate){
       $this->array_botao            = array('Remover (enturmação) da turma selecionada');
-      $this->array_botao_url_script = array("removerEnturmacao({$this->ref_cod_matricula}, {$this->ref_cod_turma})");
+      $this->array_botao_url_script = array("removerEnturmacao({$this->ref_cod_matricula}, {$this->ref_cod_turma}, {$this->data_enturmacao})");
     }
 
     if (! $this->turmaOrigemMesmaDestino && $canCreate) {
@@ -329,23 +383,25 @@ class indice extends clsDetalhe
         $this->array_botao_url_script[] = "enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"transferir\")";
       }
 
-      //nova enturmação
-      if (! $this->possuiEnturmacaoTurmaDestino && $canCreate) {
-        $this->array_botao[]            = 'Enturmar na turma selecionada';
-        $this->array_botao_url_script[] = "enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"nova\")";
+      if ($habilita_enturmar || !$this->possuiEnturmacao){
+        //nova enturmação
+        if (! $this->possuiEnturmacaoTurmaDestino && $canCreate) {
+          $this->array_botao[]            = 'Enturmar na turma selecionada';
+          $this->array_botao_url_script[] = "enturmar({$this->ref_cod_matricula}, {$this->ref_cod_turma}, \"nova\")";
+        }
       }
     }
 
     $this->array_botao[] = 'Voltar';
-    $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$this->ref_cod_matricula}\");";
+    $this->array_botao_url_script[] = "go(\"educar_matricula_turma_lst.php?ref_cod_matricula={$this->ref_cod_matricula}&ano_letivo={$this->ano_letivo}\");";
 
     $this->largura = '100%';
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Detalhe da enturma&ccedil;&atilde;o da matr&iacute;cula"
+         "educar_index.php"                  => "Escola",
+         ""                                  => "Enturmações da matrícula"
     ));
     $this->enviaLocalizacao($localizacao->montar());
   }

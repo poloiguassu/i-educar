@@ -1,5 +1,8 @@
 <?php
 
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -61,6 +64,7 @@ class clsPmieducarCurso
   var $ref_cod_instituicao;
   var $padrao_ano_escolar;
   var $hora_falta;
+  var $modalidade_curso;
 
   /**
    * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -120,7 +124,7 @@ class clsPmieducarCurso
    *   $avaliacao_globalizada serão removidos do construtor. Seus valores são
    *   ignorados.
    */
-  function clsPmieducarCurso($cod_curso = NULL, $ref_usuario_cad = NULL,
+  function __construct($cod_curso = NULL, $ref_usuario_cad = NULL,
     $ref_cod_tipo_regime = NULL, $ref_cod_nivel_ensino = NULL,
     $ref_cod_tipo_ensino = NULL, $ref_cod_tipo_avaliacao = NULL, $nm_curso = NULL,
     $sgl_curso = NULL, $qtd_etapas = NULL, $frequencia_minima = NULL, $media = NULL,
@@ -134,7 +138,7 @@ class clsPmieducarCurso
     $this->_schema = 'pmieducar.';
     $this->_tabela = $this->_schema . 'curso';
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_curso, ref_usuario_cad, ref_cod_tipo_regime, ref_cod_nivel_ensino, ref_cod_tipo_ensino, nm_curso, sgl_curso, qtd_etapas, carga_horaria, ato_poder_publico, objetivo_curso, publico_alvo, data_cadastro, data_exclusao, ativo, ref_usuario_exc, ref_cod_instituicao, padrao_ano_escolar, hora_falta, multi_seriado';
+    $this->_campos_lista = $this->_todos_campos = 'cod_curso, ref_usuario_cad, ref_cod_tipo_regime, ref_cod_nivel_ensino, ref_cod_tipo_ensino, nm_curso, sgl_curso, qtd_etapas, carga_horaria, ato_poder_publico, objetivo_curso, publico_alvo, data_cadastro, data_exclusao, ativo, ref_usuario_exc, ref_cod_instituicao, padrao_ano_escolar, hora_falta, multi_seriado, modalidade_curso';
 
     if (is_numeric($ref_cod_instituicao)) {
       if (class_exists('clsPmieducarInstituicao')) {
@@ -315,6 +319,7 @@ class clsPmieducarCurso
     }
 
     $this->multi_seriado = $multi_seriado;
+
   }
 
   /**
@@ -426,10 +431,16 @@ class clsPmieducarCurso
         $gruda = ", ";
       }
 
-      if (is_numeric($multi_seriado)) {
-				$campos .= "{$gruda}multi_seriado";
-				$valores .= "{$gruda}'{$this->multi_seriado}'";
-				$gruda = ", ";
+      if (is_numeric($this->multi_seriado)) {
+        $campos .= "{$gruda}multi_seriado";
+        $valores .= "{$gruda}'{$this->multi_seriado}'";
+        $gruda = ", ";
+      }
+
+      if (is_numeric($this->modalidade_curso)) {
+        $campos .= "{$gruda}modalidade_curso";
+        $valores .= "{$gruda}'{$this->modalidade_curso}'";
+        $gruda = ", ";
       }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
@@ -542,11 +553,17 @@ class clsPmieducarCurso
         $gruda = ", ";
       }
 
-			if( is_numeric( $this->multi_seriado))
-			{
-				$set .= "{$gruda}multi_seriado = '{$this->multi_seriado}'";
-				$gruda = ", ";
-			}
+            if( is_numeric( $this->multi_seriado))
+      {
+        $set .= "{$gruda}multi_seriado = '{$this->multi_seriado}'";
+        $gruda = ", ";
+      }
+
+      if( is_numeric( $this->modalidade_curso))
+      {
+        $set .= "{$gruda}modalidade_curso = '{$this->modalidade_curso}'";
+        $gruda = ", ";
+      }
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_curso = '{$this->cod_curso}'");
@@ -610,7 +627,7 @@ class clsPmieducarCurso
     }
 
     if (is_string($str_nm_curso)) {
-      $filtros .= "{$whereAnd} nm_curso LIKE '%{$str_nm_curso}%'";
+      $filtros .= "{$whereAnd} translate(upper(nm_curso),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_curso}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = " AND ";
     }
 
@@ -755,6 +772,25 @@ class clsPmieducarCurso
     }
 
     return FALSE;
+  }
+
+  function cursoDeAtividadeComplementar(){
+    if (is_numeric($this->cod_curso)) {
+      $db = new clsBanco();
+
+      $sql = "SELECT 1
+                FROM {$this->_tabela}
+               INNER JOIN pmieducar.tipo_ensino ON (tipo_ensino.cod_tipo_ensino = curso.ref_cod_tipo_ensino)
+               WHERE tipo_ensino.atividade_complementar = TRUE
+                 AND cod_curso =" . $this->cod_curso;
+      $cursoDeAtividadeComplementar = $db->CampoUnico($sql);
+      
+      if($cursoDeAtividadeComplementar){
+        return true;
+      }
+
+      return false;
+    }
   }
 
   /**

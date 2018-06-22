@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestï¿½o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaï¿½
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ï¿½ software livre; vocï¿½ pode redistribuï¿½-lo e/ou modificï¿½-lo
+ * sob os termos da Licenï¿½a Pï¿½blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versï¿½o 2 da Licenï¿½a, como (a seu critï¿½rio)
+ * qualquer versï¿½o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ï¿½ distribuï¿½ï¿½do na expectativa de que seja ï¿½til, porï¿½m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implï¿½ï¿½cita de COMERCIABILIDADE OU
+ * ADEQUAï¿½ï¿½O A UMA FINALIDADE ESPECï¿½FICA. Consulte a Licenï¿½a Pï¿½blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Vocï¿½ deve ter recebido uma cï¿½pia da Licenï¿½a Pï¿½blica Geral do GNU junto
+ * com este programa; se nï¿½o, escreva para a Free Software Foundation, Inc., no
+ * endereï¿½o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponï¿½vel desde a versï¿½o 1.0.0
  * @version   $Id$
  */
 
@@ -43,15 +43,22 @@ require_once 'include/localizacaoSistema.php';
 /**
  * clsCadastro class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaï¿½ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Include
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponï¿½vel desde a versï¿½o 1.0.0
  * @version   @@package_version@@
  */
 class clsCadastro extends clsCampos
 {
+    /**
+     * Referencia pega da session para o idpes do usuario atual
+     *
+     * @var int
+     */
+    var $pessoa_logada;
+
   var $__nome = 'formcadastro';
   var $banner;
   var $bannerLateral;
@@ -70,6 +77,7 @@ class clsCadastro extends clsCampos
 
   var $fexcluir;
   var $excluir_Img;
+  var $script_excluir = 'excluir();';
   var $nome_excluirImg;
   var $url_cancelar;
   var $nome_url_cancelar;
@@ -95,6 +103,7 @@ class clsCadastro extends clsCampos
   var $controle;
   var $acao_enviar ='acao()';
   var $botao_enviar = TRUE;
+  var $sucesso;
 
   var $onSubmit = 'acao()';
 
@@ -115,7 +124,7 @@ class clsCadastro extends clsCampos
     $this->bannerClose = $boolFechaBanner;
   }
 
-  function clsCadastro()
+  function __construct()
   {
     parent::__construct();
     $this->tipoacao = @$_POST['tipoacao'];
@@ -154,40 +163,46 @@ class clsCadastro extends clsCampos
 
       // Realiza cadastro
       $this->PreCadastrar();
-      $sucesso = FALSE;
+      $this->sucesso = FALSE;
 
       if ($this->tipoacao == 'Novo') {
-          $sucesso = $this->Novo();
-          if ($sucesso && !empty($this->script_sucesso)) {
+          $this->sucesso = $this->Novo();
+          if ($this->sucesso && !empty($this->script_sucesso)) {
             $this->script = "<script type=\"text/javascript\">
               window.opener.AdicionaItem($this->chave, '$this->item_campo_pai', '$this->nome_pai', $this->submete );
               window.close();
             </script>";
           }
 
-          if (!$sucesso && empty($this->erros) && empty($this->mensagem)) {
+          if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
             $this->mensagem = "N&atilde;o foi poss&iacute;vel inserir a informa&ccedil;&atilde;o. [CAD01]";
           }
       }
       elseif ($this->tipoacao == 'Editar') {
-          $sucesso = $this->Editar();
-          if (!$sucesso && empty($this->erros) && empty($this->mensagem)) {
+          $this->sucesso = $this->Editar();
+          if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
             $this->mensagem = "N&atilde;o foi poss&iacute;vel editar a informa&ccedil;&atilde;o. [CAD02]";
           }
       }
       elseif ($this->tipoacao == 'Excluir') {
-        $sucesso = $this->Excluir();
-        if (!$sucesso && empty($this->erros) && empty($this->mensagem)) {
+        $this->sucesso = $this->Excluir();
+        if (!$this->sucesso && empty($this->erros) && empty($this->mensagem)) {
           $this->mensagem = "N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD03]";
         }
       }
       elseif ($this->tipoacao == 'ExcluirImg') {
-        $sucesso = $this->ExcluirImg();
-        if (!$sucesso && empty( $this->erros ) && empty( $this->mensagem )) {
+        $this->sucesso = $this->ExcluirImg();
+        if (!$this->sucesso && empty( $this->erros ) && empty( $this->mensagem )) {
           $this->mensagem = "N&atilde;o foi poss&iacute;vel excluir a informa&ccedil;&atilde;o. [CAD04]";
         }
       }
-      if (empty($script) && $sucesso && !empty($this->url_sucesso)) {
+      elseif ($this->tipoacao == 'Enturmar') {
+        $this->sucesso = $this->Enturmar();
+        if (!$this->sucesso && empty( $this->erros ) && empty( $this->mensagem )) {
+          $this->mensagem = "N&atilde;o foi poss&iacute;vel copiar as entruma&ccedil;&otilde;es. [CAD05]";
+        }
+      }
+      if (empty($script) && $this->sucesso && !empty($this->url_sucesso)) {
         redirecionar( $this->url_sucesso );
       }
       else {
@@ -234,6 +249,10 @@ class clsCadastro extends clsCampos
       $this->mensagem = 'Registro incluido com sucesso!';
     }
 
+    if ($this->sucesso) {
+      return "<p class='success'>$this->mensagem</p>";
+    }
+
     return empty($this->mensagem) ? "" : "<p class='form_erro error'>$this->mensagem</p>";
   }
 
@@ -249,7 +268,7 @@ class clsCadastro extends clsCampos
 
     if ($this->banner) {
       $retorno .= "<table width='100%' style=\"height:100%\" border='0' cellpadding='0' cellspacing='0'><tr>";
-      $retorno .= "<td class=\"barraLateral\" width=\"21\" valign=\"top\"><a href='#'><img src=\"{$this->bannerLateral}\" align=\"right\" border=\"0\" alt=\"$this->titulo_barra\" title=\"$this->titulo_barra\"></a></td><td valign='top'>";
+      $retorno .= "<td valign='top'>";
     }
 
     $this->Gerar();
@@ -262,6 +281,8 @@ class clsCadastro extends clsCampos
     $this->nome_url_sucesso = empty( $this->nome_url_sucesso ) ? "Salvar" : $this->nome_url_sucesso;
 
     $width = empty($this->largura) ? "width='100%'" : "width='$this->largura'";
+
+
 
     $retorno .=  "\n<!-- cadastro begin -->\n";
     $retorno .=  "<form name='$this->__nome' id='$this->__nome' onsubmit='return $this->onSubmit' action='$this->action'  method='post' target='$this->target' $this->form_enctype>\n";
@@ -297,7 +318,7 @@ class clsCadastro extends clsCampos
      * Adiciona os botoes de help para a pagina atual
      */
     $url = parse_url($_SERVER['REQUEST_URI']);
-    $url = preg_match('^/', '', $url['path']);
+    $url = preg_replace('/^\//', '', $url['path']);
     if (strpos($url, '_det.php') !== FALSE) {
       $tipo = 'det';
     }
@@ -312,7 +333,7 @@ class clsCadastro extends clsCampos
     }
     $barra = $titulo;
 
-    // @todo Remover código, funcionalidade não existente.
+    // @todo Remover cï¿½digo, funcionalidade nï¿½o existente.
     if (class_exists('clsPmiajudaPagina')) {
       $ajudaPagina = new clsPmiajudaPagina();
       $lista = $ajudaPagina->lista(null,null,$url);
@@ -321,9 +342,9 @@ class clsCadastro extends clsCampos
         <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">
           <tr>
           <script type=\"text/javascript\">document.help_page_index = 0;</script>
-          <td width=\"20\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botão de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta página\"></a></td>
+          <td width=\"20\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botï¿½o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta pï¿½gina\"></a></td>
           <td>{$titulo}</td>
-          <td align=\"right\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botão de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta página\"></a></td>
+          <td align=\"right\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]["ref_cod_topico"]}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botï¿½o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta pï¿½gina\"></a></td>
           </tr>
         </table>";
       }
@@ -386,7 +407,11 @@ class clsCadastro extends clsCampos
       $nomeCampo = $componente[0];
       $validador = $componente[2];
 
-      if (empty($validador) && $nomeCampo == 'cpf' && preg_match("^(tab_add_[0-9])", $nome) !== 1) {
+      if ($nomeCampo === 'avulso') {
+        continue;
+      }
+
+      if (empty($validador) && $nomeCampo == 'cpf' && preg_match("/^(tab_add_[0-9])/", $nome) !== 1) {
         $retorno .=
         "if( document.getElementById('$nome').value != \"\")
         {
@@ -402,10 +427,13 @@ class clsCadastro extends clsCampos
         }";
       }
 
+
       /**
        * Campo tabela
        */
-      if (preg_match("^(tab_add_[0-9])", $nome) === 1) {
+
+      if (preg_match("/^(tab_add_[0-9])/", $nome) === 1) {
+
         $nome_campos = $componente['cabecalho'];
         $componente = array_shift($componente);
 
@@ -419,7 +447,7 @@ class clsCadastro extends clsCampos
           $nomeCampo =$componente_campo[1];
           $validador = $componente_campo[2];
 
-          if(!empty($validador)) {
+          if(!empty($validador) && strlen($validador) > 1) {
             if($componente_campo[0] == 'idFederal') {
               $campo = "document.getElementById(\"{$nomeCampo}[\"+id_campo+\"]\")";
               $validador= explode('+', $validador);
@@ -444,7 +472,7 @@ class clsCadastro extends clsCampos
                 $retorno .=  " \n if (";
               }
 
-              $retorno .=  "!($validador.test( $campo.value )))\n";
+              $retorno .=  "($campo != null)&&!($validador.test( $campo.value )))\n";
               $retorno .=  "{\n";
 
               $retorno .=  " mudaClassName( 'formdestaque', 'obrigatorio' );\n";
@@ -492,6 +520,7 @@ class clsCadastro extends clsCampos
       }
 
       if (!empty($validador)) {
+
         if ($validador == 'lat') {
           $retorno .= "if(!(/^-2[5-9]/.test( document.$this->__nome.".$nome."_graus.value ))) { \n";
           $retorno .= " alert( 'Preencha o campo \'$componente[1]\' corretamente!' ); \n";
@@ -525,6 +554,7 @@ class clsCadastro extends clsCampos
           $retorno .= " return false; } ";
         }
         else {
+
           if ($nomeCampo == 'idFederal') {
             $validador= explode('+',$validador);
             $retorno .=  " if (";
@@ -541,25 +571,16 @@ class clsCadastro extends clsCampos
             $retorno .=  " return false; } ";
           }
           else {
-            //substituito referencia a elementos por padrão W3C document.getElementById()
+            //substituito referencia a elementos por padrï¿½o W3C document.getElementById()
             //quando se referenciava um nome de elemento como um array ex: cadastro[aluno]
             //nao funcionava na referencia por nome
             //16-08-2006
-            $retorno .=  ' if (';
-
-            if ($validador[0] == '*') {
-              $validador = substr( $validador, 1 );
-              $retorno .=  "document.getElementById(\"{$nome}\").value!='' && ";
-            }
-
-            $retorno .=  "!($validador.test( document.getElementById(\"{$nome}\").value )))\n";
-            $retorno .=  "{\n";
-            $retorno .=  "  mudaClassName( 'formdestaque', 'obrigatorio' );\n";
-            $retorno .=  "  document.getElementById(\"{$nome}\").className = \"formdestaque\";\n";
-            $retorno .=  "  alert( 'Preencha o campo \'" . extendChars( $componente[1], true ) . "\' corretamente!' ); \n";
+            $retornoNaFalha =  "  mudaClassName( 'formdestaque', 'obrigatorio' );\n";
+            $retornoNaFalha .=  "  document.getElementById(\"{$nome}\").className = \"formdestaque\";\n";
+            $retornoNaFalha .=  "  alert( 'Preencha o campo \'" . extendChars( $componente[1], true ) . "\' corretamente!' ); \n";
 
             if ($this->__nm_tab) {
-              $retorno .= "
+              $retornoNaFalha .= "
                   var item = document.getElementById('$nome');
                   var prox = 1;
                   do{
@@ -585,8 +606,29 @@ class clsCadastro extends clsCampos
               ";
             }
 
-            $retorno .=  "  document.getElementById(\"{$nome}\").focus(); \n";
-            $retorno .=  "  return false;\n";
+            $retornoNaFalha .=  "  document.getElementById(\"{$nome}\").focus(); \n";
+            $retornoNaFalha .=  "  return false;\n";
+            if ($validador == '/[^ ]/') {
+                $retorno .= " if (typeof \$j == 'function' && \$j('#{$nome}').val() != null &&
+                                \$j('#{$nome}').val().constructor === Array ) {\n
+                    if (!\$j('#{$nome}').val().filter((val) => val.toString().trim().length > 0).length) {\n";
+            $retorno .=  $retornoNaFalha;
+            $retorno .=  "}\n";
+            $retorno .=  '
+                                } else if (
+            ';
+            } else {
+                $retorno .=  '  if (';
+            }
+
+            if ($validador[0] == '*') {
+              $validador = substr( $validador, 1 );
+              $retorno .=  "document.getElementById(\"{$nome}\").value!='' && ";
+            }
+
+            $retorno .=  "!($validador.test( document.getElementById(\"{$nome}\").value )))\n";
+            $retorno .=  "{\n";
+            $retorno .=  $retornoNaFalha;
             $retorno .=  "}\n";
 
             if (!empty($nomeCampo)) {
@@ -629,7 +671,7 @@ class clsCadastro extends clsCampos
     }
 
     if ($this->fexcluir) {
-      $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:excluir();' value=' Excluir '>&nbsp;";
+      $retorno .=  "&nbsp;<input id='btn_excluir' type='button' class='botaolistagem' onclick='javascript:{$this->script_excluir}' value=' Excluir '>&nbsp;";
     }
     if ($this->bot_alt) {
       $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: go( \"$this->url_alt\" );' value=' $this->nome_url_alt '>&nbsp;";
@@ -642,6 +684,9 @@ class clsCadastro extends clsCampos
     }
     if ($this->url_cancelar || $this->script_cancelar) {
       $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->script_cancelar go( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;";
+    }
+    if ($this->url_copiar_enturmacoes) {
+      $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: go( \"$this->url_copiar_enturmacoes\" );' value=' $this->nome_url_copiar_enturmacoes '>&nbsp;";
     }
 
     if ($this->array_botao_url) {
@@ -709,8 +754,8 @@ class clsCadastro extends clsCampos
   }
 
   /**
-   * Retorna uma lista formatada de erros que possam ter sido lançadas pela
-   * integração CoreExt_Controller_Page_Interface com CoreExt_DataMapper e
+   * Retorna uma lista formatada de erros que possam ter sido lanï¿½adas pela
+   * integraï¿½ï¿½o CoreExt_Controller_Page_Interface com CoreExt_DataMapper e
    * CoreExt_Entity.
    *
    * @return string|NULL
@@ -728,7 +773,7 @@ class clsCadastro extends clsCampos
     if ($hasErrors) {
       $htmlError = '
         <div class="form error">
-          <p>Por favor, verifique a lista de erros e corrija as informações necessárias no formulário.</p>
+          <p>Por favor, verifique a lista de erros e corrija as informaï¿½ï¿½es necessï¿½rias no formulï¿½rio.</p>
           <ul>%s</ul>
         </div>
         ';
@@ -745,6 +790,13 @@ class clsCadastro extends clsCampos
     return NULL;
   }
 
+    // TODO: Abstrair lógica em Trait ao atualizar PHP
+    protected function validarCamposObrigatoriosCenso()
+    {
+        $obj = new clsPmieducarInstituicao($this->ref_cod_instituicao);
+        $instituicao = empty($this->ref_cod_instituicao) ? $obj->primeiraAtiva() : $obj->detalhe();
+        return dbBool($instituicao['obrigar_campos_censo']);
+    }
 
   protected function inputsHelper() {
     if (! isset($this->_inputsHelper))
@@ -755,5 +807,11 @@ class clsCadastro extends clsCampos
 
   protected function currentUserId() {
     return Portabilis_Utils_User::currentUserId();
+  }
+
+  protected function nivelAcessoPessoaLogada()
+  {
+    $obj_permissoes = new clsPermissoes();
+    return $obj_permissoes->nivel_acesso($this->currentUserId());
   }
 }

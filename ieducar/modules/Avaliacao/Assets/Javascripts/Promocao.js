@@ -18,11 +18,11 @@ var onClickDeleteEvent    = false;
 
 //url builders
 
-var setTableSearchDetails = function(){ }
+var setTableSearchDetails = function(){};
 
 var postPromocaoMatricula = function(){
   var $proximoMatriculaIdField = $j('#proximo-matricula-id');
-  $proximoMatriculaIdField.data('initial_matricula_id', $proximoMatriculaIdField.val())
+  $proximoMatriculaIdField.data('initial_matricula_id', $proximoMatriculaIdField.val());
 
   if (validatesIfValueIsNumeric($proximoMatriculaIdField.val())) {
     var options = {
@@ -30,15 +30,18 @@ var postPromocaoMatricula = function(){
       dataType : 'json',
       data : {
         instituicao_id : $j('#instituicao_id').val(),
-        ano_escolar : $j('#ano_escolar').val(),
+        ano : $j('#ano').val(),
+        escola : $j('#escola').val(),
+        curso : $j('#curso').val(),
+        serie : $j('#serie').val(),
+        turma : $j('#turma').val()
       },
-      success : handlePostPromocaoMatricula
+      success : handlePostPromocaoMatricula,
+      error : handlePostPromocaoMatricula
     };
-
     postResource(options);
   }
-}
-
+};
 
 var deleteOldComponentesCurriculares = function() {
   var options = {
@@ -49,8 +52,7 @@ var deleteOldComponentesCurriculares = function() {
   };
 
   deleteResource(options);
-}
-
+};
 
 //callback handlers
 
@@ -58,7 +60,10 @@ function handlePostPromocaoMatricula(dataResponse){
   handleMessages(dataResponse.msgs);
 
   var $proximoMatriculaIdField = $j('#proximo-matricula-id');
-  $proximoMatriculaIdField.val(dataResponse.result.proximo_matricula_id);
+
+  var $proximaMatricula = ((dataResponse.any_error_msg) ?  (parseInt($proximoMatriculaIdField.val()) + parseInt(1)) : dataResponse.result.proximo_matricula_id);
+
+  $proximoMatriculaIdField.val($proximaMatricula);
 
   if($j('#continuar-processo').is(':checked') &&
      $j.isNumeric($proximoMatriculaIdField.val()) &&
@@ -78,7 +83,7 @@ function handleDelete(dataResponse){
 }
 
 function handleSearch($resultTable, dataResponse) {
-  var $text = $j('<p />').html('Quantidade de matrículas em andamento: ' +
+  var $text = $j('<p />').html('Quantidade de matrículas ativas na rede: ' +
                               dataResponse.quantidade_matriculas + '<br />');
 
   $j('<input />').attr('type', 'checkbox').attr('id', 'continuar-processo').attr('name', 'continuar-processo').appendTo($text);

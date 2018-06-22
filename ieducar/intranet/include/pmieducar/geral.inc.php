@@ -1,37 +1,7 @@
 <?php
 
-/*
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- */
-
-/**
- * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package  Core
- * @since    Arquivo disponível desde a versão 1.0.0
- * @version  $Id$
- */
-
 // Inclui operações de bootstrap.
 require_once '../includes/bootstrap.php';
-
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/Geral.inc.php';
@@ -53,6 +23,7 @@ require_once 'include/pmieducar/clsPmieducarDisciplinaDisciplinaTopico.inc.php';
 require_once 'include/pmieducar/clsPmieducarDisciplinaSerie.inc.php';
 require_once 'include/pmieducar/clsPmieducarDisciplinaTopico.inc.php';
 require_once 'include/pmieducar/clsPmieducarDispensaDisciplina.inc.php';
+require_once 'include/pmieducar/clsPmieducarDisciplinaDependencia.inc.php';
 require_once 'include/pmieducar/clsPmieducarDocumentos.inc.php';
 require_once 'include/pmieducar/clsPmieducarEndereco.inc.php';
 require_once 'include/pmieducar/clsPmieducarEnderecoExterno.inc.php';
@@ -125,7 +96,7 @@ require_once 'include/pmieducar/clsPmieducarAnoLetivoModulo.inc.php';
 require_once 'include/pmieducar/clsPmieducarCalendarioAnotacao.inc.php';
 require_once 'include/pmieducar/clsPmieducarCalendarioDiaAnotacao.inc.php';
 require_once 'include/pmieducar/clsPmieducarTurmaModulo.inc.php';
-require_once 'include/pmieducar/clsPmieducarTurmaDiaSemana.inc.php';
+require_once 'include/pmieducar/clsPmieducarDispensaDisciplinaEtapa.inc.php';
 require_once 'include/pmieducar/clsPmieducarFaltas.inc.php';
 require_once 'include/pmieducar/clsPmieducarQuadroHorarioHorariosAux.inc.php';
 require_once 'include/pmieducar/clsPmieducarServidorFuncao.inc.php';
@@ -134,6 +105,15 @@ require_once 'include/pmieducar/clsPmieducarCategoriaNivel.inc.php';
 require_once 'include/pmieducar/clsPmieducarNivel.inc.php';
 require_once 'include/pmieducar/clsPmieducarSubnivel.inc.php';
 require_once 'include/pmieducar/clsPmieducarServidorCursoMinistra.inc.php';
+require_once 'include/pmieducar/clsPmieducarAbandonoTipo.inc.php';
+require_once 'include/pmieducar/clsPmieducarDistribuicaoUniforme.inc.php';
+require_once 'include/pmieducar/clsPmieducarCandidatoReservaVaga.inc.php';
+require_once 'include/pmieducar/clsPmieducarSerieVaga.inc.php';
+require_once 'include/pmieducar/clsPmieducarBloqueioLancamentoFaltasNotas.inc.php';
+require_once 'include/pmieducar/clsPmieducarConfiguracoesGerais.inc.php';
+require_once 'include/pmieducar/clsPmieducarCandidatoFilaUnica.inc.php';
+require_once 'include/pmieducar/clsPmieducarEscolaCandidatoFilaUnica.inc.php';
+require_once 'include/pmieducar/clsPmieducarResponsaveisAluno.inc.php';
 
 //Biblioteca
 require_once 'include/pmieducar/clsPmieducarBiblioteca.inc.php';
@@ -161,7 +141,11 @@ require_once 'include/pmieducar/clsPmieducarClienteSuspensao.inc.php';
 require_once 'include/pmieducar/clsPmieducarAcervoAcervoAutor.inc.php';
 require_once 'include/pmieducar/clsPmieducarBibliotecaDia.inc.php';
 require_once 'include/pmieducar/clsPmieducarBibliotecaFeriados.inc.php';
+require_once 'include/pmieducar/clsPmieducarProjeto.inc.php';
+require_once 'include/pmieducar/clsPmieducarBloqueioAnoLetivo.inc.php';
+require_once 'include/pmieducar/clsPmieducarBackup.inc.php';
 
 require_once 'include/pmieducar/clsPmieducarAlunoCmf.inc.php';
 require_once 'include/pessoa/clsCadastroRaca.inc.php';
 require_once 'include/pessoa/clsCadastroFisicaRaca.inc.php';
+require_once 'include/pmieducar/alteraAtestadoParaDeclaracao.php';

@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestדo escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaם
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa י software livre; vocך pode redistribuם-lo e/ou modificב-lo
- * sob os termos da Licenחa Pתblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versדo 2 da Licenחa, como (a seu critיrio)
- * qualquer versדo posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa י distribuם­do na expectativa de que seja תtil, porיm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implם­cita de COMERCIABILIDADE OU
- * ADEQUAֳַO A UMA FINALIDADE ESPECֽFICA. Consulte a Licenחa Pתblica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * Vocך deve ter recebido uma cףpia da Licenחa Pתblica Geral do GNU junto
- * com este programa; se nדo, escreva para a Free Software Foundation, Inc., no
- * endereחo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaם <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponםvel desde a versדo 1.0.0
+ * @since     Arquivo disponível desde a versão 1.0.0
  * @version   $Id$
  */
 
@@ -33,17 +33,16 @@ require_once 'include/pmieducar/geral.inc.php';
 /**
  * clsPmieducarEscola class.
  *
- * @author    Prefeitura Municipal de Itajaם <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponםvel desde a versדo 1.0.0
+ * @since     Classe disponível desde a versão 1.0.0
  * @version   @@package_version@@
  */
 class clsPmieducarAluno
 {
   var $cod_aluno;
-  var $ref_cod_aluno_beneficio;
   var $ref_cod_religiao;
   var $ref_usuario_exc;
   var $ref_usuario_cad;
@@ -56,9 +55,25 @@ class clsPmieducarAluno
   var $nm_pai;
   var $nm_mae;
   var $tipo_responsavel;
-
+  var $recursos_prova_inep;
+  var $recebe_escolarizacao_em_outro_espaco;
+  var $justificativa_falta_documentacao;
+  var $url_laudo_medico;
+  var $url_documento;
+  var $codigo_sistema;
+  var $veiculo_transporte_escolar;
+  var $autorizado_um;
+  var $parentesco_um;
+  var $autorizado_dois;
+  var $parentesco_dois;
+  var $autorizado_tres;
+  var $parentesco_tres;
+  var $autorizado_quatro;
+  var $parentesco_quatro;
+  var $autorizado_cinco;
+  var $parentesco_cinco;
   /**
-   * Armazena o total de resultados obtidos na תltima chamada ao mיtodo lista().
+   * Armazena o total de resultados obtidos na última chamada ao método lista().
    * @var int
    */
   var $_total;
@@ -76,33 +91,33 @@ class clsPmieducarAluno
   var $_tabela;
 
   /**
-   * Lista separada por vםrgula, com os campos que devem ser selecionados na
-   * prףxima chamado ao mיtodo lista().
+   * Lista separada por vírgula, com os campos que devem ser selecionados na
+   * próxima chamado ao método lista().
    * @var string
    */
   var $_campos_lista;
 
   /**
-   * Lista com todos os campos da tabela separados por vםrgula, padrדo para
-   * seleחדo no mיtodo lista.
+   * Lista com todos os campos da tabela separados por vírgula, padrão para
+   * seleção no método lista.
    * @var string
    */
   var $_todos_campos;
 
   /**
-   * Valor que define a quantidade de registros a ser retornada pelo mיtodo lista().
+   * Valor que define a quantidade de registros a ser retornada pelo método lista().
    * @var int
    */
   var $_limite_quantidade;
 
   /**
-   * Define o valor de offset no retorno dos registros no mיtodo lista().
+   * Define o valor de offset no retorno dos registros no método lista().
    * @var int
    */
   var $_limite_offset;
 
   /**
-   * Define o campo para ser usado como padrדo de ordenaחדo no mיtodo lista().
+   * Define o campo para ser usado como padrão de ordenação no método lista().
    * @var string
    */
   var $_campo_order_by;
@@ -110,42 +125,41 @@ class clsPmieducarAluno
   /**
    * Construtor.
    */
-  function clsPmieducarAluno($cod_aluno = NULL, $ref_cod_aluno_beneficio = NULL,
-    $ref_cod_religiao = NULL, $ref_usuario_exc = NULL, $ref_usuario_cad = NULL,
-    $ref_idpes = NULL, $data_cadastro = NULL, $data_exclusao = NULL, $ativo = NULL,
-    $caminho_foto = NULL,$analfabeto = NULL, $nm_pai = NULL, $nm_mae = NULL,
-    $tipo_responsavel = NULL, $aluno_estado_id = NULL)
+  function __construct(
+    $cod_aluno = NULL,
+    $ref_cod_aluno_beneficio = NULL,
+    $ref_cod_religiao = NULL,
+    $ref_usuario_exc = NULL,
+    $ref_usuario_cad = NULL,
+    $ref_idpes = NULL,
+    $data_cadastro = NULL,
+    $data_exclusao = NULL,
+    $ativo = NULL,
+    $caminho_foto = NULL,
+    $analfabeto = NULL,
+    $nm_pai = NULL,
+    $nm_mae = NULL,
+    $tipo_responsavel = NULL,
+    $aluno_estado_id = NULL,
+    $autorizado_um = NULL,
+    $parentesco_um = NULL,
+    $autorizado_dois = NULL,
+    $parentesco_dois = NULL,
+    $autorizado_tres = NULL,
+    $parentesco_tres = NULL,
+    $autorizado_quatro = NULL,
+    $parentesco_quatro = NULL,
+    $autorizado_cinco = NULL,
+    $parentesco_cinco = NULL)
   {
     $db = new clsBanco();
     $this->_schema = 'pmieducar.';
-    $this->_tabela = $this->_schema . 'aluno';
+    $this->_tabela = $this->_schema . 'aluno a';
 
-    $this->_campos_lista = $this->_todos_campos = 'cod_aluno, ref_cod_aluno_beneficio, ref_cod_religiao, ref_usuario_exc, ref_usuario_cad, ref_idpes, data_cadastro, data_exclusao, ativo, caminho_foto, analfabeto, nm_pai, nm_mae,tipo_responsavel, aluno_estado_id';
-
-    if (is_numeric($ref_cod_aluno_beneficio)) {
-      if (class_exists('clsPmieducarAlunoBeneficio')) {
-        $tmp_obj = new clsPmieducarAlunoBeneficio($ref_cod_aluno_beneficio);
-
-        if (method_exists($tmp_obj, 'existe')) {
-          if ($tmp_obj->existe()) {
-            $this->ref_cod_aluno_beneficio = $ref_cod_aluno_beneficio;
-          }
-        }
-        elseif (method_exists($tmp_obj, 'detalhe')) {
-          if ($tmp_obj->detalhe()) {
-            $this->ref_cod_aluno_beneficio = $ref_cod_aluno_beneficio;
-          }
-        }
-      }
-      else {
-        if ($db->CampoUnico("SELECT 1 FROM pmieducar.aluno_beneficio WHERE cod_aluno_beneficio = '{$ref_cod_aluno_beneficio}'")) {
-          $this->ref_cod_aluno_beneficio = $ref_cod_aluno_beneficio;
-        }
-      }
-    }
-    elseif ($ref_cod_aluno_beneficio == 'NULL') {
-      $this->ref_cod_aluno_beneficio = $ref_cod_aluno_beneficio;
-    }
+    $this->_campos_lista = $this->_todos_campos = 'a.cod_aluno, a.ref_cod_religiao, a.ref_usuario_exc,
+        a.ref_usuario_cad, a.ref_idpes, a.data_cadastro, a.data_exclusao, a.ativo, a.caminho_foto, a.analfabeto, a.nm_pai, a.nm_mae,tipo_responsavel, a.aluno_estado_id, a.recursos_prova_inep, a.recebe_escolarizacao_em_outro_espaco,
+        a.justificativa_falta_documentacao, a.url_laudo_medico::text, a.codigo_sistema, a.veiculo_transporte_escolar, a.parentesco_um, a.autorizado_um, a.parentesco_dois, a.autorizado_dois,
+        a.parentesco_tres, a.autorizado_tres, a.parentesco_quatro, a.autorizado_quatro, a.parentesco_cinco, a.autorizado_cinco, a.url_documento::text';
 
     if (is_numeric($ref_usuario_exc)) {
       if (class_exists('clsPmieducarUsuario')) {
@@ -241,6 +255,46 @@ class clsPmieducarAluno
       $this->tipo_responsavel = $tipo_responsavel;
     }
 
+    if (is_string($autorizado_um)) {
+      $this->autorizado_um = $autorizado_um;
+    }
+
+    if (is_string($parentesco_um)) {
+      $this->parentesco_um = $parentesco_um;
+    }
+
+    if (is_string($autorizado_dois)) {
+      $this->autorizado_dois = $autorizado_dois;
+    }
+
+    if (is_string($parentesco_dois)) {
+      $this->parentesco_dois = $parentesco_dois;
+    }
+
+    if (is_string($autorizado_tres)) {
+      $this->autorizado_tres = $autorizado_tres;
+    }
+
+    if (is_string($parentesco_tres)) {
+      $this->parentesco_tres = $parentesco_tres;
+    }
+
+    if (is_string($autorizado_quatro)) {
+      $this->autorizado_quatro = $autorizado_quatro;
+    }
+
+    if (is_string($parentesco_quatro)) {
+      $this->parentesco_quatro = $parentesco_quatro;
+    }
+
+    if (is_string($autorizado_cinco)) {
+      $this->autorizado_cinco = $autorizado_cinco;
+    }
+
+    if (is_string($parentesco_cinco)) {
+      $this->parentesco_cinco = $parentesco_cinco;
+    }
+
     $this->aluno_estado_id = $aluno_estado_id;
   }
 
@@ -257,11 +311,6 @@ class clsPmieducarAluno
       $valores = '';
       $gruda   = '';
 
-      if (is_numeric($this->ref_cod_aluno_beneficio)) {
-        $campos  .= "{$gruda}ref_cod_aluno_beneficio";
-        $valores .= "{$gruda}'{$this->ref_cod_aluno_beneficio}'";
-        $gruda = ', ';
-      }
 
       if (is_numeric($this->ref_cod_religiao)) {
         $campos  .= "{$gruda}ref_cod_religiao";
@@ -325,8 +374,110 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
-      $db->Consulta("INSERT INTO {$this->_tabela} ($campos) VALUES ($valores)");
-      return $db->InsertId("{$this->_tabela}_cod_aluno_seq");
+      if (is_string($this->recursos_prova_inep)) {
+        $campos  .= "{$gruda}recursos_prova_inep";
+        $valores .= "{$gruda}'{$this->recursos_prova_inep}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->recebe_escolarizacao_em_outro_espaco)) {
+        $campos  .= "{$gruda}recebe_escolarizacao_em_outro_espaco";
+        $valores .= "{$gruda}'{$this->recebe_escolarizacao_em_outro_espaco}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->justificativa_falta_documentacao)) {
+        $campos  .= "{$gruda}justificativa_falta_documentacao";
+        $valores .= "{$gruda}'{$this->justificativa_falta_documentacao}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->url_documento) && $this->url_documento != '') {
+        $campos  .= "{$gruda}url_documento";
+        $valores .= "{$gruda}'{$this->url_documento}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->url_laudo_medico) && $this->url_laudo_medico != '') {
+        $campos  .= "{$gruda}url_laudo_medico";
+        $valores .= "{$gruda}'{$this->url_laudo_medico}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->codigo_sistema)) {
+        $campos  .= "{$gruda}codigo_sistema";
+        $valores .= "{$gruda}'{$this->codigo_sistema}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->veiculo_transporte_escolar)) {
+        $campos  .= "{$gruda}veiculo_transporte_escolar";
+        $valores .= "{$gruda}'{$this->veiculo_transporte_escolar}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_um) && $this->autorizado_um != "NULL") {
+        $campos  .= "{$gruda}autorizado_um";
+        $valores .= "{$gruda}'{$this->autorizado_um}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_um) && $this->parentesco_um != "NULL") {
+        $campos  .= "{$gruda}parentesco_um";
+        $valores .= "{$gruda}'{$this->parentesco_um}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_dois) && $this->autorizado_dois != "NULL") {
+        $campos  .= "{$gruda}autorizado_dois";
+        $valores .= "{$gruda}'{$this->autorizado_dois}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_dois) && $this->parentesco_dois != "NULL") {
+        $campos  .= "{$gruda}parentesco_dois";
+        $valores .= "{$gruda}'{$this->parentesco_dois}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_tres) && $this->autorizado_tres != "NULL") {
+        $campos  .= "{$gruda}autorizado_tres";
+        $valores .= "{$gruda}'{$this->autorizado_tres}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_tres) && $this->parentesco_tres != "NULL") {
+        $campos  .= "{$gruda}parentesco_tres";
+        $valores .= "{$gruda}'{$this->parentesco_tres}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_quatro) && $this->autorizado_quatro != "NULL") {
+        $campos  .= "{$gruda}autorizado_quatro";
+        $valores .= "{$gruda}'{$this->autorizado_quatro}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_quatro) && $this->parentesco_quatro != "NULL") {
+        $campos  .= "{$gruda}parentesco_quatro";
+        $valores .= "{$gruda}'{$this->parentesco_quatro}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_cinco) && $this->autorizado_cinco != "NULL") {
+        $campos  .= "{$gruda}autorizado_cinco";
+        $valores .= "{$gruda}'{$this->autorizado_cinco}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_cinco) && $this->parentesco_cinco != "NULL") {
+        $campos  .= "{$gruda}parentesco_cinco";
+        $valores .= "{$gruda}'{$this->parentesco_cinco}'";
+        $gruda = ', ';
+      }
+
+      $db->Consulta("INSERT INTO pmieducar.aluno ($campos) VALUES ($valores)");
+      return $db->InsertId("pmieducar.aluno_cod_aluno_seq");
     }
 
     return FALSE;
@@ -338,14 +489,9 @@ class clsPmieducarAluno
    */
   function edita()
   {
-    if (is_numeric($this->cod_aluno) && is_numeric($this->ref_usuario_exc)) {
+    if (is_numeric($this->cod_aluno)) {
       $db  = new clsBanco();
       $set = '';
-
-      if (is_numeric($this->ref_cod_aluno_beneficio) || $this->ref_cod_aluno_beneficio == "NULL") {
-        $set .= "{$gruda}ref_cod_aluno_beneficio = {$this->ref_cod_aluno_beneficio}";
-        $gruda = ', ';
-      }
 
       if (is_numeric($this->ref_cod_religiao) || $this->ref_cod_religiao == "NULL") {
         $set .= "{$gruda}ref_cod_religiao = {$this->ref_cod_religiao}";
@@ -430,6 +576,134 @@ class clsPmieducarAluno
         $gruda = ', ';
       }
 
+      if (is_string($this->recursos_prova_inep)) {
+        $set .= "{$gruda}recursos_prova_inep = '{$this->recursos_prova_inep}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->recebe_escolarizacao_em_outro_espaco)) {
+        $set .= "{$gruda}recebe_escolarizacao_em_outro_espaco = '{$this->recebe_escolarizacao_em_outro_espaco}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->justificativa_falta_documentacao)) {
+        $set .= "{$gruda}justificativa_falta_documentacao = '{$this->justificativa_falta_documentacao}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->url_documento) && $this->url_documento != '') {
+        $set .= "{$gruda}url_documento = '{$this->url_documento}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->url_laudo_medico) && $this->url_laudo_medico != '') {
+        $set .= "{$gruda}url_laudo_medico = '{$this->url_laudo_medico}'";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->codigo_sistema)) {
+        $set .= "{$gruda}codigo_sistema = '{$this->codigo_sistema}'";
+        $gruda = ', ';
+      }
+
+      if (is_numeric($this->veiculo_transporte_escolar)) {
+        $set .= "{$gruda}veiculo_transporte_escolar = '{$this->veiculo_transporte_escolar}'";
+        $gruda = ', ';
+      }else{
+        $set .= "{$gruda}veiculo_transporte_escolar = NULL ";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_um) && $this->autorizado_um != "NULL") {
+        $set .= "{$gruda}autorizado_um = '{$this->autorizado_um}'";
+        $gruda = ', ';
+      }
+      elseif ($this->autorizado_um == "NULL") {
+        $set .= "{$gruda}autorizado_um = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_um) && $this->parentesco_um != "NULL") {
+        $set .= "{$gruda}parentesco_um = '{$this->parentesco_um}'";
+        $gruda = ', ';
+      }
+      elseif ($this->parentesco_um == "NULL") {
+        $set .= "{$gruda}parentesco_um = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_dois) && $this->autorizado_dois != "NULL") {
+        $set .= "{$gruda}autorizado_dois = '{$this->autorizado_dois}'";
+        $gruda = ', ';
+      }
+      elseif ($this->autorizado_dois == "NULL") {
+        $set .= "{$gruda}autorizado_dois = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_dois) && $this->parentesco_dois != "NULL") {
+        $set .= "{$gruda}parentesco_dois = '{$this->parentesco_dois}'";
+        $gruda = ', ';
+      }
+      elseif ($this->parentesco_dois == "NULL") {
+        $set .= "{$gruda}parentesco_dois = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_tres) && $this->autorizado_tres != "NULL") {
+        $set .= "{$gruda}autorizado_tres = '{$this->autorizado_tres}'";
+        $gruda = ', ';
+      }
+      elseif ($this->autorizado_tres == "NULL") {
+        $set .= "{$gruda}autorizado_tres = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_tres) && $this->parentesco_tres != "NULL") {
+        $set .= "{$gruda}parentesco_tres = '{$this->parentesco_tres}'";
+        $gruda = ', ';
+      }
+      elseif ($this->parentesco_tres == "NULL") {
+        $set .= "{$gruda}parentesco_tres = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_quatro) && $this->autorizado_quatro != "NULL") {
+        $set .= "{$gruda}autorizado_quatro = '{$this->autorizado_quatro}'";
+        $gruda = ', ';
+      }
+      elseif ($this->autorizado_quatro == "NULL") {
+        $set .= "{$gruda}autorizado_quatro = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_quatro) && $this->parentesco_quatro != "NULL") {
+        $set .= "{$gruda}parentesco_quatro = '{$this->parentesco_quatro}'";
+        $gruda = ', ';
+      }
+      elseif ($this->parentesco_quatro == "NULL") {
+        $set .= "{$gruda}parentesco_quatro = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->autorizado_cinco) && $this->autorizado_cinco != "NULL") {
+        $set .= "{$gruda}autorizado_cinco = '{$this->autorizado_cinco}'";
+        $gruda = ', ';
+      }
+      elseif ($this->autorizado_cinco == "NULL") {
+        $set .= "{$gruda}autorizado_cinco = NULL";
+        $gruda = ', ';
+      }
+
+      if (is_string($this->parentesco_cinco) && $this->parentesco_cinco != "NULL") {
+        $set .= "{$gruda}parentesco_cinco = '{$this->parentesco_cinco}'";
+        $gruda = ', ';
+      }
+      elseif ($this->parentesco_cinco == "NULL") {
+        $set .= "{$gruda}parentesco_cinco = NULL";
+        $gruda = ', ';
+      }
+
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_aluno = '{$this->cod_aluno}'" );
         return TRUE;
@@ -440,17 +714,41 @@ class clsPmieducarAluno
   }
 
   /**
-   * Retorna uma lista de registros filtrados de acordo com os parגmetros.
+   * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
-  function lista($int_cod_aluno = null, $int_ref_cod_aluno_beneficio = null,
-    $int_ref_cod_religiao = null, $int_ref_usuario_exc = null,
-    $int_ref_usuario_cad = null, $int_ref_idpes = null, $date_data_cadastro_ini = null,
-    $date_data_cadastro_fim = null, $date_data_exclusao_ini = null,
-    $date_data_exclusao_fim = null, $int_ativo = null, $str_caminho_foto = null,
-    $str_nome_aluno = null,$str_nome_responsavel = null, $int_cpf_responsavel = null,
-    $int_analfabeto = null, $str_nm_pai = null, $str_nm_mae = null,
-    $int_ref_cod_escola = null,$str_tipo_responsavel = null)
+  function lista(
+    $int_cod_aluno = null,
+    $int_ref_cod_aluno_beneficio = null,
+    $int_ref_cod_religiao = null,
+    $int_ref_usuario_exc = null,
+    $int_ref_usuario_cad = null,
+    $int_ref_idpes = null,
+    $date_data_cadastro_ini = null,
+    $date_data_cadastro_fim = null,
+    $date_data_exclusao_ini = null,
+    $date_data_exclusao_fim = null,
+    $int_ativo = null,
+    $str_caminho_foto = null,
+    $str_nome_aluno = null,
+    $str_nome_responsavel = null,
+    $int_cpf_responsavel = null,
+    $int_analfabeto = null,
+    $str_nm_pai = null,
+    $str_nm_mae = null,
+    $int_ref_cod_escola = null,
+    $str_tipo_responsavel = null,
+    $str_autorizado_um = null,
+    $str_parentesco_um = null,
+    $str_autorizado_dois = null,
+    $str_parentesco_dois = null,
+    $str_autorizado_tres = null,
+    $str_parentesco_tres = null,
+    $str_autorizado_quatro = null,
+    $str_parentesco_quatro = null,
+    $str_autorizado_cinco = null,
+    $str_parentesco_cinco = null
+    )
   {
     $filtros = '';
     $this->resetCamposLista();
@@ -473,10 +771,6 @@ class clsPmieducarAluno
       $whereAnd = ' AND ';
     }
 
-    if (is_numeric($int_ref_cod_aluno_beneficio)) {
-      $filtros .= "{$whereAnd} ref_cod_aluno_beneficio = '{$int_ref_cod_aluno_beneficio}'";
-      $whereAnd = ' AND ';
-    }
 
     if (is_numeric($int_ref_cod_religiao)) {
       $filtros .= "{$whereAnd} ref_cod_religiao = '{$int_ref_cod_religiao}'";
@@ -542,7 +836,7 @@ class clsPmieducarAluno
             cadastro.pessoa
           WHERE
             cadastro.pessoa.idpes = ref_idpes
-            AND LOWER(nome) LIKE LOWER('%{$str_nome_aluno}%')
+            AND translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
         )";
 
       $whereAnd = ' AND ';
@@ -552,14 +846,14 @@ class clsPmieducarAluno
       $and_resp = '';
 
       if (is_string($str_nome_responsavel)) {
-        $and_nome_pai_mae  = "OR UPPER((aluno.nm_pai)) LIKE UPPER(('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'p')";
+        $and_nome_pai_mae  = "OR translate(upper(aluno.nm_pai),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') AND (aluno.tipo_responsavel = 'p')";
 
-        $and_nome_pai_mae .= "OR UPPER((aluno.nm_mae)) LIKE UPPER(('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'm')";
+        $and_nome_pai_mae .= "OR translate(upper(aluno.nm_mae),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') AND (aluno.tipo_responsavel = 'm')";
 
         $and_nome_resp     = "
-          (UPPER((pai_mae.nome)) LIKE UPPER(('%$str_nome_responsavel%'))) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
+          (translate(upper(pai_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
           OR
-          (UPPER((pai_mae.nome)) LIKE UPPER(('%$str_nome_responsavel%'))) AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
+          (translate(upper(pai_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae";
 
         $and_resp = ' AND ';
       }
@@ -610,12 +904,12 @@ class clsPmieducarAluno
     }
 
     if (is_string($str_nm_pai)) {
-      $filtros .= "{$whereAnd} (LOWER(nm_pai)) nm_pai LIKE (LOWER('%{$str_nm_pai}%'))";
+      $filtros .= "{$whereAnd} translate(upper(nm_pai),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') nm_pai LIKE translate(upper('%{$str_nm_pai}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = ' AND ';
     }
 
     if (is_string($str_nm_mae)) {
-      $filtros .= "{$whereAnd} (LOWER(nm_mae)) LIKE (LOWER('%{$str_nm_mae}%'))";
+      $filtros .= "{$whereAnd} translate(upper(nm_mae),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_mae}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = ' AND ';
     }
 
@@ -664,7 +958,7 @@ class clsPmieducarAluno
   }
 
   /**
-   * Retorna uma lista de registros filtrados de acordo com os parגmetros.
+   * Retorna uma lista de registros filtrados de acordo com os parâmetros.
    * @return array
    */
   function lista2($int_cod_aluno = NULL, $int_ref_cod_aluno_beneficio = NULL,
@@ -675,22 +969,41 @@ class clsPmieducarAluno
     $str_nome_aluno = NULL, $str_nome_responsavel = NULL, $int_cpf_responsavel = NULL,
     $int_analfabeto = NULL, $str_nm_pai = NULL, $str_nm_mae = NULL,
     $int_ref_cod_escola = NULL, $str_tipo_responsavel = NULL, $data_nascimento = NULL,
-    $str_nm_pai2 = NULL, $str_nm_mae2 = NULL, $str_nm_responsavel2 = NULL, $cod_inep = NULL)
+    $str_nm_pai2 = NULL, $str_nm_mae2 = NULL, $str_nm_responsavel2 = NULL, $cod_inep = NULL,
+    $aluno_estado_id = NULL, $ano = NULL, $ref_cod_instituicao = NULL, $ref_cod_escola = NULL,
+    $ref_cod_curso = NULL, $ref_cod_serie = NULL, $idsetorbai = NULL,
+    $autorizado_um = NULL,
+    $parentesco_um = NULL,
+    $autorizado_dois = NULL,
+    $parentesco_dois = NULL,
+    $autorizado_tres = NULL,
+    $parentesco_tres = NULL,
+    $autorizado_quatro = NULL,
+    $parentesco_quatro = NULL,
+    $autorizado_cinco = NULL,
+    $parentesco_cinco = NULL)//, $periodo = NULL )
   {
+    $filtra_baseado_matricula = is_numeric($ano) || is_numeric($ref_cod_instituicao) || is_numeric($ref_cod_escola) || is_numeric($ref_cod_curso) || is_numeric($ref_cod_serie);// || is_numeric($periodo);
+
     $filtros = '';
     $this->resetCamposLista();
 
-    $this->_campos_lista .= '
-       , (
-         SELECT
-           nome
-         FROM
-           cadastro.pessoa
-         WHERE
-           idpes = ref_idpes
-         ) AS nome_aluno';
+    $this->_campos_lista .= ', pessoa.nome AS nome_aluno';
 
-    $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+    if($filtra_baseado_matricula)
+      $sql = "SELECT distinct {$this->_campos_lista} FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
+    else
+      $sql = "SELECT {$this->_campos_lista} FROM {$this->_tabela}";
+
+    $sql .= '
+             LEFT JOIN cadastro.pessoa ON pessoa.idpes = a.ref_idpes';
+    if($idsetorbai)
+      $sql .= '
+        INNER JOIN cadastro.endereco_pessoa ep ON (a.ref_idpes = ep.idpes)
+        INNER JOIN public.bairro b ON (ep.idbai = b.idbai)
+        INNER JOIN public.setor_bai sb ON (sb.idsetorbai = b.idsetorbai)
+      ';
+
     $whereAnd = ' WHERE ';
 
     if(is_numeric($int_cod_aluno)) {
@@ -698,8 +1011,8 @@ class clsPmieducarAluno
       $whereAnd = ' AND ';
     }
 
-    if(is_numeric($int_ref_cod_aluno_beneficio)) {
-      $filtros .= "{$whereAnd} ref_cod_aluno_beneficio = '{$int_ref_cod_aluno_beneficio}'";
+    if(is_numeric($idsetorbai)) {
+      $filtros .= "{$whereAnd} sb.idsetorbai = {$idsetorbai}";
       $whereAnd = ' AND ';
     }
 
@@ -710,6 +1023,11 @@ class clsPmieducarAluno
 
     if(is_numeric($int_ref_usuario_exc)) {
       $filtros .= "{$whereAnd} ref_usuario_exc = '{$int_ref_usuario_exc}'";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_string($aluno_estado_id)) {
+      $filtros .= "{$whereAnd} a.aluno_estado_id LIKE '%{$aluno_estado_id}%'";
       $whereAnd = ' AND ';
     }
 
@@ -744,7 +1062,7 @@ class clsPmieducarAluno
     }
 
     if ($int_ativo) {
-      $filtros .= "{$whereAnd} ativo = '1'";
+      $filtros .= "{$whereAnd} a.ativo = '1'";
       $whereAnd = ' AND ';
     }
 
@@ -759,7 +1077,7 @@ class clsPmieducarAluno
     }
 
     if (is_string($str_nome_aluno)) {
-      $str_nome_aluno = addslashes($str_nome_aluno);
+      $str_nome_aluno = pg_escape_string($str_nome_aluno);
 
       $filtros .= "{$whereAnd} EXISTS (
                      SELECT
@@ -768,7 +1086,7 @@ class clsPmieducarAluno
                        cadastro.pessoa
                      WHERE
                        cadastro.pessoa.idpes = ref_idpes
-                       AND (LOWER(nome)) LIKE (LOWER('%{$str_nome_aluno}%'))
+                       AND translate(upper(nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nome_aluno}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')
                    )";
 
       $whereAnd = ' AND ';
@@ -778,14 +1096,14 @@ class clsPmieducarAluno
       $and_resp = '';
 
       if (is_string($str_nome_responsavel)) {
-        $and_nome_pai_mae  = "OR UPPER((aluno.nm_pai)) LIKE UPPER(('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'p')";
+        $and_nome_pai_mae  = "OR translate(upper(aluno.nm_pai),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') AND (aluno.tipo_responsavel = 'p')";
 
-        $and_nome_pai_mae .= "OR UPPER((aluno.nm_mae)) LIKE UPPER(('%$str_nome_responsavel%')) AND (aluno.tipo_responsavel = 'm')";
+        $and_nome_pai_mae .= "OR translate(upper(aluno.nm_mae),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') AND (aluno.tipo_responsavel = 'm')";
 
         $and_nome_resp     = "
-          (UPPER((pai_mae.nome)) LIKE UPPER(('%$str_nome_responsavel%'))) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
+          (translate(upper(pai_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) AND (aluno.tipo_responsavel = 'm') AND pai_mae.idpes = fisica_aluno.idpes_mae
           OR
-          (UPPER((pai_mae.nome)) LIKE UPPER(('%$str_nome_responsavel%'))) AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
+          (translate(upper(pai_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%$str_nome_responsavel%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) AND (aluno.tipo_responsavel = 'p') AND pai_mae.idpes = fisica_aluno.idpes_pai";
 
         $and_resp = 'AND';
       }
@@ -835,12 +1153,12 @@ class clsPmieducarAluno
     }
 
     if (is_string($str_nm_pai)) {
-      $filtros .= "{$whereAnd} (LOWER(nm_pai)) nm_pai LIKE (LOWER('%{$str_nm_pai}%'))";
+      $filtros .= "{$whereAnd} translate(upper(nm_pai),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') nm_pai LIKE translate(upper('%{$str_nm_pai}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = ' AND ';
     }
 
     if (is_string($str_nm_mae)) {
-      $filtros .= "{$whereAnd} (LOWER(nm_mae)) LIKE (LOWER('%{$str_nm_mae}%'))";
+      $filtros .= "{$whereAnd} translate(upper(nm_mae),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE translate(upper('%{$str_nm_mae}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')";
       $whereAnd = ' AND ';
     }
 
@@ -860,9 +1178,49 @@ class clsPmieducarAluno
     }
 
     if (!empty($cod_inep) && is_numeric($cod_inep)) {
-      $filtros .= "{$whereAnd} cod_aluno = ( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = {$cod_inep})";
+      $filtros .= "{$whereAnd} cod_aluno IN( SELECT cod_aluno FROM modules.educacenso_cod_aluno WHERE cod_aluno_inep = {$cod_inep})";
       $whereAnd = ' AND ';
     }
+
+    if($filtra_baseado_matricula){
+      $filtros .= "{$whereAnd} m.aprovado = 3 AND m.ativo = 1 ";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($ano)){
+      $filtros .= "{$whereAnd} m.ano = {$ano}";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($ref_cod_escola)){
+      $filtros .= "{$whereAnd} m.ref_ref_cod_escola = {$ref_cod_escola}";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($ref_cod_serie)){
+      $filtros .= "{$whereAnd} m.ref_ref_cod_serie = {$ref_cod_serie}";
+      $whereAnd = ' AND ';
+    }
+
+    if(is_numeric($ref_cod_curso)){
+      $filtros .= "{$whereAnd} m.ref_cod_curso = {$ref_cod_curso}";
+      $whereAnd = ' AND ';
+    }
+    /*
+    if(is_numeric($periodo)){
+      $filtros .= "{$whereAnd} EXISTS(
+                      select 1
+
+                FROM pmieducar.matricula_turma mt,
+                     pmieducar.turma
+                     WHERE mt.ref_cod_matricula = m.cod_matricula and
+                     mt.ativo = 1 and
+                     turma.cod_turma = mt.ref_cod_turma
+                     AND turma_turno_id = {$periodo}
+                     LIMIT 1) ";
+      $whereAnd = ' AND ';
+
+    }*/
 
     if (!empty($str_nm_pai2) || !empty($str_nm_mae2) || !empty($str_nm_responsavel2)) {
       $complemento_letf_outer = '';
@@ -873,7 +1231,7 @@ class clsPmieducarAluno
         $str_nm_pai2 = addslashes($str_nm_pai2);
 
         $complemento_sql   .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_pai ON (pessoa_pai.idpes = f.idpes_pai)';
-        $complemento_where .= "{$and_where} (nm_pai ILIKE ('%{$str_nm_pai2}%') OR pessoa_pai.nome ILIKE ('%{$str_nm_pai2}%'))";
+        $complemento_where .= "{$and_where} (translate(upper(nm_pai),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE (translate(upper('%{$str_nm_pai2}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) OR translate(upper(pessoa_pai.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE (translate(upper('%{$str_nm_pai2}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')))";
         $and_where          = ' AND ';
       }
 
@@ -881,7 +1239,7 @@ class clsPmieducarAluno
         $str_nm_mae2 = addslashes($str_nm_mae2);
 
         $complemento_sql   .= ' LEFT OUTER JOIN cadastro.pessoa AS pessoa_mae ON (pessoa_mae.idpes = f.idpes_mae)';
-        $complemento_where .= "{$and_where} (nm_mae ILIKE ('%{$str_nm_mae2}%') OR pessoa_mae.nome ILIKE ('%{$str_nm_mae2}%'))";
+        $complemento_where .= "{$and_where} (translate(upper(nm_mae),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE (translate(upper('%{$str_nm_mae2}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')) OR translate(upper(pessoa_mae.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE (translate(upper('%{$str_nm_mae2}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')))";
         $and_where          = ' AND ';
       }
 
@@ -889,7 +1247,7 @@ class clsPmieducarAluno
         $str_nm_responsavel2 = addslashes($str_nm_responsavel2);
 
         $complemento_sql .= " LEFT OUTER JOIN cadastro.pessoa AS pessoa_responsavel ON (pessoa_responsavel.idpes = f.idpes_responsavel)";
-        $complemento_where .= "{$and_where} (pessoa_responsavel.nome ILIKE ('%{$str_nm_responsavel2}%'))";
+        $complemento_where .= "{$and_where} (translate(upper(pessoa_responsavel.nome),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN') LIKE (translate(upper('%{$str_nm_responsavel2}%'),'ÅÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇÝÑ','AAAAAAEEEEIIIIOOOOOUUUUCYN')))";
         $and_where = " AND ";
       }
 
@@ -913,7 +1271,22 @@ class clsPmieducarAluno
     }
 
     $sql .= $filtros . $this->getOrderby() . $this->getLimite();
-    $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
+
+    if($filtra_baseado_matricula)
+      $sqlCount = "SELECT COUNT(DISTINCT cod_aluno) FROM {$this->_tabela} INNER JOIN pmieducar.matricula m ON (m.ref_cod_aluno = a.cod_aluno) ";
+    else
+      $sqlCount =  "SELECT COUNT(0) FROM {$this->_tabela} ";
+
+    if($idsetorbai)
+      $sqlCount .= '
+        INNER JOIN cadastro.endereco_pessoa ep ON (a.ref_idpes = ep.idpes)
+        INNER JOIN public.bairro b ON (ep.idbai = b.idbai)
+        INNER JOIN public.setor_bai sb ON (sb.idsetorbai = b.idsetorbai)
+      ';
+
+    $sqlCount .= $filtros;
+
+    $this->_total = $db->CampoUnico($sqlCount);
 
     $db->Consulta($sql);
 
@@ -995,6 +1368,20 @@ class clsPmieducarAluno
     return FALSE;
   }
 
+  function verificaInep($cod_aluno = NULL)
+  {
+    if (is_numeric($cod_aluno)) {
+      $db = new clsBanco();
+      $sql = "SELECT cod_aluno_inep
+                FROM {$this->_tabela}
+               INNER JOIN modules.educacenso_cod_aluno eca ON (eca.cod_aluno = a.cod_aluno)
+               WHERE a.cod_aluno = $cod_aluno";
+      $db->Consulta($sql);
+      $db->ProximoRegistro();
+      return $db->Tupla();
+    }
+  }
+
   function getResponsavelAluno()
   {
     if ($this->cod_aluno) {
@@ -1066,6 +1453,28 @@ class clsPmieducarAluno
         }
       }
 
+      if ($registro['tipo_responsavel'] == 'a') {
+        if (!$det_fisica_aluno) {
+          $obj_fisica= new clsFisica($registro['ref_idpes']);
+          $det_fisica_aluno = $obj_fisica->detalhe();
+        }
+
+        if ($det_fisica_aluno['idpes_mae'] && $det_fisica_aluno['idpes_pai']) {
+
+          $obj_mae = new clsPessoa_($det_fisica_aluno['idpes_mae']);
+          $det_mae = $obj_mae->detalhe();
+
+          $obj_pai = new clsPessoa_($det_fisica_aluno['idpes_pai']);
+          $det_pai = $obj_pai->detalhe();
+
+          $registro['nome_responsavel'] = $det_pai['nome'] . ", " . $det_mae['nome'];
+
+          if ($det_fisica['cpf']) {
+            $registro['cpf_responsavel'] = int2CPF($det_fisica['cpf']);
+          }
+        }
+      }
+
       if (!$registro['nome_responsavel']) {
         if ($registro['tipo_responsavel'] != NULL) {
           if ($registro['tipo_responsavel'] == 'p') {
@@ -1105,7 +1514,7 @@ class clsPmieducarAluno
   }
 
   /**
-   * Define quais campos da tabela serדo selecionados no mיtodo Lista().
+   * Define quais campos da tabela serão selecionados no método Lista().
    */
   function setCamposLista($str_campos)
   {
@@ -1113,7 +1522,7 @@ class clsPmieducarAluno
   }
 
   /**
-   * Define que o mיtodo Lista() deverpa retornar todos os campos da tabela.
+   * Define que o método Lista() deverpa retornar todos os campos da tabela.
    */
   function resetCamposLista()
   {
@@ -1121,7 +1530,7 @@ class clsPmieducarAluno
   }
 
   /**
-   * Define limites de retorno para o mיtodo Lista().
+   * Define limites de retorno para o método Lista().
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -1130,7 +1539,7 @@ class clsPmieducarAluno
   }
 
   /**
-   * Retorna a string com o trecho da query responsבvel pelo limite de
+   * Retorna a string com o trecho da query responsável pelo limite de
    * registros retornados/afetados.
    *
    * @return string
@@ -1148,7 +1557,7 @@ class clsPmieducarAluno
   }
 
   /**
-   * Define o campo para ser utilizado como ordenaחדo no mיtodo Lista().
+   * Define o campo para ser utilizado como ordenação no método Lista().
    */
   function setOrderby($strNomeCampo)
   {
@@ -1158,7 +1567,7 @@ class clsPmieducarAluno
   }
 
   /**
-   * Retorna a string com o trecho da query responsבvel pela Ordenaחדo dos
+   * Retorna a string com o trecho da query responsável pela Ordenação dos
    * registros.
    *
    * @return string

@@ -48,7 +48,7 @@ class clsIndexBase extends clsBase
 {
   public function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Falta Atraso');
+    $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
     $this->processoAp = 635;
     $this->addEstilo("localizacaoSistema");    
   }
@@ -92,30 +92,32 @@ class indice extends clsListagem
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->ref_cod_servidor        = $_GET['ref_cod_servidor'];
-    $this->ref_ref_cod_instituicao = $_GET['ref_cod_instituicao'];
-
     $this->titulo = 'Faltas e atrasos - Listagem';
 
     foreach ($_GET as $var => $val) {
       $this->$var = ($val === '') ? NULL : $val;
     }
 
-    
+    $tmp_obj = new clsPmieducarServidor($this->ref_cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
+    $registro = $tmp_obj->detalhe();
 
     $this->addCabecalhos(array(
       'Escola',
       'Instituição',
       'Tipo',
+      'Dia',
       'Horas',
       'Minutos'
     ));
 
-    // Filtros de Foreign Keys
-    $obrigatorio     = FALSE;
-    $get_instituicao = TRUE;
-    $get_escola      = TRUE;
-    include_once 'include/pmieducar/educar_campo_lista.php';
+    $fisica = new clsPessoaFisica($this->ref_cod_servidor);
+    $fisica = $fisica->detalhe();
+
+    $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
+    $this->campoRotulo('nm_servidor', 'Servidor', $fisica['nome']);
+
+    $this->inputsHelper()->dynamic('instituicao', array('required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao));
+    $this->inputsHelper()->dynamic('escola', array('required' => false, 'show-select' => true, 'value' => $this->ref_cod_escola));
 
     // Paginador
     $this->limite = 20;
@@ -129,7 +131,7 @@ class indice extends clsListagem
     $obj_falta_atraso->setLimite($this->limite, $this->offset);
 
     // Recupera a lista de faltas/atrasos
-    $lista = $obj_falta_atraso->lista(NULL, NULL, NULL, NULL, NULL, $this->ref_cod_servidor);
+    $lista = $obj_falta_atraso->lista(NULL, $this->ref_cod_escola, $this->ref_ref_cod_instituicao, NULL, NULL, $this->ref_cod_servidor);
 
     $total = $obj_falta_atraso->_total;
 
@@ -187,10 +189,13 @@ class indice extends clsListagem
           'ref_cod_instituicao' => $registro['ref_ref_cod_instituicao'],
         ));
 
+        $dt = new DateTime($registro['data_falta_atraso']);
+        $data = $dt->format('d/m/Y');
         $this->addLinhas(array(
           $urlHelper->l($registro['nm_escola'], $url, $options),
           $urlHelper->l($det_ins['nm_instituicao'], $url, $options),
           $urlHelper->l($tipo, $url, $options),
+          $urlHelper->l($data, $url, $options),
           $urlHelper->l($horas_aux, $url, $options),
           $urlHelper->l($minutos_aux, $url, $options)
         ));
@@ -222,7 +227,7 @@ class indice extends clsListagem
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_servidores_index.php"       => "Servidores",
          ""                                  => "Listagem de faltas/atrasos do servidor"
     ));
     $this->enviaLocalizacao($localizacao->montar());    
@@ -240,4 +245,4 @@ $miolo = new indice();
 $pagina->addForm($miolo);
 
 // Gera o código HTML
-$pagina->MakeAll();
+$pagina->MakeAll();;

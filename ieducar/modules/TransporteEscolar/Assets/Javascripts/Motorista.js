@@ -1,7 +1,7 @@
 // before page is ready
 
-$deleteButton = $j('<input value=" Excluir " type="button" style="display: inline; margin-left: 6px;">').html('')
-                              .addClass('botaolistagem').insertAfter('#btn_enviar');                              
+// $deleteButton = $j('<input value=" Excluir " type="button" style="display: inline; margin-left: 6px;">').html('')
+                              // .addClass('botaolistagem').insertAfter('#btn_enviar');                              
 var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');
 
@@ -111,19 +111,16 @@ var simpleSearchPessoaOptions = {
 
 // children callbacks
 
-function afterChangePessoa(targetWindow, pessoaId) {
+function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
   targetWindow.close();
 
   // timeout para usuario perceber mudança
   window.setTimeout(function() {
     messageUtils.success('Pessoa alterada com sucesso', $nomeField);
-
-    $j('#pessoa_id').val(pessoaId);
-    getPersonDetails(pessoaId);
-
+    $j('#pessoa_id').val(parentId);
+    $nomeField.val(parentId + ' - ' + parentName);
     if ($nomeField.is(':active'))
       $nomeField.focus();
-
   }, 500);
 }
 

@@ -30,6 +30,9 @@
 
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/clsMenuFuncionario.inc.php';
+require_once 'include/pmieducar/clsPmieducarEscolaUsuario.inc.php';
+require_once 'lib/Portabilis/Array/Utils.php';
+
 
 /**
  * clsPermissoes class.
@@ -44,7 +47,7 @@ require_once 'include/clsMenuFuncionario.inc.php';
  */
 class clsPermissoes
 {
-  function clsPermissoes()
+  function __construct()
   {
   }
 
@@ -71,21 +74,24 @@ class clsPermissoes
     $detalhe_usuario = $obj_usuario->detalhe();
 
     // Verifica se é super usuário
-    if ($super_usuario != NULL && $detalhe_usuario['ativo']) {
+    if ($detalhe_usuario['ativo']) {
       $obj_menu_funcionario = new clsMenuFuncionario($int_idpes_usuario, FALSE, FALSE, 0);
       $detalhe_super_usuario = $obj_menu_funcionario->detalhe();
     }
 
     if (!$detalhe_super_usuario) {
-      $obj_menu_funcionario = new clsMenuFuncionario($int_idpes_usuario,
-        FALSE, FALSE, $int_processo_ap);
-      $detalhe = $obj_menu_funcionario->detalhe();
+      $obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario();
+      $detalhe = $obj_menu_tipo_usuario->detalhePorUsuario($int_idpes_usuario, $int_processo_ap);
     }
 
     $nivel = $this->nivel_acesso($int_idpes_usuario);
     $ok = FALSE;
+    /*
+      Alterado, pois super_usuário sempre deve ter acesso a tudo
+      Antes era: if (($super_usuario && $detalhe_super_usuario) || $nivel & $int_soma_nivel_acesso) {
+    */
 
-    if (($super_usuario && $detalhe_super_usuario) || $nivel & $int_soma_nivel_acesso) {
+    if (($detalhe_super_usuario) || $nivel && $int_soma_nivel_acesso) {
       $ok = TRUE;
     }
 
@@ -153,9 +159,8 @@ class clsPermissoes
     }
 
     if (!$detalhe_super_usuario) {
-      $obj_menu_funcionario = new clsMenuFuncionario($int_idpes_usuario,
-        FALSE, FALSE, $int_processo_ap);
-      $detalhe = $obj_menu_funcionario->detalhe();
+      $obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario();
+      $detalhe = $obj_menu_tipo_usuario->detalhePorUsuario($int_idpes_usuario, $int_processo_ap);
     }
 
     $nivel = $this->nivel_acesso($int_idpes_usuario);
@@ -260,6 +265,24 @@ class clsPermissoes
 
     return FALSE;
   }
+
+    /**
+     * Retorna lista de código identificador da escola ao qual o usuário está vinculado.
+     *
+     * @param int $int_idpes_usuario
+     * @return bool|array Retorna FALSE caso o usuário não exista
+     */
+    function getEscolas($int_idpes_usuario)
+    {
+        $objEscolaUsuario = new clsPmieducarEscolaUsuario();
+        $escolas = $objEscolaUsuario->lista($int_idpes_usuario);
+
+        if (!empty($escolas)) {
+            return Portabilis_Array_Utils::arrayColumn($escolas,'ref_cod_escola');
+        }
+
+        return FALSE;
+    }
 
   /**
    * Retorna um array associativo com os códigos identificadores da escola e

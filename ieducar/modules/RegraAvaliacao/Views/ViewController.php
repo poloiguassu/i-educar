@@ -59,7 +59,13 @@ class ViewController extends Core_Controller_Page_ViewController
     'Fórmula de cálculo de recuperação' => 'formulaRecuperacao',
     'Porcentagem presença' => 'porcentagemPresenca',
     'Parecer descritivo' => 'parecerDescritivo',
-    'Tipo de presença' => 'tipoPresenca'
+    'Tipo de presença' => 'tipoPresenca',
+    'Regra diferenciada' => 'regraDiferenciada',
+    'Recuperação paralela' => 'tipoRecuperacaoParalela',
+    'Nota máxima' => 'notaMaximaGeral',
+    'Nota mínima' => 'notaMinimaGeral',
+    'Nota máxima para exame final' => 'notaMaximaExameFinal',
+    'Número máximo de casas decimais' => 'qtdCasasDecimais',
   );
   protected function _preRender(){
 
@@ -69,7 +75,7 @@ class ViewController extends Core_Controller_Page_ViewController
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""                                  => "Detalhe da regra de avalia&ccedil;&otilde;o"
     ));
     $this->enviaLocalizacao($localizacao->montar());

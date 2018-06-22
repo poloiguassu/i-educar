@@ -70,6 +70,10 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
     'observacao' => array(
       'label'  => 'Observações',
       'help'   => '',
+    ),         
+    'turno' => array(
+      'label'  => 'Turno',
+      'help'   => '',
     ),      
   );
 
@@ -81,7 +85,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "transporte_index.php"                  => "M&oacute;dulo Transporte Escolar",
+         "educar_transporte_escolar_index.php"                  => "Transporte escolar",
          ""        => "$nomeMenu usu&aacute;rio de transporte"             
     ));
     $this->enviaLocalizacao($localizacao->montar());    
@@ -118,7 +122,7 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
     $lista_rota = $obj_rota->lista();
     $rota_resources = array("" => "Selecione uma rota" );
     foreach ($lista_rota as $reg) {
-      $rota_resources["{$reg['cod_rota_transporte_escolar']}"] = "{$reg['descricao']}";
+      $rota_resources["{$reg['cod_rota_transporte_escolar']}"] = "{$reg['descricao']} - {$reg['ano']}";
     }
     
     // Rota
@@ -135,15 +139,15 @@ class PessoatransporteController extends Portabilis_Controller_Page_EditControll
 
     // observacoes
     $options = array('label' => Portabilis_String_Utils::toLatin1($this->_getLabel('observacao')), 'required' => false, 'size' => 50, 'max_length' => 255);
-    $this->inputsHelper()->textArea('observacao', $options);
+    $this->inputsHelper()->textArea('observacao', $options);     
+
+ // turno
+    $options = array('label' =>Portabilis_String_Utils::toLatin1($this->_getLabel('turno')), 'required' => false);
+    $this->inputsHelper()->select('turno', array('required' => false, 'resources' => array( 0 => "Selecione", 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral')));
+
 
 
     $this->loadResourceAssets($this->getDispatcher());
   }
-
-  function Excluir(){
-    die( $this->getOption('delete_success') );
-  }
-
 }
 ?>

@@ -4,6 +4,7 @@
   #data_emissao_certidao_civil,
   #termo_certidao_civil,
   #certidao_nascimento,
+  #certidao_casamento,
   #carteira_trabalho,
   #data_emissao_carteira_trabalho,
   #titulo_eleitor,
@@ -26,11 +27,19 @@ select {
 }
 
 #data_emissao_certidao_civil, #data_emissao_carteira_trabalho, #data_nasc {
-  width: 98px;
+  width: 105px;
 }
 
 #termo_certidao_civil {
   width: 121px !important;
+}
+
+#certidao_nascimento {
+
+}
+
+#certidao_casamento {
+
 }
 
 #carteira_trabalho, #titulo_eleitor, #complemento {

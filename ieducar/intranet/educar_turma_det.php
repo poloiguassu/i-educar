@@ -34,8 +34,9 @@ require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 
 require_once 'App/Model/IedFinder.php';
-
 require_once 'Portabilis/View/Helper/Application.php';
+require_once 'Portabilis/Utils/CustomLabel.php';
+
 /**
  * clsIndexBase class.
  *
@@ -107,6 +108,17 @@ class indice extends clsDetalhe
     );
 
     $this->cod_turma = $_GET['cod_turma'];
+
+    $dias_da_semana = array(
+      '' => 'Selecione',
+      1  => 'Domingo',
+      2  => 'Segunda',
+      3  => 'Terça',
+      4  => 'Quarta',
+      5  => 'Quinta',
+      6  => 'Sexta',
+      7  => 'Sábado'
+    );
 
     $tmp_obj = new clsPmieducarTurma();
     $lst_obj = $tmp_obj->lista($this->cod_turma, NULL, NULL, NULL, NULL, NULL,
@@ -195,16 +207,12 @@ class indice extends clsDetalhe
     $obj_permissoes = new clsPermissoes();
     $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-    if ($nivel_usuario == 1) {
-      if ($registro['ref_cod_instituicao']) {
-        $this->addDetalhe(array('Instituição', $registro['ref_cod_instituicao']));
-      }
+    if ($registro['ref_cod_instituicao']) {
+      $this->addDetalhe(array('Instituição', $registro['ref_cod_instituicao']));
     }
 
-    if ($nivel_usuario == 1 || $nivel_usuario == 2) {
-      if ($registro['ref_ref_cod_escola']) {
-        $this->addDetalhe(array('Escola', $registro['ref_ref_cod_escola']));
-      }
+    if ($registro['ref_ref_cod_escola']) {
+      $this->addDetalhe(array('Escola', $registro['ref_ref_cod_escola']));
     }
 
     if ($registro['ref_cod_curso']) {
@@ -235,7 +243,7 @@ class indice extends clsDetalhe
     }
 
     if ($registro['sgl_turma']) {
-      $this->addDetalhe(array('Sigla', $registro['sgl_turma']));
+      $this->addDetalhe(array(_cl('turma.detalhe.sigla'), $registro['sgl_turma']));
     }
 
     if ($registro['max_aluno']) {
@@ -280,26 +288,34 @@ class indice extends clsDetalhe
         $registro['hora_fim_intervalo'] = date('H:i', strtotime($registro['hora_fim_intervalo']));
         $this->addDetalhe(array('Hora Fim Intervalo', $registro['hora_fim_intervalo']));
       }
+      if (is_string($registro['dias_semana']) && !empty($registro['dias_semana'])) {
+        $registro['dias_semana'] = explode(',',str_replace(array('{', "}"), '', $registro['dias_semana']));
+        foreach ($registro['dias_semana'] as $key => $dia) {
+          $diasSemana .= $dias_da_semana[$dia] . '<br>';
+        }
+        $this->addDetalhe(array('Dia da Semana', $diasSemana));
+      }
     }
     elseif ($padrao_ano_escolar == 0) {
       $obj = new clsPmieducarTurmaModulo();
-      $obj->setOrderby('data_inicio ASC');
+      $obj->setOrderby('sequencial ASC');
       $lst = $obj->lista($this->cod_turma);
 
       if ($lst) {
         $tabela = '
           <table>
             <tr align="center">
-              <td bgcolor="#A1B3BD"><b>Nome</b></td>
-              <td bgcolor="#A1B3BD"><b>Data Início</b></td>
-              <td bgcolor="#A1B3BD"><b>Data Fim</b></td>
+              <td bgcolor="#f5f9fd "><b>Nome</b></td>
+              <td bgcolor="#f5f9fd "><b>Data Início</b></td>
+              <td bgcolor="#f5f9fd "><b>Data Fim</b></td>
+              <td bgcolor="#f5f9fd "><b>Dias Letivos</b></td>
             </tr>';
 
         $cont = 0;
 
         foreach ($lst as $valor) {
           if (($cont % 2) == 0) {
-            $color = ' bgcolor="#E4E9ED" ';
+            $color = ' bgcolor="#f5f9fd " ';
           }
           else {
             $color = ' bgcolor="#FFFFFF" ';
@@ -317,8 +333,9 @@ class indice extends clsDetalhe
               <td %s align=left>%s</td>
               <td %s align=left>%s</td>
               <td %s align=left>%s</td>
+              <td %s align=center>%s</td>
             </tr>',
-            $color, $nm_modulo, $color, $valor['data_inicio'], $color, $valor['data_fim']
+            $color, $nm_modulo, $color, $valor['data_inicio'], $color, $valor['data_fim'],$color, $valor['dias_letivos']
           );
 
           $cont++;
@@ -331,60 +348,12 @@ class indice extends clsDetalhe
         $this->addDetalhe(array('Módulo', $tabela));
       }
 
-      $dias_da_semana = array(
-        '' => 'Selecione',
-        1  => 'Domingo',
-        2  => 'Segunda',
-        3  => 'Terça',
-        4  => 'Quarta',
-        5  => 'Quinta',
-        6  => 'Sexta',
-        7  => 'Sábado'
-      );
-
-      $obj = new clsPmieducarTurmaDiaSemana();
-      $lst = $obj->lista(NULL, $this->cod_turma);
-
-      if ($lst) {
-        $tabela1 = '
-          <table>
-            <tr align="center">
-              <td bgcolor="#A1B3BD"><b>Nome</b></td>
-              <td bgcolor="#A1B3BD"><b>Hora Inicial</b></td>
-              <td bgcolor="#A1B3BD"><b>Hora Final</b></td>
-            </tr>';
-
-        $cont = 0;
-
-        foreach ($lst as $valor) {
-          if (($cont % 2) == 0) {
-            $color = ' bgcolor="#E4E9ED" ';
-          }
-          else {
-            $color = ' bgcolor="#FFFFFF" ';
-          }
-
-          $valor['hora_inicial'] = date('H:i', strtotime($valor['hora_inicial']));
-          $valor['hora_final']   = date('H:i', strtotime($valor['hora_final']));
-
-          $tabela1 .= sprintf("
-            <tr>
-              <td %s align=left>%s</td>
-              <td %s align=left>%s</td>
-              <td %s align=left>%s</td>
-            </tr>",
-            $color, $dias_da_semana[$valor['dia_semana']], $color,
-            $valor['hora_inicial'], $color, $valor['hora_final']
-          );
-
-          $cont++;
+      if (is_string($registro['dias_semana']) && !empty($registro['dias_semana'])) {
+        $registro['dias_semana'] = explode(',',str_replace(array('{', "}"), '', $registro['dias_semana']));
+        foreach ($registro['dias_semana'] as $key => $dia) {
+          $diasSemana .= $dias_da_semana[$dia] . '<br>';
         }
-
-        $tabela1 .= '</table>';
-      }
-
-      if ($tabela1) {
-        $this->addDetalhe(array('Dia da Semana', $tabela1));
+        $this->addDetalhe(array('Dia da Semana', $diasSemana));
       }
     }
 
@@ -402,13 +371,13 @@ class indice extends clsDetalhe
     $tabela3 = '
       <table>
         <tr align="center">
-          <td bgcolor="#A1B3BD"><b>Nome</b></td>
-          <td bgcolor="#A1B3BD"><b>Carga horária</b></td>
+          <td bgcolor="#f5f9fd "><b>Nome</b></td>
+          <td bgcolor="#f5f9fd "><b>Carga horária</b></td>
         </tr>';
 
     $cont = 0;
     foreach ($componentes as $componente) {
-      $color = ($cont++ % 2 == 0) ? ' bgcolor="#E4E9ED" ' : ' bgcolor="#FFFFFF" ';
+      $color = ($cont++ % 2 == 0) ? ' bgcolor="#f5f9fd " ' : ' bgcolor="#FFFFFF" ';
 
       $tabela3 .= sprintf('
         <tr>
@@ -425,6 +394,15 @@ class indice extends clsDetalhe
     if ($obj_permissoes->permissao_cadastra(586, $this->pessoa_logada, 7)) {
       $this->url_novo   = 'educar_turma_cad.php';
       $this->url_editar = 'educar_turma_cad.php?cod_turma=' . $registro['cod_turma'];
+
+      $this->array_botao[]            = 'Reclassificar alunos alfabeticamente';
+      $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente reclassificar os alunos alfabeticamente?\\nAo utilizar esta opção para esta turma, a ordenação dos alunos no diário e em relatórios que é controlada por ordem de chegada após a data de fechamento da turma (campo Data de fechamento), passará a ter o controle novamente alfabético, desconsiderando a data de fechamento.\"))reclassifica_matriculas({$registro['cod_turma']})";
+
+      $this->array_botao[]            = 'Editar sequência de alunos na turma';
+      $this->array_botao_url_script[] = sprintf('go("educar_ordenar_alunos_turma.php?cod_turma=%d");', $registro['cod_turma']);
+
+      $this->array_botao[]            = 'Lançar pareceres da turma';
+      $this->array_botao_url_script[] = sprintf('go("educar_parecer_turma_cad.php?cod_turma=%d");', $registro['cod_turma']);
     }
 
     $this->url_cancelar = 'educar_turma_lst.php';
@@ -433,15 +411,10 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""                                  => "Detalhe da turma"
     ));
     $this->enviaLocalizacao($localizacao->montar());
-
-    $this->array_botao[]            = 'Reclassificar alunos alfabeticamente';
-    $this->array_botao_url_script[] = "if(confirm(\"Deseja realmente reclassificar os alunos alfabeticamente?\\nAo utilizar esta opção para esta turma, a ordenação dos alunos no diário e em relatórios que é controlada por ordem de chegada após a data de fechamento da turma (campo Data de fechamento), passará a ter o controle novamente alfabético, desconsiderando a data de fechamento.\"))reclassifica_matriculas({$registro['cod_turma']})";
-
-    Portabilis_View_Helper_Application::loadJQueryLib($this);
 
     $scripts = array(
       '/modules/Portabilis/Assets/Javascripts/Utils.js',

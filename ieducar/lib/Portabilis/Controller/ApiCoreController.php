@@ -44,6 +44,7 @@ require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/Utils/Database.php';
 require_once 'lib/Portabilis/String/Utils.php';
 require_once 'lib/Portabilis/Utils/User.php';
+require_once 'lib/Utils/SafeJson.php';
 
 class ApiCoreController extends Core_Controller_Page_EditController
 {
@@ -75,6 +76,10 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
   protected function currentUser() {
     return Portabilis_Utils_User::load($this->getSession()->id_pessoa);
+  }
+
+  protected function getNivelAcesso() {
+    return Portabilis_Utils_User::getNivelAcesso();
   }
 
 
@@ -251,14 +256,14 @@ class ApiCoreController extends Core_Controller_Page_EditController
       $this->appendResponse('msgs', $this->messenger->getMsgs());
       $this->appendResponse('any_error_msg', $this->messenger->hasMsgWithType('error'));
 
-      $response = json_encode($this->response);
+      $response = SafeJson::encode($this->response);
     }
     catch (Exception $e){
       error_log("Erro inesperado no metodo prepareResponse da classe ApiCoreController: {$e->getMessage()}");
       $response = array('msgs' => array('msg' => 'Erro inesperado no servidor. Por favor, tente novamente.',
                         'type' => 'error'));
 
-      $response = json_encode($response);
+      $response = SafeJson::encode($response);
     }
 
     echo $response;
@@ -331,12 +336,24 @@ class ApiCoreController extends Core_Controller_Page_EditController
 
     $options        = $this->mergeOptions($options, $defaultOptions);
 
-    return $this->validator->validatesValueIsInBd($options['field_name'],
-                                                  $value,
-                                                  $options['schema_name'],
-                                                  $resourceName,
-                                                  $raiseExceptionOnFail = false,
-                                                  $addMsgOnError        = $options['add_msg_on_error']);
+    if (is_array($value)){
+      $valid = true;
+      foreach ($value as $v) {
+        $valid = $valid && $this->validator->validatesValueIsInBd($options['field_name'],
+                                                    $v,
+                                                    $options['schema_name'],
+                                                    $resourceName,
+                                                    $raiseExceptionOnFail = false,
+                                                    $addMsgOnError        = $options['add_msg_on_error']);
+      }
+      return $valid;
+    }else
+      return $this->validator->validatesValueIsInBd($options['field_name'],
+                                                    $value,
+                                                    $options['schema_name'],
+                                                    $resourceName,
+                                                    $raiseExceptionOnFail = false,
+                                                    $addMsgOnError        = $options['add_msg_on_error']);
   }
 
   protected function validatesUniquenessOf($resourceName, $value, $options = array()) {
@@ -506,7 +523,7 @@ class ApiCoreController extends Core_Controller_Page_EditController
     $selectFields                    = join(', ', $searchOptions['selectFields']);
 
     return "select distinct $selectFields from $namespace.$table
-            where lower($labelAttr) like lower($1)||'%' order by $labelAttr limit 15";
+            where lower($labelAttr) like '%'||lower($1)||'%' order by $labelAttr limit 15";
   }
 
   protected function sqlParams($query) {

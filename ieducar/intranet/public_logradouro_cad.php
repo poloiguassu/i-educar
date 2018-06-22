@@ -35,6 +35,8 @@ require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/public/geral.inc.php';
 require_once 'include/urbano/clsUrbanoTipoLogradouro.inc.php';
+require_once ("include/pmieducar/geral.inc.php");
+require_once ("include/modules/clsModulesAuditoriaGeral.inc.php");
 
 class clsIndexBase extends clsBase
 {
@@ -111,6 +113,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_enderecamento_index.php"    => "Endereçamento",
          ""        => "{$nomeMenu} logradouro"             
     ));
     $this->enviaLocalizacao($localizacao->montar());    
@@ -139,7 +142,7 @@ class indice extends clsCadastro
       echo '<!--\nErro\nClasse clsPais nao encontrada\n-->';
       $opcoes = array('' => 'Erro na geracao');
     }
-    $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais);
+    $this->campoLista('idpais', 'País', $opcoes, $this->idpais);
 
     $opcoes = array('' => 'Selecione');
     if (class_exists('clsUf')) {
@@ -212,6 +215,12 @@ class indice extends clsCadastro
 
     $cadastrou = $obj->cadastra();
     if ($cadastrou) {
+
+      $enderecamento = new clsPublicLogradouro($cadastrou);
+      $enderecamento = $enderecamento->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("Endereçamento de Logradouro", $this->pessoa_logada, $cadastrou);
+      $auditoria->inclusao($enderecamento);
+
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
       header('Location: public_logradouro_lst.php');
       die();
@@ -228,6 +237,10 @@ class indice extends clsCadastro
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
+
+    $enderecamentoDetalhe = new clsPublicLogradouro(null, null, $this->idlog);
+    $enderecamentoDetalhe->cadastrou = $this->idlog;
+    $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
 
     $obj = new clsPublicLogradouro($this->idlog, $this->idtlog, $this->nome,
       $this->idmun, NULL, 'S', $this->pessoa_logada, NULL, 'U', NULL, NULL, 'I', NULL, 9);
@@ -309,7 +322,7 @@ function getUf(xml_uf) {
     }
   }
   else {
-    campoUf.options[0].text = 'O pais não possui nenhum estado';
+    campoUf.options[0].text = 'O país não possui nenhum estado';
   }
 }
 

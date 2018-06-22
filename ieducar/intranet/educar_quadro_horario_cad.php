@@ -47,7 +47,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo( "{$this->_instituicao} i-Educar - Quadro de Hor&aacute;rios" );
+    $this->SetTitulo( "{$this->_instituicao} Servidores - Quadro de Hor&aacute;rios" );
     $this->processoAp = "641";
     $this->addEstilo('localizacaoSistema');
   }
@@ -68,7 +68,7 @@ class indice extends clsCadastro
   var $pessoa_logada;
 
   var $ref_cod_turma;
-  var $ref_ref_cod_serie;
+  var $ref_cod_serie;
   var $ref_cod_curso;
   var $ref_cod_escola;
   var $ref_cod_instituicao;
@@ -88,11 +88,12 @@ class indice extends clsCadastro
     @session_write_close();
 
     $this->ref_cod_turma       = $_GET['ref_cod_turma'];
-    $this->ref_ref_cod_serie   = $_GET['ref_cod_serie'];
+    $this->ref_cod_serie       = $_GET['ref_cod_serie'];
     $this->ref_cod_curso       = $_GET['ref_cod_curso'];
     $this->ref_cod_escola      = $_GET['ref_cod_escola'];
     $this->ref_cod_instituicao = $_GET['ref_cod_instituicao'];
     $this->cod_quadro_horario  = $_GET['ref_cod_quadro_horario'];
+    $this->ano                 = $_GET['ano'];
 
     if (is_numeric($this->cod_quadro_horario)) {
       $obj_quadro_horario = new clsPmieducarQuadroHorario($this->cod_quadro_horario);
@@ -116,11 +117,11 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
 
     $obj_permissoes->permissao_cadastra(641, $this->pessoa_logada, 7,
-      "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}" );
+      "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}" );
 
     $this->url_cancelar = $retorno == 'Editar' ?
-      "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}" :
-      "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}";
+      "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}" :
+      "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}";
 
     $this->nome_url_cancelar = 'Cancelar';
 
@@ -128,8 +129,8 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "{$nomeMenu} quadro de hor&aacute;rios"             
+         "educar_servidores_index.php"       => "Servidores",
+         ""        => "{$nomeMenu} quadro de hor&aacute;rios"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -145,16 +146,7 @@ class indice extends clsCadastro
     // primary keys
     $this->campoOculto('cod_quadro_horario', $this->cod_quadro_horario);
 
-    $obrigatorio            = TRUE;
-    $get_escola             = TRUE;
-    $get_curso              = TRUE;
-    $get_escola_curso_serie = TRUE;
-    $get_turma              = TRUE;
-    include 'include/pmieducar/educar_campo_lista.php';
-
-    $this->url_cancelar = $retorno == 'Editar' ?
-      "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}" :
-      "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}";
+    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola', 'curso', 'serie', 'turma'));
   }
 
   function Novo()
@@ -165,23 +157,30 @@ class indice extends clsCadastro
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(641, $this->pessoa_logada, 7,
-      "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}");
+      "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}");
 
     $obj = new clsPmieducarQuadroHorario();
-    $lista = $obj->lista( NULL, NULL, $this->pessoa_logada, $this->ref_cod_turma, NULL, NULL, NULL, NULL, 1 );
+    $lista = $obj->lista( NULL, NULL, $this->pessoa_logada, $this->ref_cod_turma, NULL, NULL, NULL, NULL, 1, $this->ano );
     if ($lista) {
       echo "<script>alert('Quadro de Horário já cadastrado para esta turma');</script>";
       return FALSE;
     }
 
     $obj = new clsPmieducarQuadroHorario(NULL, NULL, $this->pessoa_logada,
-      $this->ref_cod_turma, NULL, NULL, 1);
+      $this->ref_cod_turma, NULL, NULL, 1, $this->ano);
 
     $cadastrou = $obj->cadastra();
 
     if ($cadastrou) {
+
+      $quadroHorario = new clsPmieducarQuadroHorario($cadastrou);
+      $quadroHorario = $quadroHorario->detalhe();
+
+      $auditoria = new clsModulesAuditoriaGeral("quadro_horario", $this->pessoa_logada, $cadastrou);
+      $auditoria->inclusao($quadroHorario);
+
       $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-      header("Location: educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&busca=S");
+      header("Location: educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}&busca=S");
       die();
     }
 
@@ -201,7 +200,7 @@ class indice extends clsCadastro
 
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_excluir(641, $this->pessoa_logada, 7,
-      "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}");
+      "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}");
 
     if (is_numeric($this->cod_quadro_horario)) {
       $obj_horarios = new clsPmieducarQuadroHorarioHorarios(
@@ -212,9 +211,14 @@ class indice extends clsCadastro
         $obj_quadro = new clsPmieducarQuadroHorario($this->cod_quadro_horario,
           $this->pessoa_logada);
 
+        $quadroHorario = $obj_quadro->detalhe();
+        
         if ($obj_quadro->excluir()) {
+          $auditoria = new clsModulesAuditoriaGeral("quadro_horario", $this->pessoa_logada, $this->cod_quadro_horario);
+          $auditoria->exclusao($quadroHorario);
+
           $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-          header("Location: educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}");
+          header("Location: educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}");
           die();
         }
       }
@@ -237,19 +241,3 @@ $pagina->addForm($miolo);
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
-<script type="text/javascript">
-document.getElementById('ref_cod_escola').onchange = function()
-{
-  getEscolaCurso();
-}
-
-document.getElementById('ref_cod_curso').onchange = function()
-{
-  getEscolaCursoSerie();
-}
-
-document.getElementById('ref_ref_cod_serie').onchange = function()
-{
-  getTurma();
-}
-</script>

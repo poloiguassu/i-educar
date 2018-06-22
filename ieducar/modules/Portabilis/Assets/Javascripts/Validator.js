@@ -1,4 +1,4 @@
-
+validatesIfValueIsInSet
 // #TODO rename this file to Validation.js and move functions validates* to object validationUtils
 
 var validationUtils = {
@@ -23,8 +23,8 @@ var validationUtils = {
     return allValid;
   },
 
-  validatesFields : function () {
-    return validatesPresenseOfValueInRequiredFields() &&
+  validatesFields : function (validateHiddenFields) {
+    return validatesPresenseOfValueInRequiredFields(undefined, undefined, validateHiddenFields) &&
            validationUtils.validatesDateFields();
   },
 
@@ -33,6 +33,23 @@ var validationUtils = {
 
     if (cpf.length != 11)
       return false;
+
+    var cpfsInvalidos = [
+      '00000000000',
+      '11111111111',
+      '22222222222',
+      '33333333333',
+      '44444444444',
+      '55555555555',
+      '66666666666',
+      '77777777777',
+      '88888888888',
+      '99999999999'
+    ];
+
+    if ($j.inArray(cpf,cpfsInvalidos) != -1) {
+      return false;
+    }
 
     var soma;
     var resto;
@@ -70,7 +87,7 @@ var validationUtils = {
   }
 };
 
-function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields) {
+function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields, validateHiddenFields) {
   var $emptyFields = [];
   requiredFields = $j('.obrigatorio:not(.skip-presence-validation)');
 
@@ -85,15 +102,19 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
 
     if ($requiredField.length > 0 &&
         /*$requiredField.css('display') != 'none' &&*/
-        $requiredField.is(':visible')           &&
+        ($requiredField.is(':visible') || validateHiddenFields) &&
         $requiredField.is(':enabled')           &&
-        $requiredField.val() == ''              &&
+        ($requiredField.val() == '' || $requiredField.val() == null)               &&
         $j.inArray($requiredField[0], exceptFields) < 0) {
 
       $emptyFields.push($requiredField);
 
       if (! $requiredField.hasClass('error'))
         $requiredField.addClass('error');
+
+      if ($requiredField.is(':hidden,select')) {
+        $requiredField.parent().find('ul.chosen-choices').addClass('error');
+      }
 
       messageUtils.removeStyle($requiredField);
     }
@@ -104,15 +125,19 @@ function validatesPresenseOfValueInRequiredFields(additionalFields, exceptFields
   if ($emptyFields.length == 0)
     return true;
 
-  alert('Preencha os campos obrigat\u00F3rios, antes de continuar.');
+  let label = ($emptyFields[0].hasClass('simple-search-id') ? $j('#'+$emptyFields[0].attr('data-for')) : $emptyFields[0]).closest('tr').find('td:first span.form:first').text() || "";
+  if (label.length) {
+    alert(`Preencha o campo '${label}' corretamente`);
+  } else {
+    alert('Preencha os campos obrigat\u00F3rios, antes de continuar.');
+  }
   $emptyFields.first().focus();
   return false;
 }
 
 
 function validatesIfValueIsInSet(value, targetId, set) {
-/*** REVER  
-  if (objectUtils.length(set) > 0 && set[value] == undefined) {
+  /*if (objectUtils.length(set) > 0 && set[value] == undefined) {
     var s = [];
 
     $j.each(set, function(index, value) {
@@ -124,7 +149,6 @@ function validatesIfValueIsInSet(value, targetId, set) {
 
     return false;
   }*/
-  
   if (value<0 || value>10){
     messageUtils.error('Informe um valor entre 0 à 10', targetId);
     return false;
@@ -135,7 +159,7 @@ function validatesIfValueIsInSet(value, targetId, set) {
 
 function validatesIfValueIsNumeric(value, targetId) {
   if (! $j.isNumeric(value)) {
-    messageUtils.error('Informe um numero válido.', targetId);
+    messageUtils.error('Informe um número válido.', targetId);
     return false;
   }
 
@@ -150,4 +174,24 @@ function validatesIfNumericValueIsInRange(value, targetId, initialRange, finalRa
   }
 
   return true;
+}
+
+function validatesIfDecimalPlacesInRange(value, targetId, initialRange, finalRange){
+  if (! $j.isNumeric(value) || decimalPlaces(value) < initialRange || decimalPlaces(value) > finalRange) {
+    messageUtils.error('Informe um valor com número de casas decimais entre ' + initialRange + ' e ' + finalRange, targetId);
+    return false;
+  }
+
+  return true;
+}
+
+function decimalPlaces(num) {
+  var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+  if (!match) { return 0; }
+  return Math.max(
+       0,
+       // Number of digits right of decimal point.
+       (match[1] ? match[1].length : 0)
+       // Adjust for scientific notation.
+       - (match[2] ? +match[2] : 0));
 }

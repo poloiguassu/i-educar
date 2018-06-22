@@ -36,6 +36,10 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 
+/**
+ * Class MunicipioController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class MunicipioController extends ApiCoreController
 {
   // search options
@@ -48,7 +52,7 @@ class MunicipioController extends ApiCoreController
   // "<id_municipio> - <nome_municipio> (<sigla_uf>)", ex: "1 - Içara (SC)"
   protected function formatResourceValue($resource) {
     $siglaUf = $resource['sigla_uf'];
-    $nome    = $resource['name'];
+    $nome    = $this->toUtf8($resource['name'], array('transform' => true));
 
     return $resource['id'] . " - $nome ($siglaUf)";
   }

@@ -1,6 +1,6 @@
 <?php
 #error_reporting(E_ALL);
-#ini_set("display_errors", 1);]
+#ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -51,6 +51,7 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchAssuntos extends Porta
       $resources = $resources->lista();
       $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_acervo_assunto', 'nm_assunto');
     }
+
     return $this->insertOption(null, '', $resources);
   }
 
@@ -58,17 +59,22 @@ class Portabilis_View_Helper_Input_Resource_MultipleSearchAssuntos extends Porta
     $defaultOptions = array('objectName'    => 'assuntos',
                             'apiController' => 'Assunto',
                             'apiResource'   => 'assunto-search');
+
     $options                         = $this->mergeOptions($options, $defaultOptions);
     $options['options']['resources'] = $this->getOptions($options['options']['resources']);
+
     //var_dump($options['options']['options']);
+
     $this->placeholderJs($options);
+
     parent::multipleSearch($options['objectName'], $attrName, $options);
   }
-  
+
   protected function placeholderJs($options) {
     $optionsVarName = "multipleSearch" . Portabilis_String_Utils::camelize($options['objectName']) . "Options";
     $js             = "if (typeof $optionsVarName == 'undefined') { $optionsVarName = {} };
                        $optionsVarName.placeholder = safeUtf8Decode('Selecione os assuntos');";
+
     Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, $js, $afterReady = true);
   }
 }

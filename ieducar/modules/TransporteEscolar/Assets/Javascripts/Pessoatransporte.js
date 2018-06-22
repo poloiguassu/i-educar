@@ -50,8 +50,8 @@ function getPonto( xml_ponto )
 
 // before page is ready
 
-$deleteButton = $j('<input value=" Excluir " type="button" style="display: inline; margin-left: 6px;">').html('')
-                              .addClass('botaolistagem').insertAfter('#btn_enviar');
+// $deleteButton = $j('<input value=" Excluir " type="button" style="display: inline; margin-left: 6px;">').html('')
+                              // .addClass('botaolistagem').insertAfter('#btn_enviar');
 var $idField        = $j('#id');
 var $nomeField      = $j('#pessoa_nome');
 
@@ -99,7 +99,8 @@ resourceOptions.handleGet = function(dataResponse) {
   $j('#rota').val(dataResponse.rota);
   chamaGetPonto();
 
-  $j('#observacao').val(dataResponse.observacao);  
+  $j('#observacao').val(dataResponse.observacao);
+  $j('#turno').val(dataResponse.turno);  
 
   $j('#nome').val(dataResponse.pessoa+' - '+dataResponse.pessoa_nome);  
   $j('#pessoa_id').val(dataResponse.pessoa);  

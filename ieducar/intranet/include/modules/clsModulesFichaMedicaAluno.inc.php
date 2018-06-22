@@ -1,23 +1,24 @@
 <?php
+
 /**
- * i-Educar - Sistema de gest„o escolar
+ * i-Educar - Sistema de gest√£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÌ
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja√≠
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa È software livre; vocÍ pode redistribuÌ-lo e/ou modific·-lo
- * sob os termos da LicenÁa P˙blica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a vers„o 2 da LicenÁa, como (a seu critÈrio)
- * qualquer vers„o posterior.
+ * Este programa √© software livre; voc√™ pode redistribu√≠-lo e/ou modific√°-lo
+ * sob os termos da Licen√ßa P√∫blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers√£o 2 da Licen√ßa, como (a seu crit√©rio)
+ * qualquer vers√£o posterior.
  *
- * Este programa È distribuÌ≠do na expectativa de que seja ˙til, porÈm, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÌ≠cita de COMERCIABILIDADE OU
- * ADEQUA«√O A UMA FINALIDADE ESPECÕFICA. Consulte a LicenÁa P˙blica Geral
+ * Este programa √© distribu√≠¬≠do na expectativa de que seja √∫til, por√©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl√≠¬≠cita de COMERCIABILIDADE OU
+ * ADEQUA√á√ÉO A UMA FINALIDADE ESPEC√çFICA. Consulte a Licen√ßa P√∫blica Geral
  * do GNU para mais detalhes.
  *
- * VocÍ deve ter recebido uma cÛpia da LicenÁa P˙blica Geral do GNU junto
- * com este programa; se n„o, escreva para a Free Software Foundation, Inc., no
- * endereÁo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc√™ deve ter recebido uma c√≥pia da Licen√ßa P√∫blica Geral do GNU junto
+ * com este programa; se n√£o, escreva para a Free Software Foundation, Inc., no
+ * endere√ßo 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
@@ -26,7 +27,9 @@
  * @since     07/2013
  * @version   $Id$
  */
+
 require_once 'include/pmieducar/geral.inc.php';
+
 /**
  * clsModulesFichaMedicaAluno class.
  * 
@@ -84,52 +87,61 @@ class clsModulesFichaMedicaAluno
   var $responsavel_parentesco;
   var $responsavel_parentesco_telefone;
   var $responsavel_parentesco_celular;
+
   /**
    * @var int
-   * Armazena o total de resultados obtidos na ˙ltima chamada ao mÈtodo lista().
+   * Armazena o total de resultados obtidos na √∫ltima chamada ao m√©todo lista().
    */
   var $_total;
+
   /**
    * Nome do schema.
    * @var string
    */
   var $_schema;
+
   /**
    * Nome da tabela.
    * @var string
    */
   var $_tabela;
+
   /**
-   * Lista separada por vÌrgula, com os campos que devem ser selecionados na
-   * prÛxima chamado ao mÈtodo lista().
+   * Lista separada por v√≠rgula, com os campos que devem ser selecionados na
+   * pr√≥xima chamado ao m√©todo lista().
    * @var string
    */
   var $_campos_lista;
+
   /**
-   * Lista com todos os campos da tabela separados por vÌrgula, padr„o para
-   * seleÁ„o no mÈtodo lista.
+   * Lista com todos os campos da tabela separados por v√≠rgula, padr√£o para
+   * sele√ß√£o no m√©todo lista.
    * @var string
    */
   var $_todos_campos;
+
   /**
-   * Valor que define a quantidade de registros a ser retornada pelo mÈtodo lista().
+   * Valor que define a quantidade de registros a ser retornada pelo m√©todo lista().
    * @var int
    */
   var $_limite_quantidade;
+
   /**
-   * Define o valor de offset no retorno dos registros no mÈtodo lista().
+   * Define o valor de offset no retorno dos registros no m√©todo lista().
    * @var int
    */
   var $_limite_offset;
+
   /**
-   * Define o campo para ser usado como padr„o de ordenaÁ„o no mÈtodo lista().
+   * Define o campo para ser usado como padr√£o de ordena√ß√£o no m√©todo lista().
    * @var string
    */
   var $_campo_order_by;
+
   /**
    * Construtor.
    */
-  function clsModulesFichaMedicaAluno( $ref_cod_aluno = NULL , $altura = NULL , $peso = NULL , $grupo_sanguineo = NULL ,
+  function __construct( $ref_cod_aluno = NULL , $altura = NULL , $peso = NULL , $grupo_sanguineo = NULL ,
      $fator_rh = NULL , $alergia_medicamento = NULL , $desc_alergia_medicamento = NULL ,
      $alergia_alimento = NULL , $desc_alergia_alimento = NULL ,  $doenca_congenita = NULL ,
      $desc_doenca_congenita = NULL , $fumante = NULL , $doenca_caxumba = NULL , $doenca_sarampo = NULL ,
@@ -146,6 +158,7 @@ class clsModulesFichaMedicaAluno
     $db = new clsBanco();
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}ficha_medica_aluno";
+
     $this->_campos_lista = $this->_todos_campos = " ref_cod_aluno, altura, peso, grupo_sanguineo,
         fator_rh, alergia_medicamento, desc_alergia_medicamento,alergia_alimento, desc_alergia_alimento,
         doenca_congenita,desc_doenca_congenita, fumante, doenca_caxumba, doenca_sarampo,doenca_rubeola, 
@@ -156,142 +169,189 @@ class clsModulesFichaMedicaAluno
         fratura_trauma,desc_fratura_trauma, plano_saude, desc_plano_saude, hospital_clinica,
         hospital_clinica_endereco, hospital_clinica_telefone, responsavel,responsavel_parentesco, 
         responsavel_parentesco_telefone, responsavel_parentesco_celular"; 
+
     if (is_numeric($ref_cod_aluno)) {
       $this->ref_cod_aluno = $ref_cod_aluno;
     }
+
     if (is_string($altura)) {
       $this->altura = $altura;
     }
+
    if (is_string($peso)) {
       $this->peso = $peso;
     }
+
    if (is_string($grupo_sanguineo)) {
       $this->grupo_sanguineo = $grupo_sanguineo;
     }
+
    if (is_string($fator_rh)) {
       $this->fator_rh = $fator_rh;
     }
+
    if (is_string($alergia_medicamento)) {
       $this->alergia_medicamento = $alergia_medicamento;
     }
+
    if (is_string($desc_alergia_medicamento)) {
       $this->desc_alergia_medicamento = $desc_alergia_medicamento;
     }
+
    if (is_string($alergia_alimento)) {
       $this->alergia_alimento = $alergia_alimento;
     }
+
    if (is_string($desc_alergia_alimento)) {
       $this->desc_alergia_alimento = $desc_alergia_alimento;
     }
+
    if (is_string($doenca_congenita)) {
       $this->doenca_congenita = $doenca_congenita;
     }
+
    if (is_string($desc_doenca_congenita)) {
       $this->desc_doenca_congenita = $desc_doenca_congenita;
     }
+
    if (is_string($fumante)) {
       $this->fumante = $fumante;
     }
+
    if (is_string($doenca_caxumba)) {
       $this->doenca_caxumba = $doenca_caxumba;
     }
+
    if (is_string($doenca_sarampo)) {
       $this->doenca_sarampo = $doenca_sarampo;
     }
+
    if (is_string($doenca_rubeola)) {
       $this->doenca_rubeola = $doenca_rubeola;
     }
+
    if (is_string($doenca_catapora)) {
       $this->doenca_catapora = $doenca_catapora;
     }
+
    if (is_string($doenca_escarlatina)) {
       $this->doenca_escarlatina = $doenca_escarlatina;
     }
+
    if (is_string($doenca_coqueluche)) {
       $this->doenca_coqueluche = $doenca_coqueluche;
     }
+
    if (is_string($doenca_outras)) {
       $this->doenca_outras = $doenca_outras;
     }
+
    if (is_string($epiletico)) {
       $this->epiletico = $epiletico;
     }
+
    if (is_string($epiletico_tratamento)) {
       $this->epiletico_tratamento = $epiletico_tratamento;
     }
+
    if (is_string($hemofilico)) {
       $this->hemofilico = $hemofilico;
     }
+
    if (is_string($hipertenso)) {
       $this->hipertenso = $hipertenso;
     }
+
    if (is_string($asmatico)) {
       $this->asmatico = $asmatico;
     }
+
    if (is_string($diabetico)) {
       $this->diabetico = $diabetico;
     }
+
    if (is_string($insulina)) {
       $this->insulina = $insulina;
     }
+
    if (is_string($tratamento_medico)) {
       $this->tratamento_medico = $tratamento_medico;
     }
+
    if (is_string($desc_tratamento_medico)) {
       $this->desc_tratamento_medico = $desc_tratamento_medico;
     }
+
    if (is_string($medicacao_especifica)) {
       $this->medicacao_especifica = $medicacao_especifica;
     }
+
   if (is_string($desc_medicacao_especifica)) {
       $this->desc_medicacao_especifica = $desc_medicacao_especifica;
     }
+
   if (is_string($acomp_medico_psicologico)) {
       $this->acomp_medico_psicologico = $acomp_medico_psicologico;
     }
+
   if (is_string($desc_acomp_medico_psicologico)) {
       $this->desc_acomp_medico_psicologico = $desc_acomp_medico_psicologico;
     }
+
   if (is_string($restricao_atividade_fisica)) {
       $this->restricao_atividade_fisica = $restricao_atividade_fisica;
     }
+
   if (is_string($desc_restricao_atividade_fisica)) {
       $this->desc_restricao_atividade_fisica = $desc_restricao_atividade_fisica;
     }
+
   if (is_string($fratura_trauma)) {
       $this->fratura_trauma = $fratura_trauma;
     }
+
   if (is_string($desc_fratura_trauma)) {
       $this->desc_fratura_trauma = $desc_fratura_trauma;
     }
+
   if (is_string($plano_saude)) {
       $this->plano_saude = $plano_saude;
     }
+
   if (is_string($desc_plano_saude)) {
       $this->desc_plano_saude = $desc_plano_saude;
     }
+
   if (is_string($hospital_clinica)) {
       $this->hospital_clinica = $hospital_clinica;
     }
+
   if (is_string($hospital_clinica_endereco)) {
       $this->hospital_clinica_endereco = $hospital_clinica_endereco;
     }
+
   if (is_string($hospital_clinica_telefone)) {
       $this->hospital_clinica_telefone = $hospital_clinica_telefone;
     }
+
   if (is_string($responsavel)) {
       $this->responsavel = $responsavel;
     }
+
   if (is_string($responsavel_parentesco)) {
       $this->responsavel_parentesco = $responsavel_parentesco;
     }
+
   if (is_string($responsavel_parentesco_telefone)) {
       $this->responsavel_parentesco_telefone = $responsavel_parentesco_telefone;
     }
+
   if (is_string($responsavel_parentesco_celular)) {
       $this->responsavel_parentesco_celular = $responsavel_parentesco_celular;
     }
+
   }
+
   /**
    * Cria um novo registro.
    * @return bool
@@ -301,12 +361,15 @@ class clsModulesFichaMedicaAluno
     if (is_numeric($this->ref_cod_aluno))
     {
       $db = new clsBanco();
+
       $campos  = '';
       $valores = '';
       $gruda   = '';    
+
       $campos .= "{$gruda}ref_cod_aluno";
       $valores .= "{$gruda}{$this->ref_cod_aluno}";
       $gruda = ", ";
+
       $campos .= "{$gruda}altura";
       $valores .= "{$gruda}'{$this->altura}'";
       $gruda = ", ";
@@ -486,8 +549,10 @@ class clsModulesFichaMedicaAluno
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
       return $this->ref_cod_aluno;
     }
+
     return FALSE;
   }
+
   /**
    * Edita os dados de um registro.
    * @return bool
@@ -497,12 +562,13 @@ class clsModulesFichaMedicaAluno
     if (is_numeric($this->ref_cod_aluno)) {
       $db  = new clsBanco();
       $set = '';
+
       $set .= "altura = '{$this->altura}'";
   
       $set .= ",peso = '{$this->peso}'";
-  
+      
       $set .= ",grupo_sanguineo = '{$this->grupo_sanguineo}'";
-  
+
       $set .= ",fator_rh = '{$this->fator_rh}'";
   
       $set .= ",alergia_medicamento = '{$this->alergia_medicamento}'";
@@ -534,6 +600,7 @@ class clsModulesFichaMedicaAluno
       $set .= ",doenca_outras = '{$this->doenca_outras}'";
   
       $set .= ",epiletico = '{$this->epiletico}'";
+
       $set .= ",epiletico_tratamento = '{$this->epiletico_tratamento}'";
   
       $set .= ",hemofilico = '{$this->hemofilico}'";
@@ -583,16 +650,18 @@ class clsModulesFichaMedicaAluno
       $set .= ",responsavel_parentesco_telefone = '{$this->responsavel_parentesco_telefone}'";
   
       $set .= ",responsavel_parentesco_celular = '{$this->responsavel_parentesco_celular}'";
-  
+
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_cod_aluno = '{$this->ref_cod_aluno}'");
         return TRUE;
       }
     }
+
     return FALSE;
   }
+
   /**
-   * Retorna uma lista de registros filtrados de acordo com os par‚metros.
+   * Retorna uma lista de registros filtrados de acordo com os par√¢metros.
    * @return array
    */
   function lista()
@@ -601,16 +670,23 @@ class clsModulesFichaMedicaAluno
     $filtros = "";
     /*
     $whereAnd = " WHERE ";
+
+
     if (is_string($altura)) {
-      $filtros .= "{$whereAnd} TO_ASCII(LOWER(altura)) LIKE TO_ASCII(LOWER('%{$altura}%'))";
+      $filtros .= "{$whereAnd} (LOWER(altura)) LIKE (LOWER('%{$altura}%'))";
       $whereAnd = " AND ";
     }*/
+
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista))+2;
     $resultado = array();
+
     $sql .= $filtros . $this->getOrderby() . $this->getLimite();
+
     $this->_total = $db->CampoUnico("SELECT COUNT(0) FROM {$this->_tabela} {$filtros}");
+
     $db->Consulta($sql);
+
     if ($countCampos > 1) {
       while ($db->ProximoRegistro()) {
         $tupla = $db->Tupla();
@@ -627,8 +703,10 @@ class clsModulesFichaMedicaAluno
     if (count($resultado)) {
       return $resultado;
     }
+
     return FALSE;
   }
+
   /**
    * Retorna um array com os dados de um registro.
    * @return array
@@ -641,8 +719,10 @@ class clsModulesFichaMedicaAluno
       $db->ProximoRegistro();
       return $db->Tupla();
     }
+
     return FALSE;
   }
+
   /**
    * Retorna um array com os dados de um registro.
    * @return array
@@ -655,8 +735,10 @@ class clsModulesFichaMedicaAluno
       $db->ProximoRegistro();
       return $db->Tupla();
     }
+
     return FALSE;
   }
+
   /**
    * Exclui um registro.
    * @return bool
@@ -669,32 +751,37 @@ class clsModulesFichaMedicaAluno
       $db->Consulta($sql);
       return true;
     }
+
     return FALSE;
   }
+
   /**
-   * Define quais campos da tabela ser„o selecionados no mÈtodo Lista().
+   * Define quais campos da tabela ser√£o selecionados no m√©todo Lista().
    */
   function setCamposLista($str_campos)
   {
     $this->_campos_lista = $str_campos;
   }
+
   /**
-   * Define que o mÈtodo Lista() deverpa retornar todos os campos da tabela.
+   * Define que o m√©todo Lista() deverpa retornar todos os campos da tabela.
    */
   function resetCamposLista()
   {
     $this->_campos_lista = $this->_todos_campos;
   }
+
   /**
-   * Define limites de retorno para o mÈtodo Lista().
+   * Define limites de retorno para o m√©todo Lista().
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
     $this->_limite_quantidade = $intLimiteQtd;
     $this->_limite_offset = $intLimiteOffset;
   }
+
   /**
-   * Retorna a string com o trecho da query respons·vel pelo limite de
+   * Retorna a string com o trecho da query respons√°vel pelo limite de
    * registros retornados/afetados.
    *
    * @return string
@@ -710,8 +797,9 @@ class clsModulesFichaMedicaAluno
     }
     return '';
   }
+
   /**
-   * Define o campo para ser utilizado como ordenaÁ„o no mÈtodo Lista().
+   * Define o campo para ser utilizado como ordena√ß√£o no m√©todo Lista().
    */
   function setOrderby($strNomeCampo)
   {
@@ -719,8 +807,9 @@ class clsModulesFichaMedicaAluno
       $this->_campo_order_by = $strNomeCampo;
     }
   }
+
   /**
-   * Retorna a string com o trecho da query respons·vel pela OrdenaÁ„o dos
+   * Retorna a string com o trecho da query respons√°vel pela Ordena√ß√£o dos
    * registros.
    *
    * @return string

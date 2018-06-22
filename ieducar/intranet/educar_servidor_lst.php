@@ -1,5 +1,6 @@
 <?php
-
+// error_reporting(E_ERROR);
+// ini_set("display_errors", 1);
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -71,17 +72,18 @@ class indice extends clsListagem
   var $titulo;
   var $limite;
   var $offset;
-
   var $cod_servidor;
-  var $ref_cod_deficiencia;
   var $ref_idesco;
   var $ref_cod_funcao;
   var $carga_horaria;
   var $data_cadastro;
   var $data_exclusao;
   var $ativo;
-
+  var $nome;
+  var $matricula_servidor;
+  var $ref_cod_escola;
   var $ref_cod_instituicao;
+  var $servidor_sem_alocacao;
 
   function Gerar()
   {
@@ -96,37 +98,29 @@ class indice extends clsListagem
       $this->$var = ($val === '') ? NULL : $val;
     }
 
-    
-
     $this->addCabecalhos( array(
       'Nome do Servidor',
       'Matrícula',
+      'CPF',
       'Instituição'
     ));
 
-    $get_escola      = TRUE;
-    $obrigatorio     = TRUE;
-    $exibe_nm_escola = TRUE;
-
-    include 'include/pmieducar/educar_campo_lista.php';
-
-    $opcoes = array('' => 'Pesquise o funcionario clicando na lupa ao lado');
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'anoLetivo'));
 
     if ($this->cod_servidor) {
       $objTemp = new clsFuncionario($this->cod_servidor);
       $detalhe = $objTemp->detalhe();
-      $detalhe = $detalhe['idpes']->detalhe();
+      // $detalhe = $detalhe['idpes']->detalhe();
 
       $opcoes[$detalhe['idpes']] = $detalhe['nome'];
+     $opcoes[$detalhe['ref_cod_pessoa_fj']] = $detalhe['matricula_servidor'];
     }
 
     $parametros = new clsParametrosPesquisas();
     $parametros->setSubmit(0);
-    $parametros->adicionaCampoSelect( 'cod_servidor', 'ref_cod_pessoa_fj', 'nome');
-
-    $this->campoListaPesq('cod_servidor', 'Servidor', $opcoes, $this->cod_servidor,
-      'pesquisa_funcionario_lst.php', '', FALSE, '', '', NULL, NULL, '', FALSE,
-      $parametros->serializaCampos() . '&com_matricula=false', TRUE);
+    $this->campoTexto("nome","Nome do servidor", $this->nome,50,255,false);
+    $this->campoTexto("matricula_servidor","Matrícula", $this->matricula_servidor,50,255,false);
+    $this->campoCheck("servidor_sem_alocacao","Incluir servidores sem alocação", isset($_GET['servidor_sem_alocacao']));
 
     // Paginador
     $this->limite = 20;
@@ -137,9 +131,9 @@ class indice extends clsListagem
     $obj_servidor->setOrderby('carga_horaria ASC');
     $obj_servidor->setLimite($this->limite, $this->offset);
 
-    $lista = $obj_servidor->lista(
+     $lista = $obj_servidor->lista(
       $this->cod_servidor,
-      $this->ref_cod_deficiencia,
+      NULL,
       $this->ref_idesco,
       $this->carga_horaria,
       NULL,
@@ -147,32 +141,39 @@ class indice extends clsListagem
       NULL,
       NULL,
       1,
-      $this->ref_cod_instituicao,
+      null,
       NULL,
       NULL,
       NULL,
-      NULL,
+      $this->nome,
       NULL,
       NULL,
       TRUE,
+      TRUE,
+      TRUE,
+      NULL,
+      NULL,
+      $this->ref_cod_escola,
       NULL,
       NULL,
       NULL,
       NULL,
-      ! isset($_GET['busca']) ? $this->ref_cod_escola : NULL,
       NULL,
       NULL,
       NULL,
       NULL,
-      ! isset($_GET['busca']) ? 1 : NULL
+      NULL,
+      isset($_GET['servidor_sem_alocacao']),
+      $this->ano_letivo,
+      $this->matricula_servidor
     );
-
     $total = $obj_servidor->_total;
 
     // UrlHelper
     $url = CoreExt_View_Helper_UrlHelper::getInstance();
 
     // Monta a lista
+    // echo "<pre>";var_dump($lista);die;
     if (is_array($lista) && count($lista)) {
       foreach ($lista as $registro) {
         // Pega detalhes de foreign_keys
@@ -189,11 +190,11 @@ class indice extends clsListagem
         if (class_exists('clsFuncionario')) {
           $obj_cod_servidor      = new clsFuncionario($registro['cod_servidor']);
           $det_cod_servidor      = $obj_cod_servidor->detalhe();
-          $registro['matricula'] = $det_cod_servidor['matricula'];
-          $det_cod_servidor      = $det_cod_servidor['idpes']->detalhe();
-          $registro['nome']      = $det_cod_servidor['nome'];
-        }
-        else {
+          // $det_cod_servidor      = $det_cod_servidor['idpes']->detalhe();
+          $det_cod_servidor      = $det_cod_servidor;
+         // $registro['nome']      = $det_cod_servidor['nome'];
+          $registro['cpf']      = $det_cod_servidor['cpf'];
+        } else {
           $registro['cod_servidor'] = 'Erro na geracao';
         }
 
@@ -203,10 +204,10 @@ class indice extends clsListagem
             'cod_servidor'        => $registro['cod_servidor'],
             'ref_cod_instituicao' => $det_ref_cod_instituicao['cod_instituicao'],
         ));
-
         $this->addLinhas(array(
           $url->l($registro['nome'], $path, $options),
-          $url->l($registro['matricula'], $path, $options),
+          $url->l($registro['matricula_servidor'], $path, $options),
+          $url->l($registro['cpf'], $path, $options),
           $url->l($registro['ref_cod_instituicao'], $path, $options),
         ));
       }
@@ -221,14 +222,14 @@ class indice extends clsListagem
     }
 
     $this->largura = '100%';
-    
+
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""                                  => "Listagem de servidores"
+         $_SERVER['SERVER_NAME']."/intranet" => "Início",
+         "educar_servidores_index.php"       => "Servidores",
+         ""                                  => "Servidores"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

@@ -31,6 +31,7 @@
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
+require_once 'include/modules/clsModulesComponenteCurricular.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
@@ -73,7 +74,6 @@ class indice extends clsCadastro
 
   var $cod_servidor;
   var $ref_cod_instituicao;
-  var $ref_cod_deficiencia;
   var $ref_idesco;
   var $ref_cod_funcao;
   var $carga_horaria;
@@ -176,20 +176,21 @@ class indice extends clsCadastro
     }
 
     if ($this->ref_cod_curso) {
-      foreach ($this->ref_cod_curso as $curso) {
-        $lst_disciplinas = $obj_disciplina->lista(NULL, NULL, NULL, NULL, NULL,
-          NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, $curso,
-          $this->ref_cod_instituicao);
-
-        $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
-        $componentes = $componenteAnoDataMapper->findComponentePorCurso($curso);
-
+      $cursosDifferente = array_unique($this->ref_cod_curso);
+      foreach ($cursosDifferente as $curso) {
+        $obj_componentes = new clsModulesComponenteCurricular;
+        $componentes     = $obj_componentes->listaComponentesPorCurso($this->ref_cod_instituicao, $curso);
         $opcoes_disc = array();
-        foreach ($componentes as $componente) {
-          $opcoes_disc[$componente->id]  = $componente->nome;
-        }
+        $opcoes_disc['todas_disciplinas']  = 'Todas as disciplinas';
 
-        $lst_opcoes[] = array($opcoes_curso, $opcoes_disc);
+        $total_componentes = count($componentes);
+        for ($i=0; $i < $total_componentes; $i++) {
+          $opcoes_disc[$componentes[$i]['id']]  = $componentes[$i]['nome'];
+        }
+        $disciplinasCurso[$curso] = array($opcoes_curso, $opcoes_disc);
+      }
+      foreach ($this->ref_cod_curso as $curso) {
+        $lst_opcoes[] = $disciplinasCurso[$curso];
       }
     }
 
@@ -216,10 +217,22 @@ class indice extends clsCadastro
 
     if ($this->ref_cod_curso) {
       for ($i = 0, $loop = count($this->ref_cod_curso); $i < $loop; $i++) {
-        $curso = $this->ref_cod_curso[$i];
-        $curso_servidor[$curso] = $curso;
-        $disciplina = $this->ref_cod_disciplina[$i];
-        $cursos_disciplina[$curso][$disciplina] = $disciplina;
+        if ($this->ref_cod_disciplina[$i] == 'todas_disciplinas'){
+          $componenteAnoDataMapper = new ComponenteCurricular_Model_AnoEscolarDataMapper();
+          $componentes = $componenteAnoDataMapper->findComponentePorCurso($this->ref_cod_curso[$i]);
+          
+          foreach ($componentes as $componente) {
+            $curso = $this->ref_cod_curso[$i];
+            $curso_servidor[$curso] = $curso;
+            $disciplina = $componente->id;
+            $cursos_disciplina[$curso][$disciplina] = $disciplina;
+          }
+        }else{
+          $curso = $this->ref_cod_curso[$i];
+          $curso_servidor[$curso] = $curso;
+          $disciplina = $this->ref_cod_disciplina[$i];
+          $cursos_disciplina[$curso][$disciplina] = $disciplina;
+        }
       }
     }
 
@@ -286,6 +299,8 @@ $pagina->MakeAll();
     var disciplinas = xml.getElementsByTagName('disciplina');
 
     if (disciplinas.length) {
+      campoDisciplina.options[campoDisciplina.options.length] =
+          new Option('Todas as disciplinas', 'todas_disciplinas', false, false);
       for (var i = 0; i < disciplinas.length; i++) {
         campoDisciplina.options[campoDisciplina.options.length] =
           new Option(disciplinas[i].firstChild.data, disciplinas[i].getAttribute('cod_disciplina'), false, false);

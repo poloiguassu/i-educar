@@ -10,9 +10,10 @@
     <link rel=stylesheet type='text/css' href='styles/reset.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/portabilis.css?rand=3' />
     <link rel=stylesheet type='text/css' href='styles/min-portabilis.css?rand=3' />
-    <link rel=stylesheet type='text/css' href='styles/login.css?rand=4' />
+    <link rel=stylesheet type='text/css' href='styles/login.css?rand=6' />
 
-  <script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
+    <script type='text/javascript' src='scripts/jquery/jquery-1.8.3.min.js'></script>
+    <script type="text/javascript" src="scripts/mensagens.js"></script>
 
   <script type="text/javascript">
 
@@ -55,17 +56,22 @@
       else
         $j('.visible-for-non-windows-so').show();
     }
+
   </script>
 
 	</head>
 	<body onload="loginpage_onload();" class="hidden fade-in">
+    <!--img src="https://s3-sa-east-1.amazonaws.com/apps-core-images/uploads/dia-da-mulher.png" style="float:left;"-->
+    <!-- <img src="templates/imagens/mensagem-natal.png" height="300px" style="position:absolute; left: 40px; top: -2px;" /> -->
     <div id="flash-container">
 
-      <!--[if lt IE 7]>
-      <p style="min-height: 32px;" class="flash update-browser"><strong>Seu navegador est&aacute desatualizado.</strong> Para melhor navega&ccedil;&atildeo  no sistema, por favor, atualize seu navegador.<a href="http://br.mozdev.org/download/" target="_blank"><img style="margin-top:4px;" src="http://www.mozilla.org/contribute/buttons/110x32bubble_r_pt.png" alt="Firefox" width="110" height="32" style="border-style:none;" title="Mozilla Firefox" /></a></p>
-      <![endif]-->
-
       <!-- #&ERROLOGIN&# -->
+
+            <!-- #&PENDENCIA_ADMINISTRATIVA&# -->
+
+
+    <div class="mensagens" id="mensagens"></div>
+
     </div>
 
     <div id="corpo">
@@ -98,6 +104,8 @@
           <tr>
             <td>
               <p class="forget-password"><a class="light small" href="/module/Usuario/RedefinirSenha">Esqueceu sua senha?</a></p>
+
+              <p><a target="_blank" class="light small" href="http://educacao.portabilis.com.br/">Acesso professores, pais e alunos.</a> <a target="_blank" class="decorated light small" href="http://www.portabilis.com.br/produto/educacao-19#destaques">Saiba mais</a>
             </p>
             </td>
           </tr>
@@ -120,9 +128,22 @@
     </div> <!-- end corpo -->
 
     <div id="rodape" class="texto-normal">
-		  <p>
-        <!--Portabilis Tecnologia-->
-		  </p>
+      <p>
+        Portabilis Tecnologia - suporte@portabilis.com.br -
+
+        <a target="_blank" class="light" href="http://suporte.portabilis.com.br"> Obter Suporte </a>
+      </p>
+
+      <!-- <div id="div-novembro-azul" style="top: -385px">
+        <a href="https://www.google.com.br/#q=Campanha+Novembro+azul" target="_blank"><img src="https://s3.amazonaws.com/apps-ieducar-images/novembro-azul/novembro-azul.jpg"/></a>
+      </div> -->
+
+      <!--div id="div-copa-no-brasil">
+        <img src="https://cloud.githubusercontent.com/assets/1082624/3250687/b08b862c-f1a8-11e3-87f9-a1bfef5949c3.jpg"/>
+        <p><a href="https://www.google.com/maps/views/streetview/brazils-painted-streets?gl=br&hl=pt-BR" target="_blank">
+            <span style="color: #00A859;">Ruas</span> <span style="color: #FFCC29;">coloridas do <span style="color: #3E4095;">Brasil</span>
+          </a></p>
+      </div-->
     </div> <!-- end rodape -->
 
   </body>

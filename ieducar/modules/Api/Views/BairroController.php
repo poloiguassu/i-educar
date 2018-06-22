@@ -1,4 +1,5 @@
 <?php
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -27,36 +28,58 @@
  * @since   Arquivo disponível desde a versão ?
  * @version   $Id$
  */
+
 require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'intranet/include/clsBanco.inc.php';
+
+/**
+ * Class BairroController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class BairroController extends ApiCoreController
 {
+
   protected function searchOptions() {
-    $municipioId = $this->getRequest()->municipio_id ? $this->getRequest()->municipio_id : 0;
-    return array('sqlParams'    => array($municipioId), 'selectFields' => array('zona_localizacao'));
-    
+    $distritoId = $this->getRequest()->distrito_id ? $this->getRequest()->distrito_id : 0;
+    return array('sqlParams'    => array($distritoId), 'selectFields' => array('zona_localizacao'));
+
   }
+
   protected function formatResourceValue($resource) {
+    $id = $resource['id'];
     $zona    = $resource['zona_localizacao'] == 1 ? 'Urbana' : 'Rural';
     $nome    = $this->toUtf8($resource['name'], array('transform' => true));
-    return "$nome / Zona $zona ";
+    $municipio = $this->toUtf8($resource['municipio'], array('transform' => true));
+
+    return  $this->getRequest()->exibir_municipio ? "$id - $nome - $municipio" : "$nome / Zona $zona ";
   }
+
   protected function sqlsForNumericSearch() {
-    
-    $sqls[] = "select idbai as id, nome as name, zona_localizacao from
-                 public.bairro where idbai like $1||'%' and idmun = $2 ";
+
+    $sqls[] = "SELECT b.idbai as id, b.nome as name, zona_localizacao, m.nome as municipio from
+                 public.bairro b
+                 INNER JOIN public.municipio m ON m.idmun = b.idmun
+                 where idbai::varchar like $1||'%' and (iddis = $2 or $2 = 0 )";
+
     return $sqls;
   }
+
   protected function sqlsForStringSearch() {
-    $sqls[] = "select idbai as id, nome as name, zona_localizacao from
-                 public.bairro where lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%' and idmun = $2 ";
+
+    $sqls[] = "SELECT b.idbai as id, b.nome as name, zona_localizacao, m.nome as municipio from
+                 public.bairro b
+                 INNER JOIN public.municipio m ON m.idmun = b.idmun
+                 where lower((b.nome)) like '%'||lower(($1))||'%' and (b.iddis = $2 or $2 = 0) ";
+
     return $sqls;
   }
+
   public function Gerar() {
     if ($this->isRequestFor('get', 'bairro-search'))
       $this->appendResponse($this->search());
     else
       $this->notImplementedOperationError();
   }
+
 }

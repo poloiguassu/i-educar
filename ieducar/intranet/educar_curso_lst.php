@@ -1,5 +1,8 @@
 <?php
 
+#error_reporting(E_ALL);
+#ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -32,7 +35,6 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
-require_once ("include/localizacaoSistema.php");
 
 /**
  * clsIndexBase class.
@@ -50,7 +52,7 @@ class clsIndexBase extends clsBase
   {
     $this->SetTitulo($this->_instituicao . ' i-Educar - Curso');
     $this->processoAp = '566';
-    $this->addEstilo( "localizacaoSistema" );
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -262,12 +264,12 @@ class indice extends clsListagem
       $this->nome_acao = "Novo";
     }
     $this->largura = "100%";
-    
+
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "Listagem de cursos"
+         "educar_index.php"                  => "Escola",
+         ""        => "Listagem de cursos"             
     ));
     $this->enviaLocalizacao($localizacao->montar());
   }

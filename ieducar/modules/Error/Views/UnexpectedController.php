@@ -43,7 +43,6 @@ class UnexpectedController extends Portabilis_Controller_ErrorCoreController
   }
 
   public function Gerar() {
-    $linkToSupport = $GLOBALS['coreExt']['Config']->modules->error->link_to_support;
 
     if ($GLOBALS['coreExt']['Config']->modules->error->show_details) {
       $detail  = "<br /><h3>Erro app</h3>{$this->getSession()->last_error_message}";
@@ -67,6 +66,7 @@ class UnexpectedController extends Portabilis_Controller_ErrorCoreController
 
     echo "
       <div id='error' class='small'>
+        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">
         <div class='content'>
          <h1>Erro inesperado</h1>
 
@@ -77,7 +77,7 @@ class UnexpectedController extends Portabilis_Controller_ErrorCoreController
           <ol>
             <li><a href='/intranet/index.php'>Tente novamente</a></li>
             <li><a href='/intranet/logof.php'>Fa&ccedil;a logoff do sistema</a> e tente novamente</li>
-            <li>Caso o erro persista, por favor, <a target='_blank' href='$linkToSupport'>solicite suporte</a>.</li>
+            <li>Caso o erro persista, por favor, <a target='_blank' onclick='FreshWidget.show();'>solicite suporte</a>.</li>
           </ol>
         </p>
 

@@ -47,7 +47,7 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Escola S&eacute;rie');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Séries da escola');
     $this->processoAp = '585';
     $this->addEstilo("localizacaoSistema");
   }
@@ -106,22 +106,12 @@ class indice extends clsListagem
 
     $obj_permissao = new clsPermissoes();
     $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
-    if ($nivel_usuario == 1)
-    {
-      $lista_busca[] = 'Escola';
-      $lista_busca[] = 'Institui&ccedil;&atilde;o';
-    }
-    else if ($nivel_usuario == 2)
-    {
-      $lista_busca[] = 'Escola';
-    }
+    $lista_busca[] = 'Escola';
+    $lista_busca[] = 'Institui&ccedil;&atilde;o';
+    $lista_busca[] = 'Escola';
     $this->addCabecalhos($lista_busca);
 
-    $get_escola = true;
-//    $get_escola_curso = true;
-    $get_curso = true;
-    $get_escola_curso_serie = true;
-    include('include/pmieducar/educar_campo_lista.php');
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
 
     // Paginador
     $this->limite = 20;
@@ -132,6 +122,10 @@ class indice extends clsListagem
     $obj_escola_serie = new clsPmieducarEscolaSerie();
     $obj_escola_serie->setOrderby('nm_serie ASC');
     $obj_escola_serie->setLimite($this->limite, $this->offset);
+
+        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
+            $obj_escola_serie->codUsuario = $this->pessoa_logada;
+        }
 
     $lista = $obj_escola_serie->lista(
       $this->ref_cod_escola,
@@ -181,13 +175,9 @@ class indice extends clsListagem
           "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$registro["ref_cod_curso"]}</a>"
         );
 
-        if ($nivel_usuario == 1) {
-          $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$nm_escola}</a>";
-          $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$registro["ref_cod_instituicao"]}</a>";
-        }
-        elseif ($nivel_usuario == 2) {
-          $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$nm_escola}</a>";
-        }
+        $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$nm_escola}</a>";
+        $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$registro["ref_cod_instituicao"]}</a>";
+        $lista_busca[] = "<a href=\"educar_escola_serie_det.php?ref_cod_escola={$registro["ref_cod_escola"]}&ref_cod_serie={$registro["ref_cod_serie"]}\">{$nm_escola}</a>";
 
         $this->addLinhas($lista_busca);
       }
@@ -205,8 +195,8 @@ class indice extends clsListagem
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "Listagem de v&iacute;nculos entre escolas e s&eacute;ries"
+         "educar_index.php"                  => "Escola",
+         ""        => "Séries da escola"
     ));
     $this->enviaLocalizacao($localizacao->montar());
   }
@@ -224,14 +214,3 @@ $pagina->addForm($miolo);
 // Gera o código HTML
 $pagina->MakeAll();
 ?>
-<script type="text/javascript">
-document.getElementById('ref_cod_escola').onchange = function()
-{
-  getEscolaCurso();
-}
-
-document.getElementById('ref_cod_curso').onchange = function()
-{
-  getEscolaCursoSerie();
-}
-</script>

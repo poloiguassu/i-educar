@@ -18,7 +18,7 @@ var $cpfNotice    = $j('<span>').html('')
                                 .hide()
                                 .width($j('#nm_pessoa').outerWidth() - 12)
                                 .appendTo($cpfField.parent());
-
+let obrigarCamposCenso = $j('#obrigar_campos_censo');
 
 // links pessoa pai, mãe
 
@@ -105,31 +105,60 @@ var getPersonByCpf = function(cpf) {
 
 // hide or show #pais_origem_nome by #tipo_nacionalidade
 var checkTipoNacionalidade = function() {
-  if ($j.inArray($j('#tipo_nacionalidade').val(), ['2', '3']) > -1)
+  if ($j.inArray($j('#tipo_nacionalidade').val(), ['2', '3']) > -1) {
+    if (obrigarCamposCenso) {
+      $j('#pais_origem_nome').makeRequired();
+    }
     $j('#pais_origem_nome').show();
-  else
+  } else {
     $j('#pais_origem_nome').hide();
+  }
 }
 
 // hide or show *certidao* fields, by #tipo_certidao_civil
 var checkTipoCertidaoCivil = function() {
-  var $certidaoCivilFields     = $j('#termo_certidao_civil, #livro_certidao_civil, #folha_certidao_civil');
-  var $certidaoNascimentoField = $j('#certidao_nascimento');
+  var $certidaoCivilFields     = $j('#termo_certidao_civil, #livro_certidao_civil, #folha_certidao_civil').hide();
+  var $certidaoNascimentoField = $j('#certidao_nascimento').hide();
+  var $certidaoCasamentoField  = $j('#certidao_casamento').hide();
   var tipoCertidaoCivil        = $j('#tipo_certidao_civil').val();
 
-  $certidaoCivilFields.hide();
-  $certidaoNascimentoField.hide();
+  $certidaoCivilFields.makeUnrequired();
+  $certidaoNascimentoField.makeUnrequired();
+  $certidaoCasamentoField.makeUnrequired();
+  $j('#uf_emissao_certidao_civil').makeUnrequired();
+  $j('#data_emissao_certidao_civil').makeUnrequired();
+  $j('#cartorio_cert_civil_inep_id').makeUnrequired();
+  $j('#cartorio_cert_civil_inep').makeUnrequired();
 
   if ($j.inArray(tipoCertidaoCivil, ['91', '92']) > -1) {
     $certidaoCivilFields.show();
-    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil / Termo / Livro / Folha'));
-  }
-
-  else if (tipoCertidaoCivil == 'certidao_nascimento_novo_formato') {
+    if (obrigarCamposCenso) {
+      $j('#uf_emissao_certidao_civil').makeRequired();
+      $j('#data_emissao_certidao_civil').makeRequired();
+      $j('#cartorio_cert_civil_inep_id').makeRequired();
+      $j('#cartorio_cert_civil_inep').makeRequired();
+      $certidaoCivilFields.makeRequired();
+    }
+    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
+  } else if (tipoCertidaoCivil == 'certidao_nascimento_novo_formato') {
     $certidaoNascimentoField.show();
-    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil / Certidão nascimento'));
+    if (obrigarCamposCenso) {
+      $certidaoNascimentoField.makeRequired();
+    }
+    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
+  } else if (tipoCertidaoCivil == 'certidao_casamento_novo_formato') {
+    if (obrigarCamposCenso) {
+      $certidaoCasamentoField.makeRequired();
+    }
+    $certidaoCasamentoField.show();
+    $j('#tr_tipo_certidao_civil td:first span').html(stringUtils.toUtf8('Tipo certidão civil'));
   }
 
+  $j('#tipo_certidao_civil').makeUnrequired();
+
+  if (tipoCertidaoCivil.length && obrigarCamposCenso) {
+    $j('#tipo_certidao_civil').makeRequired();
+  }
 }
 
 var validatesCpf = function() {
@@ -161,6 +190,14 @@ var validatesUniquenessOfCpf = function() {
     getPersonByCpf(cpf);
 }
 
+function certidaoNascimentoInvalida() {
+  $j('#certidao_nascimento').addClass('error');
+  messageUtils.error('O campo referente a certidão de nascimento deve conter exatos 32 dígitos.');
+}
+function certidaoCasamentoInvalida() {
+  $j('#certidao_casamento').addClass('error');
+  messageUtils.error('O campo referente a certidão de casamento deve conter exatos 32 dígitos.');
+}
 
 var submitForm = function(event) {
   if ($j('#cep_').val()){
@@ -168,6 +205,16 @@ var submitForm = function(event) {
       return;
     }
   }
+
+  var tipoCertidaoNascimento = ($j('#tipo_certidao_civil').val() == 'certidao_nascimento_novo_formato');
+  var tipoCertidaoCasamento = ($j('#tipo_certidao_civil').val() == 'certidao_casamento_novo_formato');
+
+  if (tipoCertidaoNascimento && $j('#certidao_nascimento').val().length < 32) {
+      return certidaoNascimentoInvalida();
+  } else if (tipoCertidaoCasamento && $j('#certidao_casamento').val().length < 32) {
+      return certidaoCasamentoInvalida();
+  }
+
   if ($cpfField.val()) {
     $j(document).data('submit_form_after_ajax_validation', true);
     validatesUniquenessOfCpf();
@@ -219,6 +266,20 @@ $j(document).ready(function() {
 
   hideEnderecoFields();
   fixUpPlaceholderEndereco();
+  permiteEditarEndereco();
+
+  function verificaObrigatoriedadeRg() {
+    $j('#data_emissao_rg').makeUnrequired();
+    $j('#orgao_emissao_rg').makeUnrequired();
+    $j('#uf_emissao_rg').makeUnrequired();
+    if ($j('#rg').val().length && obrigarCamposCenso) {
+      $j('#data_emissao_rg').makeRequired();
+      $j('#orgao_emissao_rg').makeRequired();
+      $j('#uf_emissao_rg').makeRequired();
+    }
+  }
+
+  $j('#rg').on('change', verificaObrigatoriedadeRg);
 
 }); // ready
 
@@ -282,6 +343,15 @@ function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
   }, 500);
 }
 
+function ativarPessoa(cod_pessoa){
+  var searchPath = '../module/Api/pessoa?oper=get&resource=reativarPessoa';
+  var params = {id : cod_pessoa}
+  if(confirm("Confirma reativa\u00e7\u00e3o do cadastro?")){
+    $j.get(searchPath, params, function(data){
+      window.location.href='atendidos_lst.php';
+    });
+  }
+}
 
 // simple search options
 

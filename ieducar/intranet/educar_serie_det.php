@@ -158,9 +158,7 @@ class indice extends clsDetalhe
 
     $this->addDetalhe(array('Dias letivos', $registro['dias_letivos']));
 
-    if ($registro['intervalo']) {
-      $this->addDetalhe(array('Intervalo', $registro['intervalo']));
-    }
+    $this->addDetalhe(array('Idade padrão', $registro['idade_ideal']));
 
     if ($registro['observacao_historico']) {
       $this->addDetalhe(array('Observação histórico', $registro['observacao_historico']));
@@ -177,10 +175,11 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "Detalhe da s&eacute;rie"
+         "educar_index.php"                  => "Escola",
+         ""        => "Detalhe da s&eacute;rie"             
     ));
-    $this->enviaLocalizacao($localizacao->montar());
+    $this->enviaLocalizacao($localizacao->montar());  
+
   }
 }
 

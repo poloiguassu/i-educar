@@ -30,106 +30,110 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 
 class clsIndexBase extends clsBase
 {
-	function Formular()
-	{
-		$this->SetTitulo( "{$this->_instituicao} i-Educar - Cliente" );
-		$this->processoAp = "603";
-		$this->addEstilo('localizacaoSistema');
-	}
+    function Formular()
+    {
+        $this->SetTitulo( "{$this->_instituicao} i-Educar - Cliente" );
+        $this->processoAp = "603";
+        $this->addEstilo('localizacaoSistema');
+    }
 }
 
 class indice extends clsCadastro
 {
-	/**
-	 * Referencia pega da session para o idpes do usuario atual
-	 *
-	 * @var int
-	 */
-	var $pessoa_logada;
+    /**
+     * Referencia pega da session para o idpes do usuario atual
+     *
+     * @var int
+     */
+    var $pessoa_logada;
 
-	var $cod_cliente;
-	var $ref_cod_instituicao;
-	var $ref_cod_escola;
-	var $ref_cod_biblioteca;
-	var $ref_cod_biblioteca_atual;
-	var $ref_cod_cliente_tipo;
-	var $ref_usuario_exc;
-	var $ref_usuario_cad;
-	var $ref_idpes;
-	var $login_;
-	var $senha_;
-	var $data_cadastro;
-	var $data_exclusao;
-	var $ativo;
-	var $del_cod_cliente;
-	var $del_cod_cliente_tipo;
+    var $cod_cliente;
+    var $ref_cod_instituicao;
+    var $ref_cod_escola;
+    var $ref_cod_biblioteca;
+    var $ref_cod_biblioteca_atual;
+    var $ref_cod_cliente_tipo;
+    var $ref_usuario_exc;
+    var $ref_usuario_cad;
+    var $ref_idpes;
+    var $login_;
+    var $senha_;
+    var $data_cadastro;
+    var $data_exclusao;
+    var $ativo;
+    var $del_cod_cliente;
+    var $del_cod_cliente_tipo;
+  var $observacoes;
 
 
   function Inicializar()
-	{
-		$retorno = "Novo";
-		@session_start();
-		$this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
+    {
+        $retorno = "Novo";
+        @session_start();
+        $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-		$this->cod_cliente	 = $_GET["cod_cliente"];
-		$this->ref_cod_biblioteca = $_GET["ref_cod_biblioteca"];
+        $this->cod_cliente   = $_GET["cod_cliente"];
+        $this->ref_cod_biblioteca = $_GET["ref_cod_biblioteca"];
 
-		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
-		if( is_numeric( $this->cod_cliente ) && is_numeric($this->ref_cod_biblioteca) )
-		{
-			$obj = new clsPmieducarCliente( $this->cod_cliente );
-			$registro  = $obj->detalhe();
-			if( $registro )
-			{
-				foreach( $registro AS $campo => $val )	// passa todos os valores obtidos no registro para atributos do objeto
-					$this->$campo = $val;
-				$this->data_cadastro = dataFromPgToBr( $this->data_cadastro );
-				$this->data_exclusao = dataFromPgToBr( $this->data_exclusao );
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_cadastra( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
+        if( is_numeric( $this->cod_cliente ) && is_numeric($this->ref_cod_biblioteca) )
+        {
+            $obj = new clsPmieducarCliente( $this->cod_cliente );
+            $registro  = $obj->detalhe();
+            if( $registro )
+            {
+                foreach( $registro AS $campo => $val )  // passa todos os valores obtidos no registro para atributos do objeto
+                    $this->$campo = $val;
+                $this->data_cadastro = dataFromPgToBr( $this->data_cadastro );
+                $this->data_exclusao = dataFromPgToBr( $this->data_exclusao );
 
-				$this->login_ = $this->login;
-				$this->senha_ = $this->senha;
+                $this->login_ = $this->login;
+                $this->senha_ = $this->senha;
 
-				$obj_permissoes = new clsPermissoes();
-				if( $obj_permissoes->permissao_excluir( 603, $this->pessoa_logada, 11 ) )
-				{
-					$this->fexcluir = true;
-				}
+        $observacoes =  $this->observacoes;
 
-					$retorno = "Editar";
-			}
-		}
-		$this->url_cancelar = ($retorno == "Editar") ? "educar_cliente_det.php?cod_cliente={$registro["cod_cliente"]}&ref_cod_biblioteca={$this->ref_cod_biblioteca}" : "educar_cliente_lst.php";
-		$this->nome_url_cancelar = "Cancelar";
+        $obj_permissoes = new clsPermissoes();
+                if( $obj_permissoes->permissao_excluir( 603, $this->pessoa_logada, 11 ) )
+                {
+                    $this->fexcluir = true;
+                }
+
+                    $retorno = "Editar";
+            }
+        }
+        $this->url_cancelar = ($retorno == "Editar") ? "educar_cliente_det.php?cod_cliente={$registro["cod_cliente"]}&ref_cod_biblioteca={$this->ref_cod_biblioteca}" : "educar_cliente_lst.php";
+        $this->nome_url_cancelar = "Cancelar";
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "i-Educar - Biblioteca",
-         ""        => "{$nomeMenu} cliente"             
+         "educar_biblioteca_index.php"                  => "Biblioteca",
+         ""        => "{$nomeMenu} cliente"
     ));
-    $this->enviaLocalizacao($localizacao->montar());		
+    $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
-	}
+    }
 
-	function Gerar()
-	{
-		// primary keys
-		$this->campoOculto( "cod_cliente", $this->cod_cliente );
-		$this->campoOculto("requisita_senha", "0");
-		$opcoes = array( "" => "Pesquise a pessoa clicando na lupa ao lado" );
-		if( $this->ref_idpes )
-		{
-			$objTemp = new clsPessoaFisica( $this->ref_idpes );
-			$detalhe = $objTemp->detalhe();
-			$opcoes["{$detalhe["idpes"]}"] = $detalhe["nome"];
-		}
+    function Gerar()
+    {
+        // primary keys
+        $this->campoOculto( "cod_cliente", $this->cod_cliente );
+        $this->campoOculto("requisita_senha", "0");
+        $opcoes = array( "" => "Pesquise a pessoa clicando na lupa ao lado" );
+        if( $this->ref_idpes )
+        {
+            $objTemp = new clsPessoaFisica( $this->ref_idpes );
+            $detalhe = $objTemp->detalhe();
+            $opcoes["{$detalhe["idpes"]}"] = $detalhe["nome"];
+        }
 
     // Caso o cliente não exista, exibe um campo de pesquisa, senão, mostra um rótulo
     if (!$this->cod_cliente) {
@@ -142,34 +146,64 @@ class indice extends clsCadastro
       $parametros->setPessoaNovo('S');
       $parametros->setPessoaTela('frame');
 
-      $this->campoListaPesq('ref_idpes', 'Cliente', $opcoes, $this->ref_idpes, 'pesquisa_pessoa_lst.php', '', FALSE, '', '', NULL, NULL, '', FALSE, $parametros->serializaCampos());
-		}
+      // $this->campoListaPesq('ref_idpes', 'Cliente', $opcoes, $this->ref_idpes, 'pesquisa_pessoa_lst.php', '', FALSE, '', '', NULL, NULL, '', FALSE, $parametros->serializaCampos());
+      $dados = array(
+        'nome' => 'Cliente',
+        'campo' => '',
+        'valor' => array(null => 'Para procurar, clique na lupa ao lado.'),
+        'default' => null,
+        'acao' => "",
+        'descricao' => "",
+        'caminho' => 'pesquisa_pessoa_lst.php',
+        'descricao2' => "",
+        'flag' => null,
+        'pag_cadastro' => null,
+        'disabled' => "",
+        'div' => false,
+        'serializedcampos' => $parametros->serializaCampos(),
+        'duplo' => false,
+        'obrigatorio' => true
+      );
+      $this->setOptionsListaPesquisa("ref_idpes", $dados);
+
+        }
     else {
+      $this->campoTexto("codigo","Código",$this->cod_cliente,9,9,null,null,null,null,null,null,null,true);
       $this->campoOculto('ref_idpes', $this->ref_idpes);
       $this->campoRotulo('nm_cliente', 'Cliente', $detalhe['nome']);
     }
 
 
-		// text
-		$this->campoNumero( "login", "Login", $this->login_, 9, 9, false );
-		$this->campoSenha( "senha", "Senha", $this->senha_, false );
+        // text
+        $this->campoNumero( "login", "Login", $this->login_, 9, 9, false );
+        $this->campoSenha( "senha", "Senha", $this->senha_, false );
 
-		if($this->cod_cliente && $this->ref_cod_biblioteca)
-		{
-			$db = new clsBanco();
+        if($this->cod_cliente && $this->ref_cod_biblioteca)
+        {
+            $db = new clsBanco();
 
       // Cria campo oculto com o ID da biblioteca atual ao qual usuário está cadastrado
-			$this->ref_cod_biblioteca_atual = $this->ref_cod_biblioteca;
-			$this->campoOculto("ref_cod_biblioteca_atual", $this->ref_cod_biblioteca_atual);
+            $this->ref_cod_biblioteca_atual = $this->ref_cod_biblioteca;
+            $this->campoOculto("ref_cod_biblioteca_atual", $this->ref_cod_biblioteca_atual);
 
-			//$this->ref_cod_biblioteca   = $db->CampoUnico("SELECT cod_biblioteca  FROM pmieducar.biblioteca, pmieducar.cliente_tipo_cliente ctc, pmieducar.cliente_tipo ct WHERE ref_cod_cliente = '$this->cod_cliente' AND ref_cod_cliente_tipo = cod_cliente_tipo AND ct.ref_cod_biblioteca = cod_biblioteca AND ctc.ref_cod_biblioteca = {$this->ref_cod_biblioteca}");
+            //$this->ref_cod_biblioteca   = $db->CampoUnico("SELECT cod_biblioteca  FROM pmieducar.biblioteca, pmieducar.cliente_tipo_cliente ctc, pmieducar.cliente_tipo ct WHERE ref_cod_cliente = '$this->cod_cliente' AND ref_cod_cliente_tipo = cod_cliente_tipo AND ct.ref_cod_biblioteca = cod_biblioteca AND ctc.ref_cod_biblioteca = {$this->ref_cod_biblioteca}");
 
       // obtem o codigo do tipo de cliente, apartir da tabela cliente_tipo_cliente
-			$this->ref_cod_cliente_tipo = $db->CampoUnico("SELECT ref_cod_cliente_tipo FROM pmieducar.cliente_tipo_cliente WHERE ref_cod_cliente = '$this->cod_cliente'");
-		}
+            $this->ref_cod_cliente_tipo = $db->CampoUnico("SELECT ref_cod_cliente_tipo FROM pmieducar.cliente_tipo_cliente WHERE ref_cod_cliente = '$this->cod_cliente'");
+        }
 
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'biblioteca', 'bibliotecaTipoCliente'));
-	}
+
+    $obs_options = array(
+      'required'    => false,
+      'label'       => 'Observações:',
+      'cols'        => 35,
+      'placeholder' => '',
+      'max_length'  => 255,
+      'value'       => $this->observacoes
+    );
+    $this->inputsHelper()->textArea( 'observacoes', $obs_options);
+    }
 
 
 
@@ -188,10 +222,9 @@ class indice extends clsCadastro
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_cadastra(603, $this->pessoa_logada, 11,  'educar_cliente_lst.php');
 
-    $obj = new clsPmieducarCliente(NULL, NULL, NULL, $this->ref_idpes);
-    $detalhe = $obj->detalhe();
-
-    if (!$detalhe) {
+    $obj = new clsPmieducarCliente();
+    $lista = $obj->lista(NULL, NULL, NULL, $this->ref_idpes, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+    if (!$lista) {
       $obj_cliente = new clsPmieducarCliente();
       $lst_cliente = $obj_cliente->lista(NULL, NULL, NULL, NULL, $this->login);
 
@@ -200,10 +233,15 @@ class indice extends clsCadastro
       }
       else {
         $obj = new clsPmieducarCliente($this->cod_cliente, NULL, $this->pessoa_logada,
-				  $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, 1);
+                  $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, 1, $this->observacoes);
 
-        $cadastrou = $obj->cadastra();
+        $this->cod_cliente = $cadastrou = $obj->cadastra();
         if ($cadastrou) {
+          $obj->cod_cliente = $this->cod_cliente;
+          $cliente = $obj->detalhe();
+          $auditoria = new clsModulesAuditoriaGeral("cliente", $this->pessoa_logada, $this->cod_cliente);
+          $auditoria->inclusao($cliente);
+
           $this->cod_cliente = $cadastrou;
           $obj_cliente_tipo = new clsPmieducarClienteTipoCliente($this->ref_cod_cliente_tipo,
             $this->cod_cliente, NULL, NULL, $this->pessoa_logada, $this->pessoa_logada, 1);
@@ -223,7 +261,7 @@ class indice extends clsCadastro
               $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
               header('Location: educar_cliente_lst.php');
               die();
-						}
+                        }
           }
         }
 
@@ -233,11 +271,10 @@ class indice extends clsCadastro
       }
     }
     else {
-      $obj = new clsPmieducarCliente(NULL, NULL, NULL, $this->ref_idpes);
-      $registro = $obj->detalhe();
-
+      $obj = new clsPmieducarCliente();
+      $registro = $obj->lista(NULL, NULL, NULL, $this->ref_idpes, NULL, NULL, NULL, NULL, NULL, NULL, 1);
       if ($registro) {
-        $this->cod_cliente = $registro['cod_cliente'];
+        $this->cod_cliente = $registro[0]['cod_cliente'];
       }
 
       $this->ativo = 1;
@@ -255,15 +292,16 @@ class indice extends clsCadastro
           $this->mensagem = "Não cadastrou";
 
           return FALSE;
-				}
+                }
         else {
           header('Location: educar_cliente_lst.php');
 
           return TRUE;
           die();
-				}
+                }
       }
-			else {
+            else {
+        //$this->Editar();
         $this->mensagem = "O cliente já está cadastrado!<br>";
       }
     }
@@ -290,11 +328,15 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(603, $this->pessoa_logada, 11, 'educar_cliente_lst.php');
 
     $obj = new clsPmieducarCliente($this->cod_cliente, $this->pessoa_logada, $this->pessoa_logada,
-      $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, $this->ativo);
+      $this->ref_idpes, $this->login, $senha, $this->data_cadastro, $this->data_exclusao, $this->ativo, $this->observacoes);
 
+    $detalheAntigo = $obj->detalhe();
     $editou = $obj->edita();
 
     if ($editou) {
+      $detalheAtual = $obj->detalhe();
+      $auditoria = new clsModulesAuditoriaGeral("cliente", $this->pessoa_logada, $this->cod_cliente);
+      $auditoria->alteracao($detalheAntigo, $detalheAtual);
       // Cria objeto clsPemieducarClienteTipoCliente configurando atributos usados nas queries
       $obj_cliente_tipo = new clsPmieducarClienteTipoCliente(
         $this->ref_cod_cliente_tipo, $this->cod_cliente, NULL, NULL,
@@ -323,34 +365,38 @@ class indice extends clsCadastro
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
-		die();
-	}
+        die();
+    }
 
 
 
-	function Excluir()
-	{
-		@session_start();
-		 $this->pessoa_logada = $_SESSION['id_pessoa'];
-		@session_write_close();
+    function Excluir()
+    {
+        @session_start();
+         $this->pessoa_logada = $_SESSION['id_pessoa'];
+        @session_write_close();
 
-		$obj_permissoes = new clsPermissoes();
-		$obj_permissoes->permissao_excluir( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
+        $obj_permissoes = new clsPermissoes();
+        $obj_permissoes->permissao_excluir( 603, $this->pessoa_logada, 11,  "educar_cliente_lst.php" );
 
-		$obj = new clsPmieducarCliente( $this->cod_cliente, $this->pessoa_logada, null, $this->ref_idpes, null, null, null, null, 0 );
-		$excluiu = $obj->excluir();
-		if( $excluiu )
-		{
-			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-			header( "Location: educar_cliente_lst.php" );
-			die();
-			return true;
-		}
+        $obj = new clsPmieducarCliente( $this->cod_cliente, $this->pessoa_logada, null, $this->ref_idpes, null, null, null, null, 0 );
+        $detalhe = $obj->detalhe();
+    $excluiu = $obj->excluir();
+        if( $excluiu )
+        {
 
-		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-		echo "<!--\nErro ao excluir clsPmieducarCliente\nvalores obrigatorios\nif( is_numeric( $this->cod_cliente ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
-		return false;
-	}
+      $auditoria = new clsModulesAuditoriaGeral("cliente", $this->pessoa_logada, $this->cod_cliente);
+      $auditoria->exclusao($detalhe);
+            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+            header( "Location: educar_cliente_lst.php" );
+            die();
+            return true;
+        }
+
+        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+        echo "<!--\nErro ao excluir clsPmieducarCliente\nvalores obrigatorios\nif( is_numeric( $this->cod_cliente ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+        return false;
+    }
 }
 
 // cria uma extensao da classe base
@@ -365,19 +411,19 @@ $pagina->MakeAll();
 <script>
 document.getElementById('ref_cod_biblioteca').onchange = function()
 {
-	ajaxBiblioteca();
+    ajaxBiblioteca();
 };
 
 if(document.getElementById('ref_cod_biblioteca').value != '')
 {
-	ajaxBiblioteca();
+    ajaxBiblioteca();
 }
 
 function ajaxBiblioteca()
 {
-	var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
-	var xml_biblioteca = new ajax( requisitaSenha );
-	xml_biblioteca.envia( "educar_biblioteca_xml.php?bib="+campoBiblioteca );
+    var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
+    var xml_biblioteca = new ajax( requisitaSenha );
+    xml_biblioteca.envia( "educar_biblioteca_xml.php?bib="+campoBiblioteca );
 }
 
 setVisibility('tr_login_', false);
@@ -385,35 +431,35 @@ setVisibility('tr_senha_', false);
 
 function requisitaSenha(xml)
 {
-	var DOM_array = xml.getElementsByTagName( "biblioteca" );
-	var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
+    var DOM_array = xml.getElementsByTagName( "biblioteca" );
+    var campoBiblioteca = document.getElementById('ref_cod_biblioteca').value;
 
-	if (campoBiblioteca == '')
-	{
-		setVisibility('tr_login_', false);
-		setVisibility('tr_senha_', false);
-	}
-	else
-	{
-		for( var i = 0; i < DOM_array.length; i++ )
-		{
-			if (DOM_array[i].getAttribute("requisita_senha") == 0)
-			{
-				setVisibility('tr_login_', false);
-				setVisibility('tr_senha_', false);
-				document.getElementById('login_').setAttribute('class', 'geral');
-				document.getElementById('senha_').setAttribute('class', 'geral');
-				document.getElementById('requisita_senha').value = '0';
-			}
-			else if (DOM_array[i].getAttribute("requisita_senha") == 1)
-			{
-				setVisibility('tr_login_', true);
-				setVisibility('tr_senha_', true);
-				document.getElementById('login_').setAttribute('class', 'obrigatorio');
-				document.getElementById('senha_').setAttribute('class', 'obrigatorio');
-				document.getElementById('requisita_senha').value = '1';
-			}
-		}
-	}
+    if (campoBiblioteca == '')
+    {
+        setVisibility('tr_login_', false);
+        setVisibility('tr_senha_', false);
+    }
+    else
+    {
+        for( var i = 0; i < DOM_array.length; i++ )
+        {
+            if (DOM_array[i].getAttribute("requisita_senha") == 0)
+            {
+                setVisibility('tr_login_', false);
+                setVisibility('tr_senha_', false);
+                document.getElementById('login_').setAttribute('class', 'geral');
+                document.getElementById('senha_').setAttribute('class', 'geral');
+                document.getElementById('requisita_senha').value = '0';
+            }
+            else if (DOM_array[i].getAttribute("requisita_senha") == 1)
+            {
+                setVisibility('tr_login_', true);
+                setVisibility('tr_senha_', true);
+                document.getElementById('login_').setAttribute('class', 'obrigatorio');
+                document.getElementById('senha_').setAttribute('class', 'obrigatorio');
+                document.getElementById('requisita_senha').value = '1';
+            }
+        }
+    }
 }
 </script>

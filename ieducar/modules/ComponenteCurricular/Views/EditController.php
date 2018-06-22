@@ -1,5 +1,8 @@
 <?php
 
+// error_reporting(E_ALL);
+// ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -32,6 +35,7 @@
 require_once 'Core/Controller/Page/EditController.php';
 require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
 require_once 'ComponenteCurricular/Model/TipoBase.php';
+require_once 'ComponenteCurricular/Model/CodigoEducacenso.php';
 
 /**
  * EditController class.
@@ -77,6 +81,17 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => '',
       'entity' => 'area_conhecimento'
     ),
+
+    'codigo_educacenso' => array(
+      'label'  => 'Disciplina Educacenso',
+      'help'   => '',
+      'entity' => 'codigo_educacenso'
+    ),
+    'ordenamento' => array(
+      'label'  => 'Ordem de apresentação',
+      'help'   => 'Ordem respeitada no lançamento de notas/faltas.',
+      'entity' => 'ordenamento'
+    ),
   );
 
   protected function _preRender()
@@ -89,7 +104,7 @@ class EditController extends Core_Controller_Page_EditController
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""        => "$nomeMenu componente curricular"
     ));
     $this->enviaLocalizacao($localizacao->montar());
@@ -108,8 +123,8 @@ class EditController extends Core_Controller_Page_EditController
       $instituicoes, $this->getEntity()->instituicao);
 
     // Nome
-    $this->campoTexto('nome', $this->_getLabel('nome'), $this->getEntity()->nome,
-      50, 200, TRUE, FALSE, FALSE, $this->_getHelp('nome'));
+    $this->campoTexto('nome', $this->_getLabel('nome'), trim($this->getEntity()->nome),
+      50, 500, TRUE, FALSE, FALSE, $this->_getHelp('nome'));
 
     // Abreviatura
     $this->campoTexto('abreviatura', $this->_getLabel('abreviatura'),
@@ -126,5 +141,82 @@ class EditController extends Core_Controller_Page_EditController
     $areas = CoreExt_Entity::entityFilterAttr($areas, 'id', 'nome');
     $this->campoLista('area_conhecimento', $this->_getLabel('area_conhecimento'),
       $areas, $this->getEntity()->get('area_conhecimento'));
+
+    // Código educacenso
+    $codigos = ComponenteCurricular_Model_CodigoEducacenso::getInstance();
+    $this->campoLista('codigo_educacenso', $this->_getLabel('codigo_educacenso'),
+      $codigos->getEnums(), $this->getEntity()->get('codigo_educacenso'));
+
+    // Ordenamento
+    $this-> campoNumero('ordenamento',
+                        $this->_getLabel('ordenamento'),
+                        $this->getEntity()->ordenamento==99999 ? null : $this->getEntity()->ordenamento,
+                        15,
+                        15,
+                        false,
+                        $this->_getHelp('ordenamento'));
+  }
+
+  /**
+   * OVERRIDE
+   * Insere um novo registro no banco de dados e redireciona para a página
+   * definida pela opção "new_success".
+   * @see clsCadastro#Novo()
+   */
+  public function Novo()
+  {
+    if ($this->_save()) {
+      header("Location: /intranet/educar_componente_curricular_lst.php");
+    }
+    return FALSE;
+  }
+
+  protected function _save(){
+    $data = array();
+
+    foreach ($_POST as $key => $val) {
+      if (array_key_exists($key, $this->_formMap)) {
+
+        if($key == "ordenamento"){
+
+          if((trim($val) == "") || (is_null($val))) {
+            $data[$key] = 99999;
+            continue;
+          }
+        }
+
+        $data[$key] = $val;
+      }
+    }
+
+
+    // Verifica pela existência do field identity
+    if (isset($this->getRequest()->id) && 0 < $this->getRequest()->id) {
+      $entity = $this->setEntity($this->getDataMapper()->find($this->getRequest()->id));
+    }
+
+    if (isset($entity)) {
+      $this->getEntity()->setOptions($data);
+    }
+    else {
+      $this->setEntity($this->getDataMapper()->createNewEntityInstance($data));
+    }
+
+    try {
+      $this->getDataMapper()->save($this->getEntity());
+      return TRUE;
+    }
+    catch (Exception $e) {
+      // TODO: ver @todo do docblock
+      $this->mensagem = 'Erro no preenchimento do formulário. ';
+      return FALSE;
+    }
   }
 }
+//seta o radio automaticamente como primeiro valor
+echo '<script type="text/javascript">
+      document.ready = function(){
+      element = document.getElementById("tipo_base");
+      element.checked = true;
+      };
+      </script>';

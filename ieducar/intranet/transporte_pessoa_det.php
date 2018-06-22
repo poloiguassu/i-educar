@@ -83,7 +83,7 @@ class indice extends clsDetalhe
     $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
 
     $this->titulo = 'Usuário de transporte - Detalhe';
-    
+
 
     $cod_pt = $_GET['cod_pt'];
 
@@ -94,16 +94,33 @@ class indice extends clsDetalhe
       header('Location: transporte_empresa_lst.php');
       die();
     }
-    
+
     $this->addDetalhe( array("Código", $cod_pt));
     $this->addDetalhe( array("Pessoa", $registro['nome_pessoa']) );
     $this->addDetalhe( array("Rota", $registro['nome_rota']) );
     $this->addDetalhe( array("Destino", (trim($registro['nome_destino'])=='' ? $registro['nome_destino2'] : $registro['nome_destino'])) );
     $this->addDetalhe( array("Ponto de embarque", $registro['nome_ponto'] ));
     $this->addDetalhe( array("Observa&ccedil;&atilde;o", $registro['observacao']) );
-    
-    $this->url_novo = "../module/TransporteEscolar/Pessoatransporte";
-    $this->url_editar = "../module/TransporteEscolar/Pessoatransporte?id={$cod_pt}";
+    if($registro['turno'] == 1){
+      $nm_turno = "Matutino";
+    }else if($registro['turno'] == 2){
+      $nm_turno = "Vespertino";
+    }else if($registro['turno'] == 3){
+      $nm_turno = "Noturno";
+    }else if($registro['turno'] == 4){
+      $nm_turno = "Integral";
+    }else if($registro['turno'] == 0){
+      $nm_turno = "";
+    }
+    $this->addDetalhe( array("Turno", $nm_turno) );
+    $obj_permissao = new clsPermissoes();
+
+    if($obj_permissao->permissao_cadastra(21240, $this->pessoa_logada,7,null,true))
+    {
+      $this->url_novo = "../module/TransporteEscolar/Pessoatransporte";
+      $this->url_editar = "../module/TransporteEscolar/Pessoatransporte?id={$cod_pt}";
+    }
+
     $this->url_cancelar = "transporte_pessoa_lst.php";
 
     $this->largura = "100%";
@@ -111,10 +128,10 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_transporte_escolar_index.php"                  => "Transporte escolar",
          ""                                  => "Detalhe do usu&aacute;rio de transporte"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
   }
 }
 

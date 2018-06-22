@@ -30,8 +30,7 @@
 
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
-require_once 'include/clsEmail.inc.php';
-
+require_once 'Portabilis/Mailer.php';
 require_once 'modules/Error/Mailers/NotificationMailer.php';
 
 /**
@@ -413,11 +412,11 @@ abstract class clsBancoSQL_
     $temp = explode("'", $this->strStringSQL);
 
     for ($i = 0; $i < count($temp); $i++) {
-      // Ignora o que está entre aspas
+      // Ignora o que estÃ¡ entre aspas
       if (! ($i % 2)) {
-        // Fora das aspas, verifica se há algo errado no SQL
+        // Fora das aspas, verifica se hÃ¡ algo errado no SQL
         if (preg_match("/(--|#|\/\*)/", $temp[$i])) {
-          $erroMsg = 'Proteção contra injection: ' . date( "Y-m-d H:i:s" );
+          $erroMsg = 'ProteÃ§Ã£o contra injection: ' . date( "Y-m-d H:i:s" );
           echo "<!-- {$this->strStringSQL} -->";
           $this->Interrompe($erroMsg);
         }
@@ -490,9 +489,12 @@ abstract class clsBancoSQL_
 
       $conteudo .= "</table>";
 
-      $objEmail = new clsEmail($objConfig->arrayConfig['ArrStrEmailsAdministradores'],
-        "[INTRANET - PMI] Desempenho de query", $conteudo);
-      $objEmail->envia();
+      (new Portabilis_Mailer)->sendMail(
+          $objConfig->arrayConfig['ArrStrEmailsAdministradores'],
+          '[INTRANET - PMI] Desempenho de query',
+          $conteudo,
+          ['mime' => 'text/html']
+      );
     }
 
     return $this->bConsulta_ID;
@@ -804,7 +806,7 @@ abstract class clsBancoSQL_
     @session_write_close();
 
     $pgErrorMsg = $getError ? pg_result_error($this->bConsulta_ID) : '';
-    NotificationMailer::unexpectedDataBaseError($appErrorMsg, $pgErrorMsg, $this->strStringSQL);
+    (new NotificationMailer)->unexpectedDataBaseError($appErrorMsg, $pgErrorMsg, $this->strStringSQL);
 
     die("<script>document.location.href = '/module/Error/unexpected';</script>");
   }

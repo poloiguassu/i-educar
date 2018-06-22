@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestĂŁo escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaĂ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa ĂŠ software livre; vocĂŞ pode redistribuĂ­-lo e/ou modificĂĄ-lo
+ * sob os termos da LicenĂ§a PĂşblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versĂŁo 2 da LicenĂ§a, como (a seu critĂŠrio)
+ * qualquer versĂŁo posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa ĂŠ distribuĂ­Â­do na expectativa de que seja Ăştil, porĂŠm, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implĂ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAĂĂO A UMA FINALIDADE ESPECĂFICA. Consulte a LicenĂ§a PĂşblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocĂŞ deve ter recebido uma cĂłpia da LicenĂ§a PĂşblica Geral do GNU junto
+ * com este programa; se nĂŁo, escreva para a Free Software Foundation, Inc., no
+ * endereĂ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaĂ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo disponĂ­vel desde a versĂŁo 1.0.0
  * @version   $Id$
  */
 
@@ -34,11 +34,11 @@ require_once 'include/clsAgenda.inc.php';
 /**
  * clsIndex class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaĂ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponĂ­vel desde a versĂŁo 1.0.0
  * @version   @@package_version@@
  */
 class clsIndex extends clsBase
@@ -52,11 +52,11 @@ class clsIndex extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de ItajaĂ­ <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe disponĂ­vel desde a versĂŁo 1.0.0
  * @version   @@package_version@@
  */
 class indice
@@ -89,16 +89,60 @@ class indice
         $temp .= "<center><h3>Acesso negado para este usu&aacute;rio.</h3><br>Caso persista nas tentativas sua conta na intranet poder&aacute; ser bloqueada por tempo indeterminado.</center>";
       }
 
+      $pendencia_administrativa = dbBool($GLOBALS['coreExt']['Config']->app->administrative_pending->exist);
+      $texto_pendencia = $GLOBALS['coreExt']['Config']->app->administrative_pending->msg;
+
+      if ($pendencia_administrativa)
+        echo '
+            <script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
+          <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
+          <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
+          <div id="dialog" title="Aviso">
+            '.$texto_pendencia.'
+          </div>
+          <script>
+          var $j = jQuery.noConflict();
+
+          $j(function() {
+            $j( "#dialog" ).dialog({
+              width: 600,
+              position: { my: "center", at: "top", of: window },
+              buttons: [
+                {
+                  text: "Entendi. Prosseguir utilizando o sistema.",
+                  click: function(){
+                    $j(this).dialog("close");
+                  }
+                }
+              ]
+            });
+
+          });
+         </script>';
+      $temp .= "<table class='tablelistagem' id='tableLocalizacao'width='100%' border='0'  cellpadding='0' cellspacing='0'>
+                  <tr height='10px'>
+                    <td class='fundoLocalizacao' colspan='2'>
+                      <div id='localizacao'>
+                        <a href='/intranet' title='Ir para o início'>
+                          <i class='fa fa-home' aria-hidden='true'></i>
+                          <span> Início</span>
+                        </a>
+                        <a class='flechinha' href='#'> / </a>
+                        <a href='#' class='pagina_atual'>Calendário</a>
+                      </div>
+                    </td>
+                  </tr>
+                </table>";
       $temp .= '<table width="100%" height="400" align="center" border="0" cellspacing="4" cellpadding="0">';
       $temp .= '
         <tr>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_dom.jpg" width="43" height="24" border="0" alt="DOM" title="Domingo"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_seg.jpg" width="43" height="24" border="0" alt="SEG" title="Segunda Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_ter.jpg" width="43" height="24" border="0" alt="TER" title="Terca Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_qua.jpg" width="43" height="24" border="0" alt="QUA" title="Quarta Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_qui.jpg" width="43" height="24" border="0" alt="QUI" title="Quinta Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_st.jpg"  width="43" height="24" border="0" alt="SEX" title="Sexta Feira"></td>
-          <td class="fundoCalendarioTopo" style="padding:0px;"><img src="imagens/nvp_agn_sab.jpg" width="43" height="24" border="0" alt="SAB" title="Sabado"></td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">DOM</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">SEG</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">TER</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">QUA</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">QUI</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">SEX</td>
+          <td class="fundoCalendarioTopo" style="padding:0px;">SAB</td>
         </tr>';
 
       $mes = ($_GET['mes']) ? $_GET['mes'] : date('m');
@@ -132,7 +176,7 @@ class indice
         }
       }
 
-      // Faz loop da quantidade de dias do MÃªs
+      // Faz loop da quantidade de dias do MĂÂŞs
       $max_comp_dia = 5;
       for ($i=1; $i <= date('t', mktime(0, 0, 0, $mes, 1, $ano)); $i++) {
         $qtd = 0;
@@ -175,7 +219,7 @@ class indice
                   }
 
                   $qtd++;
-                  $compromisso_geral .= "<a href='juris_processo_det.php?cod_processo={$encaminha['ref_cod_juris_processo']}&versao_processo={$encaminha['ref_versao_processo']}' ><span class='textoAgenda' $id>- Pasta nÂº {$encaminha['ref_cod_juris_processo']}</span></a><br>";
+                  $compromisso_geral .= "<a href='juris_processo_det.php?cod_processo={$encaminha['ref_cod_juris_processo']}&versao_processo={$encaminha['ref_versao_processo']}' ><span class='textoAgenda' $id>- Pasta nĂÂş {$encaminha['ref_cod_juris_processo']}</span></a><br>";
                 }
               }
               else {
@@ -193,7 +237,7 @@ class indice
                   }
 
                   $qtd++;
-                  $compromisso_geral .= "<a href='juris_tramite_det.php?cod_tramite={$encaminha['ref_cod_juris_tramite']}&versao_tramite={$encaminha['ref_versao_tramite']}' ><span class='textoAgenda' $id>- Processo nÂº {$encaminha['ref_cod_juris_tramite']}</span></a><br>";
+                  $compromisso_geral .= "<a href='juris_tramite_det.php?cod_tramite={$encaminha['ref_cod_juris_tramite']}&versao_tramite={$encaminha['ref_versao_tramite']}' ><span class='textoAgenda' $id>- Processo nĂÂş {$encaminha['ref_cod_juris_tramite']}</span></a><br>";
                 }
               }
             }
@@ -304,7 +348,7 @@ class indice
         }
 
         $data_temp = strtotime(substr($dataAtual, 0, 19));
-        $compromisso_geral = ($compromisso_geral) ? "$compromisso_geral<a href='agenda.php?cod_agenda={$cod_agenda}&time=$data_temp' ><div align='center' class='textoAgenda'><b>Ver Todos</b></div>" : $compromisso_geral;
+        $compromisso_geral = ($compromisso_geral) ? "$compromisso_geral<a class='agenda-ver-todos' href='agenda.php?cod_agenda={$cod_agenda}&time=$data_temp' ><div align='center' class='textoAgenda'><b>Ver Todos</b></div>" : $compromisso_geral;
 
         if ($i == 1) {
           $ultimoDiaUltimoMes = date('t', mktime(0, 0, 0, $mes - 1, 1, $ano));
@@ -314,14 +358,14 @@ class indice
             $temp .= "<td class='fundoCalendarioMesDiferente' valign='top'><span class='diasMes'>$dia</span></td>";
           }
 
-          $temp .= "<td class='$classe' valign='top' background='imagens/nvp_calend_01.gif' style='background-repeat:no-repeat;'>$compromisso_geral</td>";
+          $temp .= "<td class='$classe' valign='top'><div class='dia_agenda'> " . $this->addLeadingZero($i) . " </div>$compromisso_geral</td>";
         }
         else {
           if($diaDaSemana == 0) {
-            $temp .= "</tr><tr><td class='$classe' valign='top' background='imagens/nvp_calend_" . $this->addLeadingZero($i) . ".gif' style='background-repeat:no-repeat;'>$compromisso_geral</td>";
+            $temp .= "</tr><tr><td class='$classe' valign='top'><div class='dia_agenda'> " . $this->addLeadingZero($i) . " </div>$compromisso_geral</td>";
           }
           else {
-            $temp .= "<td class='$classe' valign='top' background='imagens/nvp_calend_" . $this->addLeadingZero($i) . ".gif' style='background-repeat:no-repeat;'>$compromisso_geral</td>";
+            $temp .= "<td class='$classe' valign='top'><div class='dia_agenda'> " . $this->addLeadingZero($i) . " </div>$compromisso_geral</td>";
           }
         }
 
@@ -367,11 +411,18 @@ class indice
 
       $temp .= "</tr>
       <tr>
-        <td colspan=\"6\" align=\"center\" class=\"fundoCalendarioTopo\"><a href='index.php?mes=$anterior&ano=$ano_anterior'><img src=\"imagens/nvp_agn_anterior.jpg\" width=\"84\" height=\"20\" border=\"0\" style=\"padding-top:4px;\"></a> &nbsp;&nbsp;<a href='index.php?mes=$proximo&ano=$proximo_ano'><img src=\"imagens/nvp_agn_proximo.jpg\" width=\"84\" height=\"20\" border=\"0\" style=\"padding-top:4px;\"></a></td>
+        <td colspan=\"6\" align=\"center\" class=\"fundoCalendarioTopo\">
+          <a class=\"nav_agenda\" href='index.php?mes=$anterior&ano=$ano_anterior'>
+            &laquo; Anterior
+          </a> &nbsp;&nbsp;
+          <a class=\"nav_agenda\" href='index.php?mes=$proximo&ano=$proximo_ano'>
+            Próximo &raquo;
+          </a>
+        </td>
         <td align=center class='fundoCalendarioTopo'>$mes/$ano</td>
       </tr>
       <tr>
-        <td colspan=\"7\" class=\"fundoCalendario\" style=\"height:15px\"><h3 style=\"padding-top:2px;margin:0px\">Agenda do(a): <a href=\"agenda.php?cod_agenda={$cod_agenda}\">$nomeAgenda</a></h3></td>
+        <td colspan=\"7\" class=\"fundoCalendario\" style=\"height:15px; background-color: #fff;\"><h3 style=\"padding-top:2px;margin:0px\">Agenda do(a): <a href=\"agenda.php?cod_agenda={$cod_agenda}\">$nomeAgenda</a></h3></td>
       </tr>
       </table>{$endScript}";
       return $temp;
@@ -381,16 +432,53 @@ class indice
       die();
     }
   }
+  function mostraModalPesquisa($municipio, $linkPesquisa){
+    return '<script type="text/javascript" src="scripts/jquery/jquery-1.8.3.min.js"></script>
+          <link rel="stylesheet" href="scripts/jquery/jquery-ui.min-1.9.2/css/custom/jquery-ui-1.9.2.custom.min.css">
+          <script src="scripts/jquery/jquery-ui.min-1.9.2/js/jquery-ui-1.9.2.custom.min.js"></script>
+          <div id="dialog" title="Pesquisa de satisfa&ccedil;&atilde;o">
+            <p>Caro usu&aacute;rio(a), a Secretaria Mun. de Educa&ccedil;&atilde;o e a Portabilis Tecnologia, convidam voc&ecirc; a responder a uma pesquisa de satisfa&ccedil;&atilde;o referente ao projeto de moderniza&ccedil;&atilde;o da gest&atilde;o escolar com o i-Educar em ' . $municipio . '.</p>
+            <br/>
+            <p><i>Voc&ecirc; precisar&aacute; de apenas 5 minutos para responder a pesquisa. :)</i></p>
+            <br/>
+            <p><b> Contamos com voc&ecirc;! :)</b></p>
+          </div>
+          <script>
+          var $j = jQuery.noConflict();
+
+          $j(function() {
+            $j( "#dialog" ).dialog({
+              width: 600,
+              position: { my: "center", at: "top", of: window },
+              buttons: [
+                {
+                  text: "Participar da pesquisa",
+                  click: function(){
+                    window.open(' . '"' . $linkPesquisa . '"' . ' , "_blank");
+                    $j(this).dialog("close");
+                  }
+                },
+                {
+                  text: "N\u00e3o, obrigado",
+                  click: function(){
+                    $j(this).dialog("close");
+                  }
+                }
+              ]
+            });
+          });
+         </script>';
+  }
 }
 
-// Instancia objeto de página
+// Instancia objeto de pĂĄgina
 $pagina = new clsIndex();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conteĂşdo
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conteĂşdo Ă   pĂĄgina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o cĂłdigo HTML
 $pagina->MakeAll();

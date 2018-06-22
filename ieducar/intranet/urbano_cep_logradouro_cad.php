@@ -1,40 +1,49 @@
 <?php
-
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃÃO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  urbano
  * @subpackage  Enderecamento
  * @subpackage  Logradouro
- * @since       Arquivo disponível desde a versão 1.0.0
+ * @since       Arquivo disponÃ­vel desde a versÃ£o 1.0.0
  * @version     $Id$
  */
-
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/urbano/geral.inc.php';
 
+/*
+require_once 'include/clsBase.inc.php';
+require_once 'include/clsCadastro.inc.php';
+require_once 'include/clsBanco.inc.php';
+require_once 'include/pmieducar/geral.inc.php';
+
+require_once 'lib/Portabilis/Utils/Database.php';
+require_once 'lib/Portabilis/String/Utils.php';
+
+require_once 'Educacenso/Model/DocenteDataMapper.php';
+*/
 class clsIndexBase extends clsBase
 {
   function Formular()
@@ -44,11 +53,9 @@ class clsIndexBase extends clsBase
     $this->addEstilo('localizacaoSistema');
   }
 }
-
 class indice extends clsCadastro
 {
   var $pessoa_logada;
-
   var $idlog;
   var $nroini;
   var $nrofin;
@@ -60,80 +67,64 @@ class indice extends clsCadastro
   var $operacao;
   var $idsis_rev;
   var $idsis_cad;
-
   var $idpais;
   var $sigla_uf;
   var $idmun;
-
   var $tab_cep = array();
   var $cep;
   var $idbai;
+  var $retorno;
 
   function Inicializar()
   {
-    $retorno = 'Novo';
+    $this->retorno = 'Novo';
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
-
     $this->idlog = $_GET['idlog'];
-
     if (is_numeric($this->idlog)) {
       $obj_cep_logradouro = new clsUrbanoCepLogradouro();
       $lst_cep_logradouro = $obj_cep_logradouro->lista(NULL, NULL, NULL, NULL,
         NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->idlog);
-
       if ($lst_cep_logradouro) {
         $registro = $lst_cep_logradouro[0];
       }
-
       if ($registro) {
         foreach ($registro as $campo => $val) {
           $this->$campo = $val;
         }
-
-        $retorno = 'Editar';
-
+        $this->retorno = 'Editar';
         // CEP
-        $obj_cep_logradouro_bairro = new clsCepLogradouroBairro();
-        $lst_cep_logradouro_bairro = $obj_cep_logradouro_bairro->lista($this->idlog,
-          FALSE, FALSE, 'cep ASC');
-
-        if ($lst_cep_logradouro_bairro) {
-          foreach ($lst_cep_logradouro_bairro as $cep) {
-            $this->tab_cep[] = array(int2CEP($cep['cep']->cep), $cep['idbai']->idbai);
-          }
-        }
+        $this->tab_cep = $this->getListCepBairro();
       }
     }
     else {
       $this->tab_cep[] = array();
     }
-
-    $this->url_cancelar = $retorno == 'Editar' ?
-      'urbano_cep_logradouro_det.php?cep=' . $registro['cep'] . '&idlog=' . $registro['idlog'] :
+    $this->url_cancelar = $this->retorno == 'Editar' ?
+      'urbano_cep_logradouro_det.php?idlog=' . $registro['idlog'] :
       'urbano_cep_logradouro_lst.php';
     $this->nome_url_cancelar = 'Cancelar';
-
-    $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
+    $nomeMenu = $this->retorno == "Editar" ? $this->retorno : "Cadastrar";
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""        => "{$nomeMenu} CEP"             
+         "educar_enderecamento_index.php"    => "Endereçamento",
+         ""        => "{$nomeMenu} CEP"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
-
-    return $retorno;
+    $this->enviaLocalizacao($localizacao->montar());
+    return $this->retorno;
   }
-
   function Gerar()
   {
+
+    $habilitaCampo = ($this->retorno == 'Editar');
+
     // foreign keys
     $opcoes = array('' => 'Selecione');
     if (class_exists('clsPais')) {
       $objTemp = new clsPais();
       $lista = $objTemp->lista(FALSE, FALSE, FALSE, FALSE, FALSE, 'nome ASC');
-
       if (is_array($lista) && count($lista)) {
         foreach ($lista as $registro) {
           $opcoes[$registro['idpais']] = $registro['nome'];
@@ -144,14 +135,12 @@ class indice extends clsCadastro
       echo '<!--\nErro\nClasse clsPais nao encontrada\n-->';
       $opcoes = array('' => 'Erro na geracao');
     }
-    $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais);
-
+    $this->campoLista('idpais', 'Pais', $opcoes, $this->idpais, '', FALSE, '','', $habilitaCampo);
     $opcoes = array('' => 'Selecione');
     if (class_exists('clsUf')) {
       if ($this->idpais) {
         $objTemp = new clsUf();
         $lista = $objTemp->lista(FALSE, FALSE, $this->idpais, FALSE, FALSE, 'nome ASC');
-
         if (is_array($lista) && count($lista)) {
           foreach ($lista as $registro) {
             $opcoes[$registro['sigla_uf']] = $registro['nome'];
@@ -163,15 +152,13 @@ class indice extends clsCadastro
       echo '<!--\nErro\nClasse clsUf nao encontrada\n-->';
       $opcoes = array('' => 'Erro na geracao');
     }
-    $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf);
-
+    $this->campoLista('sigla_uf', 'Estado', $opcoes, $this->sigla_uf, '', FALSE, '','', $habilitaCampo);
     $opcoes = array('' => 'Selecione');
     if (class_exists('clsMunicipio')) {
       if ($this->sigla_uf) {
         $objTemp = new clsMunicipio();
         $lista = $objTemp->lista(FALSE, $this->sigla_uf, FALSE, FALSE, FALSE,
           FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 'nome ASC');
-
         if (is_array($lista) && count($lista)) {
           foreach ($lista as $registro) {
             $opcoes[$registro['idmun']] = $registro['nome'];
@@ -183,15 +170,13 @@ class indice extends clsCadastro
       echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
       $opcoes = array('' => 'Erro na geracao');
     }
-    $this->campoLista('idmun', 'Munic&iacute;pio', $opcoes, $this->idmun);
-
+    $this->campoLista('idmun', 'Munic&iacute;pio', $opcoes, $this->idmun, '', FALSE, '','', $habilitaCampo);
     $opcoes = array('' => 'Selecione');
     if (class_exists('clsLogradouro')) {
       if ($this->idmun) {
         $objTemp = new clsLogradouro();
         $lista = $objTemp->lista(FALSE, FALSE, $this->idmun, FALSE, FALSE,
           FALSE, FALSE, 'nome ASC');
-
         if (is_array($lista) && count($lista)) {
           foreach ($lista as $registro) {
             $opcoes[$registro['idlog']] = $registro['nome'];
@@ -204,18 +189,15 @@ class indice extends clsCadastro
       echo '<!--\nErro\nClasse clsLogradouro nao encontrada\n-->';
       $opcoes = array('' => 'Erro na geracao');
     }
-    $this->campoLista('idlog', 'Logradouro', $opcoes, $this->idlog);
+    $this->campoLista('idlog', 'Logradouro', $opcoes, $this->idlog, '', FALSE, '','', $habilitaCampo);
 
     // Tabela CEP
     $this->campoTabelaInicio('tab_cep', 'Tabela de CEP', array('CEP', 'Bairro'), $this->tab_cep, 400);
-
     $opcoes_bairro = array('' => 'Selecione');
-
     if ($this->idmun) {
       $obj_bairro = new clsBairro();
       $lst_bairro = $obj_bairro->lista($this->idmun, FALSE, FALSE, FALSE, FALSE,
         'nome ASC');
-
       if ($lst_bairro) {
         foreach ($lst_bairro as $campo) {
           $opcoes_bairro[$campo['idbai']] = $campo['nome'];
@@ -224,173 +206,174 @@ class indice extends clsCadastro
     }
     $this->campoCep('cep', 'CEP', $this->cep, true);
     $this->campoLista('idbai', 'Bairro', $opcoes_bairro, $this->idbai);
-
     $this->campoTabelaFim();
-  }
 
+    $scripts = array(
+      '/modules/Portabilis/Assets/Javascripts/Utils.js',
+      '/modules/Portabilis/Assets/Javascripts/ClientApi.js'
+    );
+
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+  }
   function Novo()
   {
     $this->Editar();
   }
-
   function Editar()
   {
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
+    $this->idlog = !$this->idlog ? $_GET['idlog'] : $this->idlog;
+
+    $tab_cep_aux = $this->getListCepBairro();
+
     if (($this->idbai[0] != '') && ($this->cep[0] != '')) {
       foreach ($this->cep as $id => $cep) {
         $cep = idFederal2int($cep);
-
         $obj = new clsUrbanoCepLogradouro($cep, $this->idlog, NULL, NULL, NULL,
           NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9);
-
         if (!$obj->existe()) {
           if (!$obj->cadastra()) {
             $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
             echo "<!--\nErro ao editar clsUrbanoCepLogradouro\nvalores obrigatorios\nif( is_numeric( $cep ) && is_numeric( $this->idlog ) && is_numeric( $this->pessoa_logada ) )\n-->";
-
             return FALSE;
           }
         }
-
         $obj_cep_log_bairro = new clsUrbanoCepLogradouroBairro($this->idlog,
           $cep, $this->idbai[$id], NULL, NULL, 'U', $this->pessoa_logada, NULL,
           'I', NULL, 9);
 
         if (!$obj_cep_log_bairro->existe()) {
-          if (!$obj_cep_log_bairro->cadastra()) {
-            $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
-            echo "<!--\nErro ao editar clsUrbanoCepLogradouroBairro\nvalores obrigatorios\nif( is_numeric( $cep ) && is_numeric( $this->idlog ) && is_numeric( {$this->idbai[$id]} ) && is_numeric( $this->pessoa_logada ) )\n-->";
-
-            return FALSE;
+          if ($id >= count($tab_cep_aux)){
+            if (!$obj_cep_log_bairro->cadastra()) {
+              $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+              echo "<!--\nErro ao editar clsUrbanoCepLogradouroBairro\nvalores obrigatorios\nif( is_numeric( $cep ) && is_numeric( $this->idlog ) && is_numeric( {$this->idbai[$id]} ) && is_numeric( $this->pessoa_logada ) )\n-->";
+              return FALSE;
+            }
+          } else {
+            $cepOld = idFederal2int($tab_cep_aux[$id][0]);
+            $bairroOld = $tab_cep_aux[$id][1];
+            if (!$obj_cep_log_bairro->editaCepBairro($cepOld, $bairroOld)) {
+              $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
+              echo "<!--\nErro ao editar clsUrbanoCepLogradouroBairro\nvalores obrigatorios\nif( is_numeric( $cep ) && is_numeric( $this->idlog ) && is_numeric( {$this->idbai[$id]} ) && is_numeric( $this->pessoa_logada ) )\n-->";
+              return FALSE;
+            }
           }
         }
       }
-
       $this->mensagem .= 'Edi&ccedil;&atilde;o efetuada com sucesso.<br>';
       header('Location: urbano_cep_logradouro_lst.php');
       die();
     }
     else {
-      $this->mensagem = 'É necessario adicionar pelo menos um CEP e bairro.<br>';
-
-      return FALSE;
+      header('Location: urbano_cep_logradouro_lst.php');
+      die();
     }
   }
-
   function Excluir()
   {
     session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
-
     $obj = new clsUrbanoCepLogradouro($this->cep, $this->idlog, $this->nroini,
       $this->nrofin, $this->idpes_rev, $this->data_rev, $this->origem_gravacao,
       $this->idpes_cad, $this->data_cad, $this->operacao, $this->idsis_rev, $this->idsis_cad);
     $excluiu = $obj->excluir();
-
     if ($excluiu) {
       $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
       header('Location: urbano_cep_logradouro_lst.php');
       die();
     }
-
     $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br>';
     echo "<!--\nErro ao excluir clsUrbanoCepLogradouro\nvalores obrigatorios\nif( is_numeric( $this->cep ) && is_numeric( $this->idlog ) )\n-->";
-
     return FALSE;
   }
+  function getListCepBairro()
+  {
+    $tab_cep = array();
+
+    $obj_cep_logradouro_bairro = new clsCepLogradouroBairro();
+    $lst_cep_logradouro_bairro = $obj_cep_logradouro_bairro->lista($this->idlog,
+      FALSE, FALSE, 'cep ASC');
+    if ($lst_cep_logradouro_bairro) {
+      foreach ($lst_cep_logradouro_bairro as $cep) {
+        $tab_cep[] = array(int2CEP($cep['cep']->cep), $cep['idbai']->idbai);
+      }
+    }
+    return $tab_cep;
+  }
 }
-
-// Instancia objeto de página
+// Instancia objeto de pÃ¡gina
 $pagina = new clsIndexBase();
-
-// Instancia objeto de conteúdo
+// Instancia objeto de conteÃºdo
 $miolo = new indice();
-
-// Atribui o conteúdo à  página
+// Atribui o conteÃºdo Ã   pÃ¡gina
 $pagina->addForm($miolo);
-
-// Gera o código HTML
+// Gera o cÃ³digo HTML
 $pagina->MakeAll();
 ?>
 
-<script type="text/javascript">
+<script type="text/javascript" charset="toLatin1">
 document.getElementById('idpais').onchange = function() {
   var campoPais = document.getElementById('idpais').value;
-
   var campoUf= document.getElementById('sigla_uf');
   campoUf.length = 1;
   campoUf.disabled = true;
   campoUf.options[0].text = 'Carregando estado...';
-
   var xml_uf = new ajax( getUf );
   xml_uf.envia('public_uf_xml.php?pais=' + campoPais);
 }
-
 function getUf(xml_uf) {
   var campoUf = document.getElementById('sigla_uf');
   var DOM_array = xml_uf.getElementsByTagName('estado');
-
   if (DOM_array.length) {
     campoUf.length = 1;
     campoUf.options[0].text = 'Selecione um estado';
     campoUf.disabled = false;
-
     for (var i = 0; i < DOM_array.length; i++) {
       campoUf.options[campoUf.options.length] = new Option( DOM_array[i].firstChild.data,
         DOM_array[i].getAttribute('sigla_uf'), false, false);
     }
   }
   else {
-    campoUf.options[0].text = 'O pais não possui nenhum estado';
+    campoUf.options[0].text = 'O pa\u00eds n\u00e3o possui nenhum estado';
   }
 }
-
 document.getElementById('sigla_uf').onchange = function() {
   var campoUf = document.getElementById('sigla_uf').value;
-
   var campoMunicipio= document.getElementById('idmun');
   campoMunicipio.length = 1;
   campoMunicipio.disabled = true;
-  campoMunicipio.options[0].text = 'Carregando município...';
-
+  campoMunicipio.options[0].text = 'Carregando munic\u00edpio...';
   var xml_municipio = new ajax(getMunicipio);
   xml_municipio.envia('public_municipio_xml.php?uf=' + campoUf);
 }
-
 function getMunicipio(xml_municipio) {
   var campoMunicipio = document.getElementById('idmun');
   var DOM_array = xml_municipio.getElementsByTagName('municipio');
-
   if (DOM_array.length) {
     campoMunicipio.length = 1;
-    campoMunicipio.options[0].text = 'Selecione um município';
+    campoMunicipio.options[0].text = 'Selecione um munic\u00edpio';
     campoMunicipio.disabled = false;
-
     for (var i = 0; i < DOM_array.length; i++) {
       campoMunicipio.options[campoMunicipio.options.length] = new Option(DOM_array[i].firstChild.data,
         DOM_array[i].getAttribute('idmun'), false, false);
     }
   }
   else {
-    campoMunicipio.options[0].text = 'O estado não possui nenhum município';
+    campoMunicipio.options[0].text = 'O estado n\u00e3o possui nenhum munic\u00edpio';
   }
 }
-
 document.getElementById('idmun').onchange = function() {
   var campoMunicipio = document.getElementById('idmun').value;
-
   var campoLogradouro = document.getElementById('idlog');
   campoLogradouro.length = 1;
   campoLogradouro.disabled = true;
   campoLogradouro.options[0].text = 'Carregando logradouro...';
-
   var xml_logradouro = new ajax(getLogradouro);
   xml_logradouro.envia('public_logradouro_xml.php?mun=' + campoMunicipio);
-
   for (var i = 0; i < tab_add_1.id; i++) {
     var campoBairro = document.getElementById('idbai['+i+']');
     campoBairro.length = 1;
@@ -400,142 +383,159 @@ document.getElementById('idmun').onchange = function() {
   var xml_bairro = new ajax(getBairro);
   xml_bairro.envia('public_bairro_xml.php?mun=' + campoMunicipio);
 }
-
 function getLogradouro(xml_logradouro) {
   var campoLogradouro = document.getElementById('idlog');
   var DOM_array = xml_logradouro.getElementsByTagName('logradouro');
-
   if (DOM_array.length) {
     campoLogradouro.length = 1;
     campoLogradouro.options[0].text = 'Selecione um logradouro';
     campoLogradouro.disabled = false;
-
     for (var i = 0; i < DOM_array.length; i++) {
+      if(DOM_array[i].firstChild){
       campoLogradouro.options[campoLogradouro.options.length] = new Option(DOM_array[i].firstChild.data,
         DOM_array[i].getAttribute('idlog'), false, false);
     }
+    }
   }
   else {
-    campoLogradouro.options[0].text = 'O município não possui nenhum logradouro';
+    campoLogradouro.options[0].text = 'O munic\u00edpio n\u00e3o possui nenhum logradouro';
   }
 }
-
 function getBairro(xml_bairro) {
   var DOM_array = xml_bairro.getElementsByTagName('bairro');
-
   for (var i = 0; i < tab_add_1.id; i++) {
     var campoBairro = document.getElementById('idbai['+i+']');
-
     if (DOM_array.length) {
       campoBairro.length = 1;
       campoBairro.options[0].text = 'Selecione um bairro';
       campoBairro.disabled = false;
-
       for (var j = 0; j < DOM_array.length; j++) {
         campoBairro.options[campoBairro.options.length] = new Option(DOM_array[j].firstChild.data,
           DOM_array[j].getAttribute('idbai'), false, false);
       }
     }
     else {
-      campoBairro.options[0].text = 'O município não possui nenhum bairro';
+      campoBairro.options[0].text = 'O munic\u00edpio n\u00e3o possui nenhum bairro';
     }
   }
 }
-
 document.getElementById('btn_add_tab_add_1').onclick = function() {
   tab_add_1.addRow();
-
   var campoMunicipio = document.getElementById('idmun').value;
-
   var pos = tab_add_1.id - 1;
-
   var campoBairro = document.getElementById('idbai['+pos+']');
   campoBairro.length = 1;
   campoBairro.disabled = true;
   campoBairro.options[0].text = 'Carregando bairro...';
-
   var xml_bairro = new ajax(getBairroUnico);
   xml_bairro.envia('public_bairro_xml.php?mun=' + campoMunicipio);
 }
-
 function getBairroUnico(xml_bairro) {
   var pos = tab_add_1.id - 1;
   var campoBairro = document.getElementById('idbai['+pos+']');
-
   var DOM_array = xml_bairro.getElementsByTagName('bairro');
-
   if (DOM_array.length) {
     campoBairro.length = 1;
     campoBairro.options[0].text = 'Selecione um bairro';
     campoBairro.disabled = false;
-
     for (var j = 0; j < DOM_array.length; j++) {
       campoBairro.options[campoBairro.options.length] = new Option(DOM_array[j].firstChild.data,
         DOM_array[j].getAttribute('idbai'), false, false);
     }
   }
   else {
-    campoBairro.options[0].text = 'O município não possui nenhum bairro';
+    campoBairro.options[0].text = 'O munic\u00edpio n\u00e3o possui nenhum bairro';
   }
 }
-
-// Quando seleciona um logradouro, busca por registros de CEP e bairro já
+// Quando seleciona um logradouro, busca por registros de CEP e bairro jÃ¡
 // existentes no banco de dados
-document.getElementById('idlog').onchange = function() {
+/*document.getElementById('idlog').onchange = function() {
   var campoLogradouro = document.getElementById('idlog').value;
-
   var xml_cep = new ajax(getCepBairro);
   xml_cep.envia('urbano_cep_logradouro_bairro_xml.php?log=' + campoLogradouro);
 }
-
 function getCepBairro(xml_cep) {
   var campoLogradouro = document.getElementById('idlog');
   var DOM_array = xml_cep.getElementsByTagName('cep_bairro');
-
   if (DOM_array.length) {
     for (var i = 0; i < DOM_array.length; i++) {
       if (i != 0) {
         tab_add_1.addRow();
       }
-
       var campoCep = document.getElementById('cep['+i+']');
       var cep = DOM_array[i].getAttribute('cep');
       campoCep.value = cep.substring(0,5) + '-' + cep.substring(5);
     }
-
     var campoMunicipio = document.getElementById('idmun').value;
-
     var xml_bairro = new ajax(getBairro_, DOM_array);
     xml_bairro.envia('public_bairro_xml.php?mun=' + campoMunicipio);
   }
 }
-
 function getBairro_(xml_bairro, DOM_array) {
   var DOM_array_ = xml_bairro.getElementsByTagName('bairro');
   DOM_array = DOM_array[0];
-
   for (var i = 0; i < tab_add_1.id; i++) {
     var campoBairro = document.getElementById('idbai['+i+']');
-
     if (DOM_array_.length) {
       campoBairro.length = 1;
       campoBairro.options[0].text = 'Selecione um bairro';
       campoBairro.disabled = false;
-
       for (var j = 0; j < DOM_array_.length; j++) {
         campoBairro.options[campoBairro.options.length] = new Option(DOM_array_[j].firstChild.data,
           DOM_array_[j].getAttribute('idbai'), false, false);
       }
-
       campoBairro.value = DOM_array[i].firstChild.data;
     }
     else {
-      campoBairro.options[0].text = 'O município não possui nenhum bairro';
+      campoBairro.options[0].text = 'O municÃ­pio nÃ£o possui nenhum bairro';
     }
   }
-}
+}*/
 
-$j(document).ready( function(){
-  $j('#tab_cep').find('img[alt="excluir"]').hide();
+
+$j(document).ready(function(){
+
+  for (var i = 0; i < tab_add_1.id; i++) {
+
+    var valorCep = $j("input[id='cep["+i+"]']").val();
+    var idBairro = $j("select[id='idbai["+i+"]'] option:selected").val();
+
+    if (idBairro == '') continue;
+
+    //Remove evento de click antigo
+    $j("a[id='link_remove["+i+"]']").attr('onclick','').unbind('click');
+    //Adiciona novo evento de click para excluir via Ajax
+
+    $j("a[id='link_remove["+i+"]']").click({cep: valorCep, bairro: idBairro, button: document.getElementById('link_remove['+i+']')}, onclickExcluirCepBairro);
+  }
+
+  function onclickExcluirCepBairro(event) {
+    if(!confirm("Tem certeza que deseja excluir este CEP?")) return false;
+
+    var idLog    = $j("select[id='idlog'] option:selected").val();
+
+    var options = {
+      url       : deleteResourceUrlBuilder.buildUrl('/module/Api/endereco', 'delete_endereco'),
+      dataType  : 'json',
+      data      : {
+        cep       : event.data.cep,
+        id_bairro : event.data.bairro,
+        id_log    : idLog
+      },
+      success   : function(dataResponse){
+        if (!dataResponse.any_error_msg)
+          tab_add_1.removeRow(event.data.button);
+
+        handleDeleteCepBairro(dataResponse);
+      }
+    };
+      deleteResource(options)
+  }
+
+  var handleDeleteCepBairro = function(dataResponse) {
+    handleMessages(dataResponse.msgs);
+  }
+
 });
+
 </script>

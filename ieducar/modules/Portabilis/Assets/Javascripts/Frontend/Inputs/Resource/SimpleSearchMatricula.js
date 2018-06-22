@@ -7,7 +7,13 @@ var simpleSearchMatriculaOptions = {
 
     ano : function() {
       return $j('#ano').val() 
-    } 
+    },
+
+    somente_andamento : function() {
+      return $j('#somente_andamento').length ? true : false
+    },
+
+    filtro_abandono_transferencia : 0
   },
 
   canSearch : function() { 
@@ -17,10 +23,10 @@ var simpleSearchMatriculaOptions = {
       return false;
     }
 
-    if (! $j('#ref_cod_escola').val()) {
-      alert('Selecione uma escola.');
-      return false;
-    }
+    //if (! $j('#ref_cod_escola').val()) {
+     // alert('Selecione uma escola.');
+    //  return false;
+   // }
     
     return true;
  }

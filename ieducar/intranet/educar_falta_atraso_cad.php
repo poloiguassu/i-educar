@@ -1,5 +1,8 @@
 <?php
 
+// error_reporting(E_ERROR);
+// ini_set("display_errors", 1);
+
 /**
  * i-Educar - Sistema de gestão escolar
  *
@@ -32,6 +35,7 @@ require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/pmieducar/geral.inc.php';
+
 require_once 'Portabilis/Date/Utils.php';
 
 /**
@@ -48,9 +52,9 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Falta Atraso');
+    $this->SetTitulo($this->_instituicao . ' Servidores - Falta Atraso');
     $this->processoAp = 635;
-    $this->addEstilo("localizacaoSistema");    
+    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -104,7 +108,7 @@ class indice extends clsCadastro
       $registro  = $obj->detalhe();
 
       if ($registro) {
-        // passa to$this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);dos os valores obtidos no registro para atributos do objeto
+        // passa todos os valores obtidos no registro para atributos do objeto
         foreach ($registro as $campo => $val) {
           $this->$campo = $val;
         }
@@ -121,18 +125,16 @@ class indice extends clsCadastro
       }
     }
 
-    $this->url_cancelar = $retorno == 'Editar' ?
-      sprintf('educar_falta_atraso_det.php?cod_falta_atraso=%d', $registro['cod_falta_atraso']) :
-      sprintf('educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d', $this->ref_cod_servidor, $this->ref_cod_instituicao);
+    $this->url_cancelar = sprintf('educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d', $this->ref_cod_servidor, $this->ref_cod_instituicao);
 
     $this->nome_url_cancelar = 'Cancelar';
 
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
-         ""        => "{$nomeMenu} falta/atraso do servidor"             
+         $_SERVER['SERVER_NAME']."/intranet" => "Início",
+         "educar_servidores_index.php"       => "Servidores",
+         ""        => "{$nomeMenu} falta/atraso do servidor"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -145,11 +147,8 @@ class indice extends clsCadastro
     $this->campoOculto('cod_falta_atraso', $this->cod_falta_atraso);
     $this->campoOculto('ref_cod_servidor', $this->ref_cod_servidor);
 
-    // Foreign keys
-    $obrigatorio     = TRUE;
-    $get_instituicao = TRUE;
-    $get_escola      = TRUE;
-    include 'include/pmieducar/educar_campo_lista.php';
+    $this->inputsHelper()->dynamic('instituicao', array('value' => $this->ref_cod_instituicao, 'disabled' => $desabilitado));
+    $this->inputsHelper()->dynamic('escola', array('value' => $this->ref_cod_escola, 'disabled' => $desabilitado));
 
     // Text
     // @todo CoreExt_Enum
@@ -178,6 +177,7 @@ class indice extends clsCadastro
 
   function Novo()
   {
+
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
@@ -234,9 +234,9 @@ class indice extends clsCadastro
     $obj_permissoes->permissao_cadastra(635, $this->pessoa_logada, 7,
       sprintf('educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
         $this->ref_cod_servidor, $this->ref_cod_instituicao));
-
+    $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
     if ($this->tipo == 1) {
-      $obj = new clsPmieducarFaltaAtraso(NULL, $this->ref_cod_escola,
+      $obj = new clsPmieducarFaltaAtraso($this->cod_falta_atraso, $this->ref_cod_escola,
         $this->ref_cod_instituicao, $this->pessoa_logada, NULL,
         $this->ref_cod_servidor, $this->tipo, $this->data_falta_atraso,
         $this->qtd_horas, $this->qtd_min, $this->justificada, NULL, NULL, 1);
@@ -248,12 +248,11 @@ class indice extends clsCadastro
       $det_ser = $obj_ser->detalhe();
       $horas   = floor($det_ser['carga_horaria']);
       $minutos = ($det_ser['carga_horaria'] - $horas) * 60;
-      $obj = new clsPmieducarFaltaAtraso(NULL, $this->ref_cod_escola,
+      $obj = new clsPmieducarFaltaAtraso($this->cod_falta_atraso, $this->ref_cod_escola,
         $this->ref_cod_instituicao, $this->pessoa_logada, NULL,
         $this->ref_cod_servidor, $this->tipo, $this->data_falta_atraso, $horas,
         $minutos, $this->justificada, NULL, NULL, 1);
     }
-
     $editou = $obj->edita();
     if ($editou) {
       $this->mensagem .= 'Edição efetuada com sucesso.<br />';
@@ -272,7 +271,7 @@ class indice extends clsCadastro
     @session_start();
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     @session_write_close();
-
+    $this->data_falta_atraso = Portabilis_Date_Utils::brToPgSQL($this->data_falta_atraso);
     $obj_permissoes = new clsPermissoes();
     $obj_permissoes->permissao_excluir(635, $this->pessoa_logada, 7,
       sprintf('educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
@@ -289,7 +288,6 @@ class indice extends clsCadastro
         $this->ref_cod_servidor, $this->ref_cod_instituicao));
       die();
     }
-
     $this->mensagem = "Exclusão não realizada.<br>";
     echo "<!--\nErro ao excluir clsPmieducarFaltaAtraso\nvalores obrigatórios\nif( is_numeric( $this->cod_falta_atraso ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
     return FALSE;

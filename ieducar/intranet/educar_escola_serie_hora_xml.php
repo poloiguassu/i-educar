@@ -28,7 +28,7 @@
  * @version   $Id$
  */
 
-header('Content-type: text/xml; encoding=UTF-8');
+header('Content-type: text/xml; encoding=');
 
 require_once 'include/clsBanco.inc.php';
 require_once 'include/funcoes.inc.php';

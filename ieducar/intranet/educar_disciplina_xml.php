@@ -57,18 +57,13 @@ if (is_numeric($_GET['cur']) || is_numeric($_GET['ser'])) {
 if (is_numeric($_GET['esc']) && is_numeric($_GET['ser'])) {
   require_once 'App/Model/IedFinder.php';
 
-  try {
-    $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($_GET['ser'], $_GET['esc']);
-  } catch (Exception $e) {
-    echo '<disciplina>Erro: ' . $e->getMessage() . '</disciplina>';
-    echo "</query>";
-    die();
-  }
+  $componentes = App_Model_IedFinder::getEscolaSerieDisciplina($_GET['ser'],
+    $_GET['esc']);
 }
 
 foreach ($componentes as $componente) {
-  print sprintf(' <disciplina cod_disciplina="%d" carga_horaria="%d">%s</disciplina>%s',
-    $componente->id, $componente->cargaHoraria, $componente, PHP_EOL);
+  print sprintf(' <disciplina cod_disciplina="%d" carga_horaria="%d" docente_vinculado="%d">%s</disciplina>%s',
+    $componente->id, $componente->cargaHoraria, $componente->docenteVinculado, $componente, PHP_EOL);
 }
 
 echo "</query>";

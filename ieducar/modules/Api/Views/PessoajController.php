@@ -36,13 +36,17 @@ require_once 'lib/Portabilis/Controller/ApiCoreController.php';
 require_once 'lib/Portabilis/Array/Utils.php';
 require_once 'lib/Portabilis/String/Utils.php';
 
+/**
+ * Class PessoajController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class PessoajController extends ApiCoreController
 {
-  
+
   protected function sqlsForNumericSearch() {
-    
+
     $sqls[] = "select distinct idpes as id, nome as name from
-                 cadastro.pessoa where tipo='J' and idpes like $1||'%'";
+                 cadastro.pessoa where tipo='J' and idpes::varchar like $1||'%'";
 
     return $sqls;
   }
@@ -50,10 +54,10 @@ class PessoajController extends ApiCoreController
   protected function sqlsForStringSearch() {
 
     $sqls[] = "select distinct idpes as id, nome as name from
-                 cadastro.pessoa where tipo='J' and lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%'";
+                 cadastro.pessoa where tipo='J' and lower((nome)) like '%'||lower(($1))||'%'";
 
     return $sqls;
-  }  
+  }
 
   public function Gerar() {
     if ($this->isRequestFor('get', 'pessoaj-search'))

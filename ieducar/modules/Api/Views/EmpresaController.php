@@ -42,6 +42,10 @@ require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Array/Utils.php';
 require_once 'Portabilis/Date/Utils.php';
 
+/**
+ * Class EmpresaController
+ * @deprecated Essa versão da API pública será descontinuada
+ */
 class EmpresaController extends ApiCoreController
 {
   protected $_processoAp        = 578; //verificar
@@ -50,8 +54,8 @@ class EmpresaController extends ApiCoreController
   // validation
 
   protected function validatePessoaJuridica($id){
-    
-    
+
+
   }
 
   // load resources
@@ -68,12 +72,12 @@ class EmpresaController extends ApiCoreController
     $nome = $this->fetchPreparedQuery($sql, $id, false, 'first-field');
 
     return $this->toUtf8($nome, array('transform' => true));
-  }    
+  }
 
 
 
   protected function createOrUpdateEmpresa($id = null){
-    
+
 
     $empresa                                 = new clsModulesEmpresaTransporteEscolar();
     $empresa->cod_empresa_transporte_escolar = $id;
@@ -138,7 +142,7 @@ class EmpresaController extends ApiCoreController
 
     $sqls[] = "select distinct cod_empresa_transporte_escolar as id, nome as name from
                  modules.empresa_transporte_escolar, cadastro.pessoa where idpes = ref_idpes
-                 and cod_empresa_transporte_escolar like $1||'%'";
+                 and cod_empresa_transporte_escolar::varchar like $1||'%'";
 
     return $sqls;
   }
@@ -148,7 +152,7 @@ class EmpresaController extends ApiCoreController
 
     $sqls[] = "select distinct cod_empresa_transporte_escolar as id, nome as name from
                  modules.empresa_transporte_escolar, cadastro.pessoa where idpes = ref_idpes
-                 and lower(to_ascii(nome)) like '%'||lower(to_ascii($1))||'%'";
+                 and lower((nome)) like '%'||lower(($1))||'%'";
 
     return $sqls;
   }
@@ -158,7 +162,7 @@ class EmpresaController extends ApiCoreController
     $id = $this->getRequest()->id;
     $empresa            = new clsModulesEmpresaTransporteEscolar();
     $empresa->cod_empresa_transporte_escolar = $id;
-    if ($empresa->existe())    
+    if ($empresa->existe())
       return true;
     else
       return false;
@@ -172,7 +176,7 @@ class EmpresaController extends ApiCoreController
        $this->messenger->append('O campo Observações não pode ter mais que 255 caracteres.');
        return false;
       }
-      
+
 
     }
 
@@ -190,7 +194,7 @@ class EmpresaController extends ApiCoreController
       else
         $this->messenger->append('Aparentemente a empresa não pode ser cadastrada, por favor, verifique.');
     }
-   
+
 
     return array('id' => $id);
   }
@@ -208,7 +212,7 @@ class EmpresaController extends ApiCoreController
       else
         $this->messenger->append('Aparentemente a empresa não pode ser alterado, por favor, verifique.');
       }
-   
+
 
     return array('id' => $id);
   }
@@ -221,13 +225,13 @@ class EmpresaController extends ApiCoreController
 
       $empresa                  = new clsModulesEmpresaTransporteEscolar();
       $empresa->cod_empresa_transporte_escolar       = $id;
-      
+
 
       if($empresa->excluir()){
         $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
       }else
         $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.',
-                                 'error', false, 'error');    
+                                 'error', false, 'error');
 
     return array('id' => $id);
   }
@@ -253,8 +257,8 @@ class EmpresaController extends ApiCoreController
                 location.href=\"intranet/transporte_empresa_lst.php\";
               </script>";
           die();
-        }                
-        
+        }
+
     }else
       $this->notImplementedOperationError();
   }

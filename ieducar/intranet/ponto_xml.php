@@ -43,7 +43,7 @@ print '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 print '<query>' . PHP_EOL;
 
 if ($id == strval(intval($id))) {
-	
+
   $obj = new clsModulesItinerarioTransporteEscolar();
   $obj->setOrderBy(' seq asc ');
   $pontos = $obj->listaPontos($id);

@@ -23,8 +23,8 @@
  * Pacote PHPJS dispon�vel em:
  * <http://phpjs.org/packages/view/3063/name:933975c113578d0edd81fd2a76bcd480>
  *
- * Transliterado com iconv para UTF-8.
- * $ iconv -f UTF-8 -t UTF-8//translit
+ * Transliterado com iconv para .
+ * $ iconv -f UTF-8 -t //translit
  *
  * Cont�m as seguintes fun��es:
  * - checkdate

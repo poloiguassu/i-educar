@@ -1,6 +1,9 @@
 
 // jquery utils
 
+$j = jQuery.noConflict();
+
+
 function buildId(id) {
   return typeof(id) == 'string' && id.length > 0 && id.charAt(0) != '#' ? '#' + id : id;
 }
@@ -30,6 +33,32 @@ var formUtils = {
     }
   }
 };
+
+function makeRequired(elementId) {
+  $j('<span class="campo_obrigatorio">*</span>').insertAfter($j('#tr_' + elementId + ' td:nth-child(1) span'));
+  $j('#' + elementId).addClass('obrigatorio');
+  $j('#' + elementId).removeClass('geral');
+}
+
+$j.fn.makeRequired = function(){
+  return this.each(function() {
+    makeRequired(this.id);
+    return $j(this);
+  });
+}
+
+function makeUnrequired(elementId) {
+  $j('#tr_' + elementId + ' td span.campo_obrigatorio').remove();
+  $j('#' + elementId).addClass('geral');
+  $j('#' + elementId).removeClass('obrigatorio');
+}
+
+$j.fn.makeUnrequired = function(){
+  return this.each(function() {
+    makeUnrequired(this.id);
+    return $j(this);
+  });
+}
 
 function fixupFieldsWidth(additionalFields, force){
   if (! $j(document).data('fixed-fields-width') || force) {
@@ -179,6 +208,17 @@ function safeCapitalize(value) {
 }
 
 
+function safeCapitalizeFirstCaracter(value) {
+  if (typeof(value) == 'string') {
+    value = value.toLowerCase();
+    value = value.trim();
+    value = value.substr(0, 1).toUpperCase() + value.substr(1);
+  }
+
+  return value;
+}
+
+
 function safeSort(values) {
   try{
     var sortedValues = values.sort(function(a, b) {
@@ -278,6 +318,13 @@ var handleMessages = messageUtils.handleMessages;
 
     // add div for feedback messages
     $j('<div />').attr('id', 'feedback-messages').appendTo($j('#corpo'));
+
+    // Search on press enter
+    $j('.tablelistagem input:text').keypress(function(e) {
+        if(e.which == 13) {
+            acao();
+        }
+    });
 
   }); // ready
 })(jQuery);

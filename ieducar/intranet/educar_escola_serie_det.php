@@ -122,16 +122,12 @@ class indice extends clsDetalhe
     $obj_permissao = new clsPermissoes();
     $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
-    if ($nivel_usuario == 1) {
-      if ($registro["ref_cod_instituicao"]) {
-        $this->addDetalhe(array('Institui&ccedil;&atilde;o', $registro['ref_cod_instituicao']));
-      }
+    if ($registro["ref_cod_instituicao"]) {
+      $this->addDetalhe(array('Institui&ccedil;&atilde;o', $registro['ref_cod_instituicao']));
     }
 
-    if ($nivel_usuario == 1 || $nivel_usuario == 2) {
-      if ($nm_escola) {
-        $this->addDetalhe(array('Escola', $nm_escola));
-      }
+    if ($nm_escola) {
+      $this->addDetalhe(array('Escola', $nm_escola));
     }
 
     if ($registro['ref_cod_curso']) {
@@ -174,15 +170,15 @@ class indice extends clsDetalhe
       $tabela = '
 <table>
   <tr align="center">
-    <td bgcolor="#A1B3BD"><b>Nome</b></td>
-    <td bgcolor="#A1B3BD"><b>Carga horária</b></td>
+    <td bgcolor="#ccdce6"><b>Nome</b></td>
+    <td bgcolor="#ccdce6"><b>Carga horária</b></td>
   </tr>';
 
       $cont = 0;
 
       foreach ($componentes as $componente) {
         if (($cont % 2) == 0) {
-          $color = ' bgcolor="#E4E9ED" ';
+          $color = ' bgcolor="#f5f9fd" ';
         }
         else {
           $color = ' bgcolor="#FFFFFF" ';
@@ -217,10 +213,11 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""        => "Detalhe do v&iacute;nculos entre escola e s&eacute;rie"
     ));
     $this->enviaLocalizacao($localizacao->montar());
+
   }
 }
 

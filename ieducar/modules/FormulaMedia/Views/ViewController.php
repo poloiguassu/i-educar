@@ -51,7 +51,7 @@ class ViewController extends Core_Controller_Page_ViewController
   protected $_tableMap   = array(
     'Nome' => 'nome',
     'Fórmula de cálculo' => 'formulaMedia',
-    'Tipo de fórmula' => 'tipoFormula'
+    'Tipo de fórmula' => 'tipoFormula',
   );
 
   protected function _preRender(){
@@ -64,7 +64,7 @@ class ViewController extends Core_Controller_Page_ViewController
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Escola",
          ""                                  => "Detalhe da f&oacute;rmula de m&eacute;dia"
     ));
     $this->enviaLocalizacao($localizacao->montar());

@@ -1,24 +1,24 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gestÃ£o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
+ * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
+ * qualquer versÃ£o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
+ * ADEQUAÃ‡ÃƒO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
+ * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
+ * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category  i-Educar
@@ -51,7 +51,7 @@ class clsModulesItinerarioTransporteEscolar
   var $tipo;
 
   /**
-   * Armazena o total de resultados obtidos na última chamada ao método lista().
+   * Armazena o total de resultados obtidos na Ãºltima chamada ao mÃ©todo lista().
    * @var int
    */
   var $_total;
@@ -69,33 +69,33 @@ class clsModulesItinerarioTransporteEscolar
   var $_tabela;
 
   /**
-   * Lista separada por vírgula, com os campos que devem ser selecionados na
-   * próxima chamado ao método lista().
+   * Lista separada por vÃ­rgula, com os campos que devem ser selecionados na
+   * prÃ³xima chamado ao mÃ©todo lista().
    * @var string
    */
   var $_campos_lista;
 
   /**
-   * Lista com todos os campos da tabela separados por vírgula, padrão para
-   * seleção no método lista.
+   * Lista com todos os campos da tabela separados por vÃ­rgula, padrÃ£o para
+   * seleÃ§Ã£o no mÃ©todo lista.
    * @var string
    */
   var $_todos_campos;
 
   /**
-   * Valor que define a quantidade de registros a ser retornada pelo método lista().
+   * Valor que define a quantidade de registros a ser retornada pelo mÃ©todo lista().
    * @var int
    */
   var $_limite_quantidade;
 
   /**
-   * Define o valor de offset no retorno dos registros no método lista().
+   * Define o valor de offset no retorno dos registros no mÃ©todo lista().
    * @var int
    */
   var $_limite_offset;
 
   /**
-   * Define o campo para ser usado como padrão de ordenação no método lista().
+   * Define o campo para ser usado como padrÃ£o de ordenaÃ§Ã£o no mÃ©todo lista().
    * @var string
    */
   var $_campo_order_by;
@@ -103,7 +103,7 @@ class clsModulesItinerarioTransporteEscolar
   /**
    * Construtor.
    */
-  function clsModulesItinerarioTransporteEscolar($cod_itinerario_transporte_escolar = NULL, $ref_cod_rota_transporte_escolar = NULL
+  function __construct($cod_itinerario_transporte_escolar = NULL, $ref_cod_rota_transporte_escolar = NULL
     , $seq = NULL,  $ref_cod_ponto_transporte_escolar = NULL, $ref_cod_veiculo = NULL,
      $hora = NULL, $tipo = NULL)
   {
@@ -112,7 +112,7 @@ class clsModulesItinerarioTransporteEscolar
     $this->_schema = "modules.";
     $this->_tabela = "{$this->_schema}itinerario_transporte_escolar";
 
-    $this->_campos_lista = $this->_todos_campos = " cod_itinerario_transporte_escolar, ref_cod_rota_transporte_escolar, ref_cod_ponto_transporte_escolar, ref_cod_veiculo, seq, hora, tipo"; 
+    $this->_campos_lista = $this->_todos_campos = " cod_itinerario_transporte_escolar, ref_cod_rota_transporte_escolar, ref_cod_ponto_transporte_escolar, ref_cod_veiculo, seq, hora, tipo";
 
     if (is_numeric($cod_itinerario_transporte_escolar)) {
       $this->cod_itinerario_transporte_escolar = $cod_itinerario_transporte_escolar;
@@ -120,7 +120,7 @@ class clsModulesItinerarioTransporteEscolar
 
     if (is_numeric($ref_cod_rota_transporte_escolar)) {
       $this->ref_cod_rota_transporte_escolar = $ref_cod_rota_transporte_escolar;
-    }    
+    }
 
     if (is_numeric($seq)) {
       $this->seq = $seq;
@@ -128,19 +128,19 @@ class clsModulesItinerarioTransporteEscolar
 
     if (is_numeric($ref_cod_ponto_transporte_escolar)) {
       $this->ref_cod_ponto_transporte_escolar = $ref_cod_ponto_transporte_escolar;
-    }   
+    }
 
     if (is_numeric($ref_cod_veiculo)) {
       $this->ref_cod_veiculo = $ref_cod_veiculo;
-    }   
+    }
 
     if (is_string($hora)) {
       $this->hora = $hora;
-    }  
+    }
 
     if (is_string($tipo)) {
       $this->tipo = $tipo;
-    }   
+    }
   }
 
   /**
@@ -149,9 +149,9 @@ class clsModulesItinerarioTransporteEscolar
    */
   function cadastra()
   {
-    
+
     if ( is_numeric($this->ref_cod_rota_transporte_escolar)
-     && is_numeric($this->seq) && is_numeric($this->ref_cod_ponto_transporte_escolar) 
+     && is_numeric($this->seq) && is_numeric($this->ref_cod_ponto_transporte_escolar)
       && is_string($this->tipo))
     {
       $db = new clsBanco();
@@ -164,7 +164,7 @@ class clsModulesItinerarioTransporteEscolar
       $campos .= "{$gruda}ref_cod_rota_transporte_escolar";
       $valores .= "{$gruda}'{$this->ref_cod_rota_transporte_escolar}'";
       $gruda = ", ";
-    }    
+    }
 
     if (is_numeric($this->seq)) {
       $campos .= "{$gruda}seq";
@@ -176,28 +176,30 @@ class clsModulesItinerarioTransporteEscolar
       $campos .= "{$gruda}ref_cod_ponto_transporte_escolar";
       $valores .= "{$gruda}'{$this->ref_cod_ponto_transporte_escolar}'";
       $gruda = ", ";
-    }   
+    }
 
     if (is_numeric($this->ref_cod_veiculo)) {
       $campos .= "{$gruda}ref_cod_veiculo";
       $valores .= "{$gruda}'{$this->ref_cod_veiculo}'";
       $gruda = ", ";
-    }   
+    }
 
     if ($this->checktime($this->hora)) {
       $campos .= "{$gruda}hora";
       $valores .= "{$gruda}'{$this->hora}'";
       $gruda = ", ";
-    } 
+    }
 
     if (is_string($this->tipo)) {
       $campos .= "{$gruda}tipo";
       $valores .= "{$gruda}'{$this->tipo}'";
       $gruda = ", ";
-    } 
+    }
 
       $db->Consulta("INSERT INTO {$this->_tabela} ( $campos ) VALUES( $valores )");
-      return $db->InsertId("{$this->_tabela}_seq");
+      $this->cod_itinerario_transporte_escolar = $db->InsertId("{$this->_tabela}_seq");
+
+      return (int) $this->cod_itinerario_transporte_escolar;
     }
 
     return FALSE;
@@ -214,7 +216,7 @@ class clsModulesItinerarioTransporteEscolar
       $db  = new clsBanco();
       $set = '';
       $gruda = '';
- 
+
     if (is_numeric($this->cod_itinerario_transporte_escolar)) {
         $set .= "{$gruda}cod_itinerario_transporte_escolar = '{$this->cod_itinerario_transporte_escolar}'";
         $gruda = ", ";
@@ -223,7 +225,7 @@ class clsModulesItinerarioTransporteEscolar
     if (is_numeric($this->ref_cod_rota_transporte_escolar)) {
         $set .= "{$gruda}ref_cod_rota_transporte_escolar = '{$this->ref_cod_rota_transporte_escolar}'";
         $gruda = ", ";
-    }    
+    }
 
     if (is_numeric($this->seq)) {
         $set .= "{$gruda}seq = '{$this->seq}'";
@@ -233,22 +235,22 @@ class clsModulesItinerarioTransporteEscolar
     if (is_numeric($this->ref_cod_ponto_transporte_escolar)) {
         $set .= "{$gruda}ref_cod_ponto_transporte_escolar = '{$this->ref_cod_ponto_transporte_escolar}'";
         $gruda = ", ";
-    }   
+    }
 
     if (is_numeric($this->ref_cod_veiculo)) {
         $set .= "{$gruda}ref_cod_veiculo = '{$this->ref_cod_veiculo}'";
         $gruda = ", ";
-    }   
+    }
 
     if (is_string($this->hora)) {
         $set .= "{$gruda}hora = '{$this->hora}'";
         $gruda = ", ";
-    }  
+    }
 
     if (is_string($this->tipo)) {
         $set .= "{$gruda}tipo = '{$this->tipo}'";
         $gruda = ", ";
-    } 
+    }
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_itinerario_transporte_escolar = '{$this->cod_itinerario_transporte_escolar}'");
         return TRUE;
@@ -258,7 +260,7 @@ class clsModulesItinerarioTransporteEscolar
   }
 
   /**
-   * Retorna uma lista de registros filtrados de acordo com os parâmetros.
+   * Retorna uma lista de registros filtrados de acordo com os parÃ¢metros.
    * @return array
    */
   function lista($cod_itinerario_transporte_escolar = NULL, $ref_cod_rota_transporte_escolar = NULL,
@@ -268,8 +270,10 @@ class clsModulesItinerarioTransporteEscolar
      (SELECT descricao
        FROM modules.ponto_transporte_escolar
        WHERE ref_cod_ponto_transporte_escolar = cod_ponto_transporte_escolar) as descricao,
-     (SELECT descricao || ', Placa: ' || placa
+     (SELECT descricao || ', Placa: ' || placa || ', Motorista: ' || pessoa.nome
        FROM modules.veiculo
+       LEFT JOIN modules.motorista ON (motorista.cod_motorista = veiculo.ref_cod_motorista)
+       LEFT JOIN cadastro.pessoa ON (pessoa.idpes = motorista.ref_idpes)
        WHERE ref_cod_veiculo = cod_veiculo) as nome_onibus FROM {$this->_tabela}";
     $filtros = "";
 
@@ -283,7 +287,7 @@ class clsModulesItinerarioTransporteEscolar
     if (is_numeric($ref_cod_rota_transporte_escolar)) {
       $filtros .= "{$whereAnd} ref_cod_rota_transporte_escolar = '{$ref_cod_rota_transporte_escolar}'";
       $whereAnd = " AND ";
-    }  
+    }
 
     if (is_numeric($seq)) {
       $filtros .= "{$whereAnd} seq = '{$seq}'";
@@ -302,7 +306,7 @@ class clsModulesItinerarioTransporteEscolar
     if (is_numeric($ref_cod_ponto_transporte_escolar)){
       $filtros .= "{$whereAnd} ref_cod_ponto_transporte_escolar = '{$ref_cod_ponto_transporte_escolar}'";
       $whereAnd = " AND ";
-    }    
+    }
 
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista))+2;
@@ -351,7 +355,7 @@ class clsModulesItinerarioTransporteEscolar
     if (is_numeric($ref_cod_rota_transporte_escolar)) {
       $filtros .= "{$whereAnd} ref_cod_rota_transporte_escolar = '{$ref_cod_rota_transporte_escolar}'";
       $whereAnd = " AND ";
-    }  
+    }
 
     $db = new clsBanco();
     $countCampos = count(explode(',', $this->_campos_lista))+2;
@@ -389,23 +393,11 @@ class clsModulesItinerarioTransporteEscolar
    */
   function detalhe()
   {
-    if (is_numeric($this->cod_rota_transporte_escolar)) {
+    if (is_numeric($this->cod_itinerario_transporte_escolar)) {
       $db = new clsBanco();
-      $db->Consulta("SELECT {$this->_todos_campos}, (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa
-          WHERE
-            idpes = ref_idpes_destino
-         ) AS nome_destino , (
-          SELECT
-            nome
-          FROM
-            cadastro.pessoa, modules.empresa_transporte_escolar
-          WHERE
-            idpes = ref_idpes and cod_empresa_transporte_escolar = ref_cod_empresa_transporte_escolar
-         ) AS nome_empresa FROM {$this->_tabela} WHERE cod_rota_transporte_escolar = '{$this->cod_rota_transporte_escolar}'");
+      $db->Consulta("SELECT {$this->_todos_campos}
+                       FROM {$this->_tabela}
+                      WHERE cod_itinerario_transporte_escolar = '{$this->cod_itinerario_transporte_escolar}'");
       $db->ProximoRegistro();
       return $db->Tupla();
     }
@@ -458,21 +450,21 @@ class clsModulesItinerarioTransporteEscolar
     }
 
     return FALSE;
-  } 
+  }
 
   function checktime($time)
-  { 
+  {
     list($hour,$minute) = explode(':',$time);
- 
+
     if ($hour > -1 && $hour < 24 && $minute > -1 && $minute < 60 && is_numeric($hour) && is_numeric($minute))
     {
       return true;
-    } else 
+    } else
         return false;
-  } 
+  }
 
   /**
-   * Define quais campos da tabela serão selecionados no método Lista().
+   * Define quais campos da tabela serÃ£o selecionados no mÃ©todo Lista().
    */
   function setCamposLista($str_campos)
   {
@@ -480,7 +472,7 @@ class clsModulesItinerarioTransporteEscolar
   }
 
   /**
-   * Define que o método Lista() deverpa retornar todos os campos da tabela.
+   * Define que o mÃ©todo Lista() deverpa retornar todos os campos da tabela.
    */
   function resetCamposLista()
   {
@@ -488,7 +480,7 @@ class clsModulesItinerarioTransporteEscolar
   }
 
   /**
-   * Define limites de retorno para o método Lista().
+   * Define limites de retorno para o mÃ©todo Lista().
    */
   function setLimite($intLimiteQtd, $intLimiteOffset = NULL)
   {
@@ -497,7 +489,7 @@ class clsModulesItinerarioTransporteEscolar
   }
 
   /**
-   * Retorna a string com o trecho da query responsável pelo limite de
+   * Retorna a string com o trecho da query responsÃ¡vel pelo limite de
    * registros retornados/afetados.
    *
    * @return string
@@ -515,7 +507,7 @@ class clsModulesItinerarioTransporteEscolar
   }
 
   /**
-   * Define o campo para ser utilizado como ordenação no método Lista().
+   * Define o campo para ser utilizado como ordenaÃ§Ã£o no mÃ©todo Lista().
    */
   function setOrderby($strNomeCampo)
   {
@@ -525,7 +517,7 @@ class clsModulesItinerarioTransporteEscolar
   }
 
   /**
-   * Retorna a string com o trecho da query responsável pela Ordenação dos
+   * Retorna a string com o trecho da query responsÃ¡vel pela OrdenaÃ§Ã£o dos
    * registros.
    *
    * @return string
