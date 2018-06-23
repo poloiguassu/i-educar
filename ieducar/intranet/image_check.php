@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestÃƒÂ£o escolar
+ * i-Educar - Sistema de gestão escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÃƒÂ­
+ * Copyright (C) 2006  Prefeitura Municipal de Itajaí
  *     <ctima@itajai.sc.gov.br>
  *
- * Este programa ÃƒÂ© software livre; vocÃƒÂª pode redistribuÃƒÂ­-lo e/ou modificÃƒÂ¡-lo
- * sob os termos da LicenÃƒÂ§a PÃƒÂºblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versÃƒÂ£o 2 da LicenÃƒÂ§a, como (a seu critÃƒÂ©rio)
- * qualquer versÃƒÂ£o posterior.
+ * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
+ * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
+ * qualquer versão posterior.
  *
- * Este programa ÃƒÂ© distribuÃƒÂ­Ã‚Â­do na expectativa de que seja ÃƒÂºtil, porÃƒÂ©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÃƒÂ­Ã‚Â­cita de COMERCIABILIDADE OU
- * ADEQUAÃƒÂ‡ÃƒÂƒO A UMA FINALIDADE ESPECÃƒÂFICA. Consulte a LicenÃƒÂ§a PÃƒÂºblica Geral
+ * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
+ * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
  * do GNU para mais detalhes.
  *
- * VocÃƒÂª deve ter recebido uma cÃƒÂ³pia da LicenÃƒÂ§a PÃƒÂºblica Geral do GNU junto
- * com este programa; se nÃƒÂ£o, escreva para a Free Software Foundation, Inc., no
- * endereÃƒÂ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
+ * com este programa; se não, escreva para a Free Software Foundation, Inc., no
+ * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author      Lucas Schmoeller da Silva <lucas@portabilis.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Api
  * @subpackage  Modules
- * @since       Arquivo disponÃƒÂ­vel desde a versÃƒÂ£o ?
+ * @since       Arquivo disponível desde a versão ?
  * @version     $Id$
  */
 
@@ -59,42 +59,42 @@ class PictureController {
         if ($maxSize!=null)
             $this->maxSize = $maxSize;
         else
-            $this->maxSize = 150*1024;
+            $this->maxSize = 4096*1024;
 
         if ($suportedExtensions != null)
             $this->suportedExtensions = $suportedExtensions;
         else
-            $this->suportedExtensions = array('jpeg','jpg','gif','png');
+            $this->suportedExtensions = array('jpeg','jpg','png');
     }
 
     /**
-    * Envia imagem caso seja vÃƒÂ¡lida e retorna caminho
+    * Envia imagem caso seja válida e retorna caminho
     *
     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
     * @return String
     */
-    function sendPicture($imageName){
+	function sendPicture($imageName){
 
-        $this->imageName = $imageName;
-        $tmp = $this->imageFile["tmp_name"];
-        include('s3_config.php');
-        //Rename image name.
+		$this->imageName = $imageName;
+		$tmp = $this->imageFile["tmp_name"];
+		$tmp_extension = $this->getExtension($this->imageFile["name"]);
 
-        $actual_image_name = $directory.$this->imageName; 
-        if($s3->putObjectFile($tmp, $bucket , $actual_image_name, S3::ACL_PUBLIC_READ) )
-        {
-                                                
-            $s3file='http://'.$bucket.'.s3.amazonaws.com/'.$actual_image_name;
-            return $s3file;
-        }
-        else{
-            $this->errorMessage = "Ocorreu um erro no servidor ao enviar foto. Tente novamente.";
-            return '';
-        }
-    }
+		$actual_image_name = './arquivos/fotosPessoa/' . $imageName . '.' . $tmp_extension; 
+		if(move_uploaded_file($tmp, $actual_image_name))
+		{
+			return $actual_image_name;
+		}
+		else{
+			echo "<script type='text/javascript'>
+			alert('".$actual_image_name." foi criada com sucesso..');
+			</script>";
+			$this->errorMessage = "Ocorreu um erro no servidor ao enviar foto. Tente novamente.";
+			return '';
+		}
+	}
 
     /**
-    * Verifica se a imagem ÃƒÂ© vÃƒÂ¡lida
+    * Verifica se a imagem é válida
     *
     * @author Lucas Schmoeller da Silva - lucas@portabilis.com
     * @return boolean
@@ -118,7 +118,7 @@ class PictureController {
                     return true;   
                 }
                 else{
-                    $this->errorMessage = "O cadastro n&atilde;o pode ser realizado, a foto possui um tamanho maior do que o permitido.";
+                    $this->errorMessage = "Não é permitido fotos com mais de 4Mb.";
                     return false;
                 }
             }
@@ -131,7 +131,7 @@ class PictureController {
             $this->errorMessage = "Selecione uma imagem."; 
             return false;
         }
-        $this->errorMessage = "Imagem inv&aacute;lida."; 
+        $this->errorMessage = "Imagem inválida."; 
         return false;
     }
     /**
@@ -153,7 +153,7 @@ class PictureController {
         $l = strlen($name) - $i;
         $ext = substr($name,$i+1,$l);
 
-        return $ext;
+        return strtolower($ext);
     }
 }
 

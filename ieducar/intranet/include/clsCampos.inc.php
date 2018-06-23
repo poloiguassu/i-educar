@@ -227,26 +227,25 @@ class clsCampos extends Core_Controller_Page_Abstract
         $this->form_enctype = " enctype='multipart/form-data'";
     }
 
-    function campoCep($nome, $campo, $valor, $obrigatorio = FALSE,
-                      $hifen = '-', $descricao = FALSE, $disable = FALSE)
-    {
-        $arr_componente = array(
-            'cep',
-            $this->__adicionando_tabela ? $nome : $campo,
-            $obrigatorio ? "/([0-9]{5})$hifen([0-9]{3})/" : "*(/([0-9]{5})$hifen([0-9]{3})/)",
-            $valor,
-            10,
-            (8 + @strlen($hifen)),
-            'nnnnn-nnn',
-            $descricao,
-            ($disable) ? 'disabled' : ''
-        );
+  function campoHora($nome, $campo, $valor, $obrigatorio = FALSE, $descricao = '', $acao = '', $limitaHora = tru)
+  {
+    $arr_componente = array(
+      'hora',
+      $this->__adicionando_tabela ? $nome : $campo,
+      $limitaHora ? ($obrigatorio ? '/^([0-1]?[0-9]|2[0-3]):([0-5][0-9])(:[0-5][0-9])?$/' : '*(/^([0-1]?[0-9]|2[0-3]):([0-5][0-9])(:[0-5][0-9])?$/)') : ($obrigatorio ? "/[0-9]{2}:[0-9]{2}/" : "*(/[0-9]{2}:[0-9]{2}/)"),
+      $valor,
+      7,
+      5,
+      'hh:mm',
+      $descricao,
+      $acao
+    );
 
-        if (!$this->__adicionando_tabela) {
-            $this->campos[$nome] = $arr_componente;
-        } else {
-            $this->__campos_tabela[] = $arr_componente;
-        }
+    if (! $this->__adicionando_tabela) {
+      $this->campos[$nome] = $arr_componente;
+    }
+    else {
+      $this->__campos_tabela[] = $arr_componente;
     }
 
     function campoCheck($nome, $campo, $valor, $desc = '', $duplo = FALSE,
@@ -723,6 +722,31 @@ class clsCampos extends Core_Controller_Page_Abstract
             $this->__campos_tabela[] = $arr_componente;
         }
     }
+  }
+
+  function campoRadio($nome, $campo, $valor, $default, $acao = '', $descricao = '')
+  {
+    $this->campos[$nome] = array(
+      'radio',
+      $campo,
+      '',
+      $valor,
+      $default,
+      $acao,
+      $descricao
+    );
+  }
+
+  function campoRotulo($nome, $campo, $valor = null, $duplo = FALSE, $descricao = '', $separador = ':')
+  {
+    $arr_componente = array(
+      $duplo ? 'rotuloDuplo' : 'rotulo',
+      $this->__adicionando_tabela ? $nome : $campo,
+      '',
+      $valor,
+      6 => $descricao,
+      'separador' => $separador
+    );
 
     function campoOculto($nome, $valor)
     {
@@ -1177,10 +1201,10 @@ class clsCampos extends Core_Controller_Page_Abstract
             $nome_add = $nome;
             $campo_tabela = FALSE;
 
-            // Cria nova tab
-            if (preg_match("/^(tabbed_add_[0-9]+)/", $nome) === 1) {
-                $nomes_tab = urlencode(serialize($arr_campos['cabecalho_tab']));
-                unset($arr_campos['cabecalho_tab']);
+      // Cria nova tab
+      if (preg_match("^(tabbed_add_[0-9]+)", $nome) === 1) {
+        $nomes_tab = urlencode(serialize($arr_campos['cabecalho_tab']));
+        unset($arr_campos['cabecalho_tab']);
 
                 // $arr_campos
                 $desabilitado_tab = urlencode(serialize($arr_campos['desabilitado_tab']));
@@ -1207,30 +1231,51 @@ class clsCampos extends Core_Controller_Page_Abstract
                            <td valign=top width=1><img src="imagens/img/blank.gif" width=1 height=1></td>
                            <td valign=top width=100% class="tabPage" height="auto">';
 
-                $existe_tab_iniciada = TRUE;
-                continue;
+        $existe_tab_iniciada = TRUE;
+        continue;
+      }
+
+      if (preg_match("^(tab_name_[0-9]+)", $nome) === 1) {
+        if ($existe_tab_aberta) {
+          if ($this->__segue_fluxo) {
+            $colspan = 2;
+            $sequencia = unserialize($this->__sequencia_fluxo);
+
+            if (isset($sequencia[$index - 1])) {
+              $prox_id = array_flip($sequencia);
+              $prox_id = $prox_id[$index] * 2;
+
+              $retorno .= "<tr><td align=left><img onclick='LTb0(\"0\", \"$prox_id\")' style='cursor:pointer' src='imagens/bot_anterior.gif' border='0' /></td>";
+              $colspan = 1;
             }
+            if ($sequencia[$index] != 0) {
+              $prox_id = $sequencia[$index++]*2;
+              $retorno .= "<td colspan=$colspan align=right><img onclick='validaTab(".($componente['id']-1).");LTb0(\"0\", \"$prox_id\")' style='cursor:pointer' src='imagens/bot_proximo.gif' border='0' /></td></tr>";
+            }
+            else {
+              $retorno .= "<td colspan=$colspan align=right><img onclick='{$this->__acao_enviar_abas}' style='cursor:pointer' src='imagens/bot_salvar.gif' border='0' /></td></tr>";
+            }
+          }
 
-            if (preg_match("/^(tab_name_[0-9]+)/", $nome) === 1) {
-                if ($existe_tab_aberta) {
-                    if ($this->__segue_fluxo) {
-                        $colspan = 2;
-                        $sequencia = unserialize($this->__sequencia_fluxo);
+          $retorno .= "<!-- FIM TABELA 3 --></table></div>";
+        }
 
-                        if (isset($sequencia[$index - 1])) {
-                            $prox_id = array_flip($sequencia);
-                            $prox_id = $prox_id[$index] * 2;
+        $existe_tab_aberta = TRUE;
+        $retorno .= "<div id=\"content{$componente['id']}\" style=\"visibility: hidden;\" class=\"tabPage\">";
+        $retorno .= "<!-- INICIO TABELA 3 --><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" width=100%  align=center>";
 
-                            $retorno .= "<tr><td align=left><img onclick='LTb0(\"0\", \"$prox_id\")' style='cursor:pointer' src='imagens/bot_anterior.gif' border='0' /></td>";
-                            $colspan = 1;
-                        }
-                        if ($sequencia[$index] != 0) {
-                            $prox_id = $sequencia[$index++] * 2;
-                            $retorno .= "<td colspan=$colspan align=right><img onclick='validaTab(" . ($componente['id'] - 1) . ");LTb0(\"0\", \"$prox_id\")' style='cursor:pointer' src='imagens/bot_proximo.gif' border='0' /></td></tr>";
-                        } else {
-                            $retorno .= "<td colspan=$colspan align=right><img onclick='{$this->__acao_enviar_abas}' style='cursor:pointer' src='imagens/bot_salvar.gif' border='0' /></td></tr>";
-                        }
-                    }
+        continue;
+      }
+
+      if ($nome === 'fim_tab') {
+        if ($existe_tab_aberta) {
+          if ($this->__segue_fluxo) {
+            $colspan = 2;
+            $sequencia = unserialize($this->__sequencia_fluxo);
+
+            if (isset($sequencia[$index - 1])) {
+              $prox_id = array_flip($sequencia);
+              $prox_id = $prox_id[$index] * 2;
 
                     $retorno .= "<!-- FIM TABELA 3 --></table></div>";
                 }
@@ -1283,9 +1328,9 @@ class clsCampos extends Core_Controller_Page_Abstract
                 continue;
             }
 
-            if (preg_match("/^(tab_add_[0-9]+)/", $nome) === 1) {
-                $campo_tabela = TRUE;
-                $javascript = '';
+      if (preg_match("^(tab_add_[0-9]+)",$nome) === 1) {
+        $campo_tabela = TRUE;
+        $javascript   = '';
 
                 $cabecalho = $componente['cabecalho'];
                 $nome_tabela = $componente['nome'];
@@ -2642,7 +2687,20 @@ class clsCampos extends Core_Controller_Page_Abstract
     }
     ";
 
-        return $ret;
+    return $ret;
+  }
+
+  function getCampoTexto($nome, $id = '', $valor = '', $tamanhovisivel = '',
+    $tamanhomaximo = '', $evento = '', $disabled = '', $descricao = '',
+    $class = '', $descricao2 = '')
+  {
+    $id = $id ? $id : $nome;
+
+    if ($disabled) {
+      $disabled = "disabled='disabled'";
+    }
+    else {
+      $disabled = '';
     }
 
     function getCampoTexto($nome, $id = '', $valor = '', $tamanhovisivel = '',

@@ -525,13 +525,12 @@ class indice extends clsDetalhe
             $this->addDetalhe(array('Telefone 1', $registro['ddd_fone_1'] . $registro['fone_1']));
         }
 
-        if ($registro['fone_2']) {
-            if ($registro['ddd_fone_2']) {
-                $registro['ddd_fone_2'] = sprintf('(%s)&nbsp;', $registro['ddd_fone_2']);
-            }
-
-            $this->addDetalhe(array('Telefone 2', $registro['ddd_fone_2'] . $registro['fone_2']));
-        }
+    if ($registro['nome_aluno']) {
+      if ($caminhoFoto!=null and $caminhoFoto!='')
+        $this->addDetalhe(array('Nome Aluno', $registro['nome_aluno'].'<p><img height="117" src="'.$caminhoFoto.'"/></p>'));
+      else
+        $this->addDetalhe(array('Nome Aluno', $registro['nome_aluno']));
+    }
 
         if ($registro['fone_mov']) {
             if ($registro['ddd_mov']) {
@@ -549,13 +548,9 @@ class indice extends clsDetalhe
             $this->addDetalhe(array('Fax', $registro['ddd_fax'] . $registro['fone_fax']));
         }
 
-        if ($registro['email']) {
-            $this->addDetalhe(array('E-mail', $registro['email']));
-        }
-
-        if ($registro['url']) {
-            $this->addDetalhe(array('P√°gina Pessoal', $registro['url']));
-        }
+    if ($registro['sexo']) {
+      $this->addDetalhe(array('Sexo', $registro['sexo']));
+    }
 
         if ($registro['ref_cod_religiao']) {
             $obj_religiao = new clsPmieducarReligiao($registro['ref_cod_religiao']);
@@ -740,15 +735,9 @@ class indice extends clsDetalhe
         $objFichaMedica = new clsModulesFichaMedicaAluno($this->cod_aluno);
         $reg = $objFichaMedica->detalhe();
 
-        if ($reg) {
-            $this->addDetalhe(array('<span id="fmedica"></span>Altura/metro', $reg['altura']));
-            if (trim($reg['peso']) != '') {
-                $this->addDetalhe(array('Peso/kg', $reg['peso']));
-            }
-
-            if (trim($reg['grupo_sanguineo']) != '') {
-                $this->addDetalhe(array('Grupo sangu√≠neo', $reg['grupo_sanguineo']));
-            }
+    if ($deficiencia_pessoa) {
+      $tabela = '<table border="0" width="300" cellpadding="3"><tr bgcolor="#A1B3BD" align="center"><td>DeficiÍncias</td></tr>';
+      $cor    = '#D1DADF';
 
             if (trim($reg['fator_rh']) != '') {
                 $this->addDetalhe(array('Fator RH', $reg['fator_rh']));
@@ -941,83 +930,117 @@ class indice extends clsDetalhe
             $this->addDetalhe(array('Possui coleta de lixo', $reg['lixo']));
         }
 
-        $objProjetos = new clsPmieducarProjeto();
-        $reg = $objProjetos->listaProjetosPorAluno($this->cod_aluno);;
+    $objUniforme       = new clsModulesUniformeAluno($this->cod_aluno);
+    $reg               = $objUniforme->detalhe();
 
-        if ($reg) {
-            $tabela_projetos = '
-            <table>
-              <tr align="center">
-                <td bgcolor="#ccdce6"><b>Projeto</b></td>
-                <td bgcolor="#ccdce6"><b>Data de inclus√£o</b></td>
-                <td bgcolor="#ccdce6"><b>Data de desligamento</b></td>
-                <td bgcolor="#ccdce6"><b>Turno</b></td>
-              </tr>
-            ';
+    if($reg){    
+      $this->addDetalhe(array('<span id="funiforme"></span>Recebeu uniforme', ($reg['recebeu_uniforme'] == 'S' ? 'Sim': 'N„o') ));       
+      $this->addDetalhe(array('<span class="tit_uniforme">Camiseta</span>'));   
+      $this->addDetalhe(array('Quantidade', $reg['quantidade_camiseta'])); 
+      $this->addDetalhe(array('Tamanho', $reg['tamanho_camiseta']));
+    }  
 
-            $cont = 0;
+    $objMoradia        = new clsModulesMoradiaAluno($this->cod_aluno);
+    $reg               = $objMoradia->detalhe();
 
-            foreach ($reg as $projeto) {
-                $color = ($cont++ % 2 == 0) ? ' bgcolor="#f5f9fd" ' : ' bgcolor="#FFFFFF" ';
-                $turno = '';
+    if($reg){    
 
-                switch ($projeto['turno']) {
-                    case 1:
-                        $turno = 'Matutino';
-                        break;
-                    case 2:
-                        $turno = 'Vespertino';
-                        break;
-                    case 3:
-                        $turno = 'Noturno';
-                        break;
-                }
-
-                $tabela_projetos .= sprintf('
-                    <tr>
-                        <td %s align="left">%s</td>
-                        <td %s align="center">%s</td>
-                        <td %s align="center">%s</td>
-                        <td %s align="center">%s</td>
-                    </tr>',
-                    $color, $projeto['projeto'], $color, dataToBrasil($projeto['data_inclusao']),
-                    $color, dataToBrasil($projeto['data_desligamento']), $color, $turno
-                );
+      $moradia = '';
+      switch ($reg['moradia']) {
+        case 'A':
+          $moradia = 'Apartamento';
+          break;
+        case 'C':
+          $moradia = 'Casa';
+            switch ($reg['material']) {
+              case 'A':
+                $moradia.= ' de alvenaria';
+                break;
+              case 'M':
+                $moradia.= ' de madeira';
+                break;
+              case 'I':
+                $moradia.= ' mista';
+                break;                                
             }
+          break;
+        case 'O':
+          $moradia = 'Outra: '.$reg['casa_outra'];
+          break;
+        default: 
+          $moradia = 'N„o informado';
+      }
 
-            $tabela_projetos .= '</table>';
-            $this->addDetalhe(array('<span id="fprojeto"></span>Projetos', $tabela_projetos));
-        }
+      $this->addDetalhe(array('<span id="fmoradia"></span>Moradia', $moradia ));       
+      $situacao;
+      switch ($reg['moradia_situacao']) {
+        case 1:
+          $situacao = 'Alugado';
+          break;      
+        case 2:
+          $situacao = 'PrÛprio';
+          break;      
+        case 3:
+          $situacao = 'Cedido';
+          break;      
+        case 4:
+          $situacao = 'Financiado';
+          break;      
+        case 5:
+          $situacao = 'Outra';
+          break;                                              
+      }
+      $this->addDetalhe(array('SituaÁ„o', $situacao)); 
+      $this->addDetalhe(array('Quantidade de quartos', $reg['quartos'])); 
+      $this->addDetalhe(array('Quantidade de salas', $reg['sala']));       
+      $this->addDetalhe(array('Quantidade de copas', $reg['copa']));       
+      $this->addDetalhe(array('Quantidade de banheiros', $reg['banheiro']));       
+      $this->addDetalhe(array('Quantidade de garagens', $reg['garagem']));       
+      $this->addDetalhe(array('Possui empregada domÈstica', $reg['empregada_domestica']));       
+      $this->addDetalhe(array('Possui automÛvel', $reg['automovel']));       
+      $this->addDetalhe(array('Possui motocicleta', $reg['motocicleta']));       
+      $this->addDetalhe(array('Possui computador', $reg['computador']));       
+      $this->addDetalhe(array('Possui geladeira', $reg['geladeira']));       
+      $this->addDetalhe(array('Possui fog„o', $reg['fogao']));       
+      $this->addDetalhe(array('Possui m·quina de lavar', $reg['maquina_lavar']));       
+      $this->addDetalhe(array('Possui microondas', $reg['microondas']));       
+      $this->addDetalhe(array('Possui vÌdeo/dvd', $reg['video_dvd']));       
+      $this->addDetalhe(array('Possui televis„o', $reg['televisao']));       
+      $this->addDetalhe(array('Possui celular', $reg['celular']));       
+      $this->addDetalhe(array('Possui telefone', $reg['telefone']));       
+      $this->addDetalhe(array('Quantidade de pessoas', $reg['quant_pessoas']));       
+      $this->addDetalhe(array('Renda familiar', 'R$ '.$reg['renda']));       
+      $this->addDetalhe(array('Possui ·gua encanada', $reg['agua_encanada']));       
+      $this->addDetalhe(array('Possui poÁo', $reg['poco']));       
+      $this->addDetalhe(array('Possui energia elÈtrica', $reg['energia']));       
+      $this->addDetalhe(array('Possui tratamento de esgoto', $reg['esgoto']));       
+      $this->addDetalhe(array('Possui fossa', $reg['fossa']));       
+      $this->addDetalhe(array('Possui coleta de lixo', $reg['lixo']));       
 
-        $this->url_cancelar = 'educar_aluno_lst.php';
-        $this->largura = '100%';
+    }          
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
-            "educar_index.php" => "Escola",
-            "" => "Matr√≠cula"
-        ));
+    $this->url_cancelar = 'educar_aluno_lst.php';
+    $this->largura      = '100%';
 
-        $this->enviaLocalizacao($localizacao->montar());
-        $this->addDetalhe("<input type='hidden' id='escola_id' name='aluno_id' value='{$registro['ref_cod_escola']}' />");
-        $this->addDetalhe("<input type='hidden' id='aluno_id' name='aluno_id' value='{$registro['cod_aluno']}' />");
-        $mostraDependencia = $GLOBALS['coreExt']['Config']->app->matricula->dependencia;
-        $this->addDetalhe("<input type='hidden' id='can_show_dependencia' name='can_show_dependencia' value='{$mostraDependencia}' />");
+    $this->addDetalhe("<input type='hidden' id='escola_id' name='aluno_id' value='{$registro['ref_cod_escola']}' />");
+    $this->addDetalhe("<input type='hidden' id='aluno_id' name='aluno_id' value='{$registro['cod_aluno']}' />");
 
-        // js
-        $scripts = array(
-            '/modules/Portabilis/Assets/Javascripts/Utils.js',
-            '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-            '/modules/Cadastro/Assets/Javascripts/AlunoShow.js?version=3'
-        );
+    // js
 
-        Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    Portabilis_View_Helper_Application::loadJQueryLib($this);
 
-        $styles = array('/modules/Cadastro/Assets/Stylesheets/Aluno.css');
+    $scripts = array(
+      '/modules/Portabilis/Assets/Javascripts/Utils.js',
+      '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
+      '/modules/Cadastro/Assets/Javascripts/AlunoShow.js?version=3'
+      );
 
-        Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
-    }
+    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+
+    $styles = array ('/modules/Cadastro/Assets/Stylesheets/Aluno.css');
+
+    Portabilis_View_Helper_Application::loadStylesheet($this, $styles);
+  }
 }
 
 // Instancia o objeto da p√°gina

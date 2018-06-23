@@ -1,26 +1,26 @@
 <?php
 /**
  *
- * @author  Prefeitura Municipal de Itajaí
+ * @author  Prefeitura Municipal de Itaja�
  * @version $Id$
  *
- * Pacote: i-PLB Software Público Livre e Brasileiro
+ * Pacote: i-PLB Software P�blico Livre e Brasileiro
  *
- * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de Itaja�
  *            ctima@itajai.sc.gov.br
  *
- * Este  programa  é  software livre, você pode redistribuí-lo e/ou
- * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
- * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
- * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ * Este  programa  �  software livre, voc� pode redistribu�-lo e/ou
+ * modific�-lo sob os termos da Licen�a P�blica Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a vers�o 2 da
+ * Licen�a   como  (a  seu  crit�rio)  qualquer  vers�o  mais  nova.
  *
- * Este programa  é distribuído na expectativa de ser útil, mas SEM
- * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
- * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
- * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ * Este programa  � distribu�do na expectativa de ser �til, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia impl�cita de COMERCIALI-
+ * ZA��O  ou  de ADEQUA��O A QUALQUER PROP�SITO EM PARTICULAR. Con-
+ * sulte  a  Licen�a  P�blica  Geral  GNU para obter mais detalhes.
  *
- * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
- * junto  com  este  programa. Se não, escreva para a Free Software
+ * Voc�  deve  ter  recebido uma c�pia da Licen�a P�blica Geral GNU
+ * junto  com  este  programa. Se n�o, escreva para a Free Software
  * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
  * 02111-1307, USA.
  *
@@ -45,7 +45,7 @@ class clsIndexBase extends clsBase {
 class indice extends clsCadastro {
 
   /**
-   * Referência a usuário da sessão
+   * Refer�ncia a usu�rio da sess�o
    * @var int
    */
   public $pessoa_logada = NULL;
@@ -87,7 +87,7 @@ class indice extends clsCadastro {
 
 
   /**
-   * Implementação do método clsCadastro::Inicializar()
+   * Implementa��o do m�todo clsCadastro::Inicializar()
    * @see ieducar/intranet/include/clsCadastro#Inicializar()
    */
   public function Inicializar() {
@@ -145,7 +145,7 @@ class indice extends clsCadastro {
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""        => "Afastar servidor"             
     ));
     $this->enviaLocalizacao($localizacao->montar());    
@@ -156,7 +156,7 @@ class indice extends clsCadastro {
 
 
   /**
-   * Implementação do método clsCadastro::Gerar()
+   * Implementa��o do m�todo clsCadastro::Gerar()
    * @see ieducar/intranet/include/clsCadastro#Gerar()
    */
   public function Gerar() {
@@ -192,12 +192,12 @@ class indice extends clsCadastro {
     if ($this->status == 'N') {
       $this->campoData('data_saida', 'Data de Afastamento', $this->data_saida, TRUE);
     }
-    // Se edição, mostra a data de afastamento
+    // Se edi��o, mostra a data de afastamento
     elseif ($this->status == 'E') {
       $this->campoRotulo('data_saida', 'Data de Afastamento', $this->data_saida);
     }
 
-    // Se edição, mostra campo para entrar com data de retorno
+    // Se edi��o, mostra campo para entrar com data de retorno
     if ($this->status == 'E') {
       $this->campoData('data_retorno', 'Data de Retorno', $this->data_retorno, FALSE);
     }
@@ -307,18 +307,18 @@ class indice extends clsCadastro {
 
 
   /**
-   * Implementação do método clsCadastro::Novo()
+   * Implementa��o do m�todo clsCadastro::Novo()
    *
-   * Recebe os valores com códigos de servidor e instituição atual, junto com
+   * Recebe os valores com c�digos de servidor e institui��o atual, junto com
    * a data. Casos de uso:
-   * - Servidor sem função de professor: apenas é marcado que o servidor está
+   * - Servidor sem fun��o de professor: apenas � marcado que o servidor est�
    *   afastado
-   * - Servidor com função de professor:
-   *   - Verifica-se quais professores estão aptos a substituir o servidor,
-   *     baseado em critérios como horário de aula, alocação na escola,
-   *     disciplinas que ministra. Esse passo é realizado no método
+   * - Servidor com fun��o de professor:
+   *   - Verifica-se quais professores est�o aptos a substituir o servidor,
+   *     baseado em crit�rios como hor�rio de aula, aloca��o na escola,
+   *     disciplinas que ministra. Esse passo � realizado no m�todo
    *     {@see $this->Novo()}, ao possibilitar a escolha do substituto ao
-   *     usuário
+   *     usu�rio
    *
    * @see  clsPmieducarServidorAfastamento
    * @see  ieducar/intranet/include/clsCadastro#Novo()
@@ -355,7 +355,7 @@ class indice extends clsCadastro {
     if ($cadastrou) {
       if (is_array($_POST['ref_cod_servidor_substituto'])) {
         /*
-         * Itera cada substituto e atualiza o quadro de horário com o código
+         * Itera cada substituto e atualiza o quadro de hor�rio com o c�digo
          * do servidor substituto, campos:
          * - ref_cod_instituicao_substituto
          * - ref_cod_servidor_substituto
@@ -385,7 +385,7 @@ class indice extends clsCadastro {
               $det_horarios['ref_cod_instituicao_servidor'], $ref_cod_servidor_substituto,
               $this->ref_cod_servidor, NULL, NULL, NULL, NULL, NULL, NULL);
 
-            // Caso a atualização não tenha sucesso
+            // Caso a atualiza��o n�o tenha sucesso
             if (!$obj_horario->edita()) {
               $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 
@@ -412,10 +412,10 @@ class indice extends clsCadastro {
 
 
   /**
-   * Implementação do método clsCadastro::Editar()
+   * Implementa��o do m�todo clsCadastro::Editar()
    *
-   * Esse método é chamado quando o usuário "Retorna um servidor". Dessa forma,
-   * caso seja professor, precisa atualizar a sua alocação na tabela
+   * Esse m�todo � chamado quando o usu�rio "Retorna um servidor". Dessa forma,
+   * caso seja professor, precisa atualizar a sua aloca��o na tabela
    * pmieducar.quadro_horario_horarios, apagando os valores dos campos
    * ref_cod_instituicao_ e ref_cod_servidor_ -substituto
    *
@@ -494,7 +494,7 @@ class indice extends clsCadastro {
 
 
   /**
-   * Implementação do método clsCadastro::Excluir()
+   * Implementa��o do m�todo clsCadastro::Excluir()
    * @see ieducar/intranet/include/clsCadastro#Excluir()
    */
   public function Excluir() {
@@ -529,16 +529,16 @@ class indice extends clsCadastro {
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de p�gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conte�do
 $miolo = new indice();
 
-// Atribui o conteúdo à página
+// Atribui o conte�do � p�gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o c�digo HTML
 $pagina->MakeAll();
 ?>
 
@@ -554,7 +554,7 @@ function validaFormulario() {
   do {
     if (document.getElementById('ref_cod_servidor_substituto_' + c + '_')) {
       if (document.getElementById('ref_cod_servidor_substituto_' + c + '_').value == '') {
-        alert('Você deve informar um substituto para cada horário.');
+        alert('Voc� deve informar um substituto para cada hor�rio.');
 
         return;
       }

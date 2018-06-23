@@ -61,7 +61,7 @@ class AtestadoFrequenciaController extends Portabilis_Controller_ReportCoreContr
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "i-Educar - Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""                                  => "Emiss&atilde;o de atestado de frequ&ecirc;ncia"             
     ));
     $this->enviaLocalizacao($localizacao->montar());     

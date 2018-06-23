@@ -5,92 +5,86 @@ require_once 'Portabilis/Utils/CustomLabel.php';
 
 class ProcessamentoController extends Portabilis_Controller_Page_ListController
 {
-    protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
-    protected $_titulo = 'Processamento histórico';
-    protected $_processoAp = 999613;
-    protected $_formMap = array();
+  protected $_dataMapper = 'Avaliacao_Model_NotaAlunoDataMapper';
+  protected $_titulo     = 'Processamento histórico';
+  protected $_processoAp = 999613;
+  protected $_formMap    = array();
 
-    protected function _preRender()
-    {
-        @session_start();
-        $pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+  protected function _preRender(){
 
-        $obj_permissao = new clsPermissoes();
-        $obj_permissao->permissao_cadastra(999613, $pessoa_logada, 7, '/intranet/educar_index.php');
+    parent::_preRender();
 
-        parent::_preRender();
+    Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
 
-        Portabilis_View_Helper_Application::loadStylesheet($this, 'intranet/styles/localizacaoSistema.css');
+    $localizacao = new LocalizacaoSistema();
 
-        $localizacao = new LocalizacaoSistema();
+    $localizacao->entradaCaminhos( array(
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+         ""                                  => "Processamento de hist&oacute;rico escolar"             
+    ));
+    $this->enviaLocalizacao($localizacao->montar(), true);     
+  }   
 
-        $localizacao->entradaCaminhos(
-            array(
-                $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-                "educar_index.php"                                    => "Escola",
-                ""                                                                    => "Processamento de hist&oacute;rico escolar"
-                )
-        );
-        $this->enviaLocalizacao($localizacao->montar(), true);
-    }
+  // #TODO migrar funcionalidade para novo padrão
+  protected $backwardCompatibility = true;
 
-    // #TODO migrar funcionalidade para novo padrão
-    protected $backwardCompatibility = true;
+  public function Gerar()
+  {
+    Portabilis_View_Helper_Application::loadStylesheet($this, '/modules/HistoricoEscolar/Static/styles/processamento.css');
 
-    public function Gerar()
-    {
-        Portabilis_View_Helper_Application::loadStylesheet($this, array('/modules/HistoricoEscolar/Static/styles/processamento.css','/modules/Portabilis/Assets/Plugins/Chosen/chosen.css'));
+    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
+    $this->inputsHelper()->dynamic(array('curso', 'serie', 'turma', 'matricula'), array('required' => false));
 
-        $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola'));
+    $resourceOptionsTable = "<table id='resource-options' class='styled horizontal-expand hide-on-search disable-on-apply-changes'>
 
-        $this->inputsHelper()->dynamic(
-            'curso',
-            array(
-                'required' => false,
-                'label_hint' => _cl('historico.cadastro.curso_detalhe')
-            )
-        );
+      <tr>
+        <td><label for='dias-letivos'>Quantidade dias letivos *</label></td>
+        <td colspan='2'><input type='text' id='dias-letivos' name='quantidade-dias-letivos' class='obrigatorio disable-on-search clear-on-change-curso validates-value-is-numeric'></input></td>
+      </tr>
 
-        $this->inputsHelper()->dynamic(
-            'serie',
-            array(
-                'required' => false,
-                'label' => _cl('historico.cadastro.serie')
-            )
-        );
+      <tr>
+        <td><label for='grade-curso'>Grade curso *</label></td>
+        <td>{$this->getSelectGradeCurso()}</td>
+      </tr>
 
-        $this->inputsHelper()->dynamic(array('turma', 'matricula'), array('required' => false));
+      <tr>
+        <td><label for='percentual-frequencia'>% Frequ&ecirc;ncia *</label></td>
+        <td>
+          <select id='percentual-frequencia' class='obrigatorio disable-on-search'>
+            <option value=''>Selecione</option>
+            <option value='buscar-boletim'>Usar do boletim</option>
+            <option value='informar-manualmente'>Informar manualmente</option>
+          </select>
+        </td>
+        <td><input id='percentual-frequencia-manual' name='percentual-frequencia-manual' style='display:none;'></input></td>
+      </tr>
 
-        $this->campoCheck(
-            "alunos_dependencia",
-            "Processar somente hist&oacute;ricos de depend&ecirc;ncias",
-            null,
-            null,
-            false,
-            false,
-            false,
-            "Marque esta op&ccedil;&atilde;o para trazer somente alunos que possuem alguma depend&ecirc;ncia."
-        );
+      <tr>
+        <td><label for='situacao'>Situa&ccedil;&atilde;o *</label></td>
+        <td colspan='2'>
+          <select id='situacao' class='obrigatorio disable-on-search'>
+            <option value=''>Selecione</option>
+            <option value='buscar-matricula'>Usar do boletim</option>
+            <option value='em-andamento'>Em andamento</option>
+            <option value='aprovado'>Aprovado</option>
+            <option value='reprovado'>Reprovado</option>
+            <option value='transferido'>Transferido</option>
+          </select>
+        </td>
+      </tr>
 
-        $campoPosicao = '';
-
-        if ($this->validaControlePosicaoHistorico()) {
-            $campoPosicao = "
-            <tr class='tr_posicao'>
-                <td><label for='posicao'>".Portabilis_String_Utils::toLatin1('Posição') ." *</label><br>
-                <sub style='vertical-align:top;'>".Portabilis_String_Utils::toLatin1("Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2")."</sub></td>
-                <td colspan='2'><input type='text' id='posicao' name='posicao' class='obrigatorio disable-on-search clear-on-change-curso validates-value-is-numeric'></input></td>
-            </tr>";
-        }
-
-        $resourceOptionsTable = "<table id='resource-options' style='padding: 20px 0;' class='styled horizontal-expand hide-on-search disable-on-apply-changes'>
-
-            <tr>
-                <td><label for='dias-letivos'>Quantidade dias letivos *</label></td>
-                <td colspan='2'><input type='text' id='dias-letivos' name='quantidade-dias-letivos' class='obrigatorio disable-on-search clear-on-change-curso validates-value-is-numeric'></input></td>
-            </tr>
-
+      <tr>
+        <td><label for='disciplinas'>Disciplinas *</label></td>
+        <td>
+          <select id='disciplinas' name='disciplinas' class='obrigatorio disable-on-search'>
+            <option value=''>Selecione</option>
+            <option value='buscar-boletim'>Usar do boletim</option>
+            <option value='informar-manualmente'>Informar manualmente</option>
+          </select>
+        </td>
+        <td>
+          <table id='disciplinas-manual' style='display:none;'>
             <tr>
                 <td><label for='grade-curso'>Grade curso *</label></td>
                 <td>{$this->getSelectGradeCurso()}</td>

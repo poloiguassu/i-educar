@@ -56,27 +56,26 @@ class Portabilis_View_Helper_Input_Resource_SimpleSearchLogradouro extends Porta
 
     parent::simpleSearch($options['objectName'], $attrName, $options);
   }
-  
+
   protected function resourceValue($id) {
     if ($id) {
       $sql       = "select nome, descricao as tipo_logradouro from
-                    public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog) 
+                    public.logradouro l left join urbano.tipo_logradouro tl on (l.idtlog = tl.idtlog)
                     where idlog = $1";
       $options   = array('params' => $id, 'return_only' => 'first-row');
       $resource = Portabilis_Utils_Database::fetchPreparedQuery($sql, $options);
       $tipo      = Portabilis_String_Utils::toUtf8($resource['tipo_logradouro']);
       $nome      = Portabilis_String_Utils::toUtf8($resource['nome']);
-    
+
       return Portabilis_String_Utils::toLatin1($tipo.' '.$nome, array('transform' => true, 'escape' => false));
     }
-  }  
-
-  protected function inputPlaceholder($inputOptions) {
+  }
+  protected function inputPlaceholder($inputOptions = null) {
     return 'Informe o nome do logradouro';
   }
 
   protected function loadAssets() {
     $jsFile = '/modules/Portabilis/Assets/Javascripts/Frontend/Inputs/Resource/SimpleSearchLogradouro.js';
     Portabilis_View_Helper_Application::loadJavascript($this->viewInstance, $jsFile);
-  }  
+  }
 }

@@ -60,21 +60,8 @@ class DiarioController extends Portabilis_Controller_Page_ListController
 
     $this->inputsHelper()->input('ano');
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'turma', 'etapa'));
-    $this->inputsHelper()->dynamic(array('componenteCurricularForDiario'), array('required' => $componenteRequired));
-    $this->inputsHelper()->dynamic(array('matricula'), array('required' => FALSE ));
-
-    $navegacaoTab = array('1' => 'Horizontal(padr&atilde;o)',
-                          '2' => 'Vertical',);
-                             
-    $options      = array('label'     =>'Navega&ccedil;&atilde;o do cursor(tab)',
-                          'resources' => $navegacaoTab,
-                          'required'  => false,
-                          'inline'    => true,
-                          'value'     => $navegacaoTab[1]);
-
-    $this->inputsHelper()->select('navegacao_tab', $options);
-
-    $this->inputsHelper()->hidden('mostrar_botao_replicar_todos', array('value' => $teste = $GLOBALS['coreExt']['Config']->app->faltas_notas->mostrar_botao_replicar));
+    $this->inputsHelper()->dynamic(array('componenteCurricular', 'matricula'), array('required' => false));
+	$this->campoData( "data_aula", "Data da Aula", "", true );
 
     $this->loadResourceAssets($this->getDispatcher());
   }
@@ -88,12 +75,11 @@ class DiarioController extends Portabilis_Controller_Page_ListController
     $localizacao = new LocalizacaoSistema();
 
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Lan&ccedil;amento de notas"             
+         $_SERVER['SERVER_NAME']."/intranet" => "Início",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+         ""                                  => "Lançamento de faltas"
     ));
-    $this->enviaLocalizacao($localizacao->montar(), true);     
-  }  
+    $this->enviaLocalizacao($localizacao->montar(), true);
+  }
 }
 ?>
-

@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestÃ£o escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de ItajaÃ­
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja�
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa Ã© software livre; vocÃª pode redistribuÃ­-lo e/ou modificÃ¡-lo
- * sob os termos da LicenÃ§a PÃºblica Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versÃ£o 2 da LicenÃ§a, como (a seu critÃ©rio)
- * qualquer versÃ£o posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa Ã© distribuÃ­Â­do na expectativa de que seja Ãºtil, porÃ©m, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implÃ­Â­cita de COMERCIABILIDADE OU
- * ADEQUAÃÃO A UMA FINALIDADE ESPECÃFICA. Consulte a LicenÃ§a PÃºblica Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * VocÃª deve ter recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral do GNU junto
- * com este programa; se nÃ£o, escreva para a Free Software Foundation, Inc., no
- * endereÃ§o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponÃ­vel desde a versÃ£o 1.0.0
+ * @since     Arquivo dispon�vel desde a vers�o 1.0.0
  * @version   $Id$
  */
 
@@ -37,11 +37,11 @@ require_once 'lib/Portabilis/Date/Utils.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -57,11 +57,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de ItajaÃ­ <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponÃ­vel desde a versÃ£o 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -137,8 +137,8 @@ class indice extends clsCadastro
       $localizacao = new LocalizacaoSistema();
       $localizacao->entradaCaminhos( array(
            $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-           "educar_index.php"                  => "Escola",
-           ""        => "{$nomeMenu} matr&iacute;culas da turma"
+           "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+           ""        => "{$nomeMenu} matr&iacute;culas da turma"             
       ));
       $this->enviaLocalizacao($localizacao->montar());
       return $retorno;
@@ -184,14 +184,14 @@ class indice extends clsCadastro
       $obj_ref_cod_curso = new clsPmieducarCurso($this->ref_cod_curso);
       $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
       $nm_curso = $det_ref_cod_curso['nm_curso'];
-      $this->campoRotulo('nm_curso', 'Curso', $nm_curso);
+      $this->campoRotulo('nm_curso', 'Projeto', $nm_curso);
     }
 
     if ($this->ref_ref_cod_serie) {
       $obj_ref_cod_serie = new clsPmieducarSerie($this->ref_ref_cod_serie);
       $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
       $nm_serie = $det_ref_cod_serie["nm_serie"];
-      $this->campoRotulo('nm_serie', 'S&eacute;rie', $nm_serie);
+      $this->campoRotulo('nm_serie', 'Eixo', $nm_serie);
 
       // busca o ano em q a escola esta em andamento
       $obj_ano_letivo = new clsPmieducarEscolaAnoLetivo();
@@ -203,7 +203,7 @@ class indice extends clsCadastro
         $ano_letivo = $det_ano_letivo['ano'];
       }
       else {
-        $this->mensagem = 'N&acirc;o foi possÃ­vel encontrar o ano letivo em andamento da escola.';
+        $this->mensagem = 'N�o foi poss�vel encontrar o ano letivo em andamento da escola.';
         return FALSE;
       }
     }
@@ -290,7 +290,7 @@ class indice extends clsCadastro
     }
 
     if (count($opcoes)) {
-      $this->inputsHelper()->date('data_enturmacao', array('label' => 'Data da enturma&ccedil;&acirc;o', 'value' => date('Y-m-d')));
+      $this->inputsHelper()->date('data_enturmacao', array('label' => 'Data da enturma��o', 'value' => date('Y-m-d')));
       asort($opcoes);
     $this->campoRotulo('tituloDois', 'Matr&iacute;culas', "<b>&nbsp;Alunos j&aacute; matriculados e n&atilde;o enturmados&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Marque o(s) aluno(s) para enturmar</b><label style='display: block; width: 350px; margin-left: 256px;'>&nbsp;&nbsp;&nbsp;<input checked type='checkbox' name='CheckTodosDois' onClick='marcarCheckDois(".'"ref_cod_matricula[]"'.");'/>Marcar todos</label>");
       foreach ($opcoes as $key => $aluno) {
@@ -302,10 +302,10 @@ class indice extends clsCadastro
 // $nome, $campo, $valor, $desc = '',      $duplo = FALSE, $script = FALSE, $disable = FALSE, $dica = NULL
       }
     }
-    else if ($alunosEnturmados){
-      $this->campoRotulo('rotulo_1', '-', 'Todos os alunos matriculados na s&eacute;rie j&aacute; se encontram enturmados.');
-    }else{
-      $this->campoRotulo('rotulo_1', '-', 'N&acirc;o h&aacute; alunos enturmados.');
+    else if($alunosEnturmados){
+      $this->campoRotulo('rotulo_1', '-', 'Todos os alunos matriculados na s�rie j� se encontram enturmados.');
+    }else {      
+      $this->campoRotulo('rotulo_1', '-', 'N�o h� alunos enturmados.');
     }
 
     $this->campoQuebra();
@@ -322,7 +322,7 @@ class indice extends clsCadastro
     $this->data_enturmacao = Portabilis_Date_Utils::brToPgSQL($this->data_enturmacao);
     @session_write_close();
 
-    // realiza desenturmaÃ§Ãµes
+    // realiza desenturma��es
     foreach ($this->check_desenturma as $matricula) {
       $this->removerEnturmacao($matricula,$this->ref_cod_turma);
     }
@@ -410,16 +410,16 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de pÃ¡gina
+// Instancia objeto de p�gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteÃºdo
+// Instancia objeto de conte�do
 $miolo = new indice();
 
-// Atribui o conteÃºdo Ã   pÃ¡gina
+// Atribui o conte�do �  p�gina
 $pagina->addForm($miolo);
 
-// Gera o cÃ³digo HTML
+// Gera o c�digo HTML
 $pagina->MakeAll();
 
 ?>

@@ -56,8 +56,10 @@ class DiarioApiController extends ApiCoreController
             return false;
         }
 
-        $objBloqueioAnoLetivo = new clsPmieducarBloqueioAnoLetivo($this->getRequest()->instituicao_id, $this->getRequest()->ano);
-        $bloqueioAnoLetivo = $objBloqueioAnoLetivo->detalhe();
+    if ($escola['bloquear_lancamento_diario_anos_letivos_encerrados'] == '1' && $anoLetivoEncerrado) {
+      $this->messenger->append("O ano letivo '{$this->getRequest()->ano}' est� encerrado, esta escola est� configurada para n�o permitir alterar o diário de anos letivos encerrados.");
+      return false;
+    }
 
         if ($bloqueioAnoLetivo) {
             $dataAtual = strtotime(date("Y-m-d"));
@@ -419,13 +421,19 @@ class DiarioApiController extends ApiCoreController
         return $this->validatesPresenceOf('etapa');
     }
 
-    protected function canDeleteNota()
-    {
-        return $this->canDelete() &&
-        $this->validatesPresenceOf('componente_curricular_id') &&
-        $this->validatesInexistenceOfNotaExame() &&
-        $this->validatesInexistenceNotasInNextEtapas();
-    }
+  protected function canGetMatriculas() {
+    return $this->validatesPresenceOf(array('instituicao_id',
+                                     'escola_id',
+                                     'curso_id',
+                                     'curso_id',
+                                     'serie_id',
+                                     'turma_id',
+                                     'ano',
+                                     'etapa',
+								     'data_aula')) &&
+          $this->validatesPresenceOfMatriculaIdOrComponenteCurricularId() &&
+          $this->validatesCanChangeDiarioForAno();
+  }
 
     protected function canDeleteFalta()
     {
@@ -718,10 +726,9 @@ class DiarioApiController extends ApiCoreController
             $this->messenger->append('Falta matrícula ' . $this->getRequest()->matricula_id . ' alterada com sucesso.', 'success');
         }
 
-        $this->appendResponse('componente_curricular_id', $this->getRequest()->componente_curricular_id);
-        $this->appendResponse('matricula_id', $this->getRequest()->matricula_id);
-        $this->appendResponse('situacao', $this->getSituacaoComponente());
-        $this->appendResponse('should_show_recuperacao_especifica', $this->shouldShowRecuperacaoEspecifica());
+      $this->serviceBoletim()->addFalta($falta);
+      $this->trySaveServiceBoletim();
+      $this->messenger->append('Falta matr�cula '. $this->getRequest()->matricula_id .' alterada com sucesso.', 'success');
     }
 
     protected function postParecer()
@@ -996,23 +1003,13 @@ class DiarioApiController extends ApiCoreController
         return in_array($this->serviceBoletim()->getRegra()->get('parecerDescritivo'), $tiposParecerGeral);
     }
 
-    protected function setCurrentMatriculaId($matriculaId)
-    {
-        $this->_currentMatriculaId = $matriculaId;
+    if ($canDelete && is_null($this->getFaltaAtual())) {
+      $this->messenger->append('Falta matr��cula '. $this->getRequest()->matricula_id .' inexistente ou j� removida.', 'notice');
     }
-
-    protected function getCurrentMatriculaId()
-    {
-        // caso tenha setado _currentMatriculaId, ignora matricula_id recebido nos parametros
-        if (!is_null($this->_currentMatriculaId)) {
-            $matriculaId = $this->_currentMatriculaId;
-        } elseif (!is_null($this->getRequest()->matricula_id)) {
-            $matriculaId = $this->getRequest()->matricula_id;
-        } else {
-            throw new CoreExt_Exception("Não foi possivel recuperar o id da matricula atual.");
-        }
-
-        return $matriculaId;
+    elseif ($canDelete) {
+      $this->serviceBoletim()->deleteFalta($this->getRequest()->etapa, $componenteCurricularId, $this->getRequest()->data_aula);
+      $this->trySaveServiceBoletim();
+      $this->messenger->append('Falta matr��cula '. $this->getRequest()->matricula_id .' removida com sucesso.', 'success');
     }
 
     protected function serviceBoletim($reload = false)
@@ -1037,10 +1034,12 @@ class DiarioApiController extends ApiCoreController
             }
         }
 
-        // validates service
-        if (is_null($this->_boletimServiceInstances[$matriculaId])) {
-            throw new CoreExt_Exception("Não foi possivel instanciar o serviço boletim para a matricula $matriculaId.");
-        }
+      if ((is_null($parecerAtual) || $parecerAtual == '')) {
+        $this->messenger->append('Parecer descritivo matrícula '. $this->getRequest()->matricula_id .' inexistente ou j� removido.', 'notice');
+      }
+      else{
+        $tpParecer = $this->serviceBoletim()->getRegra()->get('parecerDescritivo');
+        $cnsParecer = RegraAvaliacao_Model_TipoParecerDescritivo;
 
         return $this->_boletimServiceInstances[$matriculaId];
     }
@@ -1248,7 +1247,15 @@ class DiarioApiController extends ApiCoreController
 
         $tipoNota = $this->fetchPreparedQuery($sql, array($serieId, $componenteId));
 
-        return $tipoNota[0]['tipo_nota'];
+    // set service
+    if (! isset($this->_boletimServiceInstances[$matriculaId]) || $reload) {
+      try {
+        $params = array('matricula' => $matriculaId, 'usuario' => $this->getSession()->id_pessoa);
+        $this->_boletimServiceInstances[$matriculaId] = new Avaliacao_Service_Boletim($params);
+      }
+      catch (Exception $e){
+        $this->messenger->append("Erro ao instanciar servi�o boletim para matricula {$matriculaId}: " . $e->getMessage(), 'error', true);
+      }
     }
 
     protected function getAreaConhecimento($componenteCurricularId = null)
@@ -1302,35 +1309,135 @@ class DiarioApiController extends ApiCoreController
             $etapa = $this->getRequest()->etapa;
         }
 
-        // validacao
-        if (!is_numeric($componenteCurricularId)) {
-            throw new Exception('Não foi possivel obter a nota atual, pois não foi recebido o id do componente curricular.');
-        }
+  protected function getFaltaComponente() {
+    return new Avaliacao_Model_FaltaComponente(array(
+            'componenteCurricular' => $this->getRequest()->componente_curricular_id,
+            'quantidade'           => $this->getQuantidadeFalta(),
+            'etapa'                => $this->getRequest()->etapa,
+			'data_falta'		   => $this->getRequest()->data_aula
+    ));
+  }
 
-        $nota = urldecode($this->serviceBoletim()->getNotaComponente($componenteCurricularId, $etapa)->nota);
 
-        return str_replace(',', '.', $nota);
+  // metodos auxiliares getParecer
+
+  protected function getParecerComponente() {
+    return new Avaliacao_Model_ParecerDescritivoComponente(array(
+              'componenteCurricular' => $this->getRequest()->componente_curricular_id,
+              'parecer'              => $this->safeStringForDb($this->getRequest()->att_value),
+              'etapa'                => $this->getRequest()->etapa
+    ));
+  }
+
+
+  protected function getParecerGeral() {
+    return new Avaliacao_Model_ParecerDescritivoGeral(array(
+              'parecer' => $this->safeStringForDb($this->getRequest()->att_value),
+              'etapa'   => $this->getRequest()->etapa
+    ));
+  }
+
+
+  // metodos auxiliares getSituacaoMatricula
+
+  protected function getSituacaoMatricula($ccId = null) {
+    if (is_null($ccId))
+      $ccId = $this->getRequest()->componente_curricular_id;
+
+    $situacao = 'Situação não recuperada';
+
+    try {
+      $situacaoCc = $this->serviceBoletim()->getSituacaoComponentesCurriculares()->componentesCurriculares[$ccId];
+      $situacao   = App_Model_MatriculaSituacao::getInstance()->getValue($situacaoCc->situacao);
+    }
+    catch (Exception $e) {
+      $matriculaId = $this->getRequest()->matricula_id;
+      $this->messenger->append("Erro ao recuperar situação da matrícula '$matriculaId': " .
+                               $e->getMessage());
     }
 
-    protected function getNotaGeral($etapa = null)
-    {
+    return $this->safeString($situacao);
+  }
 
-        if (is_null($etapa)) {
-            $etapa = $this->getRequest()->etapa;
-        }
 
-        $nota = urldecode($this->serviceBoletim()->getNotaGeral($etapa)->nota);
+  // outros metodos auxiliares
 
-        return str_replace(',', '.', $nota);
+  protected function loadComponentesCurricularesForMatricula($matriculaId) {
+    $componentesCurriculares  = array();
 
+    $componenteCurricularId   = $this->getRequest()->componente_curricular_id;
+    $_componentesCurriculares = App_Model_IedFinder::getComponentesPorMatricula($matriculaId, null, null, $componenteCurricularId);
+
+    foreach($_componentesCurriculares as $_componente) {
+      $componente                          = array();
+
+      $componente['id']                    = $_componente->get('id');
+      $componente['nome']                  = $this->safeString(strtoupper($_componente->get('nome')), false);
+      $componente['nota_atual']            = $this->getNotaAtual($etapa = null, $componente['id']);
+      $componente['nota_exame']            = $this->getNotaExame($componente['id']);
+      $componente['falta_atual']           = $this->getFaltaAtual($etapa = null, $componente['id']);
+      $componente['parecer_atual']         = $this->getParecerAtual($componente['id']);
+      $componente['situacao']              = $this->getSituacaoMatricula($componente['id']);
+      $componente['nota_necessaria_exame'] = ($componente['situacao'] == 'Em Exame' ? $this->getNotaNecessariaExame($componente['id']) : null );
+
+      if (!empty($componente['nota_necessaria_exame']))
+        $this->createOrUpdateNotaExame($matriculaId, $componente['id'], $componente['nota_necessaria_exame']);
+      else
+        $this->deleteNotaExame($matriculaId, $componente['id']);
+
+      //buscando pela área do conhecimento
+      $area                                = $this->getAreaConhecimento($componente['id']);
+      $nomeArea                            = (($area->secao != '') ? $area->secao . ' - ' : '') . $area->nome;
+      $componente['area_id']               = $area->id;
+      $componente['area_nome']             = $this->safeString(strtoupper($nomeArea), false);
+
+      //criando chave para ordenamento temporário
+      //área de conhecimento + componente curricular
+      $componente['my_order']              = Portabilis_String_Utils::unaccent(strtoupper($nomeArea)) . Portabilis_String_Utils::unaccent(strtoupper($_componente->get('nome')));
+
+      $componentesCurriculares[]           = $componente;
     }
 
-    protected function getMediaAtual($componenteCurricularId = null)
-    {
-        // defaults
-        if (is_null($componenteCurricularId)) {
-            $componenteCurricularId = $this->getRequest()->componente_curricular_id;
-        }
+    //ordenando pela chave temporária criada
+    $componentesCurriculares = Portabilis_Array_Utils::sortByKey('my_order', $componentesCurriculares);
+
+    //removendo chave temporária
+    $len = count($componentesCurriculares);
+    for ($i = 0; $i < $len; $i++) {
+    	unset($componentesCurriculares[$i]['my_order']);
+    }
+    return $componentesCurriculares;
+  }
+
+  protected function getAreaConhecimento($componenteCurricularId = null) {
+  	if (is_null($componenteCurricularId))
+  		$componenteCurricularId = $this->getRequest()->componente_curricular_id;
+
+  	if (! is_numeric($componenteCurricularId)) {
+  		throw new Exception('Não foi possível obter a área de conhecimento pois não foi recebido o id do componente curricular.');
+  	}
+
+  	require_once 'ComponenteCurricular/Model/ComponenteDataMapper.php';
+  	$mapper = new ComponenteCurricular_Model_ComponenteDataMapper();
+
+    $where = array('id' => $componenteCurricularId);
+
+    $area = $mapper->findAll(array('area_conhecimento'), $where);
+
+    $areaConhecimento        = new stdClass();
+    $areaConhecimento->id    = $area[0]->area_conhecimento->id;
+    $areaConhecimento->nome  = $area[0]->area_conhecimento->nome;
+    $areaConhecimento->secao = $area[0]->area_conhecimento->secao;
+
+    return $areaConhecimento;
+  }
+
+  protected function createOrUpdateNotaExame($matriculaId, $componenteCurricularId, $notaExame) {
+
+    $obj = new clsModulesNotaExame($matriculaId, $componenteCurricularId, $notaExame);
+
+    return ($obj->existe() ? $obj->edita() : $obj->cadastra());
+  }
 
         // validacao
         if (!is_numeric($componenteCurricularId)) {

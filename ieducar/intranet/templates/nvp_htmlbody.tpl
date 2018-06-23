@@ -1,22 +1,6 @@
 <table summary="" class='tabelanum1' id="tablenum1"  border='0' cellspacing='0' cellpadding='0'>
-<tr id="topo" class="topo">
-	<td class="logo" align="left"><a style="color:#FFF; text-decoration: none;" href="/">i-Educar</a></td>
-	<td id="perfil-user-id" class="perfil-user" align="right">
-		<a class="icons-top" href="#">
-			<img id="notificacao" src="/intranet/imagens/icon-nav-notifications.png">
-		</a>
-		<a href="/intranet/meusdados.php" title="Meus dados">
-			<div id="foto-user" class="foto-user" style="background: url('<!-- #&FOTO&# -->')"></div>
-		</a>
-		<div class="dropdown">
- 	 		<div class="dropbtn"><!-- #&USERLOGADO&# --></div>
-  			<div class="dropdown-content">
-    			<a href="/intranet/agenda.php">Agenda</a>
-    			<a href="/intranet/index.php">CalendÃ¡rio</a>
-    			<a href="/intranet/meusdados.php">Meus dados</a>
-    			<a href="/intranet/logof.php">Sair</a>
-			 </div>
-		</div><!--a href="http://www.google.com.br/" target="_blank"><img src="imagens/nvp_bot_internet.jpg" width="62" height="21" border="0" alt="Acessar Internet" title="Acessar a Web"></a--></td>
+<tr class="r2c1">
+	<td align="center" class="r2c1A" >&nbsp;Último Acesso: <b><!-- #&ULTIMOACESSO&# --></b></td>
 </tr>
 <tr>
 	<td colspan="3">
@@ -43,12 +27,6 @@
 	</tr>
 	</table>
 	</td>
-</tr>
-<tr class="rodape">
-	<td colspan="3">
-	<center>
-    <!-- #&RODAPE_INTERNO&# -->
-	</center></td>
 </tr>
 </table>
 

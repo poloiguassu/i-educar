@@ -1,5 +1,5 @@
 /**
-* @author Prefeitura Municipal de Itajaí
+* @author Prefeitura Municipal de Itaja�
 *
 * Criado em #data_criacao# pelo gerador automatico de classes
 */
@@ -200,7 +200,7 @@ class #nome_classe#
 	}
 
 	/**
-	 * Retorna true se o registro existir. Caso contrário retorna false.
+	 * Retorna true se o registro existir. Caso contr�rio retorna false.
 	 *
 	 * @return bool
 	 */
@@ -262,10 +262,11 @@ class #nome_classe#
 	 *
 	 * @return null
 	 */
-	function setLimite( $intLimiteQtd, $intLimiteOffset = null )
+	function setLimite( $intLimiteQtd, $intLimiteOffset = 0 )
 	{
 		$this->_limite_quantidade = $intLimiteQtd;
-		$this->_limite_offset = $intLimiteOffset;
+		if ($intLimiteOffset > 0)
+			$this->_limite_offset = $intLimiteOffset;
 	}
 
 	/**

@@ -12,7 +12,7 @@ class clsIndex extends clsBase
 {
 	function Formular()
 	{
-		$this->SetTitulo( "Prefeitura de Itaja&iacute; - #upper_nome_schema# - Cadastro de #nome_tabela#" );
+		$this->SetTitulo( "Trilha Jovem - #upper_nome_schema# - Cadastro de #nome_tabela#" );
 		$this->processoAp = "0";
 	}
 }

@@ -1,29 +1,29 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	*																	     *
+	*	@author Prefeitura Municipal de Itaja�								 *
+	*	@updated 29/03/2007													 *
+	*   Pacote: i-PLB Software P�blico Livre e Brasileiro					 *
+	*																		 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja�			 *
+	*						ctima@itajai.sc.gov.br					    	 *
+	*																		 *
+	*	Este  programa  �  software livre, voc� pode redistribu�-lo e/ou	 *
+	*	modific�-lo sob os termos da Licen�a P�blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers�o 2 da	 *
+	*	Licen�a   como  (a  seu  crit�rio)  qualquer  vers�o  mais  nova.	 *
+	*																		 *
+	*	Este programa  � distribu�do na expectativa de ser �til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl�cita de COMERCIALI-	 *
+	*	ZA��O  ou  de ADEQUA��O A QUALQUER PROP�SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen�a  P�blica  Geral  GNU para obter mais detalhes.	 *
+	*																		 *
+	*	Voc�  deve  ter  recebido uma c�pia da Licen�a P�blica Geral GNU	 *
+	*	junto  com  este  programa. Se n�o, escreva para a Free Software	 *
+	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
+	*	02111-1307, USA.													 *
+	*																		 *
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -100,135 +100,116 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"                  => "Servidores",
-         ""        => "{$nomeMenu} fun&ccedil;&atilde;o"             
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+         ""        => "{$nomeMenu} fun&ccedil;&atilde;o"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
-        return $retorno;
-    }
+		return $retorno;
+	}
 
-    function Gerar()
-    {
-        // primary keys
-        $this->campoOculto( "cod_funcao", $this->cod_funcao );
+	function Gerar()
+	{
+		// primary keys
+		$this->campoOculto( "cod_funcao", $this->cod_funcao );
 
-        $obrigatorio = true;
-        include("include/pmieducar/educar_campo_lista.php");
+		$obrigatorio = true;
+		include("include/pmieducar/educar_campo_lista.php");
 
-        // text
-        $this->campoTexto( "nm_funcao", "Func&atilde;o", $this->nm_funcao, 30, 255, true );
-        $this->campoTexto( "abreviatura", "Abreviatura", $this->abreviatura, 30, 255, true );
-        $opcoes = array('' => 'Selecione',
-                        'S' => 'Sim',
-                        'N' => 'N&atilde;o'
-                        );
+		// text
+		$this->campoTexto( "nm_funcao", "Func&atilde;o", $this->nm_funcao, 30, 255, true );
+		$this->campoTexto( "abreviatura", "Abreviatura", $this->abreviatura, 30, 255, true );
+		$opcoes = array('' => 'Selecione',
+						'S' => 'Sim',
+						'N' => 'N&atilde;o'
+						);
 
-        $this->campoLista( "professor", "Professor",$opcoes, $this->professor,"",false,"","",false,true);
-    }
+		$this->campoLista( "professor", "Educador",$opcoes, $this->professor,"",false,"","",false,true);
+	}
 
-    function Novo()
-    {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
+	function Novo()
+	{
+		@session_start();
+		 $this->pessoa_logada = $_SESSION['id_pessoa'];
+		@session_write_close();
 
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 634, $this->pessoa_logada, 3,  "educar_funcao_lst.php" );
+		$obj_permissoes = new clsPermissoes();
+		$obj_permissoes->permissao_cadastra( 634, $this->pessoa_logada, 3,  "educar_funcao_lst.php" );
 
-        if($this->professor == 'N')
-            $this->professor =  "0";
-        elseif($this->professor == 'S')
-            $this->professor = "1";
+		if($this->professor == 'N')
+			$this->professor =  "0";
+		elseif($this->professor == 'S')
+			$this->professor = "1";
 
-        $obj = new clsPmieducarFuncao( null, null, $this->pessoa_logada, $this->nm_funcao, $this->abreviatura, $this->professor, null, null, 1, $this->ref_cod_instituicao );
-        $cadastrou = $obj->cadastra();
-        if( $cadastrou )
-        {
+		$obj = new clsPmieducarFuncao( null, null, $this->pessoa_logada, $this->nm_funcao, $this->abreviatura, $this->professor, null, null, 1, $this->ref_cod_instituicao );
+		$cadastrou = $obj->cadastra();
+		if( $cadastrou )
+		{
+			$this->mensagem .= "Cadastro efetuado com sucesso.<br>";
+			header( "Location: educar_funcao_lst.php" );
+			die();
+			return true;
+		}
 
-            $funcao = new clsPmieducarFuncao($cadastrou);
-            $funcao = $funcao->detalhe();
+		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
+		echo "<!--\nErro ao cadastrar clsPmieducarFuncao\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_funcao ) && is_string( $this->abreviatura ) && is_numeric( $this->professor )\n-->";
+		return false;
+	}
 
-            $auditoria = new clsModulesAuditoriaGeral("servidor_funcao", $this->pessoa_logada, $cadastrou);
-            $auditoria->inclusao($funcao);
+	function Editar()
+	{
+		@session_start();
+		 $this->pessoa_logada = $_SESSION['id_pessoa'];
+		@session_write_close();
 
-            $this->mensagem .= "Cadastro efetuado com sucesso.<br>";
-            header( "Location: educar_funcao_lst.php" );
-            die();
-            return true;
-        }
+		if($this->professor == 'N')
+			$this->professor =  "0";
+		elseif($this->professor == 'S')
+			$this->professor = "1";
 
-        $this->mensagem = "Cadastro n&atilde;o realizado.<br>";
-        echo "<!--\nErro ao cadastrar clsPmieducarFuncao\nvalores obrigatorios\nis_numeric( $this->pessoa_logada ) && is_string( $this->nm_funcao ) && is_string( $this->abreviatura ) && is_numeric( $this->professor )\n-->";
-        return false;
-    }
-
-    function Editar()
-    {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
-        $funcao = new clsPmieducarFuncao($this->cod_funcao);
-        $funcaoAntes = $funcao->detalhe();
-
-        if($this->professor == 'N')
-            $this->professor =  "0";
-        elseif($this->professor == 'S')
-            $this->professor = "1";
-
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 634, $this->pessoa_logada, 3,  "educar_funcao_lst.php" );
+		$obj_permissoes = new clsPermissoes();
+		$obj_permissoes->permissao_cadastra( 634, $this->pessoa_logada, 3,  "educar_funcao_lst.php" );
 
 
-        $obj = new clsPmieducarFuncao($this->cod_funcao, $this->pessoa_logada, null, $this->nm_funcao, $this->abreviatura, $this->professor, null, null, 1, $this->ref_cod_instituicao );
-        $editou = $obj->edita();
-        if( $editou )
-        {
-            $funcaoDepois = $funcao->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral("servidor_funcao", $this->pessoa_logada, $this->cod_funcao);
-            $auditoria->alteracao($funcaoAntes, $funcaoDepois);
+		$obj = new clsPmieducarFuncao($this->cod_funcao, $this->pessoa_logada, null, $this->nm_funcao, $this->abreviatura, $this->professor, null, null, 1, $this->ref_cod_instituicao );
+		$editou = $obj->edita();
+		if( $editou )
+		{
+			$this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
+			header( "Location: educar_funcao_lst.php" );
+			die();
+			return true;
+		}
 
-            $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_funcao_lst.php" );
-            die();
-            return true;
-        }
+		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
+		echo "<!--\nErro ao editar clsPmieducarFuncao\nvalores obrigatorios\nif( is_numeric( $this->cod_funcao ) && is_numeric( $this->pessoa_logada ) )\n-->";
+		return false;
+	}
 
-        $this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao editar clsPmieducarFuncao\nvalores obrigatorios\nif( is_numeric( $this->cod_funcao ) && is_numeric( $this->pessoa_logada ) )\n-->";
-        return false;
-    }
+	function Excluir()
+	{
+		@session_start();
+		 $this->pessoa_logada = $_SESSION['id_pessoa'];
+		@session_write_close();
 
-    function Excluir()
-    {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_excluir( 634, $this->pessoa_logada, 3,  "educar_funcao_lst.php" );
+		$obj_permissoes = new clsPermissoes();
+		$obj_permissoes->permissao_excluir( 634, $this->pessoa_logada, 3,  "educar_funcao_lst.php" );
 
 
-        $obj = new clsPmieducarFuncao( $this->cod_funcao, $this->pessoa_logada, null,null,null,null,null,null,0,$this->ref_cod_instituicao );
-        $funcao = $obj->detalhe();
+		$obj = new clsPmieducarFuncao( $this->cod_funcao, $this->pessoa_logada, null,null,null,null,null,null,0,$this->ref_cod_instituicao );
+		$excluiu = $obj->excluir();
+		if( $excluiu )
+		{
+			$this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
+			header( "Location: educar_funcao_lst.php" );
+			die();
+			return true;
+		}
 
-        $excluiu = $obj->excluir();
-        if( $excluiu )
-        {
-            $auditoria = new clsModulesAuditoriaGeral("servidor_funcao", $this->pessoa_logada, $this->cod_funcao);
-            $auditoria->exclusao($funcao);
-
-            $this->mensagem .= "Exclus&atilde;o efetuada com sucesso.<br>";
-            header( "Location: educar_funcao_lst.php" );
-            die();
-            return true;
-        }
-
-        $this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
-        echo "<!--\nErro ao excluir clsPmieducarFuncao\nvalores obrigatorios\nif( is_numeric( $this->cod_funcao ) && is_numeric( $this->pessoa_logada ) )\n-->";
-        return false;
-    }
+		$this->mensagem = "Exclus&atilde;o n&atilde;o realizada.<br>";
+		echo "<!--\nErro ao excluir clsPmieducarFuncao\nvalores obrigatorios\nif( is_numeric( $this->cod_funcao ) && is_numeric( $this->pessoa_logada ) )\n-->";
+		return false;
+	}
 }
 
 // cria uma extensao da classe base

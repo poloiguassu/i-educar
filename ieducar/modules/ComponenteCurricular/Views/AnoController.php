@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja�
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix�o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     ComponenteCurricular
  * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.1.0
+ * @since       Arquivo dispon�vel desde a vers�o 1.1.0
  * @version     $Id$
  */
 
@@ -36,23 +36,23 @@ require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
 /**
  * AnoController class.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix�o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     ComponenteCurricular
  * @subpackage  Modules
- * @since       Classe disponível desde a versão 1.1.0
+ * @since       Classe dispon�vel desde a vers�o 1.1.0
  * @version     @@package_version@@
  */
 class AnoController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper = 'ComponenteCurricular_Model_AnoEscolarDataMapper';
-  protected $_titulo     = 'Configuração de ano escolar';
+  protected $_titulo     = 'Configura��o de ano escolar';
   protected $_processoAp = 946;
   protected $_formMap    = array();
 
   /**
-   * Array de instâncias ComponenteCurricular_Model_AnoEscolar.
+   * Array de inst�ncias ComponenteCurricular_Model_AnoEscolar.
    * @var array
    */
   protected $_entries = array();
@@ -60,7 +60,7 @@ class AnoController extends Core_Controller_Page_EditController
   /**
    * Setter.
    * @param array $entries
-   * @return Core_Controller_Page Provê interface fluída
+   * @return Core_Controller_Page Prov� interface flu�da
    */
   public function setEntries(array $entries = array())
   {
@@ -90,7 +90,7 @@ class AnoController extends Core_Controller_Page_EditController
   }
 
   /**
-   * Verifica se uma instância ComponenteCurricular_Model_AnoEscolar identificada
+   * Verifica se uma inst�ncia ComponenteCurricular_Model_AnoEscolar identificada
    * por $id existe.
    * @param int $id
    * @return bool
@@ -104,7 +104,7 @@ class AnoController extends Core_Controller_Page_EditController
   }
 
   /**
-   * Retorna um array associativo de séries com código de curso como chave.
+   * Retorna um array associativo de s�ries com c�digo de curso como chave.
    * @return array
    */
   protected function _getSeriesAgrupadasPorCurso()
@@ -142,7 +142,7 @@ class AnoController extends Core_Controller_Page_EditController
     $this->setEntries($this->getDataMapper()->findAll(array(),
       array('componenteCurricular' => $this->getRequest()->cid)));
 
-    // Configura ação cancelar
+    // Configura a��o cancelar
     $this->setOptions(array('url_cancelar' => array(
       'path' => 'view', 'options' => array(
         'query' => array('id' => $this->getRequest()->cid)
@@ -186,8 +186,8 @@ class AnoController extends Core_Controller_Page_EditController
 
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Carga horária dos anos escolares"
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+         ""                                  => "Editando anos escolares"             
     ));
     $this->enviaLocalizacao($localizacao->montar());
   }
@@ -209,7 +209,7 @@ class AnoController extends Core_Controller_Page_EditController
         $this->campoCheck('ano_escolar['.$c.']', '', $this->hasEntry($c), $serie, FALSE);
 
         $valor = $this->hasEntry($c) ? $this->getEntry($c)->cargaHoraria : NULL;
-        $this->campoTexto('carga_horaria['.$c.']', 'Carga horária',
+        $this->campoTexto('carga_horaria['.$c.']', 'Carga hor�ria',
           $valor, 5, 5, FALSE, FALSE,
           FALSE);
       }
@@ -224,12 +224,12 @@ class AnoController extends Core_Controller_Page_EditController
   {
     $data = $insert = $delete = $intersect = array();
 
-    // O id de componente_curricular será igual ao id da request
+    // O id de componente_curricular ser� igual ao id da request
     if ($cid = $this->getRequest()->cid) {
       $data['componenteCurricular'] = $cid;
     }
 
-    // Cria um array de Entity geradas pela requisição
+    // Cria um array de Entity geradas pela requisi��o
     foreach ($this->getRequest()->ano_escolar as $key => $val) {
       $data['anoEscolar'] = $key;
       $data['cargaHoraria'] = $this->getRequest()->carga_horaria[$key];
@@ -251,7 +251,7 @@ class AnoController extends Core_Controller_Page_EditController
 
     // Registros a inserir
     foreach ($insert as $key => $entity) {
-      // Se o registro já existe, passa para o próximo
+      // Se o registro j� existe, passa para o pr�ximo
       if (FALSE !== array_search($key, $intersect)) {
         $entity->markOld();
       }
@@ -260,7 +260,7 @@ class AnoController extends Core_Controller_Page_EditController
         $this->getDataMapper()->save($entity);
       }
       catch (Exception $e) {
-        $this->mensagem = 'Erro no preenchimento do formulário.';
+        $this->mensagem = 'Erro no preenchimento do formul�rio.';
         return FALSE;
       }
     }

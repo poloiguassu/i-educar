@@ -1,29 +1,29 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	*																	     *
+	*	@author Prefeitura Municipal de Itaja�								 *
+	*	@updated 29/03/2007													 *
+	*   Pacote: i-PLB Software P�blico Livre e Brasileiro					 *
+	*																		 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja�			 *
+	*						ctima@itajai.sc.gov.br					    	 *
+	*																		 *
+	*	Este  programa  �  software livre, voc� pode redistribu�-lo e/ou	 *
+	*	modific�-lo sob os termos da Licen�a P�blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers�o 2 da	 *
+	*	Licen�a   como  (a  seu  crit�rio)  qualquer  vers�o  mais  nova.	 *
+	*																		 *
+	*	Este programa  � distribu�do na expectativa de ser �til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl�cita de COMERCIALI-	 *
+	*	ZA��O  ou  de ADEQUA��O A QUALQUER PROP�SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen�a  P�blica  Geral  GNU para obter mais detalhes.	 *
+	*																		 *
+	*	Voc�  deve  ter  recebido uma c�pia da Licen�a P�blica Geral GNU	 *
+	*	junto  com  este  programa. Se n�o, escreva para a Free Software	 *
+	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
+	*	02111-1307, USA.													 *
+	*																		 *
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -108,115 +108,115 @@ class indice extends clsListagem
 
         $lista_busca = array(
       "Ano",
-      "Matrícula",
-      "Situação",
+      "Matr�cula",
+      "Situa��o",
       "Turma",
-            "S&eacute;rie",
-            "Curso"
-        );
+			"Eixo",
+			"Projeto"
+		);
 
-        $obj_permissoes = new clsPermissoes();
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-        if ($nivel_usuario == 1)
-        {
-            $lista_busca[] = "Escola";
-            $lista_busca[] = "Institui&ccedil;&atilde;o";
-        }
-        else if ($nivel_usuario == 2)
-        {
-            $lista_busca[] = "Escola";
-        }
-        $this->addCabecalhos($lista_busca);
+		$obj_permissoes = new clsPermissoes();
+		$nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+		if ($nivel_usuario == 1)
+		{
+			$lista_busca[] = "Escola";
+			$lista_busca[] = "Institui&ccedil;&atilde;o";
+		}
+		else if ($nivel_usuario == 2)
+		{
+			$lista_busca[] = "Escola";
+		}
+		$this->addCabecalhos($lista_busca);
 
-        $get_escola = true;
-        $get_curso = true;
-        $get_escola_curso_serie = true;
-        include("include/pmieducar/educar_campo_lista.php");
+		$get_escola = true;
+		$get_curso = true;
+		$get_escola_curso_serie = true;
+		include("include/pmieducar/educar_campo_lista.php");
 
-        if ( $this->ref_cod_escola )
-        {
-            $this->ref_ref_cod_escola = $this->ref_cod_escola;
-        }
+		if ( $this->ref_cod_escola )
+		{
+			$this->ref_ref_cod_escola = $this->ref_cod_escola;
+		}
 
-        // Paginador
-        $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+		// Paginador
+		$this->limite = 20;
+		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        $obj_matricula = new clsPmieducarMatricula();
-        $obj_matricula->setOrderby('ano DESC, ref_ref_cod_serie DESC, aprovado, cod_matricula');
-        $obj_matricula->setLimite( $this->limite, $this->offset );
+		$obj_matricula = new clsPmieducarMatricula();
+		$obj_matricula->setOrderby('ano DESC, ref_ref_cod_serie DESC, aprovado, cod_matricula');
+		$obj_matricula->setLimite( $this->limite, $this->offset );
 
-        $lista = $obj_matricula->lista(
-            $this->cod_matricula,
-            null,
-            $this->ref_ref_cod_escola,
-            $this->ref_ref_cod_serie,
-            null,
-            null,
-            $this->ref_cod_aluno,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            $this->ref_cod_curso,
-            $this->ref_cod_instituicao,
-            1
-        );
+		$lista = $obj_matricula->lista(
+			$this->cod_matricula,
+			null,
+			$this->ref_ref_cod_escola,
+			$this->ref_ref_cod_serie,
+			null,
+			null,
+			$this->ref_cod_aluno,
+			null,
+			null,
+			null,
+			null,
+			null,
+			1,
+			null,
+			$this->ref_cod_curso,
+			$this->ref_cod_instituicao,
+			1
+		);
 
-        $total = $obj_matricula->_total;
+		$total = $obj_matricula->_total;
 
-        // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
-                if( class_exists( "clsPmieducarCurso" ) )
-                {
-                    $obj_ref_cod_curso = new clsPmieducarCurso( $registro["ref_cod_curso"] );
-                    $det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
-                    $registro["ref_cod_curso"] = $det_ref_cod_curso["nm_curso"];
-                }
-                else
-                {
-                    $registro["ref_cod_curso"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarCurso\n-->";
-                }
-                if( class_exists( "clsPmieducarSerie" ) )
-                {
-                    $obj_serie = new clsPmieducarSerie( $registro["ref_ref_cod_serie"] );
-                    $det_serie = $obj_serie->detalhe();
-                    $registro["ref_ref_cod_serie"] = $det_serie["nm_serie"];
-                }
-                else
-                {
-                    $registro["ref_ref_cod_serie"] = "Erro na geracao";
-                    echo "<!--\nErro\nClasse nao existente: clsPmieducarSerie\n-->";
-                }
-                if( class_exists( "clsPmieducarInstituicao" ) )
-                {
-                    $obj_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
-                    $obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
-                    $registro["ref_cod_instituicao"] = $obj_cod_instituicao_det["nm_instituicao"];
-                }
-                else
-                {
-                    $registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
-                }
-                if( class_exists( "clsPmieducarEscola" ) )
-                {
-                    $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_ref_cod_escola"] );
-                    $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                    $registro["ref_ref_cod_escola"] = $det_ref_cod_escola["nome"];
-                }
-                else
-                {
-                    $registro["ref_ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
-                    echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
-                }
+		// monta a lista
+		if( is_array( $lista ) && count( $lista ) )
+		{
+			foreach ( $lista AS $registro )
+			{
+				if( class_exists( "clsPmieducarCurso" ) )
+				{
+					$obj_ref_cod_curso = new clsPmieducarCurso( $registro["ref_cod_curso"] );
+					$det_ref_cod_curso = $obj_ref_cod_curso->detalhe();
+					$registro["ref_cod_curso"] = $det_ref_cod_curso["nm_curso"];
+				}
+				else
+				{
+					$registro["ref_cod_curso"] = "Erro na geracao";
+					echo "<!--\nErro\nClasse nao existente: clsPmieducarCurso\n-->";
+				}
+				if( class_exists( "clsPmieducarSerie" ) )
+				{
+					$obj_serie = new clsPmieducarSerie( $registro["ref_ref_cod_serie"] );
+					$det_serie = $obj_serie->detalhe();
+					$registro["ref_ref_cod_serie"] = $det_serie["nm_serie"];
+				}
+				else
+				{
+					$registro["ref_ref_cod_serie"] = "Erro na geracao";
+					echo "<!--\nErro\nClasse nao existente: clsPmieducarSerie\n-->";
+				}
+				if( class_exists( "clsPmieducarInstituicao" ) )
+				{
+					$obj_cod_instituicao = new clsPmieducarInstituicao( $registro["ref_cod_instituicao"] );
+					$obj_cod_instituicao_det = $obj_cod_instituicao->detalhe();
+					$registro["ref_cod_instituicao"] = $obj_cod_instituicao_det["nm_instituicao"];
+				}
+				else
+				{
+					$registro["ref_cod_instituicao"] = "Erro na gera&ccedil;&atilde;o";
+					echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarInstituicao\n-->";
+				}
+				if( class_exists( "clsPmieducarEscola" ) )
+				{
+					$obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_ref_cod_escola"] );
+					$det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+					$registro["ref_ref_cod_escola"] = $det_ref_cod_escola["nome"];
+				}
+				else
+				{
+					$registro["ref_ref_cod_escola"] = "Erro na gera&ccedil;&atilde;o";
+					echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
+				}
 
         $enturmacoes = new clsPmieducarMatriculaTurma();
         $enturmacoes = $enturmacoes->lista($registro['cod_matricula'], NULL, NULL,
@@ -287,7 +287,7 @@ class indice extends clsListagem
         }
     else
     {
-                $this->addLinhas(array('Aluno sem matrículas em andamento na sua escola.'));
+				$this->addLinhas(array('Aluno sem matr�culas em andamento na sua escola.'));
     }
 
         $this->addPaginador2( "educar_matricula_lst.php", $total, $_GET, $this->nome, $this->limite );

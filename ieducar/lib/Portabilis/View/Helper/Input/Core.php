@@ -80,7 +80,7 @@ class Portabilis_View_Helper_Input_Core {
     return $value;
   }
 
-  protected function inputPlaceholder($inputOptions) {
+  protected function inputPlaceholder($inputOptions = null) {
     return isset($inputOptions['placeholder']) ? $inputOptions['placeholder'] : $inputOptions['label'];
   }
 

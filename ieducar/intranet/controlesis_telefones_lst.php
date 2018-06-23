@@ -47,113 +47,132 @@ class indice extends clsListagem
      */
     var $pessoa_logada;
 
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
-    var $titulo;
+	/**
+	 * Titulo no topo da pagina
+	 *
+	 * @var int
+	 */
+	var $titulo;
 
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
-    var $limite;
+	/**
+	 * Quantidade de registros a ser apresentada em cada pagina
+	 *
+	 * @var int
+	 */
+	var $limite;
 
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
-    var $offset;
+	/**
+	 * Inicio dos registros a serem exibidos (limit)
+	 *
+	 * @var int
+	 */
+	var $offset;
 
-    var $cod_telefones;
-    var $ref_funcionario_cad;
-    var $ref_funcionario_exc;
-    var $nome;
-    var $numero;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+	var $cod_telefones;
+	var $ref_funcionario_cad;
+	var $ref_funcionario_exc;
+	var $nome;
+	var $ddd_numero;
+	var $numero;
+	var $responsavel;
+	var $ddd_celular;
+	var $celular;
+	var $email;
+	var $endereco;
+	var $data_cadastro;
+	var $data_exclusao;
+	var $ativo;
 
-    function Gerar()
-    {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
+	function Gerar()
+	{
+		@session_start();
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
+		session_write_close();
 
-        $this->titulo = "Telefones - Listagem";
+		$this->titulo = "Agenda Telefonica - Listagem";
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
+			$this->$var = ( $val === "" ) ? null: $val;
 
-        
+		
 
-        $this->addCabecalhos( array(
+		$this->addCabecalhos( array(
+			"Instituição",
+			"Responsável",
+			"Numero",
+			"Celular",
+			"Email"
+		) );
 
-            "Nome",
-            "Numero"
-        ) );
-
-        // Filtros de Foreign Keys
-
-
-        // outros Filtros
-        $this->campoTexto( "nome", "Nome", $this->nome, 30, 255, false );
-        $this->campoNumero( "numero", "Numero", $this->numero, 15, 255, false );
-
-
-        // Paginador
-        $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
-
-        $obj_telefones = new clsPmicontrolesisTelefones();
-        $obj_telefones->setOrderby( "nome ASC" );
-        $obj_telefones->setLimite( $this->limite, $this->offset );
-
-        $lista = $obj_telefones->lista(
-            $this->cod_telefones,
-            null,
-            null,
-            $this->nome,
-            $this->numero,
-            null,
-            null,
-            1
-        );
-
-        $total = $obj_telefones->_total;
-
-        // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            foreach ( $lista AS $registro )
-            {
-                // muda os campos data
-                $registro["data_cadastro_time"] = strtotime( substr( $registro["data_cadastro"], 0, 16 ) );
-                $registro["data_cadastro_br"] = date( "d/m/Y H:i", $registro["data_cadastro_time"] );
-
-                $registro["data_exclusao_time"] = strtotime( substr( $registro["data_exclusao"], 0, 16 ) );
-                $registro["data_exclusao_br"] = date( "d/m/Y H:i", $registro["data_exclusao_time"] );
+		// Filtros de Foreign Keys
 
 
-                // pega detalhes de foreign_keys
+		// outros Filtros
+		$this->campoTexto("nome", "Instituição", $this->nome, 30, 255, false );
+		$this->campoTexto("responsavel", "Responsável", $this->responsavel, 30, 255, false );
+		$this->campoNumero("numero", "Numero", $this->numero, 15, 255, false );
+		$this->campoTexto("email", "Email", $this->email, 30, 255, false);
+
+
+		// Paginador
+		$this->limite = 20;
+		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+
+		$obj_telefones = new clsPmicontrolesisTelefones();
+		$obj_telefones->setOrderby( "nome ASC" );
+		$obj_telefones->setLimite( $this->limite, $this->offset );
+
+		$lista = $obj_telefones->lista(
+			$this->cod_telefones,
+			null,
+			null,
+			$this->nome,
+			null,
+			$this->numero,
+			null,
+			null,
+			null,
+			null,
+			1,
+			null,
+			$this->numero,
+			$this->responsavel,
+			$this->email,
+			null
+		);
+
+		$total = $obj_telefones->_total;
+
+		// monta a lista
+		if( is_array( $lista ) && count( $lista ) )
+		{
+			foreach ( $lista AS $registro )
+			{
+				// muda os campos data
+				$registro["data_cadastro_time"] = strtotime( substr( $registro["data_cadastro"], 0, 16 ) );
+				$registro["data_cadastro_br"] = date( "d/m/Y H:i", $registro["data_cadastro_time"] );
+
+				$registro["data_exclusao_time"] = strtotime( substr( $registro["data_exclusao"], 0, 16 ) );
+				$registro["data_exclusao_br"] = date( "d/m/Y H:i", $registro["data_exclusao_time"] );
+
+
+				// pega detalhes de foreign_keys
 
 
 
-                $this->addLinhas( array(
-
-                    "<a href=\"controlesis_telefones_det.php?cod_telefones={$registro["cod_telefones"]}\">{$registro["nome"]}</a>",
-                    "<a href=\"controlesis_telefones_det.php?cod_telefones={$registro["cod_telefones"]}\">{$registro["numero"]}</a>"
-                ) );
-            }
-        }
-        $this->addPaginador2( "controlesis_telefones_lst.php", $total, $_GET, $this->nome, $this->limite );
-        $this->acao = "go(\"controlesis_telefones_cad.php\")";
-        $this->nome_acao = "Novo";
-        $this->largura = "100%";
-    }
+				$this->addLinhas( array(
+					"<a href=\"controlesis_telefones_det.php?cod_telefones={$registro["cod_telefones"]}\">{$registro["nome"]}</a>",
+					"<a href=\"controlesis_telefones_det.php?cod_telefones={$registro["cod_telefones"]}\">{$registro["responsavel"]}</a>",
+					"<a href=\"controlesis_telefones_det.php?cod_telefones={$registro["cod_telefones"]}\">{$registro["numero"]}</a>",
+					"<a href=\"controlesis_telefones_det.php?cod_telefones={$registro["cod_telefones"]}\">{$registro["celular"]}</a>"
+				) );
+			}
+		}
+		$this->addPaginador2( "controlesis_telefones_lst.php", $total, $_GET, $this->nome, $this->limite );
+		$this->acao = "go(\"controlesis_telefones_cad.php\")";
+		$this->nome_acao = "Novo";
+		$this->largura = "100%";
+	}
 }
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();

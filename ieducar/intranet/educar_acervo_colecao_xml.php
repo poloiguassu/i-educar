@@ -1,60 +1,59 @@
 <?php
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de ItajaÃ­                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software PÃºblico Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de ItajaÃ­             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  Ã©  software livre, vocÃª pode redistribuÃ­-lo e/ou     *
-    *   modificÃ¡-lo sob os termos da LicenÃ§a PÃºblica Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versÃ£o 2 da     *
-    *   LicenÃ§a   como  (a  seu  critÃ©rio)  qualquer  versÃ£o  mais  nova.    *
-    *                                                                        *
-    *   Este programa  Ã© distribuÃ­do na expectativa de ser Ãºtil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implÃ­cita de COMERCIALI-     *
-    *   ZAÃ‡ÃƒO  ou  de ADEQUAÃ‡ÃƒO A QUALQUER PROPÃ“SITO EM PARTICULAR. Con-     *
-    *   sulte  a  LicenÃ§a  PÃºblica  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   VocÃª  deve  ter  recebido uma cÃ³pia da LicenÃ§a PÃºblica Geral GNU     *
-    *   junto  com  este  programa. Se nÃ£o, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-    header( 'Content-type: text/xml' );
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	*																	     *
+	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@updated 29/03/2007													 *
+	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*																		 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*						ctima@itajai.sc.gov.br					    	 *
+	*																		 *
+	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
+	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
+	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*																		 *
+	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
+	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*																		 *
+	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
+	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
+	*	02111-1307, USA.													 *
+	*																		 *
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	header('Content-type: text/xml');
 
-    require_once( "include/clsBanco.inc.php" );
-    require_once( "include/funcoes.inc.php" );
+	require_once("include/clsBanco.inc.php");
+	require_once("include/funcoes.inc.php");
+	require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
 
-  require_once 'Portabilis/Utils/DeprecatedXmlApi.php';
-  Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
+	Portabilis_Utils_DeprecatedXmlApi::returnEmptyQueryUnlessUserIsLoggedIn();
 
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<query xmlns=\"sugestoes\">\n";
 
-    if( is_numeric( $_GET["bib"] ) )
-    {
-        $db = new clsBanco();
-        $sql = "SELECT
-                    cod_acervo_colecao, nm_colecao
-                FROM
-                    pmieducar.acervo_colecao
-                WHERE
-                    ref_cod_biblioteca = {$_GET["bib"]}
-                AND
-                    ativo = 1";
-        $db->Consulta($sql);
-        if ($db->Num_Linhas())
-        {
-            while ($db->ProximoRegistro())
-            {
-                list($cod_acervo_colecao, $nm_colecao) = $db->Tupla();
-                $nm_colecao=preg_replace('/&(?!#?[a-z0-9]+;)/', '&amp;', $nm_colecao);
-                echo "<acervo_colecao cod_acervo_colecao=\"{$cod_acervo_colecao}\">{$nm_colecao}</acervo_colecao>\n";
-            }
-        }
-    }
-    echo "</query>";
+	if(is_numeric($_GET["esc"]))
+	{
+		$db = new clsBanco();
+		$sql = "SELECT
+					cod_vps_funcao, nm_funcao
+				FROM
+					pmieducar.vps_funcao
+				WHERE
+					ref_cod_escola = {$_GET["esc"]}
+				AND
+					ativo = 1";
+		$db->Consulta($sql);
+		if ($db->Num_Linhas())
+		{
+			while ($db->ProximoRegistro())
+			{
+				list($cod_vps_funcao, $nm_funcao) = $db->Tupla();
+				echo "<vps_funcao cod_vps_funcao=\"{$cod_vps_funcao}\">{$nm_funcao}</vps_funcao>\n";
+			}
+		}
+	}
+	echo "</query>";
 ?>

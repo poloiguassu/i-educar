@@ -281,7 +281,6 @@ class clsPessoaFj
         $this->logradouro       = $detalheEndereco['logradouro'];
         $this->sigla_uf         = $detalheEndereco['sigla_uf'];
         $this->cidade           = $detalheEndereco['cidade'];
-        $this->reside_desde     = $detalheEndereco['reside_desde'];
         $this->idtlog           = $detalheEndereco['idtlog'];
         $this->complemento      = $detalheEndereco['complemento'];
         $this->numero           = $detalheEndereco['numero'];
@@ -298,7 +297,6 @@ class clsPessoaFj
         $detalhePessoa['logradouro']   = $this->logradouro;
         $detalhePessoa['sigla_uf']     = $this->sigla_uf;
         $detalhePessoa['cidade']       = $this->cidade;
-        $detalhePessoa['reside_desde'] = $this->reside_desde;
         $detalhePessoa['idtlog']       = $this->idtlog;
         $detalhePessoa['complemento']  = $this->complemento;
         $detalhePessoa['numero']       = $this->numero;
@@ -313,6 +311,7 @@ class clsPessoaFj
 
       if ($detalhe_fisica) {
         $detalhePessoa['cpf'] = $detalhe_fisica['cpf'];
+		$detalhePessoa['sexo'] = $detalhe_fisica['sexo'];
 
         $this->cpf       = $detalhe_fisica['cpf'];
         $this->data_nasc = $detalhe_fisica['data_nasc'];

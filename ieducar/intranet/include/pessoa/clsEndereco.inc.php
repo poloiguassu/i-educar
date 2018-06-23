@@ -60,7 +60,6 @@ class clsEndereco
   var $cidade;
   var $idmun;
   var $sigla_uf;
-  var $reside_desde;
   var $bloco;
   var $apartamento;
   var $andar;

@@ -58,7 +58,7 @@ class EditController extends Core_Controller_Page_EditController
 
   protected $_formMap = array(
     'servidor' => array(
-      'label'  => '',
+      'label'  => 'Educador',
       'help'   => '',
       'entity' => 'servidor'
     ),
@@ -68,7 +68,7 @@ class EditController extends Core_Controller_Page_EditController
       'entity' => 'licenciatura'
     ),
     'curso' => array(
-      'label'  => 'Curso',
+      'label'  => 'Projeto',
       'help'   => '',
       'entity' => 'curso'
     ),
@@ -128,7 +128,7 @@ class EditController extends Core_Controller_Page_EditController
     $this->campoRadio('licenciatura', $this->_getLabel('licenciatura'),
       array(1 => 'Sim', 0 => 'Não'), $licenciatura);
 
-    // Curso
+    // Projeto
     $opcoes = array();
     foreach ($cursos as $curso) {
       $opcoes[$curso->id] = $curso->nome;

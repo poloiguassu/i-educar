@@ -49,12 +49,12 @@ require_once 'App/Model/ZonaLocalizacao.php';
  */
 class clsIndex extends clsBase
 {
-  function Formular()
-  {
-    $this->SetTitulo($this->_instituicao . ' Pessoa');
-    $this->processoAp = 43;
-    $this->addEstilo('localizacaoSistema');
-  }
+	function Formular()
+	{
+		$this->SetTitulo('Processo Seletivo - Jovem');
+		$this->processoAp = 43;
+		$this->addEstilo('localizacaoSistema');
+	}
 }
 
 /**
@@ -71,11 +71,7 @@ class indice extends clsDetalhe
 {
   function Gerar()
   {
-    @session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-        
-    $this->titulo = 'Detalhe da Pessoa';
+    $this->titulo = 'Detalhe da Jovem - Processo Seletivo';
 
     $this->addBanner('imagens/nvp_top_intranet.jpg',
       'imagens/nvp_vert_intranet.jpg', 'Intranet');
@@ -104,18 +100,6 @@ class indice extends clsDetalhe
 
     if ($detalhe['data_nasc']) {
       $this->addDetalhe(array('Data de Nascimento', dataFromPgToBr($detalhe['data_nasc'])));
-    }
-
-    // Cor/Raça.
-    $raca = new clsCadastroFisicaRaca($cod_pessoa);
-    $raca = $raca->detalhe();
-    if (is_array($raca)) {
-      $raca = new clsCadastroRaca($raca['ref_cod_raca']);
-      $raca = $raca->detalhe();
-
-      if (is_array($raca)) {
-        $this->addDetalhe(array('Raça', $raca['nm_raca']));
-      }
     }
 
     if ($detalhe['logradouro']) {
@@ -221,5 +205,5 @@ $miolo = new indice();
 // Atribui o conteúdo à página
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o c�digo HTML
 $pagina->MakeAll();

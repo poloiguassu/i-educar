@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja�
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo dispon�vel desde a vers�o 1.0.0
  * @version   $Id$
  */
 
@@ -38,11 +38,11 @@ require_once 'include/modules/clsModulesAuditoriaGeral.inc.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -58,11 +58,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -152,13 +152,13 @@ class indice extends clsCadastro
 
     $this->nome_url_cancelar = 'Cancelar';
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Dispensa de componentes curriculares"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
+      $localizacao = new LocalizacaoSistema();
+      $localizacao->entradaCaminhos( array(
+           $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+           "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+           ""        => "{$nomeMenu} dispensa de disciplina"
+      ));
+      $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
   }
@@ -195,7 +195,7 @@ class indice extends clsCadastro
     $this->campoRotulo('nm_aluno', 'Nome do Aluno', $det_aluno['nome_aluno']);
 
     if (!isset($this->ref_cod_turma)) {
-      $this->mensagem = 'Para dispensar um aluno de um componente curricular, é necessário que este esteja enturmado.';
+      $this->mensagem = 'Para dispensar um aluno de um componente curricular, � necess�rio que este esteja enturmado.';
       return;
     }
 
@@ -251,21 +251,7 @@ class indice extends clsCadastro
     $this->campoLista('ref_cod_tipo_dispensa', 'Tipo Dispensa', $opcoes,
       $this->ref_cod_tipo_dispensa);
 
-    $this->montaEtapas();
-
-    $this->campoMemo('observacao', 'Observação', $this->observacao, 60, 10, FALSE);
-  }
-
-  function existeComponenteSerie()
-  {
-      $db = new clsBanco();
-      $sql = "SELECT EXISTS (SELECT 1
-                               FROM pmieducar.escola_serie_disciplina
-                              WHERE ref_ref_cod_serie = {$this->ref_cod_serie}
-                                AND ref_ref_cod_escola = {$this->ref_cod_escola}
-                                AND ref_cod_disciplina = {$this->ref_cod_disciplina}
-                                AND escola_serie_disciplina.ativo = 1)";
-      return dbBool($db->campoUnico($sql));
+    $this->campoMemo('observacao', 'Observa��o', $this->observacao, 60, 10, FALSE);
   }
 
   function Novo()
@@ -287,7 +273,7 @@ class indice extends clsCadastro
     $db  = new clsBanco();
     $max_cod_dispensa = $db->CampoUnico($sql);
 
-    // Caso não exista nenhuma dispensa, atribui o código 1, tabela não utiliza sequences
+    // Caso n�o exista nenhuma dispensa, atribui o c�digo 1, tabela n�o utiliza sequences
     $max_cod_dispensa = $max_cod_dispensa > 0 ? $max_cod_dispensa : 1;
 
     $obj = new clsPmieducarDispensaDisciplina($this->ref_cod_matricula,
@@ -382,7 +368,7 @@ class indice extends clsCadastro
       die();
     }
 
-    $this->mensagem = 'Cadastro não realizado.<br />';
+    $this->mensagem = 'Cadastro n�o realizado.<br />';
     echo "<!--\nErro ao cadastrar clsPmieducarDispensaDisciplina\nvalores obrigatorios\n is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->pessoa_logada ) && is_numeric( $this->ref_cod_tipo_dispensa )\n-->";
     return FALSE;
   }
@@ -413,15 +399,12 @@ class indice extends clsCadastro
     $detalheAntigo = $obj->detalhe();
     $editou = $obj->edita();
     if ($editou) {
-
-      $auditoria = new clsModulesAuditoriaGeral("dispensa_disciplina", $this->pessoa_logada, $this->cod_dispensa);
-      $auditoria->alteracao($detalheAntigo, $obj->detalhe());
-      $this->mensagem .= 'Edição efetuada com sucesso.<br />';
+      $this->mensagem .= 'Edi��o efetuada com sucesso.<br />';
       header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
       die();
     }
 
-    $this->mensagem = 'Edição não realizada.<br />';
+    $this->mensagem = 'Edi��o n�o realizada.<br />';
     echo "<!--\nErro ao editar clsPmieducarDispensaDisciplina\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->pessoa_logada ) )\n-->";
     return FALSE;
   }
@@ -448,14 +431,12 @@ class indice extends clsCadastro
     $excluiu = $obj->excluir();
 
     if ($excluiu) {
-      $auditoria = new clsModulesAuditoriaGeral("dispensa_disciplina", $this->pessoa_logada, $this->cod_dispensa);
-      $auditoria->exclusao($detalhe);
-      $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
+      $this->mensagem .= 'Exclus�o efetuada com sucesso.<br />';
       header('Location: educar_dispensa_disciplina_lst.php?ref_cod_matricula=' . $this->ref_cod_matricula);
       die();
     }
 
-    $this->mensagem = 'Exclusão não realizada.<br />';
+    $this->mensagem = 'Exclus�o n�o realizada.<br />';
     echo "<!--\nErro ao excluir clsPmieducarDispensaDisciplina\nvalores obrigatorios\nif( is_numeric( $this->ref_cod_matricula ) && is_numeric( $this->ref_cod_serie ) && is_numeric( $this->ref_cod_escola ) && is_numeric( $this->ref_cod_disciplina ) && is_numeric( $this->pessoa_logada ) )\n-->";
     return FALSE;
   }
@@ -519,14 +500,14 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de p�gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conte�do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conte�do �  p�gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o c�digo HTML
 $pagina->MakeAll();

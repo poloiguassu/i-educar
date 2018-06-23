@@ -2,31 +2,31 @@
 //error_reporting(E_ERROR);
 //ini_set("display_errors", 1);
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja�
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix�o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     RegraAvaliacao
  * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.1.0
+ * @since       Arquivo dispon�vel desde a vers�o 1.1.0
  * @version     $Id$
  */
 
@@ -37,18 +37,18 @@ require_once 'RegraAvaliacao/Model/RegraRecuperacaoDataMapper.php';
 /**
  * EditController class.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix�o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     RegraAvaliacao
  * @subpackage  Modules
- * @since       Classe disponível desde a versão 1.1.0
+ * @since       Classe dispon�vel desde a vers�o 1.1.0
  * @version     @@package_version@@
  */
 class EditController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper        = 'RegraAvaliacao_Model_RegraDataMapper';
-  protected $_titulo            = 'Cadastro de regra de avaliação';
+  protected $_titulo            = 'Cadastro de regra de avalia��o';
   protected $_processoAp        = 947;
   protected $_nivelAcessoOption = App_Model_NivelAcesso::INSTITUCIONAL;
   protected $_saveOption        = TRUE;
@@ -56,7 +56,7 @@ class EditController extends Core_Controller_Page_EditController
 
   protected $_formMap = array(
     'instituicao' => array(
-      'label'  => 'Instituição',
+      'label'  => 'Institui��o',
       'help'   => '',
     ),
     'nome' => array(
@@ -68,8 +68,8 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => ''
     ),
     'tipoProgressao' => array(
-      'label'  => 'Progressão',
-      'help'   => 'Selecione o método de progressão para a regra.'
+      'label'  => 'Progress�o',
+      'help'   => 'Selecione o m�todo de progress�o para a regra.'
     ),
     'tabelaArredondamento' => array(
       'label'  => 'Tabela de arredondamento de nota',
@@ -84,31 +84,31 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => ''
     ),
     'media' => array(
-      'label'  => 'Média final para promoção',
-      'help'   => 'Informe a média necessária para promoção<br />
-                   do aluno, aceita até 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
-                   Se o tipo de progressão for <b>"Progressiva"</b>, esse<br />
-                   valor não será considerado.'
+      'label'  => 'M�dia final para promo��o',
+      'help'   => 'Informe a m�dia necess�ria para promo��o<br />
+                   do aluno, aceita at� 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
+                   Se o tipo de progress�o for <b>"Progressiva"</b>, esse<br />
+                   valor n�o ser� considerado.'
     ),
     'mediaRecuperacao' => array(
-      'label'  => 'Média exame final para promoção',
-      'help'   => 'Informe a média necessária para promoção<br />
-                   do aluno, aceita até 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
+      'label'  => 'M�dia exame final para promo��o',
+      'help'   => 'Informe a m�dia necess�ria para promo��o<br />
+                   do aluno, aceita at� 3 casas decimais. Exemplos: 5,00; 6,725, 6.<br >
                    Desconsidere esse campo caso selecione o tipo de nota "conceitual"'
     ),
     'formulaMedia' => array(
-      'label'  => 'Fórmula de cálculo da média',
+      'label'  => 'F�rmula de c�lculo da m�dia',
       'help'   => '',
     ),
     'formulaRecuperacao' => array(
-      'label'  => 'Fórmula de cálculo da média de recuperação',
+      'label'  => 'F�rmula de c�lculo da m�dia de recupera��o',
       'help'   => '',
     ),
     'porcentagemPresenca' => array(
-      'label'  => 'Porcentagem de presença',
-      'help'   => 'A porcentagem de presença necessária para o aluno ser aprovado.<br />
-                   Esse valor é desconsiderado caso o campo "Progressão" esteja como<br />
-                   "Não progressiva automática - Somente média".<br />
+      'label'  => 'Porcentagem de presen�a',
+      'help'   => 'A porcentagem de presen�a necess�ria para o aluno ser aprovado.<br />
+                   Esse valor � desconsiderado caso o campo "Progress�o" esteja como<br />
+                   "N�o progressiva autom�tica - Somente m�dia".<br />
                    Em porcentagem, exemplo: <b>75</b> ou <b>80,750</b>'
     ),
     'parecerDescritivo' => array(
@@ -116,7 +116,7 @@ class EditController extends Core_Controller_Page_EditController
       'help'   => '',
     ),
     'tipoPresenca' => array(
-      'label'  => 'Apuração de presença',
+      'label'  => 'Apura��o de presen�a',
       'help'   => ''
     ),
     'tipoRecuperacaoParalela' => array(
@@ -251,7 +251,7 @@ var tabela_arredondamento = new function() {
 
     if (tabelas.length == 0) {
       docObj.options[0] = new Option(
-        \'O tipo de nota não possui tabela de arredondamento.\', \'\', false, false
+        \'O tipo de nota n�o possui tabela de arredondamento.\', \'\', false, false
       );
     }
   }
@@ -313,7 +313,7 @@ var tabela_arredondamento = new function() {
   {
     parent::_preRender();
 
-    // Adiciona o código Javascript de controle do formulário.
+    // Adiciona o c�digo Javascript de controle do formul�rio.
     $js = sprintf('
       <script type="text/javascript">
         %s
@@ -347,8 +347,8 @@ var tabela_arredondamento = new function() {
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "$nomeMenu regra de avalia&ccedil;&atilde;o"
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+         ""        => "$nomeMenu regra de avalia&ccedil;&atilde;o"             
     ));
     $this->enviaLocalizacao($localizacao->montar());
   }
@@ -360,7 +360,7 @@ var tabela_arredondamento = new function() {
   {
     $this->campoOculto('id', $this->getEntity()->id);
 
-    // Instituição
+    // Institui��o
     $instituicoes = App_Model_IedFinder::getInstituicoes();
     $this->campoLista('instituicao', $this->_getLabel('instituicao'), $instituicoes,
       $this->getEntity()->instituicao);
@@ -387,50 +387,42 @@ var tabela_arredondamento = new function() {
     $tabelaArredondamentoConceitual = CoreExt_Entity::entityFilterAttr($tabelaArredondamentoConceitual, 'id', 'nome');
 
     if (empty($tabelaArredondamento)) {
-      $tabelaArredondamento = array(0 => 'O tipo de nota não possui tabela de arredondamento.');
+      $tabelaArredondamento = array(0 => 'O tipo de nota n�o possui tabela de arredondamento.');
     }
 
     $this->campoLista('tabelaArredondamento', $this->_getLabel('tabelaArredondamento'),
       $tabelaArredondamento, $this->getEntity()->get('tabelaArredondamento'), '',
       FALSE, $this->_getHelp('tabelaArredondamento'), '', FALSE, FALSE);
 
-    $this->campoLista('tabelaArredondamentoNumero', $this->_getLabel('tabelaArredondamentoNumerico'),
-      $tabelaArredondamentoNumerico, $this->getEntity()->get('tabelaArredondamento'), '',
-      FALSE, $this->_getHelp('tabelaArredondamento'), '', FALSE, FALSE);
-
-    $this->campoLista('tabelaArredondamentoConceitual', $this->_getLabel('tabelaArredondamentoConceitual'),
-      $tabelaArredondamentoConceitual, $this->getEntity()->get('tabelaArredondamentoConceitual'), '',
-      FALSE, $this->_getHelp('tabelaArredondamento'), '', FALSE, FALSE);
-
-    // Tipo progressão
+    // Tipo progress�o
     $tipoProgressao = RegraAvaliacao_Model_TipoProgressao::getInstance();
     $this->campoRadio('tipoProgressao', $this->_getLabel('tipoProgressao'),
       $tipoProgressao->getEnums(), $this->getEntity()->get('tipoProgressao'), '',
       $this->_getHelp('tipoProgressao'));
 
-    // Média
+    // M�dia
     $this->campoTexto('media', $this->_getLabel('media'), $this->getEntity()->media,
       5, 50, FALSE, FALSE, FALSE, $this->_getHelp('media'));
 
     $this->campoTexto('mediaRecuperacao', $this->_getLabel('mediaRecuperacao'), $this->getEntity()->mediaRecuperacao, 5, 50, FALSE, FALSE, FALSE, $this->_getHelp('mediaRecuperacao'));
 
-    // Cálculo média
+    // C�lculo m�dia
     $formulas = $this->getDataMapper()->findFormulaMediaFinal();
     $formulas = CoreExt_Entity::entityFilterAttr($formulas, 'id', 'nome');
     $this->campoLista('formulaMedia', $this->_getLabel('formulaMedia'),
       $formulas, $this->getEntity()->get('formulaMedia'), '', FALSE,
       $this->_getHelp('formulaMedia'), '', FALSE, FALSE);
 
-    // Cálculo média recuperação
+    // C�lculo m�dia recupera��o
     $formulas = $this->getDataMapper()->findFormulaMediaRecuperacao();
-    $formulasArray = array(0 => 'Não usar recuperação');
+    $formulasArray = array(0 => 'N�o usar recupera��o');
     $formulasArray = $formulasArray + CoreExt_Entity::entityFilterAttr($formulas, 'id', 'nome');
 
     $this->campoLista('formulaRecuperacao', $this->_getLabel('formulaRecuperacao'),
       $formulasArray, $this->getEntity()->get('formulaRecuperacao'), '', FALSE,
       $this->_getHelp('formulaRecuperacao'), '', FALSE, FALSE);
 
-    // Porcentagem presença
+    // Porcentagem presen�a
     $this->campoTexto('porcentagemPresenca', $this->_getLabel('porcentagemPresenca'),
       $this->getEntity()->porcentagemPresenca, 5, 50, TRUE, FALSE, FALSE,
       $this->_getHelp('porcentagemPresenca'));
@@ -441,7 +433,7 @@ var tabela_arredondamento = new function() {
       $parecerDescritivo->getEnums(), $this->getEntity()->get('parecerDescritivo'), '',
       $this->_getHelp('parecerDescritivo'));
 
-    // Presença
+    // Presen�a
     $tipoPresenca = RegraAvaliacao_Model_TipoPresenca::getInstance();
     $this->campoRadio('tipoPresenca', $this->_getLabel('tipoPresenca'),
       $tipoPresenca->getEnums(), $this->getEntity()->get('tipoPresenca'), '',

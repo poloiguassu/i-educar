@@ -1,29 +1,29 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @updated 29/03/2007                                                  *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	*																	     *
+	*	@author Prefeitura Municipal de Itaja�								 *
+	*	@updated 29/03/2007													 *
+	*   Pacote: i-PLB Software P�blico Livre e Brasileiro					 *
+	*																		 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja�			 *
+	*						ctima@itajai.sc.gov.br					    	 *
+	*																		 *
+	*	Este  programa  �  software livre, voc� pode redistribu�-lo e/ou	 *
+	*	modific�-lo sob os termos da Licen�a P�blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers�o 2 da	 *
+	*	Licen�a   como  (a  seu  crit�rio)  qualquer  vers�o  mais  nova.	 *
+	*																		 *
+	*	Este programa  � distribu�do na expectativa de ser �til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl�cita de COMERCIALI-	 *
+	*	ZA��O  ou  de ADEQUA��O A QUALQUER PROP�SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen�a  P�blica  Geral  GNU para obter mais detalhes.	 *
+	*																		 *
+	*	Voc�  deve  ter  recebido uma c�pia da Licen�a P�blica Geral GNU	 *
+	*	junto  com  este  programa. Se n�o, escreva para a Free Software	 *
+	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
+	*	02111-1307, USA.													 *
+	*																		 *
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
  * @author Adriano Erik Weiguert Nagasava
  */
@@ -44,217 +44,258 @@ class clsIndexBase extends clsBase
 
 class indice extends clsListagem
 {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    var $pessoa_logada;
+	/**
+	 * Referencia pega da session para o idpes do usuario atual
+	 *
+	 * @var int
+	 */
+	var $pessoa_logada;
 
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
-    var $titulo;
+	/**
+	 * Titulo no topo da pagina
+	 *
+	 * @var int
+	 */
+	var $titulo;
 
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
-    var $limite;
+	/**
+	 * Quantidade de registros a ser apresentada em cada pagina
+	 *
+	 * @var int
+	 */
+	var $limite;
 
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
-    var $offset;
+	/**
+	 * Inicio dos registros a serem exibidos (limit)
+	 *
+	 * @var int
+	 */
+	var $offset;
 
-    var $cod_turma;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $ref_ref_cod_serie;
-    var $ref_ref_cod_escola;
-    var $ref_cod_infra_predio_comodo;
-    var $nm_turma;
-    var $sgl_turma;
-    var $max_aluno;
-    var $multiseriada;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
-    var $ref_cod_turma_tipo;
-    var $hora_inicial;
-    var $hora_final;
-    var $hora_inicio_intervalo;
-    var $hora_fim_intervalo;
+	var $cod_turma;
+	var $ref_usuario_exc;
+	var $ref_usuario_cad;
+	var $ref_ref_cod_serie;
+	var $ref_ref_cod_escola;
+	var $ref_cod_infra_predio_comodo;
+	var $nm_turma;
+	var $sgl_turma;
+	var $max_aluno;
+	var $multiseriada;
+	var $data_cadastro;
+	var $data_exclusao;
+	var $ativo;
+	var $ref_cod_turma_tipo;
+	var $hora_inicial;
+	var $hora_final;
+	var $hora_inicio_intervalo;
+	var $hora_fim_intervalo;
 
-    var $ref_cod_instituicao;
-    var $ref_cod_curso;
-    var $ref_cod_escola;
-    var $visivel;
+	var $ref_cod_instituicao;
+	var $ref_cod_curso;
+	var $ref_cod_escola;
+	var $visivel;
 
-    function Gerar()
-    {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
+	function Gerar()
+	{
+		@session_start();
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
+		session_write_close();
 
-        $this->titulo = "Turma - Listagem";
+		$this->titulo = "Turma - Listagem";
 
-        foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ( $val === "" ) ? null: $val;
+		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
+			$this->$var = ( $val === "" ) ? null: $val;
+
+		
+
+		$lista_busca = array(
+			"Ano",
+			"Turma",
+			"Turno",
+			"Eixo",
+			"Projeto"
+		);
 
 
+		$obj_permissao = new clsPermissoes();
+		$nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
+		if ($nivel_usuario == 1)
+		{
+			$lista_busca[] = "Escola";
+			//$lista_busca[] = "Institui&ccedil;&atilde;o";
+		}
+		else if ($nivel_usuario == 2)
+		{
+			$lista_busca[] = "Escola";
+		}
+		$lista_busca[] = "Situa��o";
+		$lista_busca[] = "Educador Coordenador";
+		$lista_busca[] = "Alunos";
+		$this->addCabecalhos($lista_busca);
 
-        $lista_busca = array(
-            "Ano",
-            "Turma",
-            "Turno",
-            "S&eacute;rie",
-            "Curso",
-            "Escola",
-            "Situação"
-        );
+		$get_escola = true;
+//		$get_escola_curso = true;
+		$get_escola_curso_serie = true;
+		$sem_padrao = true;
+		$get_curso = true;
+		include("include/pmieducar/educar_campo_lista.php");
 
-        $this->addCabecalhos($lista_busca);
+		if ( $this->ref_cod_escola )
+		{
+			$this->ref_ref_cod_escola = $this->ref_cod_escola;
+		}
 
-        if ( $this->ref_cod_escola )
-        {
-            $this->ref_ref_cod_escola = $this->ref_cod_escola;
+    $helperOptions = array();
+    $this->inputsHelper()->dynamic('anoLetivo', array(), $helperOptions);
+
+		$this->campoTexto( "nm_turma", "Turma", $this->nm_turma, 30, 255, false );
+		$this->campoLista("visivel", "Situa��o", array("" => "Selecione", "1" => "Ativo", "2" => "Inativo"), $this->visivel);
+		// Paginador
+		$this->limite = 20;
+		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+
+		$obj_turma = new clsPmieducarTurma();
+		$obj_turma->setOrderby( "nm_turma ASC" );
+		$obj_turma->setLimite( $this->limite, $this->offset );
+
+		if ($this->visivel == 1) {
+			$visivel = true;
+		} elseif ($this->visivel == 2) {
+			$visivel = false;
+		} else {
+			$visivel = array("true", "false");
+		}
+
+		$lista = $obj_turma->lista2(
+			null,
+			null,
+			null,
+			$this->ref_ref_cod_serie,
+			$this->ref_ref_cod_escola,
+			null,
+			$this->nm_turma,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			1,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			$this->ref_cod_curso,
+			$this->ref_cod_instituicao,
+			null, null, null, null, null, $visivel, null, null, $this->ano
+		);
+
+		$total = $obj_turma->_total;
+
+		// monta a lista
+		if( is_array( $lista ) && count( $lista ) )
+		{
+			$ref_cod_escola = "";
+			$nm_escola = "";
+			foreach ( $lista AS $registro )
+			{
+				if( class_exists( "clsPmieducarEscola" ) && $registro["ref_ref_cod_escola"] != $ref_cod_escola)
+				{
+					$ref_cod_escola = $registro["ref_ref_cod_escola"];
+					$obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_ref_cod_escola"] );
+					$det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
+					$ref_cod_escola = $registro["ref_ref_cod_escola"] ;
+					$nm_escola = $det_ref_cod_escola["nome"];
+				}
+				
+				$lista_busca = array(
+					"<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["ano"]}</a>",
+					"<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_turma"]}</a>"
+				);
+
+        if ($registro["turma_turno_id"]) {
+        	$options = array('params' => $registro["turma_turno_id"], 'return_only' => 'first-field');
+				  $turno   = Portabilis_Utils_Database::fetchPreparedQuery("select nome from pmieducar.turma_turno where id = $1", $options);
+
+				  $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">$turno</a>";
         }
+        else
+				  $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\"></a>";
 
-        $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie', 'anoLetivo'));
+				if ($registro["nm_serie"])
+					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_serie"]}</a>";
+				else
+					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">-</a>";
 
-        $this->campoTexto( "nm_turma", "Turma", $this->nm_turma, 30, 255, false );
-        $this->campoLista("visivel", "Situação", array("" => "Selecione", "1" => "Ativo", "2" => "Inativo"), $this->visivel, null, null, null, null, null, false);
-        $this->inputsHelper()->turmaTurno(array('required' => false, 'label' => 'Turno'));
+				$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_curso"]}</a>";
 
-        // Paginador
-        $this->limite = 20;
-        $this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
+				if ($nivel_usuario == 1)
+				{
+					if ($nm_escola)
+						$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$nm_escola}</a>";
+					else
+						$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">-</a>";
 
-        $obj_turma = new clsPmieducarTurma();
-        $obj_turma->setOrderby( "nm_turma ASC" );
-        $obj_turma->setLimite( $this->limite, $this->offset );
+					//$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_instituicao"]}</a>";
+				}
+				else if ($nivel_usuario == 2)
+				{
+					if ($nm_escola)
+						$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$nm_escola}</a>";
+					else
+						$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">-</a>";
+				}
+				if (dbBool($registro["visivel"]))
+				{
+					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">Ativo</a>";
+				}
+				else
+				{
+					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">Inativo</a>";
+				}
+				
 
-        if ($this->visivel == 1) {
-            $visivel = true;
-        } elseif ($this->visivel == 2) {
-            $visivel = false;
-        } else {
-            $visivel = array("true", "false");
-        }
+				if ($registro['ref_cod_regente'])
+				{
+					$obj_pessoa = new clsPessoa_($registro['ref_cod_regente']);
+					$det = $obj_pessoa->detalhe();
+					if ($det["nome"])
+						$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$det["nome"]}</a>";
+					else
+						$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">-</a>";
+				} else {
+					$lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">-</a>";
+				}
+				$lista_busca[] = "<a href=\"educar_matriculas_turma_alunos_cad.php?ref_cod_turma={$registro["cod_turma"]}\">Detalhes</a>";
+							
+				$this->addLinhas($lista_busca);
+			}
+		}
 
-        if (App_Model_IedFinder::usuarioNivelBibliotecaEscolar($this->pessoa_logada)) {
-            $obj_turma->codUsuario = $this->pessoa_logada;
-        }
+		$this->addPaginador2( "educar_turma_lst.php", $total, $_GET, $this->nome, $this->limite );
+		$obj_permissoes = new clsPermissoes();
+		if ( $obj_permissoes->permissao_cadastra( 586, $this->pessoa_logada, 7 ) )
+		{
+			$this->acao = "go(\"educar_turma_cad.php\")";
+			$this->nome_acao = "Novo";
+		}
+		$this->largura = "100%";
 
-        $lista = $obj_turma->lista2(
-            null,
-            null,
-            null,
-            $this->ref_cod_serie,
-            $this->ref_cod_escola,
-            null,
-            $this->nm_turma,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $this->ref_cod_curso,
-            $this->ref_cod_instituicao,
-            null, null, null, null, null, $visivel, $this->turma_turno_id, null, $this->ano_letivo
-        );
-
-        $total = $obj_turma->_total;
-
-        // monta a lista
-        if( is_array( $lista ) && count( $lista ) )
-        {
-            $ref_cod_escola = "";
-            $nm_escola = "";
-            foreach ( $lista AS $registro )
-            {
-                if( class_exists( "clsPmieducarEscola" ) && $registro["ref_ref_cod_escola"] != $ref_cod_escola)
-                {
-                    $ref_cod_escola = $registro["ref_ref_cod_escola"];
-                    $obj_ref_cod_escola = new clsPmieducarEscola( $registro["ref_ref_cod_escola"] );
-                    $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
-                    $ref_cod_escola = $registro["ref_ref_cod_escola"] ;
-                    $nm_escola = $det_ref_cod_escola["nome"];
-                }
-
-                $lista_busca = array(
-                    "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["ano"]}</a>",
-                    "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_turma"]}</a>"
-                );
-
-                if ($registro["turma_turno_id"]) {
-                    $options = array('params' => $registro["turma_turno_id"], 'return_only' => 'first-field');
-                          $turno   = Portabilis_Utils_Database::fetchPreparedQuery("select nome from pmieducar.turma_turno where id = $1", $options);
-
-                          $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">$turno</a>";
-                }
-                else
-                  $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\"></a>";
-
-                if ($registro["nm_serie"])
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_serie"]}</a>";
-                else
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">-</a>";
-
-                $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$registro["nm_curso"]}</a>";
-
-                if ($nm_escola)
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">{$nm_escola}</a>";
-                else
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">-</a>";
-
-                if (dbBool($registro["visivel"]))
-                {
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">Ativo</a>";
-                }
-                else
-                {
-                    $lista_busca[] = "<a href=\"educar_turma_det.php?cod_turma={$registro["cod_turma"]}\">Inativo</a>";
-                }
-                $this->addLinhas($lista_busca);
-            }
-        }
-
-        $this->addPaginador2( "educar_turma_lst.php", $total, $_GET, $this->nome, $this->limite );
-        $obj_permissoes = new clsPermissoes();
-        if ( $obj_permissoes->permissao_cadastra( 586, $this->pessoa_logada, 7 ) )
-        {
-            $this->acao = "go(\"educar_turma_cad.php\")";
-            $this->nome_acao = "Novo";
-        }
-        $this->largura = "100%";
-
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos( array(
-             $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""                                  => "Listagem de turmas"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
-    }
+		$localizacao = new LocalizacaoSistema();
+	    $localizacao->entradaCaminhos( array(
+	         $_SERVER['SERVER_NAME']."/intranet" => "In�cio",
+	         "educar_index.php"                  => "Trilha Jovem - Escola",
+	         ""                                  => "Listagem de turmas"
+	    ));
+	    $this->enviaLocalizacao($localizacao->montar());
+	}
 }
 // cria uma extensao da classe base
 $pagina = new clsIndexBase();

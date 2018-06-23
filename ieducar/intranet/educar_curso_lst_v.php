@@ -1,29 +1,29 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	*																	     *
+	*	@author Prefeitura Municipal de Itaja�								 *
+	*	@updated 29/03/2007													 *
+	*   Pacote: i-PLB Software P�blico Livre e Brasileiro					 *
+	*																		 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja�			 *
+	*						ctima@itajai.sc.gov.br					    	 *
+	*																		 *
+	*	Este  programa  �  software livre, voc� pode redistribu�-lo e/ou	 *
+	*	modific�-lo sob os termos da Licen�a P�blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers�o 2 da	 *
+	*	Licen�a   como  (a  seu  crit�rio)  qualquer  vers�o  mais  nova.	 *
+	*																		 *
+	*	Este programa  � distribu�do na expectativa de ser �til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl�cita de COMERCIALI-	 *
+	*	ZA��O  ou  de ADEQUA��O A QUALQUER PROP�SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen�a  P�blica  Geral  GNU para obter mais detalhes.	 *
+	*																		 *
+	*	Voc�  deve  ter  recebido uma c�pia da Licen�a P�blica Geral GNU	 *
+	*	junto  com  este  programa. Se n�o, escreva para a Free Software	 *
+	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
+	*	02111-1307, USA.													 *
+	*																		 *
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -31,11 +31,11 @@ require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Curso" );
-        $this->processoAp = "0";
-    }
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} i-Educar - Projeto" );
+		$this->processoAp = "0";
+	}
 }
 
 class indice extends clsListagem
@@ -100,61 +100,61 @@ class indice extends clsListagem
         $this->__pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->__titulo = "Curso - Listagem";
+		$this->__titulo = "Projeto - Listagem";
 
         foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ( $val === "" ) ? null: $val;
 
         
 
-        $this->addCabecalhos( array(
-            "Curso",
-            "Nivel Ensino",
-            "Tipo Ensino",
-            "Instituic&atilde;o"
-        ) );
+		$this->addCabecalhos( array(
+			"Projeto",
+			"Nivel Ensino",
+			"Tipo Ensino",
+			"Instituic&atilde;o"
+		) );
 
-        $this->campoTexto( "nm_curso", "Curso", $this->nm_curso, 30, 255, false );
-        
-        $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarNivelEnsino" ) )
-        {
-            $objTemp = new clsPmieducarNivelEnsino();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
-            {
-                foreach ( $lista as $registro ) 
-                {
-                    $opcoes["{$registro['cod_nivel_ensino']}"] = "{$registro['nm_nivel']}";
-                }
-            }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarNivelEnsino nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
-        $this->campoLista( "ref_cod_nivel_ensino", "Nivel Ensino", $opcoes, $this->ref_cod_nivel_ensino );
-        
-        $opcoes = array( "" => "Selecione" );
-        if( class_exists( "clsPmieducarTipoEnsino" ) )
-        {
-            $objTemp = new clsPmieducarTipoEnsino();
-            $lista = $objTemp->lista();
-            if ( is_array( $lista ) && count( $lista ) ) 
-            {
-                foreach ( $lista as $registro ) 
-                {
-                    $opcoes["{$registro['cod_tipo_ensino']}"] = "{$registro['nm_ensino']}";
-                }
-            }
-        }
-        else
-        {
-            echo "<!--\nErro\nClasse clsPmieducarTipoAvaliacao nao encontrada\n-->";
-            $opcoes = array( "" => "Erro na geracao" );
-        }
-        $this->campoLista( "ref_cod_tipo_ensino", "Tipo Ensino", $opcoes, $this->ref_cod_tipo_ensino );
+		$this->campoTexto( "nm_curso", "Projeto", $this->nm_curso, 30, 255, false );
+		
+		$opcoes = array( "" => "Selecione" );
+		if( class_exists( "clsPmieducarNivelEnsino" ) )
+		{
+			$objTemp = new clsPmieducarNivelEnsino();
+			$lista = $objTemp->lista();
+			if ( is_array( $lista ) && count( $lista ) ) 
+			{
+				foreach ( $lista as $registro ) 
+				{
+					$opcoes["{$registro['cod_nivel_ensino']}"] = "{$registro['nm_nivel']}";
+				}
+			}
+		}
+		else
+		{
+			echo "<!--\nErro\nClasse clsPmieducarNivelEnsino nao encontrada\n-->";
+			$opcoes = array( "" => "Erro na geracao" );
+		}
+		$this->campoLista( "ref_cod_nivel_ensino", "Nivel Ensino", $opcoes, $this->ref_cod_nivel_ensino );
+		
+		$opcoes = array( "" => "Selecione" );
+		if( class_exists( "clsPmieducarTipoEnsino" ) )
+		{
+			$objTemp = new clsPmieducarTipoEnsino();
+			$lista = $objTemp->lista();
+			if ( is_array( $lista ) && count( $lista ) ) 
+			{
+				foreach ( $lista as $registro ) 
+				{
+					$opcoes["{$registro['cod_tipo_ensino']}"] = "{$registro['nm_ensino']}";
+				}
+			}
+		}
+		else
+		{
+			echo "<!--\nErro\nClasse clsPmieducarTipoAvaliacao nao encontrada\n-->";
+			$opcoes = array( "" => "Erro na geracao" );
+		}
+		$this->campoLista( "ref_cod_tipo_ensino", "Tipo Ensino", $opcoes, $this->ref_cod_tipo_ensino );
 
 
         // Paginador

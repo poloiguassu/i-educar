@@ -1,29 +1,29 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	*																	     *
+	*	@author Prefeitura Municipal de Itaja�								 *
+	*	@updated 29/03/2007													 *
+	*   Pacote: i-PLB Software P�blico Livre e Brasileiro					 *
+	*																		 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja�			 *
+	*						ctima@itajai.sc.gov.br					    	 *
+	*																		 *
+	*	Este  programa  �  software livre, voc� pode redistribu�-lo e/ou	 *
+	*	modific�-lo sob os termos da Licen�a P�blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers�o 2 da	 *
+	*	Licen�a   como  (a  seu  crit�rio)  qualquer  vers�o  mais  nova.	 *
+	*																		 *
+	*	Este programa  � distribu�do na expectativa de ser �til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl�cita de COMERCIALI-	 *
+	*	ZA��O  ou  de ADEQUA��O A QUALQUER PROP�SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen�a  P�blica  Geral  GNU para obter mais detalhes.	 *
+	*																		 *
+	*	Voc�  deve  ter  recebido uma c�pia da Licen�a P�blica Geral GNU	 *
+	*	junto  com  este  programa. Se n�o, escreva para a Free Software	 *
+	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
+	*	02111-1307, USA.													 *
+	*																		 *
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsDetalhe.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -192,47 +192,47 @@ class indice extends clsDetalhe
             echo "<!--\nErro\nClasse n&atilde;o existente: clsPmieducarEscola\n-->";
         }
 
-        $obj_permissoes = new clsPermissoes();
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
-        if ($nivel_usuario == 1)
-        {
-            if( $registro["ref_cod_instituicao"] )
-            {
-                $this->addDetalhe( array( "Institui&ccedil;&atilde;o", "{$registro["ref_cod_instituicao"]}") );
-            }
-        }
-        if ($nivel_usuario == 1 || $nivel_usuario == 2)
-        {
-            if( $nm_escola )
-            {
-                $this->addDetalhe( array( "Escola", "{$nm_escola}") );
-            }
-        }
-        if( $registro["ref_cod_curso"] )
-        {
-            $this->addDetalhe( array( "Curso", "{$registro["ref_cod_curso"]}") );
-        }
-        if( $nm_serie )
-        {
-            $this->addDetalhe( array( "S&eacute;rie", "{$nm_serie}") );
-        }
-        if( $nm_turma )
-        {
-            $this->addDetalhe( array( "Turma", "{$nm_turma}") );
-        }
-        if( $max_aluno )
-        {
-            $this->addDetalhe( array( "M&aacute;ximo de Alunos", "{$max_aluno}") );
-        }
-        if( $qtd_alunos )
-        {
-            $this->addDetalhe( array( "Qtd Alunos Matriculados", "{$qtd_alunos}") );
-        }
-        if( $max_aluno && $qtd_alunos)
-        {
-            $vagas = $max_aluno - $qtd_alunos;
-            $this->addDetalhe( array( "Vagas Restantes", "{$vagas}") );
-        }
+		$obj_permissoes = new clsPermissoes();
+		$nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
+		if ($nivel_usuario == 1)
+		{
+			if( $registro["ref_cod_instituicao"] )
+			{
+				$this->addDetalhe( array( "Institui&ccedil;&atilde;o", "{$registro["ref_cod_instituicao"]}") );
+			}
+		}
+		if ($nivel_usuario == 1 || $nivel_usuario == 2)
+		{
+			if( $nm_escola )
+			{
+				$this->addDetalhe( array( "Escola", "{$nm_escola}") );
+			}
+		}
+		if( $registro["ref_cod_curso"] )
+		{
+			$this->addDetalhe( array( "Projeto", "{$registro["ref_cod_curso"]}") );
+		}
+		if( $nm_serie )
+		{
+			$this->addDetalhe( array( "Eixo", "{$nm_serie}") );
+		}
+		if( $nm_turma )
+		{
+			$this->addDetalhe( array( "Turma", "{$nm_turma}") );
+		}
+		if( $max_aluno )
+		{
+			$this->addDetalhe( array( "M&aacute;ximo de Alunos", "{$max_aluno}") );
+		}
+		if( $qtd_alunos )
+		{
+			$this->addDetalhe( array( "Qtd Alunos Matriculados", "{$qtd_alunos}") );
+		}
+		if( $max_aluno && $qtd_alunos)
+		{
+			$vagas = $max_aluno - $qtd_alunos;
+			$this->addDetalhe( array( "Vagas Restantes", "{$vagas}") );
+		}
 
         if ( is_array($nm_alunos) )
         {
@@ -275,7 +275,7 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""                                  => "Detalhe das matr&iacute;culas da turma"
     ));
     $this->enviaLocalizacao($localizacao->montar());        

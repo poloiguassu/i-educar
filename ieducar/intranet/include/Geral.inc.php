@@ -67,6 +67,7 @@ require_once ("include/pessoa/clsCadastroEscolaridade.inc.php");
 require_once ("include/pessoa/clsCadastroDeficiencia.inc.php");
 require_once ("include/pessoa/clsCadastroFisicaDeficiencia.inc.php");
 require_once ("include/pmidrh/clsSetor.inc.php");
+require_once ('include/pessoa/clsPreInscrito.inc.php');
 
 
 require_once ("include/pmidrh/geral.inc.php");

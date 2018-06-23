@@ -51,9 +51,8 @@ class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Turma');
+    $this->SetTitulo($this->_instituicao . ' Trilha Jovem - Turma');
     $this->processoAp = 586;
-    $this->addEstilo("localizacaoSistema");
   }
 }
 
@@ -207,27 +206,31 @@ class indice extends clsDetalhe
     $obj_permissoes = new clsPermissoes();
     $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-    if ($registro['ref_cod_instituicao']) {
-      $this->addDetalhe(array('InstituiÃ§Ã£o', $registro['ref_cod_instituicao']));
+    if ($nivel_usuario == 1) {
+      if ($registro['ref_cod_instituicao']) {
+        $this->addDetalhe(array('Instituição Executora', $registro['ref_cod_instituicao']));
+      }
     }
 
-    if ($registro['ref_ref_cod_escola']) {
-      $this->addDetalhe(array('Escola', $registro['ref_ref_cod_escola']));
+    if ($nivel_usuario == 1 || $nivel_usuario == 2) {
+      if ($registro['ref_ref_cod_escola']) {
+        $this->addDetalhe(array('Instituição', $registro['ref_ref_cod_escola']));
+      }
     }
 
     if ($registro['ref_cod_curso']) {
-      $this->addDetalhe(array('Curso', $registro['ref_cod_curso']));
+      $this->addDetalhe(array('Projeto', $registro['ref_cod_curso']));
     }
 
     if ($registro['ref_ref_cod_serie']) {
-      $this->addDetalhe(array('SÃ©rie', $registro['ref_ref_cod_serie']));
+      $this->addDetalhe(array('Eixo', $registro['ref_ref_cod_serie']));
     }
 
     if ($registro['ref_cod_regente']) {
       $obj_pessoa = new clsPessoa_($registro['ref_cod_regente']);
       $det = $obj_pessoa->detalhe();
 
-      $this->addDetalhe(array('Professor/Regente', $det['nome']));
+      $this->addDetalhe(array('Educador', $det['nome']));
     }
 
     if ($registro['ref_cod_infra_predio_comodo']) {
@@ -265,7 +268,7 @@ class indice extends clsDetalhe
       $obj_serie_mult = new clsPmieducarSerie($registro['ref_ref_cod_serie_mult']);
       $det_serie_mult = $obj_serie_mult->detalhe();
 
-      $this->addDetalhe(array('SÃ©rie Multi-Seriada', $det_serie_mult['nm_serie']));
+      $this->addDetalhe(array('Eixo Multi-Seriada', $det_serie_mult['nm_serie']));
     }
 
     if ($padrao_ano_escolar == 1) {
@@ -407,22 +410,6 @@ class indice extends clsDetalhe
 
     $this->url_cancelar = 'educar_turma_lst.php';
     $this->largura      = '100%';
-
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Detalhe da turma"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());
-
-    $scripts = array(
-      '/modules/Portabilis/Assets/Javascripts/Utils.js',
-      '/modules/Portabilis/Assets/Javascripts/ClientApi.js',
-      '/modules/Cadastro/Assets/Javascripts/TurmaDet.js'
-    );
-
-    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
   }
 }
 
@@ -435,5 +422,5 @@ $miolo = new indice();
 // Atribui o conteÃºdo Ã   pÃ¡gina
 $pagina->addForm($miolo);
 
-// Gera o cÃ³digo HTML
+// Gera o código HTML
 $pagina->MakeAll();

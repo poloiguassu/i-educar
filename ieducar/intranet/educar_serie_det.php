@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja�
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo dispon�vel desde a vers�o 1.0.0
  * @version   $Id$
  */
 
@@ -37,18 +37,18 @@ require_once 'RegraAvaliacao/Model/RegraDataMapper.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - S&eacute;rie');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Eixo');
     $this->processoAp = '583';
     $this->addEstilo("localizacaoSistema");
   }
@@ -57,11 +57,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
@@ -89,7 +89,7 @@ class indice extends clsDetalhe
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
-    $this->titulo = 'S&eacute;rie - Detalhe';
+    $this->titulo = 'Eixo - Detalhe';
     $this->addBanner('imagens/nvp_top_intranet.jpg',
       'imagens/nvp_vert_intranet.jpg', 'Intranet');
 
@@ -124,21 +124,21 @@ class indice extends clsDetalhe
     }
 
     if ( $registro['ref_cod_curso'] ) {
-      $this->addDetalhe(array('Curso', $registro['ref_cod_curso']));
+      $this->addDetalhe(array('Projeto', $registro['ref_cod_curso']));
     }
 
     if ($registro['nm_serie']) {
-      $this->addDetalhe(array('S&eacute;rie', $registro['nm_serie']));
+      $this->addDetalhe(array('Eixo', $registro['nm_serie']));
     }
 
     if ($registro['etapa_curso']) {
-      $this->addDetalhe(array('Etapa Curso', $registro['etapa_curso']));
+      $this->addDetalhe(array('Etapa Projeto', $registro['etapa_curso']));
     }
 
     if ($regraId = $registro['regra_avaliacao_id']) {
       $mapper = new RegraAvaliacao_Model_RegraDataMapper();
       $regra = $mapper->find($regraId);
-      $this->addDetalhe(array('Regra Avaliação', $regra));
+      $this->addDetalhe(array('Regra Avalia��o', $regra));
     }
 
     if ($registro['concluinte']) {
@@ -161,7 +161,7 @@ class indice extends clsDetalhe
     $this->addDetalhe(array('Idade padrão', $registro['idade_ideal']));
 
     if ($registro['observacao_historico']) {
-      $this->addDetalhe(array('Observação histórico', $registro['observacao_historico']));
+      $this->addDetalhe(array('Observa��o hist�rico', $registro['observacao_historico']));
     }
 
     if ($obj_permissoes->permissao_cadastra(583, $this->pessoa_logada, 3)) {
@@ -175,22 +175,22 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Detalhe da s&eacute;rie"             
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+         ""        => "Detalhe da s&eacute;rie"
     ));
     $this->enviaLocalizacao($localizacao->montar());  
 
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de p�gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conte�do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conte�do �� p�gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o c�digo HTML
 $pagina->MakeAll();

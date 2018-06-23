@@ -4,30 +4,30 @@
 // ini_set("display_errors", 1);
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja�
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo dispon�vel desde a vers�o 1.0.0
  * @version   $Id$
  */
 
@@ -41,11 +41,11 @@ require_once 'Portabilis/Date/Utils.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
@@ -61,11 +61,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -132,9 +132,9 @@ class indice extends clsCadastro
     $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "Início",
-         "educar_servidores_index.php"       => "Servidores",
-         ""        => "{$nomeMenu} falta/atraso do servidor"
+         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+         ""        => "{$nomeMenu} falta/atraso do servidor"             
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -166,7 +166,7 @@ class indice extends clsCadastro
     $opcoes = array(
       '' => 'Selecione',
       0  => 'Sim',
-      1  => 'Não'
+      1  => 'N�o'
     );
 
     $this->campoLista('justificada', 'Justificada', $opcoes, $this->justificada);
@@ -219,8 +219,8 @@ class indice extends clsCadastro
       die();
     }
 
-    $this->mensagem = 'Cadastro não realizado.<br />';
-    echo "<!--\nErro ao cadastrar clsPmieducarFaltaAtraso\nvalores obrigatórios\nis_numeric( $this->ref_cod_escola ) && is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_usuario_exc) && is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_servidor) && is_numeric($this->tipo) && is_string($this->data_falta_atraso) && is_numeric($this->justificada)\n-->";
+    $this->mensagem = 'Cadastro n�o realizado.<br />';
+    echo "<!--\nErro ao cadastrar clsPmieducarFaltaAtraso\nvalores obrigat�rios\nis_numeric( $this->ref_cod_escola ) && is_numeric($this->ref_ref_cod_instituicao) && is_numeric($this->ref_usuario_exc) && is_numeric($this->ref_usuario_cad) && is_numeric($this->ref_cod_servidor) && is_numeric($this->tipo) && is_string($this->data_falta_atraso) && is_numeric($this->justificada)\n-->";
     return FALSE;
   }
 
@@ -255,14 +255,14 @@ class indice extends clsCadastro
     }
     $editou = $obj->edita();
     if ($editou) {
-      $this->mensagem .= 'Edição efetuada com sucesso.<br />';
+      $this->mensagem .= 'Edi��o efetuada com sucesso.<br />';
       header('Location: ' . sprintf('educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
         $this->ref_cod_servidor, $this->ref_cod_instituicao));
       die();
     }
 
-    $this->mensagem = 'Edição não realizada.<br />';
-    echo "<!--\nErro ao editar clsPmieducarFaltaAtraso\nvalores obrigatórios\nif(is_numeric($this->cod_falta_atraso) && is_numeric($this->ref_usuario_exc))\n-->";
+    $this->mensagem = 'Edi��o n�o realizada.<br />';
+    echo "<!--\nErro ao editar clsPmieducarFaltaAtraso\nvalores obrigat�rios\nif(is_numeric($this->cod_falta_atraso) && is_numeric($this->ref_usuario_exc))\n-->";
     return FALSE;
   }
 
@@ -283,27 +283,28 @@ class indice extends clsCadastro
       $this->qtd_min, $this->justificada, $this->data_cadastro, $this->data_exclusao, 0);
     $excluiu = $obj->excluir();
     if ($excluiu) {
-      $this->mensagem .= 'Exclusão efetuada com sucesso.<br />';
+      $this->mensagem .= 'Exclus�o efetuada com sucesso.<br />';
       header('Location: ' . sprintf('educar_falta_atraso_lst.php?ref_cod_servidor=%d&ref_cod_instituicao=%d',
         $this->ref_cod_servidor, $this->ref_cod_instituicao));
       die();
     }
-    $this->mensagem = "Exclusão não realizada.<br>";
-    echo "<!--\nErro ao excluir clsPmieducarFaltaAtraso\nvalores obrigatórios\nif( is_numeric( $this->cod_falta_atraso ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
+
+    $this->mensagem = "Exclus�o n�o realizada.<br>";
+    echo "<!--\nErro ao excluir clsPmieducarFaltaAtraso\nvalores obrigat�rios\nif( is_numeric( $this->cod_falta_atraso ) && is_numeric( $this->ref_usuario_exc ) )\n-->";
     return FALSE;
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de p�gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conte�do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conte�do �  p�gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o c�digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">

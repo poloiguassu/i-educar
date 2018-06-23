@@ -1168,7 +1168,7 @@ class clsPmieducarServidor
    * array(
    *   '2' => array(
    *     'cod_funcao' => 2,
-   *     'nm_funcao' => 'Professor',
+   *     'nm_funcao' => 'Educador',
    *     'professor' => 1
    *   )
    * );

@@ -1,31 +1,30 @@
 <?php
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-*                                                                        *
-*   @author Prefeitura Municipal de Itaja√≠                               *
-*   @updated 29/03/2007                                                  *
-*   Pacote: i-PLB Software P√∫blico Livre e Brasileiro                    *
-*                                                                        *
-*   Copyright (C) 2006  PMI - Prefeitura Municipal de Itaja√≠             *
-*                       ctima@itajai.sc.gov.br                           *
-*                                                                        *
-*   Este  programa  √©  software livre, voc√™ pode redistribu√≠-lo e/ou     *
-*   modific√°-lo sob os termos da Licen√ßa P√∫blica Geral GNU, conforme     *
-*   publicada pela Free  Software  Foundation,  tanto  a vers√£o 2 da     *
-*   Licen√ßa   como  (a  seu  crit√©rio)  qualquer  vers√£o  mais  nova.    *
-*                                                                        *
-*   Este programa  √© distribu√≠do na expectativa de ser √∫til, mas SEM     *
-*   QUALQUER GARANTIA. Sem mesmo a garantia impl√≠cita de COMERCIALI-     *
-*   ZA√á√ÉO  ou  de ADEQUA√á√ÉO A QUALQUER PROP√ìSITO EM PARTICULAR. Con-     *
-*   sulte  a  Licen√ßa  P√∫blica  Geral  GNU para obter mais detalhes.     *
-*                                                                        *
-*   Voc√™  deve  ter  recebido uma c√≥pia da Licen√ßa P√∫blica Geral GNU     *
-*   junto  com  este  programa. Se n√£o, escreva para a Free Software     *
-*   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-*   02111-1307, USA.                                                     *
-*                                                                        *
+*																	     *
+*	@author Prefeitura Municipal de ItajaÌ								 *
+*	@updated 29/03/2007													 *
+*   Pacote: i-PLB Software P˙blico Livre e Brasileiro					 *
+*																		 *
+*	Copyright (C) 2006	PMI - Prefeitura Municipal de ItajaÌ			 *
+*						ctima@itajai.sc.gov.br					    	 *
+*																		 *
+*	Este  programa  È  software livre, vocÍ pode redistribuÌ-lo e/ou	 *
+*	modific·-lo sob os termos da LicenÁa P˙blica Geral GNU, conforme	 *
+*	publicada pela Free  Software  Foundation,  tanto  a vers„o 2 da	 *
+*	LicenÁa   como  (a  seu  critÈrio)  qualquer  vers„o  mais  nova.	 *
+*																		 *
+*	Este programa  È distribuÌdo na expectativa de ser ˙til, mas SEM	 *
+*	QUALQUER GARANTIA. Sem mesmo a garantia implÌcita de COMERCIALI-	 *
+*	ZA«√O  ou  de ADEQUA«√O A QUALQUER PROP”SITO EM PARTICULAR. Con-	 *
+*	sulte  a  LicenÁa  P˙blica  Geral  GNU para obter mais detalhes.	 *
+*																		 *
+*	VocÍ  deve  ter  recebido uma cÛpia da LicenÁa P˙blica Geral GNU	 *
+*	junto  com  este  programa. Se n„o, escreva para a Free Software	 *
+*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
+*	02111-1307, USA.													 *
+*																		 *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -36,283 +35,201 @@ require_once 'Portabilis/Utils/CustomLabel.php';
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
-    {
-        $this->SetTitulo("{$this->_instituicao} i-Educar - Aluno");
-        $this->processoAp = "578";
-        $this->addEstilo("localizacaoSistema");
-    }
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} - Aluno" );
+		$this->processoAp = "578";
+		$this->addEstilo( "localizacaoSistema" );
+	}
 }
 
 class indice extends clsListagem
 {
-    /**
-     * Referencia pega da session para o idpes do usuario atual
-     *
-     * @var int
-     */
-    var $pessoa_logada;
+	/**
+	 * Referencia pega da session para o idpes do usuario atual
+	 *
+	 * @var int
+	 */
+	var $pessoa_logada;
 
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
-    var $titulo;
+	/**
+	 * Titulo no topo da pagina
+	 *
+	 * @var int
+	 */
+	var $titulo;
 
-    /**
-     * Quantidade de registros a ser apresentada em cada pagina
-     *
-     * @var int
-     */
-    var $limite;
+	/**
+	 * Quantidade de registros a ser apresentada em cada pagina
+	 *
+	 * @var int
+	 */
+	var $limite;
 
-    /**
-     * Inicio dos registros a serem exibidos (limit)
-     *
-     * @var int
-     */
-    var $offset;
+	/**
+	 * Inicio dos registros a serem exibidos (limit)
+	 *
+	 * @var int
+	 */
+	var $offset;
 
-    var $cod_aluno;
-    var $ref_idpes_responsavel;
-    var $ref_cod_aluno_beneficio;
-    var $ref_cod_religiao;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $ref_idpes;
-    var $ativo;
-    var $nome_aluno;
-    var $mat_aluno;
-    var $identidade;
-    var $matriculado;
-    var $inativado;
-    var $nome_responsavel;
-    var $cpf_responsavel;
-    var $nome_pai;
-    var $nome_mae;
-    var $data_nascimento;
-    var $ano;
-    var $ref_cod_instituicao;
-    var $ref_cod_escola;
-    var $ref_cod_curso;
-    var $ref_cod_serie;
-    var $idsetorbai;
+	var $cod_aluno;
+	var $ref_idpes_responsavel;
+	var $ref_cod_aluno_beneficio;
+	var $ref_cod_religiao;
+	var $ref_usuario_exc;
+	var $ref_usuario_cad;
+	var $ref_idpes;
+	var $ativo;
 
-    function Gerar()
-    {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
+	var $nome_aluno;
+	var $mat_aluno;
+	var $identidade;
+	var $matriculado;
+	var $inativado;
+	var $nome_responsavel;
+	var $cpf_responsavel;
 
-        $this->titulo = "Aluno - Listagem";
+	var $nome_pai;
+	var $nome_mae;
+	var $data_nascimento;
 
-        $configuracoes = new clsPmieducarConfiguracoesGerais();
-        $configuracoes = $configuracoes->detalhe();
+	function Gerar()
+	{
+		@session_start();
+			$this->pessoa_logada = $_SESSION['id_pessoa'];
+		session_write_close();
 
-        foreach ($_GET AS $var => $val) // passa todos os valores obtidos no GET para atributos do objeto
-            $this->$var = ($val === "") ? null : $val;
+		$this->titulo = "Aluno - Listagem";
 
-        $this->campoNumero("cod_aluno", _cl('aluno.detalhe.codigo_aluno'), $this->cod_aluno, 20, 9, false);
+		foreach( $_GET AS $var => $val ) // passa todos os valores obtidos no GET para atributos do objeto
+			$this->$var = ( $val === "" ) ? null: $val;
 
-        if ($configuracoes['mostrar_codigo_inep_aluno']) {
-            $this->campoNumero("cod_inep", "C&oacute;digo INEP", $this->cod_inep, 20, 255, false);
-        }
-
-        $this->campoRA("aluno_estado_id", Portabilis_String_Utils::toLatin1("C√≥digo rede estadual do aluno (RA)"), $this->aluno_estado_id, FALSE);
-        $this->campoTexto("nome_aluno", "Nome do aluno", $this->nome_aluno, 50, 255, false);
-        $this->campoData("data_nascimento", "Data de Nascimento", $this->data_nascimento);
-        $this->campoTexto("nome_pai", "Nome do Pai", $this->nome_pai, 50, 255);
-        $this->campoTexto("nome_mae", "Nome da M√£e", $this->nome_mae, 50, 255);
-        $this->campoTexto("nome_responsavel", "Nome do Respons√°vel", $this->nome_responsavel, 50, 255);
-
-        $opcoes = array('' => 'Selecione');
-        if (class_exists('clsPublicSetorBai')) {
-            $objTemp = new clsPublicSetorBai();
-            $objTemp->setOrderBy(' nome asc ');
-            $lista = $objTemp->lista();
-
-            if (is_array($lista) && count($lista)) {
-                foreach ($lista as $registro) {
-                    $opcoes[$registro['idsetorbai']] = $registro['nome'];
-                }
-            }
-        } else {
-            echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
-            $opcoes = array("" => "Erro na geracao");
-        }
-
-        $this->campoLista('idsetorbai', 'Setor', $opcoes, $this->idsetorbai, NULL, NULL, NULL, NULL, NULL, FALSE);
-
-        $this->campoRotulo('filtros_matricula', '<b>Filtros de matr√≠culas em andamento</b>');
-
-        $this->inputsHelper()->integer('ano', array('required' => false, 'value' => $this->ano, 'max_length' => 4));
-        $this->inputsHelper()->dynamic('instituicao', array('required' => false, 'show-select' => true, 'value' => $this->ref_cod_instituicao));
-        $this->inputsHelper()->dynamic('escola',
-            array('required' => false,
-                'show-select' => true,
-                'value' => $this->ref_cod_escola));
-        $this->inputsHelper()->dynamic(array('curso', 'serie'), array('required' => false));
-
-        //$this->inputsHelper()->select('periodo', array('required' => false, 'value' => $this->periodo, 'resources' => array(null => 'Selecione', 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral' )));
-
-        $obj_permissoes = new clsPermissoes();
-        $cod_escola = $obj_permissoes->getEscola($this->pessoa_logada);
-
-        if ($cod_escola) {
-            $this->campoCheck("meus_alunos", "Meus Alunos", $_GET['meus_alunos']);
-            $ref_cod_escola = false;
-            if ($_GET['meus_alunos']) {
-                $ref_cod_escola = $cod_escola;
-            }
-        }
+		$this->campoNumero("cod_aluno", "CÛdigo Aluno", $this->cod_aluno, 20, 9, false);
+		$this->campoTexto("nome_aluno", "Nome do aluno", $this->nome_aluno, 50, 255, false);
+		$this->campoData("data_nascimento", "Data de Nascimento", $this->data_nascimento);
+		$this->campoTexto("nome_pai", "Nome do Pai", $this->nome_pai, 50, 255);
+		$this->campoTexto("nome_mae", "Nome da M„e", $this->nome_mae, 50, 255);
+		$this->campoTexto("nome_responsavel", "Nome do Respons·vel", $this->nome_responsavel, 50, 255);
 
 
-        $array_matriculado = array('S' => "Sim", 'N' => 'N&atilde;o');
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-        if (!$configuracoes['mostrar_codigo_inep_aluno']) {
-            $cabecalhos = array("C&oacute;digo Aluno",
-                "Nome do Aluno",
-                "Nome da M√£e",
-                "Nome do Respons&aacute;vel",
-                "CPF Respons&aacute;vel",);
-        } else {
-            $cabecalhos = array("C&oacute;digo Aluno",
-                "C√≥digo INEP",
-                "Nome do Aluno",
-                "Nome da M√£e",
-                "Nome do Respons&aacute;vel",
-                "CPF Respons&aacute;vel",);
-        }
-
-        $this->addCabecalhos($cabecalhos);
-
-        // Paginador
-        $this->limite = 20;
-        $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
-
-        $aluno = new clsPmieducarAluno();
-        $aluno->setLimite($this->limite, $this->offset);
-
-        $alunos = $aluno->lista2(
-            $this->cod_aluno,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1,
-            null,
-            $this->nome_aluno,
-            null,
-            idFederal2int($this->cpf_responsavel),
-            null,
-            null,
-            null,
-            $ref_cod_escola,
-            null,
-            $this->data_nascimento,
-            $this->nome_pai,
-            $this->nome_mae,
-            $this->nome_responsavel,
-            $this->cod_inep,
-            $this->aluno_estado_id,
-            $this->ano,
-            $this->ref_cod_instituicao,
-            $this->ref_cod_escola,
-            $this->ref_cod_curso,
-            $this->ref_cod_serie,
-            $this->idsetorbai
-        );
-
-        $total = $aluno->_total;
-
-        foreach ($alunos AS $registro) {
-            $alunoInepId = $this->tryLoadAlunoInepId($registro["cod_aluno"]);
-            $nomeAluno = strtoupper($registro["nome_aluno"]);
-            $nomeMae = strtoupper($this->loadNomeMae($registro));
-
-            // responsavel
-            $aluno->cod_aluno = $registro["cod_aluno"];
-            $responsavel = $aluno->getResponsavelAluno();
-            $nomeResponsavel = strtoupper($responsavel["nome_responsavel"]);
-
-            if (!$configuracoes['mostrar_codigo_inep_aluno']) {
-                $linhas = array(
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeAluno}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeMae}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeResponsavel}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$responsavel["cpf_responsavel"]}</a>"
-                );
-            } else {
-                $linhas = array(
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$alunoInepId}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeAluno}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeMae}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeResponsavel}</a>",
-                    "<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$responsavel["cpf_responsavel"]}</a>"
-                );
-            }
-
-            $this->addLinhas($linhas);
-        }
-
-        $this->addPaginador2("educar_aluno_lst.php", $total, $_GET, $this->nome, $this->limite);
+		$obj_permissoes = new clsPermissoes();
+		$cod_escola = $obj_permissoes->getEscola( $this->pessoa_logada );
+		if ($cod_escola)
+		{
+			$this->campoCheck( "meus_alunos", "Meus Alunos", $_GET['meus_alunos'] );
+			$ref_cod_escola = false;
+			if ($_GET['meus_alunos'])
+			{
+				$ref_cod_escola = $cod_escola;
+			}
+		}
 
 
-        //** Verificacao de permissao para cadastro
-        if ($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada, 7)) {
-            $this->acao = "go(\"/module/Cadastro/aluno\")";
-            $this->nome_acao = "Novo";
-        }
-        //**
-        $this->largura = "100%";
+		$array_matriculado = array('S' => "Sim", 'N' => 'N„o');
 
-        $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
-            "educar_index.php" => "Escola",
-            "" => "Listagem de alunos"
-        ));
-        $this->enviaLocalizacao($localizacao->montar());
-    }
+		$nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
-    protected function loadNomeMae($aluno)
-    {
-        $nome = $aluno['nm_mae'];
+		$this->addCabecalhos( array(
+			"CÛdigo Aluno",
+			"Nome do Aluno",
+			"Nome da M„e",
+			"Nome do Respons·vel",
+			"CPF Respons·vel",
+		) );
 
-        $pessoaAluno = new clsFisica($aluno['ref_idpes']);
-        $pessoaAluno = $pessoaAluno->detalhe();
+		// Paginador
+		$this->limite = 20;
+		$this->offset = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$this->limite-$this->limite: 0;
 
-        if ($pessoaAluno['idpes_mae']) {
-            $pessoaMae = new clsPessoaFj($pessoaAluno['idpes_mae']);
-            $pessoaMae = $pessoaMae->detalhe();
-            $nome = $pessoaMae['nome'];
-        }
+		$aluno = new clsPmieducarAluno();
+		$aluno->setLimite( $this->limite, $this->offset );
 
-        return $nome;
-    }
+		$alunos = $aluno->lista2(
+			$this->cod_aluno,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			1,
+			null,
+			$this->nome_aluno,
+			null,
+			idFederal2int($this->cpf_responsavel),
+			null,
+			null,
+			null,
+			$ref_cod_escola,
+			null,
+			$this->data_nascimento,
+			$this->nome_pai,
+			$this->nome_mae,
+			$this->nome_responsavel,
+			null
+		);
 
-    protected function tryLoadAlunoInepId($alunoId)
-    {
-        $dataMapper = new Educacenso_Model_AlunoDataMapper();
+		$total = $aluno->_total;
 
-        try {
-            $alunoInep = $dataMapper->find(array('cod_aluno' => $alunoId));
-            $id = $alunoInep->alunoInep;
-        } catch (Exception $e) {
-            $id = '';
-        }
+		foreach ( $alunos AS $registro ) {
+			$nomeAluno        = strtoupper($registro["nome_aluno"]);
+			$nomeMae          = strtoupper($this->loadNomeMae($registro));
 
-        return $id;
-    }
+			// responsavel
+			$aluno->cod_aluno = $registro["cod_aluno"];
+			$responsavel      = $aluno->getResponsavelAluno();
+			$nomeResponsavel  = strtoupper($responsavel["nome_responsavel"]);
+
+			$this->addLinhas( array(
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$registro["cod_aluno"]}</a>",
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeAluno}</a>",
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeMae}</a>",
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$nomeResponsavel}</a>",
+				"<a href=\"educar_aluno_det.php?cod_aluno={$registro["cod_aluno"]}\">{$responsavel["cpf_responsavel"]}</a>"
+			) );
+		}
+
+		$this->addPaginador2( "educar_aluno_lst.php", $total, $_GET, $this->nome, $this->limite );
+
+
+		//** Verificacao de permissao para cadastro
+		if($obj_permissoes->permissao_cadastra(578, $this->pessoa_logada,7))
+		{
+			$this->acao = "go(\"/module/Cadastro/aluno\")";
+			$this->nome_acao = "Novo";
+		}
+
+		$this->largura = "100%";
+
+		$localizacao = new LocalizacaoSistema();
+		$localizacao->entradaCaminhos( array(
+			$_SERVER['SERVER_NAME'] . "/intranet" => "InÌcio",
+			"educar_index.php"                    => "Trilha Jovem",
+			""                                    => "Listagem de alunos"
+		));
+
+		$this->enviaLocalizacao($localizacao->montar());
+	}
+
+	protected function loadNomeMae($aluno) {
+		$nome        = $aluno['nm_mae'];
+
+		$pessoaAluno = new clsFisica($aluno['ref_idpes']);
+		$pessoaAluno = $pessoaAluno->detalhe();
+
+		if ($pessoaAluno['idpes_mae']) {
+			$pessoaMae   = new clsPessoaFj($pessoaAluno['idpes_mae']);
+			$pessoaMae   = $pessoaMae->detalhe();
+			$nome        = $pessoaMae['nome'];
+		}
+
+		return $nome;
+	}
 }
 
 // cria uma extensao da classe base

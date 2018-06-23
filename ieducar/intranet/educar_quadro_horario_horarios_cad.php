@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja�
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
  * @author    Adriano Erik Weiguert Nagasava <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo dispon�vel desde a vers�o 1.0.0
  * @version   $Id$
  */
 
@@ -44,14 +44,14 @@ require_once 'ComponenteCurricular/Model/AnoEscolarDataMapper.php';
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' Servidores - Cadastro de Horários');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Cadastro de Hor�rios');
     $this->processoAp = '641';
     $this->addEstilo('localizacaoSistema');
   }
@@ -64,7 +64,7 @@ class clsIndexBase extends clsBase
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -200,8 +200,8 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         ""        => "{$nomeMenu} hor&aacute;rio"
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+         ""        => "{$nomeMenu} hor&aacute;rio"             
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -227,13 +227,13 @@ class indice extends clsCadastro
     $this->campoQuebra();
 
     /**
-     * Campos a serem preenchidos com os dados necessários para a inclusão de horários
+     * Campos a serem preenchidos com os dados necess�rios para a inclus�o de hor�rios
      */
 
     // foreign keys
     $opcoes_disc = array('' => 'Selecione uma disciplina');
 
-    // Componentes curriculares da série
+    // Componentes curriculares da s�rie
     $componentesTurma = array();
     try {
       $componentesTurma = App_Model_IedFinder::getComponentesTurma(
@@ -244,7 +244,7 @@ class indice extends clsCadastro
     }
 
     if (0 == count($componentesTurma)) {
-      $opcoes_disc = array('NULL' => 'A série dessa escola não possui componentes cadastrados');
+      $opcoes_disc = array('NULL' => 'A s�rie dessa escola n�o possui componentes cadastrados');
     }
     else {
         $opcoes_disc['todas_disciplinas'] = 'Todas as disciplinas';
@@ -262,11 +262,11 @@ class indice extends clsCadastro
       '' => 'Selecione um dia da semana',
       1  => 'Domingo',
       2  => 'Segunda-Feira',
-      3  => 'Terça-Feira',
+      3  => 'Ter�a-Feira',
       4  => 'Quarta-Feira',
       5  => 'Quinta-Feira',
       6  => 'Sexta-Feira',
-      7  => 'Sábado'
+      7  => 'S�bado'
     );
 
     $this->campoOculto('dia_semana', $this->dia_semana);
@@ -282,12 +282,35 @@ class indice extends clsCadastro
 
     $this->campoRotulo(
       'bt_incluir_horario', 'Hor&aacute;rio',
-      "<a href='#' id='btn_incluir_horario' ><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
+      "<a href='#' onclick=\"" .
+      "if (document.getElementById('ref_cod_disciplina').value == '') {
+         alert('Voc� deve escolher a disciplina!');
+         return;
+       }
+       else if (document.getElementById('hora_inicial').value == '') {
+         alert('Voc� deve preencher o campo Hora Inicial!');
+         return;
+       }
+       else if (document.getElementById('hora_final').value == '') {
+         alert('Voc� deve preencher o campo Hora Final!');
+         return;
+       }
+       else if (document.getElementById('ref_cod_servidor').value == '') {
+         alert('Voc� deve selecionar um servidor no campo Servidor');
+         return;
+       }
+       else {
+         if (verificaQuadroHorario()) {
+           getElementById('incluir_horario').value = 'S';
+           getElementById('tipoacao').value = '';
+           {$this->__nome}.submit();
+         }
+       }\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
 
     $this->campoOculto('incluir_horario', '');
 
     /**
-     * Inclui horários
+     * Inclui hor�rios
      */
     if ($_POST['quadro_horario']) {
       $this->quadro_horario = unserialize(urldecode($_POST['quadro_horario']));
@@ -409,7 +432,7 @@ class indice extends clsCadastro
               break;
 
             case 3:
-              $campo['nm_dia_semana_'] = 'Terça-Feira';
+              $campo['nm_dia_semana_'] = 'Ter�a-Feira';
               break;
 
             case 4:
@@ -594,7 +617,7 @@ class indice extends clsCadastro
       die();
     }
 
-    $this->mensagem = "Cadastro não realizado. 1<br>";
+    $this->mensagem = "Cadastro n�o realizado. 1<br>";
     return FALSE;
   }
 
@@ -724,7 +747,7 @@ class indice extends clsCadastro
       die();
     }
 
-    $this->mensagem = 'Cadastro não editado.<br>';
+    $this->mensagem = 'Cadastro n�o editado.<br>';
     return FALSE;
   }
 
@@ -748,26 +771,26 @@ class indice extends clsCadastro
       $obj_quadro_horarios_aux = new clsPmieducarQuadroHorarioHorariosAux();
       $obj_quadro_horarios_aux->excluirTodos($this->identificador);
 
-      $this->mensagem .= "Exclusão efetuada com sucesso.<br>";
+      $this->mensagem .= "Exclus�o efetuada com sucesso.<br>";
       header("Location: educar_calendario_anotacao_lst.php?dia={$this->dia}&mes={$this->mes}&ano={$this->ano}&ref_cod_calendario_ano_letivo={$this->ref_cod_calendario_ano_letivo}");
       die();
     }
 
-    $this->mensagem = "Exclusão não realizada.<br>";
+    $this->mensagem = "Exclus�o n�o realizada.<br>";
     return FALSE;
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de p�gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conte�do
 $miolo = new indice();
 
-// Atribui o conteúdo à  página
+// Atribui o conte�do �� p�gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o c�digo HTML
 $pagina->MakeAll();
 ?>
 <script type="text/javascript">
@@ -800,17 +823,17 @@ function validaCampoServidor()
   document.getElementById('ref_cod_servidor').length = 1;
 
   if (document.getElementById('dia_semana').value == '') {
-    alert('Você deve escolher o dia da semana!');
+    alert('Voc� deve escolher o dia da semana!');
     return;
   }
   else if (document.getElementById('hora_inicial').value == '')
   {
-    alert('Você deve preencher o campo Hora Inicial!');
+    alert('Voc� deve preencher o campo Hora Inicial!');
     return;
   }
   else if (document.getElementById('hora_final').value == '')
   {
-    alert('Você deve preencher o campo Hora Final!');
+    alert('Voc� deve preencher o campo Hora Final!');
     return;
   }
   else
@@ -965,7 +988,7 @@ function verificaQuadroHorario()
   hora_fim = parseInt(hora_fim, 10) + (parseFloat(min_fim) / 60);
 
   if (hora_ini >= hora_fim) {
-    alert('O horário de início deve ser menor que o horário final');
+    alert('O hor�rio de in�cio deve ser menor que o hor�rio final');
     return false;
   }
 
@@ -979,7 +1002,7 @@ function verificaQuadroHorario()
         {
         }
         else {
-          alert( 'O horário escolhido coincide com um horário já existente!' );
+          alert( 'O hor�rio escolhido coincide com um hor�rio j� existente!' );
           return false;
         }
       }
@@ -995,8 +1018,8 @@ function verificaQuadroHorario()
 
 function verificaHorario()
 {
-  if (parseInt(quadro_horario, 10) == 0 && !($j('#ref_cod_disciplina').val() == 'todas_disciplinas')) {
-    alert('Você deve incluir pelo menos um horário');
+  if (parseInt(quadro_horario, 10) == 0) {
+    alert('Voc� deve incluir pelo menos um hor�rio');
     return false;
   }else if ($j('#ref_cod_disciplina').val() == 'todas_disciplinas'){
     if (document.getElementById('ref_cod_disciplina').value == '') {

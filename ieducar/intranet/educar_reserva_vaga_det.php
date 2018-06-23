@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja�
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  ReservaVaga
- * @since       Arquivo disponível desde a versão 1.0.0
+ * @since       Arquivo dispon�vel desde a vers�o 1.0.0
  * @version     $Id$
  */
 
@@ -44,13 +44,13 @@ class clsIndexBase extends clsBase {
 class indice extends clsDetalhe
 {
   /**
-   * Referência a usuário da sessão
+   * Refer�ncia a usu�rio da sess�o
    * @var int
    */
   var $pessoa_logada = NULL;
 
   /**
-   * Título no topo da página
+   * T�tulo no topo da p�gina
    * @var string
    */
   var $titulo = '';
@@ -86,7 +86,7 @@ class indice extends clsDetalhe
       die();
     }
 
-    // Instituição
+    // Institui��o
     $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
     $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
     $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
@@ -96,17 +96,17 @@ class indice extends clsDetalhe
     $det_ref_cod_escola = $obj_ref_cod_escola->detalhe();
     $nm_escola = $det_ref_cod_escola['nome'];
 
-    // Série
+    // S�rie
     $obj_ref_cod_serie = new clsPmieducarSerie($registro['ref_cod_serie']);
     $det_ref_cod_serie = $obj_ref_cod_serie->detalhe();
     $nm_serie = $det_ref_cod_serie['nm_serie'];
 
-    // Curso
+    // Projeto
     $obj_curso = new clsPmieducarCurso($registro['ref_cod_curso']);
     $det_curso = $obj_curso->detalhe();
     $registro['ref_cod_curso'] = $det_curso['nm_curso'];
 
-    // Matrícula
+    // Matr�cula
     $obj_matricula = new clsPmieducarMatricula();
     $lst_matricula = $obj_matricula->lista(NULL, NULL, $registro['ref_cod_escola'],
       $registro['ref_cod_serie'], NULL, NULL, NULL, 3, NULL, NULL, NULL, NULL, 1);
@@ -124,7 +124,7 @@ class indice extends clsDetalhe
       $reservados = count($lst_reserva_vaga);
     }
 
-    // Permissões
+    // Permiss�es
     $obj_permissao = new clsPermissoes();
     $nivel_usuario = $obj_permissao->nivel_acesso($this->pessoa_logada);
 
@@ -141,11 +141,11 @@ class indice extends clsDetalhe
     }
 
     if ($registro['ref_cod_curso']) {
-      $this->addDetalhe(array('Curso', $registro['ref_cod_curso']));
+      $this->addDetalhe(array('Projeto', $registro['ref_cod_curso']));
     }
 
     if ($nm_serie) {
-      $this->addDetalhe(array('S&eacute;rie', $nm_serie));
+      $this->addDetalhe(array('Eixo', $nm_serie));
     }
 
     $obj_turmas = new clsPmieducarTurma();
@@ -211,21 +211,21 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""                                  => "Detalhe da reserva de vaga"
     ));
     $this->enviaLocalizacao($localizacao->montar());    
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de p�gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conte�do
 $miolo = new indice();
 
-// Atribui o conteúdo à página
+// Atribui o conte�do � p�gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o c�digo HTML
 $pagina->MakeAll();

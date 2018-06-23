@@ -406,7 +406,9 @@ abstract class clsBancoSQL_
       // Altera os LIKE para ILIKE (ignore case)
       $this->strStringSQL = preg_replace("/ LIKE /i", " ILIKE ", $this->strStringSQL);
 
-      $this->strStringSQL = preg_replace("/fcn_upper_nrm/i", "", $this->strStringSQL);
+      $this->strStringSQL = preg_replace("/([a-z_0-9.]+) +ILIKE +'([^']+)'/i", "to_ascii(\\1) ILIKE to_ascii('\\2')", $this->strStringSQL);
+
+      $this->strStringSQL = preg_replace("/fcn_upper_nrm/i", "to_ascii", $this->strStringSQL);
     }
 
     $temp = explode("'", $this->strStringSQL);
@@ -414,9 +416,9 @@ abstract class clsBancoSQL_
     for ($i = 0; $i < count($temp); $i++) {
       // Ignora o que estÃ¡ entre aspas
       if (! ($i % 2)) {
-        // Fora das aspas, verifica se hÃ¡ algo errado no SQL
+        // Fora das aspas, verifica se há algo errado no SQL
         if (preg_match("/(--|#|\/\*)/", $temp[$i])) {
-          $erroMsg = 'ProteÃ§Ã£o contra injection: ' . date( "Y-m-d H:i:s" );
+          $erroMsg = 'Proteção contra injection: ' . date( "Y-m-d H:i:s" );
           echo "<!-- {$this->strStringSQL} -->";
           $this->Interrompe($erroMsg);
         }

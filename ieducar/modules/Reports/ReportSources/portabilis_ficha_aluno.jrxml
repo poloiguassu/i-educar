@@ -473,7 +473,7 @@
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<text><![CDATA[ÓRGÃO EXP./UF:]]></text>
+				<text><![CDATA[ORGÃO EXP./UF:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="94eb3ade-a21f-4149-b153-aa04899daaf1" x="283" y="419" width="9" height="12"/>
@@ -564,7 +564,7 @@
 				<textElement>
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<text><![CDATA[CARTÓRIO:]]></text>
+				<text><![CDATA[CARTӓRIO:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="7f960240-14c9-4c52-8366-d4cd5fe97573" x="7" y="419" width="66" height="12"/>
@@ -710,15 +710,6 @@
 				<reportElement uuid="3a409d0f-1fbc-460e-9a20-b99f8b06a595" x="471" y="6" width="68" height="90"/>
 				<imageExpression><![CDATA[$P{foto}]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement uuid="c2713064-d203-4433-b086-70d4dcb2557e" x="471" y="6" width="68" height="90">
-					<printWhenExpression><![CDATA[$F{foto} == null]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<text><![CDATA[Foto 3x4]]></text>
-			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="9e7414a4-ac32-4387-86c9-ff256081e3a5" x="46" y="25" width="251" height="12"/>
 				<textElement>
@@ -856,7 +847,7 @@
 				<textElement>
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[ENDEREÇO]]></text>
+				<text><![CDATA[ENDEREǇO]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement uuid="7267beed-9a79-4a20-b64d-f2ab8d9d45b6" x="255" y="192" width="23" height="12"/>

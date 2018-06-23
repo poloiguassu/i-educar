@@ -32,14 +32,15 @@ require_once( "include/pmieducar/geral.inc.php" );
 
 class clsIndexBase extends clsBase
 {
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} i-Educar - Defici&ecirc;ncia" );
-        $this->processoAp = "631";
-        $this->renderBanner = false;
-        $this->renderMenu = false;
-        $this->renderMenuSuspenso = false;
-    }
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} - Deficiência" );
+		$this->SetTemplate("base_pop");
+		$this->processoAp = "631";
+		$this->renderBanner = false;
+		$this->renderMenu = false;
+		$this->renderMenuSuspenso = false;
+	}
 }
 
 class indice extends clsCadastro

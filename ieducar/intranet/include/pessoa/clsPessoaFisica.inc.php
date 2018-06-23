@@ -60,7 +60,7 @@ class clsPessoaFisica extends clsPessoaFj
   var $data_obito;
   var $nacionalidade;
   var $idpais_estrangeiro;
-  var $data_chagada_brasil;
+  var $data_chegada_brasil;
   var $idmun_nascimento;
   var $ultima_empresa;
   var $idocup;
@@ -298,7 +298,7 @@ class clsPessoaFisica extends clsPessoaFj
         $this->data_obito               = $detalhe_fisica['data_obito'];
         $this->nacionalidade            = $detalhe_fisica['nacionalidade'];
         $this->idpais_estrangeiro       = $detalhe_fisica['idpais_estrangeiro'];
-        $this->data_chagada_brasil      = $detalhe_fisica['data_chagada_brasil'];
+        $this->data_chegada_brasil      = $detalhe_fisica['data_chegada_brasil'];
         $this->idmun_nascimento         = $detalhe_fisica['idmun_nascimento'];
         $this->ultima_empresa           = $detalhe_fisica['ultima_empresa'];
         $this->idocup                   = $detalhe_fisica['idocup'];
@@ -368,8 +368,8 @@ class clsPessoaFisica extends clsPessoaFj
         $tupla['idpais_estrangeiro'] = $this->idpais_estrangeiro;
         $tupla[]                     = & $tupla['idpais_estrangeiro'];
 
-        $tupla['data_chagada_brasil'] = $this->data_chagada_brasil;
-        $tupla[]                      = & $tupla['data_chagada_brasil'];
+        $tupla['data_chegada_brasil'] = $this->data_chegada_brasil;
+        $tupla[]                      = & $tupla['data_chegada_brasil'];
 
         $tupla['idmun_nascimento'] = $this->idmun_nascimento;
         $tupla[]                   = & $tupla['idmun_nascimento'];
@@ -438,7 +438,7 @@ class clsPessoaFisica extends clsPessoaFj
           $this->data_obito               = $detalhe_fisica['data_obito'];
           $this->nacionalidade            = $detalhe_fisica['nacionalidade'];
           $this->idpais_estrangeiro       = $detalhe_fisica['idpais_estrangeiro'];
-          $this->data_chagada_brasil      = $detalhe_fisica['data_chagada_brasil'];
+          $this->data_chegada_brasil      = $detalhe_fisica['data_chegada_brasil'];
           $this->idmun_nascimento         = $detalhe_fisica['idmun_nascimento'];
           $this->ultima_empresa           = $detalhe_fisica['ultima_empresa'];
           $this->idocup                   = $detalhe_fisica['idocup'];
@@ -500,8 +500,8 @@ class clsPessoaFisica extends clsPessoaFj
           $tupla['idpais_estrangeiro'] = $this->idpais_estrangeiro;
           $tupla[]                     = & $tupla['idpais_estrangeiro'];
 
-          $tupla['data_chagada_brasil'] = $this->data_chagada_brasil;
-          $tupla[]                      = & $tupla['data_chagada_brasil'];
+          $tupla['data_chegada_brasil'] = $this->data_chegada_brasil;
+          $tupla[]                      = & $tupla['data_chegada_brasil'];
 
           $tupla['idmun_nascimento'] = $this->idmun_nascimento;
           $tupla[]                   = & $tupla['idmun_nascimento'];
@@ -612,35 +612,5 @@ class clsPessoaFisica extends clsPessoaFj
     if (is_numeric($endereco)) {
       $this->tipo_endereco = $endereco;
     }
-  }
-
-  function getNomeUsuario(){
-    if($this->idpes){
-      $db = new clsBanco();
-
-      $db->Consulta("SELECT pessoa.nome, funcionario.matricula, usuario.cod_usuario
-                       FROM cadastro.fisica
-                 INNER JOIN pmieducar.usuario ON (fisica.ref_usuario_exc = usuario.cod_usuario)
-                 INNER JOIN portal.funcionario ON (usuario.cod_usuario = funcionario.ref_cod_pessoa_fj)
-                 INNER JOIN cadastro.pessoa ON (pessoa.idpes = funcionario.ref_cod_pessoa_fj)
-                      WHERE fisica.idpes = $this->idpes");
-      if($db->ProximoRegistro()){
-        $tupla = $db->Tupla();
-        return $tupla['matricula'];
-      }
-    }
-  }
-
-    function detalheSimples()
-  {
-    if (is_numeric($this->idpes)) {
-      $sql = "SELECT * FROM cadastro.fisica WHERE idpes = '{$this->idpes}' AND ativo = 1;";
-
-      $db = new clsBanco();
-      $db->Consulta($sql);
-      $db->ProximoRegistro();
-      return $db->Tupla();
-    }
-    return FALSE;
   }
 }

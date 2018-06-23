@@ -683,20 +683,6 @@ class indice extends clsCadastro
 
     $this->inputsHelper()->integer('secao_titulo_eleitor', $options);
 
-
-    // Cor/raça.
-
-    $racas         = new clsCadastroRaca();
-    $racas         = $racas->lista(NULL, NULL, NULL, NULL, NULL, NULL, NULL, TRUE);
-
-    foreach ($racas as $raca)
-      $selectOptions[$raca['cod_raca']] = $raca['nm_raca'];
-
-    $selectOptions = array(null => 'Selecione') + Portabilis_Array_Utils::sortByValue($selectOptions);
-
-    $this->campoLista('cor_raca', 'Raça', $selectOptions, $this->cod_raca, '', FALSE, '', '', '', $obrigarCamposCenso);
-
-
     // nacionalidade
 
     // tipos
@@ -1696,5 +1682,5 @@ $miolo = new indice();
 // Atribui o conteúdo à página
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o c�digo HTML
 $pagina->MakeAll();

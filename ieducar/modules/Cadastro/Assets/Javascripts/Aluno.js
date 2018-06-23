@@ -92,11 +92,9 @@ function laudoMedicoObrigatorio() {
     messageUtils.error('Deve ser anexado um laudo médico para alunos com deficiências');
 }
 
-function addLaudoMedico(url, data) {
-    $index = $arrayLaudoMedico.length;
-    $id = $index + 1;
-    $arrayUrlLaudoMedico[$index] = url;
-    $arrayDataLaudoMedico[$index] = data;
+ // before page is ready
+var firstTab = 11;
+
 
     var dataLaudoMedico = '';
 
@@ -131,63 +129,8 @@ function addLaudoMedico(url, data) {
 function montaUrlLaudoMedico() {
     var url = '';
 
-    for (var i = 0; i < $arrayUrlLaudoMedico.length; i++) {
-        if ($arrayUrlLaudoMedico[i]) {
-            var dataLaudo = '';
-            var urlLaudo = $arrayUrlLaudoMedico[i];
-
-            if ($arrayDataLaudoMedico[i]) {
-                dataLaudo = '"data" : "' + $arrayDataLaudoMedico[i] + '",'
-            }
-            ;
-            url += '{' + dataLaudo + '"url" : "' + urlLaudo + '"},'
-        }
-    }
-
-    //Remove a ultima vírgula
-    if (url.substring(url.length - 1, url.length) == ",") {
-        url = url.substring(0, url.length - 1);
-    }
-
-    $j('#url_laudo_medico').val('[' + url + ']');
-}
-
-function codigoInepInvalido() {
-    $j('#aluno_inep_id').addClass('error');
-    messageUtils.error('O código INEP do aluno deve conter 12 dígitos');
-}
-
-function certidaoNascimentoInvalida() {
-    $j('#certidao_nascimento').addClass('error');
-    messageUtils.error('O campo referente a certidão de nascimento deve conter exatos 32 dígitos.');
-}
-
-function possuiDocumentoObrigatorio() {
-    var cpf = $j('#id_federal').val();
-    var rg = $j('#rg').val();
-    var certidaoCivil = $j('#termo_certidao_civil').val() &&
-                        $j('#folha_certidao_civil').val() &&
-                        $j('#livro_certidao_civil').val();
-    var certidaoNascimentoNovoFormato = $j('#certidao_nascimento').val();
-    var certidaoCasamentoNovoFormato = $j('#certidao_casamento').val();;
-
-    return cpf ||
-           rg ||
-           certidaoCivil ||
-           certidaoCasamentoNovoFormato ||
-           certidaoNascimentoNovoFormato;
-  }
-
-function certidaoCasamentoInvalida() {
-    $j('#certidao_casamento').addClass('error');
-    messageUtils.error('O campo referente a certidão de casamento deve conter exatos 32 dígitos.');
-}
-
-var newSubmitForm = function (event) {
-    if (!possuiDocumentoObrigatorio()) {
-        messageUtils.error('É necessário o preenchimento de pelo menos um dos seguintes documentos: CPF, RG ou Certidão civil.');
-        return false;
-    }
+var $maeNomeField = $j('#mae_nome');
+var $maeIdField   = $j('#mae_id');
 
     var codigoInep = $j('#aluno_inep_id').val();
 
@@ -219,23 +162,11 @@ var newSubmitForm = function (event) {
     submitFormExterno();
 };
 
-var $loadingDocumento = $j('<img>')
-    .attr('src', 'imagens/indicator.gif')
-    .css('margin-top', '3px')
-    .hide()
-    .insertBefore($j('#span-documento'));
-
-var $arrayDocumento = [];
-var $arrayUrlDocumento = [];
-var $arrayDataDocumento = [];
-
-function excluirDocumento(event) {
-    $arrayUrlDocumento.splice(event.data.i - 1,1);
-    $j('#documento').val('').removeClass('success');
-    messageUtils.notice('Documento excluído com sucesso!');
-    $j('#documento' + event.data.i).hide();
-    montaUrlDocumento();
-}
+var $linkToEditPessoaMae = $linkToEditPessoaPai.clone()
+                                               .removeClass('editar-pessoa-pai')
+                                               .addClass('editar-pessoa-mae')
+                                               .attr('id', 'editar-pessoa-mae-link')
+                                               .appendTo($pessoaMaeActionBar);
 
 function addDocumento(url, data) {
     $index = $arrayDocumento.length;
@@ -371,24 +302,25 @@ var $linkToEditPessoaResponsavel = $linkToEditPessoaPai
 // adiciona id 'stop' na linha separadora
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id', 'stop');
 // Adiciona abas na página
-$j('td .formdktd:first').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab4" class="alunoTab"> <span class="tabText">Moradia</span></div></li><li><div id="tab5" class="alunoTab" style="width: 125px;"> <span class="tabText" style="">Dados educacenso</span></div></li><li><div id="tab6" class="alunoTab"> <span class="tabText" style="">Projetos</span></div></li></ul></div>');
+$j('td .formdktd').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Ficha m\u00e9dica</span></div></li><li><div id="tab3" class="alunoTab"> <span class="tabText">Uniforme</span></div></li><li><div id="tab4" class="alunoTab"> <span class="tabText">Moradia</span></div></li></ul></div>');
 
 // Adiciona estilo de aba selecionada a primeira aba
 $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
 
 // hide nos campos das outras abas (deixando só os campos da primeira aba)
-$j('.tablecadastro >tbody  > tr').each(function (index, row) {
-    if (index > $j('#tr_laudo_medico').index() - 1) {
-        if (row.id != 'stop') {
-            row.hide();
-        } else {
-            return false;
-        }
-    }
+$j('.tablecadastro >tbody  > tr').each(function(index, row) {
+  if (index>firstTab){
+    if (row.id!='stop')
+      row.hide();
+    else
+      return false;
+  }
 });
 
 // Adiciona classe para que os campos de descrição possam ser desativados (checkboxs)
 $j('#restricao_atividade_fisica, #acomp_medico_psicologico, #medicacao_especifica, #tratamento_medico, #doenca_congenita, #alergia_alimento, #alergia_medicamento, #fratura_trauma, #plano_saude').addClass('temDescricao');
+
+$j('#quantidade_camiseta, #tamanho_camiseta').addClass('uniforme');
 
 // ajax
 
@@ -421,14 +353,19 @@ resourceOptions.handleGet = function (dataResponse) {
     handleMessages(dataResponse.msgs);
     $resourceNotice.hide();
 
-    if (dataResponse.id && !dataResponse.ativo) {
-        $submitButton.attr('disabled', 'disabled').hide();
-        $deleteButton.attr('disabled', 'disabled').hide();
+resourceOptions.handleGet = function(dataResponse) {
+  handleMessages(dataResponse.msgs);
+  $resourceNotice.hide();
+  if(dataResponse.pre_inscrito) {
+	  console.log('teste' + dataResponse.pre_inscrito);
+  }
+  console.log('teste' + dataResponse.pre_inscrito);
 
         var msg = "Este cadastro foi desativado em <b>" + dataResponse.destroyed_at +
             " </b><br/>pelo usuário <b>" + dataResponse.destroyed_by + "</b>, ";
 
-        $resourceNotice.html(msg).slideDown('fast');
+    var msg = "Este cadastro foi desativado em <b>"+ dataResponse.destroyed_at +
+              " </b><br/>pelo usu�rio <b>" + dataResponse.destroyed_by + "</b>, ";
 
         $j('<a>').addClass('decorated')
             .attr('href', '#')
@@ -547,153 +484,267 @@ resourceOptions.handleGet = function (dataResponse) {
         }
     }
 
+    $j('<a>').addClass('decorated')
+             .attr('href', '#')
+             .click(resourceOptions.enable)
+             .html('reativar cadastro.')
+             .appendTo($resourceNotice);
+  }
+  else
+    $deleteButton.removeAttr('disabled').show();
+
+  if (dataResponse.pessoa_id)
+    getPersonDetails(dataResponse.pessoa_id);
+
+  $idField.val(dataResponse.id);
+  tipo_resp = dataResponse.tipo_responsavel;
+  $j('#religiao_id').val(dataResponse.religiao_id);
+  $j('#beneficio_id').val(dataResponse.beneficio_id);
+  $j('#tipo_transporte').val(dataResponse.tipo_transporte);
+  $j('#alfabetizado').attr('checked', dataResponse.alfabetizado);
+
+  /***********************************************
+      CAMPOS DA FICHA M�DICA
+  ************************************************/
+
+  $j('#sus').val(dataResponse.sus);
+
+  //campos checkbox
+   if (dataResponse.alergia_medicamento == 'S'){
+    $j('#alergia_medicamento').attr('checked',true);
+    $j('#alergia_medicamento').val('on');
+  }
+
+   if (dataResponse.alergia_alimento == 'S'){
+    $j('#alergia_alimento').attr('checked',true);
+    $j('#alergia_alimento').val('on');
+  }
+
+   if (dataResponse.doenca_congenita == 'S'){
+    $j('#doenca_congenita').attr('checked',true);
+    $j('#doenca_congenita').val('on');
+  }
+
+   if (dataResponse.fumante == 'S'){
+    $j('#fumante').attr('checked',true);
+    $j('#fumante').val('on');
+  }
+
+   if (dataResponse.doenca_caxumba == 'S'){
+    $j('#doenca_caxumba').attr('checked',true);
+    $j('#doenca_caxumba').val('on');
+  }
+
+   if (dataResponse.doenca_sarampo == 'S'){
+    $j('#doenca_sarampo').attr('checked',true);
+    $j('#doenca_sarampo').val('on');
+  }
+
+   if (dataResponse.doenca_rubeola == 'S'){
+    $j('#doenca_rubeola').attr('checked',true);
+    $j('#doenca_rubeola').val('on');
+  }
+
+   if (dataResponse.doenca_catapora == 'S'){
+    $j('#doenca_catapora').attr('checked',true);
+    $j('#doenca_catapora').val('on');
+  }
+
+   if (dataResponse.doenca_escarlatina == 'S'){
+    $j('#doenca_escarlatina').attr('checked',true);
+    $j('#doenca_escarlatina').val('on');
+  }
+
+   if (dataResponse.doenca_coqueluche == 'S'){
+    $j('#doenca_coqueluche').attr('checked',true);
+    $j('#doenca_coqueluche').val('on');
+  }
+
+   if (dataResponse.epiletico == 'S'){
+    $j('#epiletico').attr('checked',true);
+    $j('#epiletico').val('on');
+  }
+
+   if (dataResponse.epiletico_tratamento == 'S'){
+    $j('#epiletico_tratamento').attr('checked',true);
+    $j('#epiletico_tratamento').val('on');
+  }
+
+   if (dataResponse.hemofilico == 'S'){
+    $j('#hemofilico').attr('checked',true);
+    $j('#hemofilico').val('on');
+  }
+
+   if (dataResponse.hipertenso == 'S'){
+    $j('#hipertenso').attr('checked',true);
+    $j('#hipertenso').val('on');
+  }
+
+   if (dataResponse.asmatico == 'S'){
+    $j('#asmatico').attr('checked',true);
+    $j('#asmatico').val('on');
+  }
+
+   if (dataResponse.diabetico == 'S'){
+    $j('#diabetico').attr('checked',true);
+    $j('#diabetico').val('on');
+  }
+
+   if (dataResponse.insulina == 'S'){
+    $j('#insulina').attr('checked',true);
+    $j('#insulina').val('on');
+  }
+
+   if (dataResponse.tratamento_medico == 'S'){
+    $j('#tratamento_medico').attr('checked',true);
+    $j('#tratamento_medico').val('on');
+  }
+
+   if (dataResponse.medicacao_especifica == 'S'){
+    $j('#medicacao_especifica').attr('checked',true);
+    $j('#medicacao_especifica').val('on');
+  }
+
+   if (dataResponse.acomp_medico_psicologico == 'S'){
+    $j('#acomp_medico_psicologico').attr('checked',true);
+    $j('#acomp_medico_psicologico').val('on');
+  }
+
+   if (dataResponse.restricao_atividade_fisica == 'S'){
+    $j('#restricao_atividade_fisica').attr('checked',true);
+    $j('#restricao_atividade_fisica').val('on');
+  }
+
+   if (dataResponse.fratura_trauma == 'S'){
+    $j('#fratura_trauma').attr('checked',true);
+    $j('#fratura_trauma').val('on');
+  }
+   if (dataResponse.plano_saude == 'S'){
+    $j('#plano_saude').attr('checked',true);
+    $j('#plano_saude').val('on');
+  }
+  // campos texto
+  $j('#altura').val(dataResponse.altura);
+  $j('#peso').val(dataResponse.peso);
+  $j('#grupo_sanguineo').val(dataResponse.grupo_sanguineo);
+  $j('#fator_rh').val(dataResponse.fator_rh);
+  $j('#desc_alergia_medicamento').val(dataResponse.desc_alergia_medicamento);
+  $j('#desc_alergia_alimento').val(dataResponse.desc_alergia_alimento);
+  $j('#desc_doenca_congenita').val(dataResponse.desc_doenca_congenita);
+  $j('#doenca_outras').val(dataResponse.doenca_outras);
+  $j('#desc_tratamento_medico').val(dataResponse.desc_tratamento_medico);
+  $j('#desc_medicacao_especifica').val(dataResponse.desc_medicacao_especifica);
+  $j('#desc_acomp_medico_psicologico').val(dataResponse.desc_acomp_medico_psicologico);
+  $j('#desc_restricao_atividade_fisica').val(dataResponse.desc_restricao_atividade_fisica);
+  $j('#desc_fratura_trauma').val(dataResponse.desc_fratura_trauma);
+  $j('#desc_plano_saude').val(dataResponse.desc_plano_saude);
+  $j('#hospital_clinica').val(dataResponse.hospital_clinica);
+  $j('#hospital_clinica_endereco').val(dataResponse.hospital_clinica_endereco);
+  $j('#hospital_clinica_telefone').val(dataResponse.hospital_clinica_telefone);
+  $j('#responsavel').val(dataResponse.responsavel);
+  $j('#responsavel_parentesco').val(dataResponse.responsavel_parentesco);
+  $j('#responsavel_parentesco_telefone').val(dataResponse.responsavel_parentesco_telefone);
+  $j('#responsavel_parentesco_celular').val(dataResponse.responsavel_parentesco_celular);
 
     /***********************************************
-     CAMPOS DA FICHA MÉDICA
-     ************************************************/
+      CAMPOS DO UNIFORME ESCOLAR
+    ************************************************/
 
-    $j('#sus').val(dataResponse.sus);
-
-    //campos checkbox
-    if (dataResponse.alergia_medicamento == 'S') {
-        $j('#alergia_medicamento').attr('checked', true);
-        $j('#alergia_medicamento').val('on');
-    }
-
-    if (dataResponse.alergia_alimento == 'S') {
-        $j('#alergia_alimento').attr('checked', true);
-        $j('#alergia_alimento').val('on');
-    }
-
-    if (dataResponse.doenca_congenita == 'S') {
-        $j('#doenca_congenita').attr('checked', true);
-        $j('#doenca_congenita').val('on');
-    }
-
-    if (dataResponse.fumante == 'S') {
-        $j('#fumante').attr('checked', true);
-        $j('#fumante').val('on');
-    }
-
-    if (dataResponse.doenca_caxumba == 'S') {
-        $j('#doenca_caxumba').attr('checked', true);
-        $j('#doenca_caxumba').val('on');
-    }
-
-    if (dataResponse.doenca_sarampo == 'S') {
-        $j('#doenca_sarampo').attr('checked', true);
-        $j('#doenca_sarampo').val('on');
-    }
-
-    if (dataResponse.doenca_rubeola == 'S') {
-        $j('#doenca_rubeola').attr('checked', true);
-        $j('#doenca_rubeola').val('on');
-    }
-
-    if (dataResponse.doenca_catapora == 'S') {
-        $j('#doenca_catapora').attr('checked', true);
-        $j('#doenca_catapora').val('on');
-    }
-
-    if (dataResponse.doenca_escarlatina == 'S') {
-        $j('#doenca_escarlatina').attr('checked', true);
-        $j('#doenca_escarlatina').val('on');
-    }
-
-    if (dataResponse.doenca_coqueluche == 'S') {
-        $j('#doenca_coqueluche').attr('checked', true);
-        $j('#doenca_coqueluche').val('on');
-    }
-
-    if (dataResponse.epiletico == 'S') {
-        $j('#epiletico').attr('checked', true);
-        $j('#epiletico').val('on');
-    }
-
-    if (dataResponse.epiletico_tratamento == 'S') {
-        $j('#epiletico_tratamento').attr('checked', true);
-        $j('#epiletico_tratamento').val('on');
-    }
-
-    if (dataResponse.hemofilico == 'S') {
-        $j('#hemofilico').attr('checked', true);
-        $j('#hemofilico').val('on');
-    }
-
-    if (dataResponse.hipertenso == 'S') {
-        $j('#hipertenso').attr('checked', true);
-        $j('#hipertenso').val('on');
-    }
-
-    if (dataResponse.asmatico == 'S') {
-        $j('#asmatico').attr('checked', true);
-        $j('#asmatico').val('on');
-    }
-
-    if (dataResponse.diabetico == 'S') {
-        $j('#diabetico').attr('checked', true);
-        $j('#diabetico').val('on');
-    }
-
-    if (dataResponse.insulina == 'S') {
-        $j('#insulina').attr('checked', true);
-        $j('#insulina').val('on');
-    }
-
-    if (dataResponse.tratamento_medico == 'S') {
-        $j('#tratamento_medico').attr('checked', true);
-        $j('#tratamento_medico').val('on');
-    }
-
-    if (dataResponse.medicacao_especifica == 'S') {
-        $j('#medicacao_especifica').attr('checked', true);
-        $j('#medicacao_especifica').val('on');
-    }
-
-    if (dataResponse.acomp_medico_psicologico == 'S') {
-        $j('#acomp_medico_psicologico').attr('checked', true);
-        $j('#acomp_medico_psicologico').val('on');
-    }
-
-    if (dataResponse.restricao_atividade_fisica == 'S') {
-        $j('#restricao_atividade_fisica').attr('checked', true);
-        $j('#restricao_atividade_fisica').val('on');
-    }
-
-    if (dataResponse.fratura_trauma == 'S') {
-        $j('#fratura_trauma').attr('checked', true);
-        $j('#fratura_trauma').val('on');
-    }
-    if (dataResponse.plano_saude == 'S') {
-        $j('#plano_saude').attr('checked', true);
-        $j('#plano_saude').val('on');
-    }
-    // campos texto
-    $j('#altura').val(dataResponse.altura);
-    $j('#peso').val(dataResponse.peso);
-    $j('#grupo_sanguineo').val(dataResponse.grupo_sanguineo);
-    $j('#fator_rh').val(dataResponse.fator_rh);
-    $j('#desc_alergia_medicamento').val(dataResponse.desc_alergia_medicamento);
-    $j('#desc_alergia_alimento').val(dataResponse.desc_alergia_alimento);
-    $j('#desc_doenca_congenita').val(dataResponse.desc_doenca_congenita);
-    $j('#doenca_outras').val(dataResponse.doenca_outras);
-    $j('#desc_tratamento_medico').val(dataResponse.desc_tratamento_medico);
-    $j('#desc_medicacao_especifica').val(dataResponse.desc_medicacao_especifica);
-    $j('#desc_acomp_medico_psicologico').val(dataResponse.desc_acomp_medico_psicologico);
-    $j('#desc_restricao_atividade_fisica').val(dataResponse.desc_restricao_atividade_fisica);
-    $j('#desc_fratura_trauma').val(dataResponse.desc_fratura_trauma);
-    $j('#desc_plano_saude').val(dataResponse.desc_plano_saude);
-    $j('#hospital_clinica').val(dataResponse.hospital_clinica);
-    $j('#hospital_clinica_endereco').val(dataResponse.hospital_clinica_endereco);
-    $j('#hospital_clinica_telefone').val(dataResponse.hospital_clinica_telefone);
-    $j('#responsavel').val(dataResponse.responsavel);
-    $j('#responsavel_parentesco').val(dataResponse.responsavel_parentesco);
-    $j('#responsavel_parentesco_telefone').val(dataResponse.responsavel_parentesco_telefone);
-    $j('#responsavel_parentesco_celular').val(dataResponse.responsavel_parentesco_celular);
+  if (dataResponse.recebeu_uniforme == 'S'){
+    $j('#recebeu_uniforme').attr('checked',true);
+    $j('#recebeu_uniforme').val('on');
+  }
+  $j('#tamanho_camiseta').val(dataResponse.tamanho_camiseta);
+  $j('#quantidade_camiseta').val(dataResponse.quantidade_camiseta);
 
     /***********************************************
-     CAMPOS DA MORADIA
-     ************************************************/
+      CAMPOS DA MORADIA
+    ************************************************/
+
+  if (dataResponse.empregada_domestica == 'S'){
+    $j('#empregada_domestica').attr('checked',true);
+    $j('#empregada_domestica').val('on');
+  }
+  if (dataResponse.automovel == 'S'){
+    $j('#automovel').attr('checked',true);
+    $j('#automovel').val('on');
+  }
+  if (dataResponse.motocicleta == 'S'){
+    $j('#motocicleta').attr('checked',true);
+    $j('#motocicleta').val('on');
+  }
+  if (dataResponse.computador == 'S'){
+    $j('#computador').attr('checked',true);
+    $j('#computador').val('on');
+  }
+  if (dataResponse.geladeira == 'S'){
+    $j('#geladeira').attr('checked',true);
+    $j('#geladeira').val('on');
+  }
+  if (dataResponse.fogao == 'S'){
+    $j('#fogao').attr('checked',true);
+    $j('#fogao').val('on');
+  }
+  if (dataResponse.maquina_lavar == 'S'){
+    $j('#maquina_lavar').attr('checked',true);
+    $j('#maquina_lavar').val('on');
+  }
+  if (dataResponse.microondas == 'S'){
+    $j('#microondas').attr('checked',true);
+    $j('#microondas').val('on');
+  }
+  if (dataResponse.video_dvd == 'S'){
+    $j('#video_dvd').attr('checked',true);
+    $j('#video_dvd').val('on');
+  }
+  if (dataResponse.televisao == 'S'){
+    $j('#televisao').attr('checked',true);
+    $j('#televisao').val('on');
+  }
+  if (dataResponse.telefone == 'S'){
+    $j('#telefone').attr('checked',true);
+    $j('#telefone').val('on');
+  }
+  if (dataResponse.celular == 'S'){
+    $j('#celular').attr('checked',true);
+    $j('#celular').val('on');
+  }
+  if (dataResponse.agua_encanada == 'S'){
+    $j('#agua_encanada').attr('checked',true);
+    $j('#agua_encanada').val('on');
+  }
+  if (dataResponse.poco == 'S'){
+    $j('#poco').attr('checked',true);
+    $j('#poco').val('on');
+  }
+  if (dataResponse.energia == 'S'){
+    $j('#energia').attr('checked',true);
+    $j('#energia').val('on');
+  }
+  if (dataResponse.esgoto == 'S'){
+    $j('#esgoto').attr('checked',true);
+    $j('#esgoto').val('on');
+  }
+  if (dataResponse.fossa == 'S'){
+    $j('#fossa').attr('checked',true);
+    $j('#fossa').val('on');
+  }
+  if (dataResponse.lixo == 'S'){
+    $j('#lixo').attr('checked',true);
+    $j('#lixo').val('on');
+  }
+
+  $j('#quartos').val(dataResponse.quartos);
+  $j('#sala').val(dataResponse.sala);
+  $j('#copa').val(dataResponse.copa);
+  $j('#banheiro').val(dataResponse.banheiro);
+  $j('#garagem').val(dataResponse.garagem);
+  $j('#casa_outra').val(dataResponse.casa_outra);
+  $j('#quant_pessoas').val(dataResponse.quant_pessoas);
+  $j('#renda').val(dataResponse.renda);
+  $j('#moradia').val(dataResponse.moradia).change();
+  $j('#material').val(dataResponse.material).change();
+  $j('#moradia_situacao').val(dataResponse.moradia_situacao).change();
 
     if (dataResponse.empregada_domestica == 'S') {
         $j('#empregada_domestica').attr('checked', true);
@@ -933,16 +984,14 @@ var handleGetPersonDetails = function (dataResponse) {
 
     $j('#pai_id').trigger('change');
 
-    if (dataResponse.mae_id) {
-        mae_details.nome = nomeMae;
-        $j('#mae_nome').val(dataResponse.mae_id + ' - ' + nomeMae);
-        $j('#mae_id').val(dataResponse.mae_id);
-    } else {
-        $j('#mae_nome').val('');
-        $j('#mae_id').val('');
-    }
-
-    $j('#mae_id').trigger('change');
+  if (dataResponse.mae_id){
+    mae_details.nome = nomeMae;
+    $j('#mae_nome').val(dataResponse.mae_id + ' - ' + nomeMae);
+    $j('#mae_id').val(dataResponse.mae_id);
+  }else{
+    $j('#mae_nome').val('');
+    $j('#mae_id').val('');
+  }
 
 
     if (dataResponse.responsavel_id) {
@@ -1221,8 +1270,9 @@ function afterChangePessoa(targetWindow, parentType, parentId, parentName) {
         }
     }
 
-    var $tempIdField;
-    var $tempNomeField;
+  // timeout para usuario perceber mudan�a
+  window.setTimeout(function() {
+    messageUtils.success('Pessoa alterada com sucesso', $tempNomeField);
 
     if (parentType) {
         $tempIdField = $j(buildId(parentType + '_id'));
@@ -1310,73 +1360,217 @@ function canShowParentsFields() {
                 dd = '0' + dd
             }
 
-            if (mm < 10) {
-                mm = '0' + mm
+    var checkTipoResponsavel = function(){
+      if ($j('#tipo_responsavel').val() == 'outra_pessoa')
+        $j('#responsavel_nome').show();
+      else
+        $j('#responsavel_nome').hide();
+    }
+
+    checkTipoResponsavel();
+    $j('#tipo_responsavel').change(checkTipoResponsavel);
+
+
+    var checkMoradia = function(){
+      if($j('#moradia').val() == 'C'){
+        $j('#material').show();
+        $j('#casa_outra').hide();
+      }else if($j('#moradia').val() == 'O'){
+        $j('#material').hide();
+        $j('#casa_outra').show();
+      }else{
+        $j('#casa_outra').hide();
+        $j('#material').hide();
+      }
+    }
+    checkMoradia();
+    $j('#moradia').change(checkMoradia);
+
+
+    /***********************
+    EVENTOS DE CLICK EM ABAS
+    ************************/
+
+    // DADOS PESSOAIS
+    $j('#tab1').click(
+      function(){
+
+        $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
+        $j('#tab1').toggleClass('alunoTab alunoTab-active')
+        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+          if (index>firstTab){
+            if (row.id!='stop')
+              row.hide();
+            else
+              return false;
+          }else{
+            row.show();
+          }
+        });
+      }
+    );
+
+    // FICHA MÉDICA
+    $j('#tab2').click(
+      function(){
+        $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
+        $j('#tab2').toggleClass('alunoTab alunoTab-active')
+        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+          if (row.id!='stop'){
+            if (index>firstTab && index<59){
+              row.show();
+            }else if (index>0){
+              row.hide();
             }
+          }else
+            return false;
+        });
+        // Esse loop desativa/ativa os campos de descrição, conforme os checkbox
+        $j('.temDescricao').each(function(i, obj) {
+            $j('#desc_'+obj.id).prop('disabled', !$j('#'+obj.id).prop('checked'));
+        });
 
-            return dd + '/' + mm + '/' + yyyy;
-        }
+      });
+    // UNIFORME
+    $j('#tab3').click(
+      function(){
+        $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
+        $j('#tab3').toggleClass('alunoTab alunoTab-active')
+        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+          if (row.id!='stop'){
+            if (index>58 && index<63){
+              row.show();
+            }else if (index>0){
+              row.hide();
+            }
+          }else
+            return false;
+        });
+        $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
+      });
 
-        // laudo médico
-        $j('#laudo_medico').on('change', prepareUpload);
+    // MORADIA
+    $j('#tab4').click(
+      function(){
+        $j('.alunoTab-active').toggleClass('alunoTab-active alunoTab');
+        $j('#tab4').toggleClass('alunoTab alunoTab-active')
+        $j('.tablecadastro >tbody  > tr').each(function(index, row) {
+
+          if (index<64 && index!=0){
+            row.hide();
+		  }else if(index<109){
+            row.show();
+          }
+        });
+        $j('.uniforme').prop('disabled',!$j('#recebeu_uniforme').prop('checked'));
+      });
 
         $j('#documento').on('change', prepareUploadDocumento);
 
-        $j('#deficiencias').trigger('chosen:updated');
+    /* A seguinte função habilitam/desabilitam o campo de descrição quando for clicado
+    nos referentes checkboxs */
 
-        function prepareUpload(event) {
-            $j('#laudo_medico').removeClass('error');
-            uploadFiles(event.target.files);
+    $j('.temDescricao').click(function(){
+        if ($j('#'+this.id).prop('checked'))
+          $j('#desc_'+this.id).removeAttr('disabled');
+        else{
+          $j('#desc_'+this.id).attr('disabled','disabled');
+          $j('#desc_'+this.id).val('');
         }
 
-        function prepareUploadDocumento(event) {
-            $j('#documento').removeClass('error');
-            uploadFilesDocumento(event.target.files);
-        }
+    $j('#recebeu_uniforme').click(function(){
+      if ($j('#recebeu_uniforme').prop('checked'))
+        $j('.uniforme').removeAttr('disabled');
+      else{
+        $j('.uniforme').attr('disabled','disabled');
+        $j('.uniforme').val('');
+      }
+    });
 
-        function uploadFiles(files) {
-            if (files && files.length > 0) {
-                $j('#laudo_medico').attr('disabled', 'disabled');
-                $j('#btn_enviar').attr('disabled', 'disabled').val('Aguarde...');
-                $loadingLaudoMedico.show();
-                messageUtils.notice('Carregando laudo médico...');
+    // MODAL pessoa-aluno
 
-                var data = new FormData();
-                $j.each(files, function (key, value) {
-                    data.append(key, value);
-                });
+    //  Esse simplesSearch é carregado no final do arquivo, então a sua linha deve ser escondida,
+    // é só campo será 'puxado' para a modal
+    $j('#municipio_pessoa-aluno').closest('tr').hide();
 
-                $j.ajax({
-                    url: '/intranet/upload.php?files',
-                    type: 'POST',
-                    data: data,
-                    cache: false,
-                    dataType: 'json',
-                    processData: false,
-                    contentType: false,
-                    success: function (dataResponse) {
-                        if (dataResponse.error) {
-                            $j('#laudo_medico').val("").addClass('error');
-                            messageUtils.error(dataResponse.error);
-                        } else {
-                            messageUtils.success('Laudo médico carregado com sucesso');
-                            $j('#laudo_medico').addClass('success');
-                            addLaudoMedico(dataResponse.file_url, currentDate());
-                        }
 
-                    },
-                    error: function () {
-                        $j('#laudo_medico').val("").addClass('error');
-                        messageUtils.error('Não foi possível enviar o arquivo');
-                    },
-                    complete: function () {
-                        $j('#laudo_medico').removeAttr('disabled');
-                        $loadingLaudoMedico.hide();
-                        $j('#btn_enviar').removeAttr('disabled').val('Gravar');
-                    }
-                });
-            }
-        }
+    $j('body').append('<div id="dialog-form-pessoa-aluno" ><form><p></p><table><tr><td valign="top"><fieldset><legend>Dados b&aacute;sicos</legend><label for="nome-pessoa-aluno">Nome</label>    <input type="text " name="nome-pessoa-aluno" id="nome-pessoa-aluno" size="58" maxlength="255" class="text">    <label for="sexo-pessoa-aluno">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-aluno" id="sexo-pessoa-aluno" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-aluno">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-aluno" id="estado-civil-pessoa-aluno"  ><option id="estado-civil-pessoa-aluno_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-aluno_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-aluno_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-aluno_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-aluno_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-aluno_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-aluno_5" value="5">Vi&uacute;vo(a)</option></select> <label for="data-nasc-pessoa-aluno"> Data de nascimento </label> <input onKeyPress="formataData(this, event);" class="" placeholder="dd/mm/yyyy" type="text" name="data-nasc-pessoa-aluno" id="data-nasc-pessoa-aluno" value="" size="11" maxlength="10" > <label for="naturalidade_pessoa-aluno"> Naturalidade </label>  </fieldset> </td><td><fieldset valign="top"> <legend>Dados do endere&ccedil;o</legend> <table></table></fieldset></td><td><fieldset ><table></table></fieldset></td></tr></table><p><a id="link_cadastro_detalhado" target="_blank">Cadastro detalhado</a></p></form></div>');
+
+    var name = $j("#nome-pessoa-aluno"),
+      sexo = $j( "#sexo-pessoa-aluno" ),
+      estadocivil  = $j( "#estado-civil-pessoa-aluno" ),
+      datanasc     = $j( "#data-nasc-pessoa-aluno" ),
+      municipio    = $j( "#naturalidade_aluno_pessoa-aluno" ),
+      municipio_id = $j( "#naturalidade_aluno_id" ),
+      complemento  = $j( "#complemento" ),
+      numero       = $j( "#numero" ),
+      letra        = $j( "#letra" ),
+      apartamento  = $j( "#apartamento" ),
+      bloco        = $j( "#bloco" ),
+      andar        = $j( "#andar" ),
+      allFields = $j( [] ).add( name ).add( sexo ).add( estadocivil ).add(datanasc).add(municipio).add(municipio_id)
+      .add(complemento).add(numero).add(letra).add(apartamento).add(bloco).add(andar);
+
+    municipio.show().toggleClass('geral text').attr('display', 'block').appendTo('#dialog-form-pessoa-aluno tr td:first-child fieldset');
+
+    $j('<label>').html('CEP').attr('for', 'cep_').insertBefore($j('#cep_'));
+    $j('#cep_').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+    $j('<label>').html('Munic&iacute;pio').attr('for', 'municipio_municipio').insertBefore($j('#municipio_municipio'));
+    $j('#municipio_municipio').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+    $j('<label>').html('Logradouro').attr('for', 'logradouro_logradouro').insertBefore($j('#logradouro_logradouro'));
+    $j('#logradouro_logradouro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+    $j('<label>').html('Tipo de logradouro').attr('for', 'idtlog').insertBefore($j('#idtlog'));
+    $j('#idtlog').toggleClass('geral text');
+    $j('<label>').html('Logradouro').attr('for', 'logradouro').insertBefore($j('#logradouro'));
+    $j('#logradouro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+    $j('<label>').html('Bairro').attr('for', 'bairro_bairro').insertBefore($j('#bairro_bairro'));
+    $j('#bairro_bairro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+    $j('<label>').html('Zona de localiza&ccedil;&atilde;o').attr('for', 'zona_localizacao').insertBefore($j('#zona_localizacao'));
+    $j('#zona_localizacao').toggleClass('geral text');
+    $j('<label>').html('Bairro').attr('for', 'bairro').insertBefore($j('#bairro'));
+    $j('#bairro').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+
+    $j('<label>').html('Complemento').attr('for', 'complemento').insertBefore($j('#complemento'));
+    $j('#complemento').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(2) fieldset table').find('td').removeClass();
+    $j('<label>').html('N&uacute;mero').attr('for', 'numero').insertBefore($j('#numero'));
+    $j('#numero').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(3) fieldset table').find('td').removeClass();
+    $j('<label>').html('Letra').attr('for', 'letra').insertBefore($j('#letra'));
+    $j('#letra').toggleClass('geral text');
+    $j('<label>').html('N&ordm; de apartamento').attr('for', 'apartamento').insertBefore($j('#apartamento'));
+    $j('#apartamento').toggleClass('geral text').closest('tr').show().find('td:first-child').hide().closest('tr').removeClass().appendTo('#dialog-form-pessoa-aluno tr td:nth-child(3) fieldset table').find('td').removeClass();
+    $j('<label>').html('Bloco').attr('for', 'bloco').insertBefore($j('#bloco'));
+    $j('#bloco').toggleClass('geral text');
+    $j('<label>').html('Andar').attr('for', 'andar').insertBefore($j('#andar'));
+    $j('#andar').toggleClass('geral text');
+
+    $j('#dialog-form-pessoa-aluno').find(':input').css('display', 'block');
+    $j('#cep_').css('display', 'inline');
+
+    $j( "#dialog-form-pessoa-aluno" ).dialog({
+      autoOpen: false,
+      height: 'auto',
+      width: 'auto',
+      modal: true,
+      resizable: false,
+      draggable: false,
+      buttons: {
+        "Gravar" : function() {
+          var bValid = true;
+          allFields.removeClass( "error" );
+
+          bValid = bValid && checkLength( name, "nome", 3, 255 );
+          bValid = bValid && checkSelect( sexo, "sexo");
+          bValid = bValid && checkSelect( estadocivil, "estado civil");
+          bValid = bValid && checkRegexp( datanasc, /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/[12][0-9]{3}$/i, "O campo data de nascimento deve ser preenchido no formato dd/mm/yyyy." );
+          bValid = bValid && checkSimpleSearch( municipio, municipio_id, "munic\u00edpio");
+          bValid = bValid && ($j('#cep_').val() == '' ? true : validateEndereco());
+
+          if ( bValid ) {
+            postPessoa($j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null);
+            $j( this ).dialog( "close" );
+          }
+        },
+        "Cancelar": function() {
 
         function uploadFilesDocumento(files) {
             if (files && files.length > 0) {
@@ -1733,11 +1927,34 @@ function canShowParentsFields() {
           $label.append($j('<span/>').addClass('campo_obrigatorio').text('*'));
         }
 
-        let checkTipoNacionalidade = () => {
-          if ($j.inArray($j('#tipo_nacionalidade').val(), ['2', '3']) > -1) {
-            $j('#pais_origem_nome').show();
-          } else {
-            $j('#pais_origem_nome').hide();
+    $j('body').append('<div id="dialog-form-pessoa-parent"><form><p></p><table><tr><td valign="top"><fieldset><label for="nome-pessoa-parent">Nome</label>    <input type="text " name="nome-pessoa-parent" id="nome-pessoa-parent" size="58" maxlength="255" class="text">    <label for="sexo-pessoa-parent">Sexo</label>  <select class="select ui-widget-content ui-corner-all" name="sexo-pessoa-parent" id="sexo-pessoa-parent" ><option value="" selected>Sexo</option><option value="M">Masculino</option><option value="F">Feminino</option></select>    <label for="estado-civil-pessoa-parent">Estado civil</label>   <select class="select ui-widget-content ui-corner-all" name="estado-civil-pessoa-parent" id="estado-civil-pessoa-parent"  ><option id="estado-civil-pessoa-parent_" value="" selected>Estado civil</option><option id="estado-civil-pessoa-parent_2" value="2">Casado(a)</option><option id="estado-civil-pessoa-parent_6" value="6">Companheiro(a)</option><option id="estado-civil-pessoa-parent_3" value="3">Divorciado(a)</option><option id="estado-civil-pessoa-parent_4" value="4">Separado(a)</option><option id="estado-civil-pessoa-parent_1" value="1">Solteiro(a)</option><option id="estado-civil-pessoa-parent_5" value="5">Vi&uacute;vo(a)</option></select></fieldset><p><a id="link_cadastro_detalhado_parent" target="_blank">Cadastro detalhado</a></p></form></div>');
+
+    $j('#dialog-form-pessoa-parent').find(':input').css('display', 'block');
+
+    var nameParent = $j("#nome-pessoa-parent"),
+      sexoParent = $j( "#sexo-pessoa-parent" ),
+      estadocivilParent  = $j( "#estado-civil-pessoa-parent" ),
+      allFields = $j( [] ).add( nameParent ).add( sexoParent ).add( estadocivilParent );
+
+    $j( "#dialog-form-pessoa-parent" ).dialog({
+      autoOpen: false,
+      height: 'auto',
+      width: 'auto',
+      modal: true,
+      resizable: false,
+      draggable: false,
+      buttons: {
+        "Gravar" : function() {
+          var bValid = true;
+          allFields.removeClass( "ui-state-error" );
+
+          bValid = bValid && checkLength( nameParent, "nome", 3, 255 );
+          bValid = bValid && checkSelect( sexoParent, "sexo");
+          bValid = bValid && checkSelect( estadocivilParent, "estado civil");
+
+          if ( bValid ) {
+            postPessoa(nameParent, nameParent.val(), sexoParent.val(), estadocivilParent.val(), null, null, (editar_pessoa ? $j('#'+pessoaPaiOuMae+'_id').val() : null), pessoaPaiOuMae);
+            $j( this ).dialog( "close" );
           }
         }
         $j('#tipo_nacionalidade').change(checkTipoNacionalidade);
@@ -2355,8 +2572,9 @@ function setAutoComplete() {
             autoFocus: true
         });
 
-    });
-}
+      $j('#dialog-form-pessoa-parent form p:first-child').html('Editar pessoa '+(parentType == 'mae' ? 'm&atilde;e' : parentType)).css('margin-left', '0.75em');
+
+      pessoaPaiOuMae = parentType;
 
 setAutoComplete();
 
@@ -2450,5 +2668,4 @@ if ($j('#transporte_rota').length > 0) {
       }
     }
 
-    $j('#rg').on('change', verificaObrigatoriedadeRg);
-}
+})(jQuery);

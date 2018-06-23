@@ -1,33 +1,33 @@
 <?php
 
 /*
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja�
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  */
 
 /**
- * Detalhes de um nível de categoria.
+ * Detalhes de um n�vel de categoria.
  *
- * @author   Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author   Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @license  http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package  Core
- * @since    Arquivo disponível desde a versão 1.0.0
+ * @since    Arquivo dispon�vel desde a vers�o 1.0.0
  * @version  $Id$
  */
 
@@ -49,98 +49,97 @@ class clsIndexBase extends clsBase
 
 class indice extends clsDetalhe
 {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
-    var $titulo;
+	/**
+	 * Titulo no topo da pagina
+	 *
+	 * @var int
+	 */
+	var $titulo;
 
-    var $cod_categoria_nivel;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $nm_categoria_nivel;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+	var $cod_categoria_nivel;
+	var $ref_usuario_exc;
+	var $ref_usuario_cad;
+	var $nm_categoria_nivel;
+	var $data_cadastro;
+	var $data_exclusao;
+	var $ativo;
 
-    function Gerar()
-    {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
+	function Gerar()
+	{
+		@session_start();
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
+		session_write_close();
 
-        $this->titulo = "Categoria Nivel - Detalhe";
-        $this->addBanner("imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet");
+		$this->titulo = "Categoria Nivel - Detalhe";
+		$this->addBanner("imagens/nvp_top_intranet.jpg", "imagens/nvp_vert_intranet.jpg", "Intranet");
 
-        $this->cod_categoria_nivel=$_GET["cod_categoria_nivel"];
+		$this->cod_categoria_nivel=$_GET["cod_categoria_nivel"];
 
-        $tmp_obj = new clsPmieducarCategoriaNivel( $this->cod_categoria_nivel );
-        $registro = $tmp_obj->detalhe();
+		$tmp_obj = new clsPmieducarCategoriaNivel( $this->cod_categoria_nivel );
+		$registro = $tmp_obj->detalhe();
 
-        if( ! $registro )
-        {
-            header( "location: educar_categoria_nivel_lst.php" );
-            die();
-        }
-
-
-        if( $registro["cod_categoria_nivel"] )
-        {
-            $this->addDetalhe( array( "Categoria", "{$registro["cod_categoria_nivel"]}") );
-        }
-        if( $registro["nm_categoria_nivel"] )
-        {
-            $this->addDetalhe( array( "Nome Categoria", "{$registro["nm_categoria_nivel"]}") );
-        }
-
-        $tab_niveis = null;
-
-        $obj_nivel = new clsPmieducarNivel();
-        $lst_nivel = $obj_nivel->buscaSequenciaNivel($this->cod_categoria_nivel);
-
-        if($lst_nivel)
-        {
-            $tab_niveis .= "<table cellspacing='0' cellpadding='0' width='200' border='0'>";
-
-            $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
-            $tab_niveis .= " <tr>
-                                <td bgcolor='#ccdce6' align='center'>N&iacute;veis</td>
-                                <td bgcolor='#ccdce6' align='center'>Subn&iacute;veis</td>
-                            </tr>";
-            foreach ($lst_nivel as $nivel)
-            {
-
-                $tab_niveis .= " <tr class='$class2' align='center'>
-                                    <td align='left'>{$nivel['nm_nivel']}</td>
-                                    <td align='center'><a style='color:#0ac336;' href='javascript:popless(\"{$nivel['cod_nivel']}\")'><i class='fa fa-plus-square' aria-hidden='true'></i></a></td>
-                                </tr>";
-
-                $class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
-
-            }
-            $tab_niveis .=  "</table>";
-
-            $this->addDetalhe(array("N&iacute;veis", "$tab_niveis"));
-        }
+		if( ! $registro )
+		{
+			header( "location: educar_categoria_nivel_lst.php" );
+			die();
+		}
 
 
-        $obj_permissoes = new clsPermissoes();
-        if( $obj_permissoes->permissao_cadastra( 829, $this->pessoa_logada, 3, null, true ) )
-        {
-            $this->url_novo = "educar_categoria_nivel_cad.php";
-            $this->url_editar = "educar_categoria_nivel_cad.php?cod_categoria_nivel={$registro["cod_categoria_nivel"]}";
-            $this->array_botao[] = 'Adicionar Níveis';
-            $this->array_botao_url[] = "educar_nivel_cad.php?cod_categoria={$registro["cod_categoria_nivel"]}";
-        }
+		if( $registro["cod_categoria_nivel"] )
+		{
+			$this->addDetalhe( array( "Categoria", "{$registro["cod_categoria_nivel"]}") );
+		}
+		if( $registro["nm_categoria_nivel"] )
+		{
+			$this->addDetalhe( array( "Nome Categoria", "{$registro["nm_categoria_nivel"]}") );
+		}
 
-        $this->url_cancelar = "educar_categoria_nivel_lst.php";
-        $this->largura = "100%";
+		$tab_niveis = null;
+
+		$obj_nivel = new clsPmieducarNivel();
+		$lst_nivel = $obj_nivel->buscaSequenciaNivel($this->cod_categoria_nivel);
+
+		if($lst_nivel)
+		{
+			$tab_niveis .= "<table cellspacing='0' cellpadding='0' width='200' border='0' style='border:1px dotted #000000'>";
+
+			$class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
+			$tab_niveis .= " <tr>
+								<td bgcolor='#A1B3BD' align='center' colspan='2'>N&iacute;veis</td>
+							</tr>";
+			foreach ($lst_nivel as $nivel)
+			{
+
+				$tab_niveis .= " <tr class='$class2' align='center'>
+									<td align='left'>{$nivel['nm_nivel']}</td>
+									<td align='left' width='30'><a href='javascript:popless(\"{$nivel['cod_nivel']}\")'><img src='imagens/nvp_bot_ad_sub.gif' border='0'></a></td>
+								</tr>";
+
+				$class2 = $class2 == "formlttd" ? "formmdtd" : "formlttd" ;
+
+			}
+			$tab_niveis .=	"</table>";
+
+			$this->addDetalhe(array("N&iacute;veis", "$tab_niveis"));
+		}
+
+
+		$obj_permissoes = new clsPermissoes();
+		if( $obj_permissoes->permissao_cadastra( 829, $this->pessoa_logada, 3, null, true ) )
+		{
+			$this->url_novo = "educar_categoria_nivel_cad.php";
+			$this->url_editar = "educar_categoria_nivel_cad.php?cod_categoria_nivel={$registro["cod_categoria_nivel"]}";
+			$this->array_botao[] = 'Adicionar N�veis';
+			$this->array_botao_url[] = "educar_nivel_cad.php?cod_categoria={$registro["cod_categoria_nivel"]}";
+		}
+
+		$this->url_cancelar = "educar_categoria_nivel_lst.php";
+		$this->largura = "100%";
 
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""                                  => "Detalhe da categoria/n&iacute;vel"
     ));
     $this->enviaLocalizacao($localizacao->montar());        

@@ -135,7 +135,7 @@
 
 .tabText{
   position: relative;
-  top: 6px;
+  top: 2px;
 }
 
 #tr_tit_dados_hospital, #tr_tit_dados_responsavel,
@@ -219,18 +219,4 @@ div p a{;
 
 .ui-dialog-content, .ui-widget-content{
   padding: 0px !important;
-}
-.select {
-  border: 1px solid #ffffff; background: #ffffff; color: #000000;
-}
-input{
-  font-size: 11px;
-}
-
-#data_emissao_rg, #uf_emissao_rg {
-  width: 135px !important;
-}
-
-#orgao_emissao_rg {
-  width: 184px !important;
 }

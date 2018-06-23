@@ -1,33 +1,33 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja�
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author      Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
  * @package     Core
  * @subpackage  pmieducar
  * @subpackage  Matricula
  * @subpackage  Rematricula
- * @since       Arquivo disponível desde a versão 1.0.0
- * @todo        Refatorar a lógica de indice::Novo() para uma classe na camada de domínio
+ * @since       Arquivo dispon�vel desde a vers�o 1.0.0
+ * @todo        Refatorar a l�gica de indice::Novo() para uma classe na camada de dom�nio
  * @version     $Id$
  */
 
@@ -66,8 +66,8 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "Rematr&iacute;cula autom&aacute;tica"
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+         ""        => "Rematr&iacute;cula autom&aacute;tica"             
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -82,14 +82,12 @@ class indice extends clsCadastro
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
     $this->inputsHelper()->dynamic('turma', array('label' => 'Selecione a turma do ano anterior', 'required' => FALSE));
     $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
-    $this->inputsHelper()->date('data_matricula', array('label' => 'Data da matricula', 'placeholder' => 'dd/mm/yyyy'));
-
-    $scripts = array('/modules/Cadastro/Assets/Javascripts/RematriculaAutomatica.js');
-    Portabilis_View_Helper_Application::loadJavascript($this, $scripts);
+    $this->inputsHelper()->date('data_matricula', array('label' => 'Data da matr�cula', 'placeholder' => 'dd/mm/yyyy'));
+    $this->inputsHelper()->hidden('nao_filtrar_ano', array('value' => '1'));
   }
 
   /**
-   * @todo Refatorar a l?ica para uma classe na camada de dom?io.
+   * @todo Refatorar a l�gica para uma classe na camada de dom�nio.
    */
   function Novo()
   {
@@ -175,6 +173,7 @@ class indice extends clsCadastro
             }
           }
         }
+        $mensagem .= "</br> As enturma��es podem ser realizadas em: Movimenta��o > Enturma��o.</span>";
         $this->mensagem = $mensagem;
       }elseif (count($alunosSemInep) > 0) {
         $this->mensagem .= "<span>Não foi possível realizar a rematrícula, pois o(s) seguinte(s) aluno(s) não possuem o INEP cadastrado: </br></br>";
@@ -185,10 +184,10 @@ class indice extends clsCadastro
       }elseif ($this->existeMatriculasAprovadasReprovadas($escolaId, $cursoId, $serieId, $turmaId, $this->ano_letivo)) {
         $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados em ".($this->ano_letivo-1).".</span>";
       }else{
-        $this->mensagem = Portabilis_String_Utils::toLatin1("<span class='notice'>Os alunos desta série já encontram-se rematriculados, sendo assim, favor verificar se as enturmações já foram efetuadas em Movimentação > Enturmação.</span>");
+        $this->mensagem = "<span class='notice'>Nenhum aluno rematriculado. Certifique-se que a turma possui alunos aprovados ou reprovados n�o matriculados em ".($ano-1).".</span>";
       }
     }elseif(empty($this->mensagem))
-      $this->mensagem = "Ocorreu algum erro inesperado durante as rematrículas, por favor, tente novamente.";
+      $this->mensagem = "Ocorreu algum erro inesperado durante as rematr�culas, por favor, tente novamente.";
 
     return $result;
   }
@@ -276,8 +275,8 @@ class indice extends clsCadastro
       $this->db->Consulta($sql);
     }
     catch (Exception $e) {
-      $this->mensagem = "Erro ao selecionar matrículas ano anterior: $anoAnterior";
-      error_log("Erro ao selecionar matrículas ano anterior, no processo rematrícula automática:" . $e->getMessage());
+      $this->mensagem = "Erro ao selecionar matr�culas ano anterior: $anoAnterior";
+      error_log("Erro ao selecionar matr�culas ano anterior, no processo rematr�cula autom�tica:" . $e->getMessage());
       return false;
     }
 
@@ -319,6 +318,8 @@ class indice extends clsCadastro
     else{
       $this->mensagem = "Não foi possível obter a próxima série da sequência de enturmação";
     }
+    else
+      $this->mensagem = "N�o foi poss�vel obter a pr�xima s�rie da sequ�ncia de enturma��o";
 
     return false;
   }
@@ -336,8 +337,8 @@ class indice extends clsCadastro
       $escolaId, $serieId, $this->pessoa_logada, $alunoId, $this->ano_letivo, $cursoId));
     }
     catch (Exception $e) {
-      $this->mensagem = "Erro durante matrícula do aluno: $alunoId";
-      error_log("Erro durante a matrícula do aluno $alunoId, no processo de rematrícula automática:" . $e->getMessage());
+      $this->mensagem = "Erro durante matr�cula do aluno: $alunoId";
+      error_log("Erro durante a matr�cula do aluno $alunoId, no processo de rematr�cula autom�tica:" . $e->getMessage());
       return false;
     }
     
@@ -375,15 +376,15 @@ class indice extends clsCadastro
   }
 }
 
-// Instancia objeto de página
+// Instancia objeto de p�gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúddo
+// Instancia objeto de conte�do
 $miolo = new indice();
 
-// Atribui o conteúdo dá página
+// Atribui o conte�do �  p�gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o c�digo HTML
 $pagina->MakeAll();
 ?>

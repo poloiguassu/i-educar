@@ -27,6 +27,8 @@
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsListagem.inc.php");
 require_once ("include/clsBanco.inc.php");
+require_once ("include/localizacaoSistema.php");
+require_once ("lib/App/Model/AtivoInativo.php");
 
 class clsIndex extends clsBase
 {
@@ -41,41 +43,47 @@ class clsIndex extends clsBase
 
 class indice extends clsListagem
 {
-    function Gerar()
-    {
-        $this->titulo = "Usu&aacute;rios";
-        
-        $this->addCabecalhos( array( "Nome","MatrÃ­cula", "MatrÃ­cula Interna" ,"Status") );
+	var $funcionario_ativo;
+
+	function Gerar()
+	{
+		$this->titulo = "Usuários";
+		$this->addCabecalhos( array( "Nome", "Status") );
 
         // Filtros de Busca
         $this->campoTexto("nm_pessoa", "Nome", "", 50, 255);
         $this->campoTexto("matricula", "Matr&iacute;cula", "", 10, 15);
         $this->campoTexto("matricula_interna", "Matr&iacute;cula Interna", "", 30, 30);
 
-        // Paginador
-        $limite = 10;
-        $iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
+		if(!is_numeric($_GET['funcionario_ativo']))
+			$this->funcionario_ativo = App_Model_AtivoInativo::ATIVO;
+		else
+			$this->funcionario_ativo = $_GET['funcionario_ativo'];
 
-        $obj_func = new clsFuncionario();
-        $obj_func->setOrderby("(nome) ASC");
-        $obj_func->setLimite($limite, $iniciolimit);
-        $lst_func = $obj_func->lista($_GET["matricula"], $_GET['nm_pessoa'],FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,
-            FALSE,FALSE,FALSE,FALSE,NULL,$_GET['matricula_interna']);
+		$this->campoLista('funcionario_ativo', 'Usuário ativo', App_Model_AtivoInativo::getInstance()->getValues(), $this->funcionario_ativo, '', FALSE, '', '', FALSE, FALSE);
 
-        if($lst_func)
-        {
-            foreach ( $lst_func AS $pessoa )
-            {
-                $ativo = ($pessoa['ativo'] == '1') ? "Ativo" : "Inativo";
-                $total = $pessoa['_total'];
-                $pessoa['nome']  = minimiza_capitaliza($pessoa['nome']);
-                $this->addLinhas( array(
-                "<a href='funcionario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'><img src='imagens/noticia.jpg' border=0>{$pessoa['nome']}</a>",
-                "<a href='funcionario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$pessoa['matricula']}</a>",
-                "<a href='funcionario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$pessoa['matricula_interna']}</a>", 
-                "<a href='funcionario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'>{$ativo}</a>") );
-            }
-        }
+		// Paginador
+		$limite = 10;
+		$iniciolimit = ( $_GET["pagina_{$this->nome}"] ) ? $_GET["pagina_{$this->nome}"]*$limite-$limite: 0;
+
+		$obj_func = new clsFuncionario();
+		$obj_func->setOrderby("ativo='1' DESC, to_ascii(nome) ASC");
+		$obj_func->setLimite($limite, $iniciolimit);
+
+		$lst_func = $obj_func->lista($_GET["matricula"],  $_GET['nm_pessoa'], $this->funcionario_ativo);
+
+		if($lst_func)
+		{
+			foreach ( $lst_func AS $pessoa )
+			{
+				$ativo = ($pessoa['ativo'] == '1') ? "Ativo" : "Inativo";
+				$total = $pessoa['_total'];
+
+				$pessoa['nome']  = minimiza_capitaliza($pessoa['nome']);
+
+				$this->addLinhas( array("<a href='funcionario_det.php?ref_pessoa={$pessoa['ref_cod_pessoa_fj']}'><img src='imagens/noticia.jpg' border=0>{$pessoa['nome']}</a>", $ativo) );
+			}
+		}
 
         $this->addPaginador2( "funcionario_lst.php", $total, $_GET, $this->nome, $limite );
         $this->acao = "go(\"funcionario_cad.php\")";
@@ -83,13 +91,14 @@ class indice extends clsListagem
 
         $this->largura = "100%";
 
-    $localizacao = new LocalizacaoSistema();
-    $localizacao->entradaCaminhos( array(
-         $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         ""                                  => "Listagem de funcion&aacute;rios"
-    ));
-    $this->enviaLocalizacao($localizacao->montar());        
-    }
+		$localizacao = new LocalizacaoSistema();
+
+		$localizacao->entradaCaminhos( array(
+			$_SERVER['SERVER_NAME']."/intranet" => "Início",
+			""                                  => "Listagem de funcion&aacute;rios"
+		));
+		$this->enviaLocalizacao($localizacao->montar());
+	}
 }
 
 $pagina = new clsIndex();

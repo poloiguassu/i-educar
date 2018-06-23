@@ -1,29 +1,29 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	*																	     *
+	*	@author Prefeitura Municipal de Itaja�								 *
+	*	@updated 29/03/2007													 *
+	*   Pacote: i-PLB Software P�blico Livre e Brasileiro					 *
+	*																		 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja�			 *
+	*						ctima@itajai.sc.gov.br					    	 *
+	*																		 *
+	*	Este  programa  �  software livre, voc� pode redistribu�-lo e/ou	 *
+	*	modific�-lo sob os termos da Licen�a P�blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers�o 2 da	 *
+	*	Licen�a   como  (a  seu  crit�rio)  qualquer  vers�o  mais  nova.	 *
+	*																		 *
+	*	Este programa  � distribu�do na expectativa de ser �til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl�cita de COMERCIALI-	 *
+	*	ZA��O  ou  de ADEQUA��O A QUALQUER PROP�SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen�a  P�blica  Geral  GNU para obter mais detalhes.	 *
+	*																		 *
+	*	Voc�  deve  ter  recebido uma c�pia da Licen�a P�blica Geral GNU	 *
+	*	junto  com  este  programa. Se n�o, escreva para a Free Software	 *
+	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
+	*	02111-1307, USA.													 *
+	*																		 *
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 $desvio_diretorio = "";
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
@@ -31,13 +31,13 @@ require_once ("include/clsBanco.inc.php");
 
 class clsIndex extends clsBase
 {
-    
-    function Formular()
-    {
-        $this->SetTitulo( "{$this->_instituicao} Diária Grupo" );
-        $this->processoAp = "297";
-        $this->addEstilo('localizacaoSistema');
-    }
+	
+	function Formular()
+	{
+		$this->SetTitulo( "{$this->_instituicao} Di�ria Grupo" );
+		$this->processoAp = "297";
+		$this->addEstilo('localizacaoSistema');
+	}
 }
 
 class indice extends clsCadastro
@@ -69,7 +69,7 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
          ""        => "{$nomeMenu} grupo de di&aacute;rias"             
     ));
     $this->enviaLocalizacao($localizacao->montar());        
@@ -156,34 +156,34 @@ class indice extends clsCadastro
     return true;
 }
 
-    function Excluir()
-    {
-        if( is_numeric( $this->cod_diaria_grupo ) )
-        {
-            $db = new clsBanco();
-            $ref_cod_diaria = $db->CampoUnico( "SELECT ref_cod_diaria_grupo FROM pmidrh.diaria WHERE ref_cod_diaria_grupo = {$this->cod_diaria_grupo}" );
+	function Excluir()
+	{
+		if( is_numeric( $this->cod_diaria_grupo ) )
+		{
+			$db = new clsBanco();
+			$ref_cod_diaria = $db->CampoUnico( "SELECT ref_cod_diaria_grupo FROM pmidrh.diaria WHERE ref_cod_diaria_grupo = {$this->cod_diaria_grupo}" );
 
-            $ref_cod_diaria_valores = $db->CampoUnico( "SELECT ref_cod_diaria_grupo FROM pmidrh.diaria_valores WHERE ref_cod_diaria_grupo = {$this->cod_diaria_grupo}" );
+			$ref_cod_diaria_valores = $db->CampoUnico( "SELECT ref_cod_diaria_grupo FROM pmidrh.diaria_valores WHERE ref_cod_diaria_grupo = {$this->cod_diaria_grupo}" );
 
-            if (!isset($ref_cod_diaria) )
-            {
-            if (!isset($ref_cod_diaria_valores))
-            {
-                $db->Consulta( "DELETE FROM pmidrh.diaria_grupo WHERE cod_diaria_grupo = {$this->cod_diaria_grupo}" );
-                header( "location: diaria_grupo_lst.php" );
-                die();
-                return true;
-            }
-            else
-            {
-            $this->mensagem = "Código da diária está sendo utilizado na tabela diaria_valores.";
-            }
-            }
-            else
-            $this->mensagem = "Código da diária está sendo utilizado na tabela diaria.";
-        }
-        return false;
-    }
+			if (!isset($ref_cod_diaria) )
+			{
+			if (!isset($ref_cod_diaria_valores))
+			{
+				$db->Consulta( "DELETE FROM pmidrh.diaria_grupo WHERE cod_diaria_grupo = {$this->cod_diaria_grupo}" );
+				header( "location: diaria_grupo_lst.php" );
+				die();
+				return true;
+			}
+			else
+			{
+			$this->mensagem = "C�digo da di�ria est� sendo utilizado na tabela diaria_valores.";
+			}
+			}
+			else
+			$this->mensagem = "C�digo da di�ria est� sendo utilizado na tabela diaria.";
+		}
+		return false;
+	}
 }
 
 

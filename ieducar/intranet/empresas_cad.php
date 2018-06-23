@@ -150,120 +150,108 @@ class indice extends clsCadastro
          "educar_pessoas_index.php"          => "Pessoas",
          ""                                  => "$nomeMenu pessoa jur&iacute;dica"
     ));
-    $this->enviaLocalizacao($localizacao->montar());            
+    $this->enviaLocalizacao($localizacao->montar());    		
 
-        return $this->retorno;
-    }
+		return $this->retorno;
+	}
 
-    function Gerar()
-    {
-        if(!$this->busca_empresa)
-        {
-            $this->campoCnpj("busca_empresa","CNPJ",$this->busca_empresa,true);
-        }
-        else
-        {
-            $this->url_cancelar = ($this->retorno == "Editar") ? "empresas_det.php?cod_empresa={$this->cod_pessoa_fj}" : "empresas_lst.php";
+	function Gerar()
+	{
+		if(!$this->busca_empresa)
+		{
+			$this->campoCnpj("busca_empresa","CNPJ",$this->busca_empresa,true);
+		}
+		else
+		{
+			$this->url_cancelar = ($this->retorno == "Editar") ? "empresas_det.php?cod_empresa={$this->cod_pessoa_fj}" : "empresas_lst.php";
 
-            $this->campoOculto( "cod_pessoa_fj", $this->cod_pessoa_fj );
-            $this->campoOculto( "idpes_cad", $this->idpes_cad );
+			$this->campoOculto( "cod_pessoa_fj", $this->cod_pessoa_fj );
+			$this->campoOculto( "idpes_cad", $this->idpes_cad );
 
-            // Dados da Empresa
-            $this->campoTexto( "fantasia", "Nome Fantasia",  $this->fantasia, "50", "255", true );
-            $this->campoTexto( "razao_social", "Raz&atilde;o Social",  $this->razao_social, "50", "255", true );
-            $this->campoTexto( "capital_social", "Capital Social",  $this->capital_social, "50", "255" );
-            
-            if($this->cnpj)
-            {
-                $this->campoRotulo("cnpj_","CNPJ", $this->cnpj);    
-                $this->campoOculto("cnpj", $this->cnpj);
-            }else 
-            {
-                $this->campoCnpj( "cnpj", "CNPJ",  $this->cnpj, true ); 
-            }
-        
-            
+			// Dados da Empresa
+			$this->campoTexto( "fantasia", "Nome Fantasia",  $this->fantasia, "50", "255", true );
+			$this->campoTexto( "razao_social", "Raz&atilde;o Social",  $this->razao_social, "50", "255", true );
+			$this->campoTexto( "capital_social", "Capital Social",  $this->capital_social, "50", "255" );
+			
+			if($this->cnpj != int2CNPJ(0))
+			{
+				$this->campoRotulo("cnpj_","CNPJ", $this->cnpj);	
+				$this->campoOculto("cnpj", $this->cnpj);
+			}else 
+			{
+				$this->campoCnpj( "cnpj", "CNPJ",  $this->cnpj, false );	
+			}
 
+			// Detalhes do Endereço da empresa
+			$objTipoLog = new clsTipoLogradouro();
+			$listaTipoLog = $objTipoLog->lista();
+			$lista = array(""=>"Selecione");
+			if($lista)
+			{
+				foreach ($listaTipoLog as $tipoLog) {
+					$lista[$tipoLog['idtlog']] = $tipoLog['descricao'];
+				}
+			}
 
-            // Detalhes do EndereÃ§o da empresa
-            $objTipoLog = new clsTipoLogradouro();
-            $listaTipoLog = $objTipoLog->lista();
-            $lista = array(""=>"Selecione");
-            if($lista)
-            {
-                foreach ($listaTipoLog as $tipoLog) {
-                    $lista[$tipoLog['idtlog']] = $tipoLog['descricao'];
-                }
-            }
+			$objUf = new clsUf();
+			$listauf = $objUf->lista();
+			$listaEstado = array(""=>"Selecione");
+			if($listauf)
+			{
+				foreach ($listauf as $uf) {
+					$listaEstado[$uf['sigla_uf']] = $uf['sigla_uf'];
+				}
+			}
 
-            $objUf = new clsUf();
-            $listauf = $objUf->lista();
-            $listaEstado = array(""=>"Selecione");
-            if($listauf)
-            {
-                foreach ($listauf as $uf) {
-                    $listaEstado[$uf['sigla_uf']] = $uf['sigla_uf'];
-                }
-            }
-
-            $this->campoOculto( "idbai", $this->idbai );
-            $this->campoOculto( "idlog", $this->idlog );
-            $this->campoOculto( "cep", $this->cep );
+			$this->campoOculto( "idbai", $this->idbai );
+			$this->campoOculto( "idlog", $this->idlog );
+			$this->campoOculto( "cep", $this->cep );
 
 
-            if($this->idlog  && $this->idbai && $this->cep && $this->cod_pessoa_fj)
-            {
-                $this->campoCep("cep_", "CEP", $this->cep, true, "-", "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=sigla_uf&campo7=cidade&campo8=idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=sigla_uf&campo12=idtlog&campo13=id_cidade\'></iframe>');\">", true);
-                $this->campoLista("idtlog","Tipo Logradouro",$lista,$this->idtlog,false,false,false,false,true);
-                $this->campoTextoInv( "logradouro", "Logradouro",  $this->logradouro, "50", "255", false );
-                $this->campoTextoInv( "cidade", "Cidade",  $this->cidade, "50", "255", false );
-                $this->campoTextoInv( "bairro", "Bairro",  $this->bairro, "50", "255", false );
-                $this->campoTexto( "complemento", "Complemento",  $this->complemento, "50", "255", false );
-                $this->campoTexto( "numero", "NÃºmero",  $this->numero, "10", "10", false );
-                $this->campoTexto( "letra", "Letra",  $this->letra, "1", "1", false );
-                $this->campoLista("sigla_uf","Estado",$listaEstado,$this->sigla_uf,false,false,false,false,true);
-            }
-            elseif($this->cod_pessoa_fj)
-            {
-                $this->campoCep("cep_", "CEP", $this->cep, true, "-", "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=sigla_uf&campo7=cidade&campo8=idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=sigla_uf&campo12=idtlog&campo13=id_cidade\'></iframe>');\">", false);
-                $this->campoLista("idtlog","Tipo Logradouro",$lista,$this->idtlog);
-                $this->campoTexto( "logradouro", "Logradouro",  $this->logradouro, "50", "255", false );
-                $this->campoTexto( "cidade", "Cidade",  $this->cidade, "50", "255", false );
-                $this->campoTexto( "bairro", "Bairro",  $this->bairro, "50", "255", false );
-                $this->campoTexto( "complemento", "Complemento",  $this->complemento, "50", "255", false );
-                $this->campoTexto( "numero", "NÃºmero",  $this->numero, "10", "10", false );
-                $this->campoTexto( "letra", "Letra",  $this->letra, "1", "1", false );
-                $this->campoLista("sigla_uf","Estado",$listaEstado,$this->sigla_uf);
+			if($this->idlog  && $this->idbai && $this->cep && $this->cod_pessoa_fj)
+			{
+				$this->campoCep("cep_", "CEP", $this->cep, true, "-", "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=sigla_uf&campo7=cidade&campo8=idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=sigla_uf&campo12=idtlog&campo13=id_cidade\'></iframe>');\">", true);
+				$this->campoLista("idtlog","Tipo Logradouro",$lista,$this->idtlog,false,false,false,false,true);
+				$this->campoTextoInv( "logradouro", "Logradouro",  $this->logradouro, "50", "255", false );
+				$this->campoTextoInv( "cidade", "Cidade",  $this->cidade, "50", "255", false );
+				$this->campoTextoInv( "bairro", "Bairro",  $this->bairro, "50", "255", false );
+				$this->campoTexto( "complemento", "Complemento",  $this->complemento, "50", "255", false );
+				$this->campoTexto( "numero", "Número",  $this->numero, "10", "10", false );
+				$this->campoTexto( "letra", "Letra",  $this->letra, "1", "1", false );
+				$this->campoLista("sigla_uf","Estado",$listaEstado,$this->sigla_uf,false,false,false,false,true);
+			}
+			elseif($this->cod_pessoa_fj)
+			{
+				$this->campoCep("cep_", "CEP", $this->cep, true, "-", "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=sigla_uf&campo7=cidade&campo8=idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=sigla_uf&campo12=idtlog&campo13=id_cidade\'></iframe>');\">", false);
+				$this->campoLista("idtlog","Tipo Logradouro",$lista,$this->idtlog);
+				$this->campoTexto( "logradouro", "Logradouro",  $this->logradouro, "50", "255", false );
+				$this->campoTexto( "cidade", "Cidade",  $this->cidade, "50", "255", false );
+				$this->campoTexto( "bairro", "Bairro",  $this->bairro, "50", "255", false );
+				$this->campoTexto( "complemento", "Complemento",  $this->complemento, "50", "255", false );
+				$this->campoTexto( "numero", "Número",  $this->numero, "10", "10", false );
+				$this->campoTexto( "letra", "Letra",  $this->letra, "1", "1", false );
+				$this->campoLista("sigla_uf","Estado",$listaEstado,$this->sigla_uf);
 
-            }
-            else
-            {
-                $this->campoCep("cep_", "CEP", $this->cep, true, "-", "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=sigla_uf&campo7=cidade&campo8=idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=sigla_uf&campo12=idtlog&campo13=id_cidade\'></iframe>');\">", true);
-                $this->campoLista("idtlog","Tipo Logradouro",$lista,$this->idtlog,false,false,false,false,true);
-                $this->campoTextoInv( "logradouro", "Logradouro",  $this->logradouro, "50", "255",true );
-                $this->campoTextoInv( "cidade", "Cidade",  $this->cidade, "50", "255", true );
-                $this->campoTextoInv( "bairro", "Bairro",  $this->bairro, "50", "255", true );
-                $this->campoTexto( "complemento", "Complemento",  $this->complemento, "50", "255", false );
-                $this->campoTexto( "numero", "NÃºmero",  $this->numero, "10", "10", false );
-                $this->campoTexto( "letra", "Letra",  $this->letra, "1", "1", false );
-                $this->campoLista("sigla_uf","Estado",$listaEstado,$this->sigla_uf,false,false,false,false,true);
-            }
+			}
+			else
+			{
+				$this->campoCep("cep_", "CEP", $this->cep, true, "-", "&nbsp;<img id='lupa' src=\"imagens/lupa.png\" border=\"0\" onclick=\"showExpansivel( 500,500, '<iframe name=\'miolo\' id=\'miolo\' frameborder=\'0\' height=\'100%\' width=\'500\' marginheight=\'0\' marginwidth=\'0\' src=\'educar_pesquisa_cep_log_bairro.php?campo1=bairro&campo2=idbai&campo3=cep&campo4=logradouro&campo5=idlog&campo6=sigla_uf&campo7=cidade&campo8=idtlog&campo9=isEnderecoExterno&campo10=cep_&campo11=sigla_uf&campo12=idtlog&campo13=id_cidade\'></iframe>');\">", true);
+				$this->campoLista("idtlog","Tipo Logradouro",$lista,$this->idtlog,false,false,false,false,true);
+				$this->campoTextoInv( "logradouro", "Logradouro",  $this->logradouro, "50", "255",true );
+				$this->campoTextoInv( "cidade", "Cidade",  $this->cidade, "50", "255", true );
+				$this->campoTextoInv( "bairro", "Bairro",  $this->bairro, "50", "255", true );
+				$this->campoTexto( "complemento", "Complemento",  $this->complemento, "50", "255", false );
+				$this->campoTexto( "numero", "Número",  $this->numero, "10", "10", false );
+				$this->campoTexto( "letra", "Letra",  $this->letra, "1", "1", false );
+				$this->campoLista("sigla_uf","Estado",$listaEstado,$this->sigla_uf,false,false,false,false,true);
+			}
 
 
 
-            // Telefones
-            /*
-            $this->campoTexto( "ddd_telefone_1", "DDD Telefone 1",  $this->ddd_telefone_1, "3", "2", false );
-            $this->campoTexto( "telefone_1", "Telefone 1",  $this->telefone_1, "10", "15", false );
-            $this->campoTexto( "ddd_telefone_2", "DDD Telefone 2",  $this->ddd_telefone_2, "3", "2", false );
-            $this->campoTexto( "telefone_2", "Telefone",  $this->telefone_2, "10", "15", false );
-            $this->campoTexto( "ddd_telefone_mov", "DDD Celular",  $this->ddd_telefone_mov, "3", "2", false );
-            $this->campoTexto( "telefone_mov", "Celular",  $this->telefone_mov, "10", "15", false );
-            $this->campoTexto( "ddd_telefone_fax", "DDD Fax",  $this->ddd_telefone_fax, "3", "2", false );
-            $this->campoTexto( "telefone_fax", "Fax",  $this->telefone_fax, "10", "15", false );
-            */
+			// Telefones
 
-            $this->inputTelefone('1', 'Telefone 1');
+
+		    $this->inputTelefone('1', 'Telefone 1');
             $this->inputTelefone('2', 'Telefone 2');
             $this->inputTelefone('mov', 'Celular');
             $this->inputTelefone('fax', 'Fax');

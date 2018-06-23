@@ -71,10 +71,21 @@ class Portabilis_View_Helper_Input_Date extends Portabilis_View_Helper_Input_Cor
     if ($isDbFormated)
       $inputOptions['value'] = Portabilis_Date_Utils::pgSQLToBr($inputOptions['value']);
 
+	Portabilis_View_Helper_Application::embedJavascript($this->viewInstance, "$('#{$inputOptions['id']}').datepicker({
+			dateFormat: 'dd/mm/yy',
+			dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+			dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+			dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+			monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+			monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+			nextText: 'Próximo',
+			prevText: 'Anterior'
+		})", true);
+
     call_user_func_array(array($this->viewInstance, 'campoData'), $inputOptions);
     $this->fixupPlaceholder($inputOptions);
 
-    // implementado fixup via js, pois algumas opÃ§Ãµes nÃ£o estÃ£o sendo verificadas pelo helper ieducar.
+    // implementado fixup via js, pois algumas opções não estão sendo verificadas pelo helper ieducar.
     $this->fixupOptions($inputOptions);
   }
 

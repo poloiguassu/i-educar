@@ -953,23 +953,24 @@ class App_Model_IedFinder extends CoreExt_Entity
    * @param int $bibliotecaId
    * @return array
    */
-  public static function getBibliotecaObra($bibliotecaId, $id = NULL)
-  {
-    $obra = self::addClassToStorage('clsPmieducarAcervo', NULL,
-                                    'include/pmieducar/clsPmieducarAcervo.inc.php');
+	public static function getVPSEntrevista($curso, $ano, $id = NULL)
+	{
+		$entrevista = self::addClassToStorage('clsPmieducarVPSEntrevista', NULL,
+						'include/pmieducar/clsPmieducarVPSEntrevista.inc.php');
 
-    $obra->ref_cod_biblioteca = $$bibliotecaId;
-    $obra->cod_acervo         = $id;
-    $obra                     = $obra->detalhe();
+		$entrevista->ref_cod_curso      = $curso;
+		$entrevista->ano                = $ano;
+		$entrevista->cod_vps_entrevista = $id;
+		$entrevista                     = $entrevista->detalhe();
 
-    if (FALSE === $obra) {
-      throw new App_Model_Exception(
-        sprintf('Obra com o c√≥digo "%d" n√£o existe.', $id)
-      );
-    }
+		if (FALSE === $entrevista) {
+			throw new App_Model_Exception(
+				sprintf('Entrevista com o cÛdigo "%d" n„o existe.', $id)
+			);
+		}
 
-    return $obra;
-  }
+		return $entrevista;
+	}
 
   /**
    * Retorna um aluno cadastrado para uma escola na tabela pmieducar.aluno, selecionando

@@ -43,7 +43,7 @@
 # Protege arquivos e diretórios de serem listados ou servidos. Arquivo info.php
 # e arquivos SQL são protegidos assim como os diretórios misc, test e
 # diretórios comuns a SCMs como CVS e SVN (para proteger deployments desse tipo).
-<FilesMatch "\.(.*sql|ini|svn-base)$|^(misc|tests|configuration|spikes|Entries.*|Repository|Root|Tag|Template|all-wcprops|entries|format)$|^info\.php$">
+<FilesMatch "\.(.*sql|ini|svn-base)$|^(misc|views|tests|configuration|spikes|Entries.*|Repository|Root|Tag|Template|all-wcprops|entries|format)$|^info\.php$">
   Order allow,deny
 </FilesMatch>
 
@@ -76,8 +76,6 @@ DirectoryIndex index.php index.html index.htm
 #
 # @link http://php.net/configuration.changes
 <IfModule mod_php5.c>
-  php_value memory_limit                512M
-  php_value error_reporting             1
   php_flag  display_errors              off
   php_flag  magic_quotes_gpc            off
   php_flag  register_globals            off
@@ -92,11 +90,11 @@ DirectoryIndex index.php index.html index.htm
 </IfModule>
 
 
-# ConfiguraÃ§Ã£o desabilitada (uma vez que o ambiente padrÃ£o jÃ¡ Ã© production), permitindo definir o ambiente via virtual host.
+# Configuração desabilitada (uma vez que o ambiente padrão já é production), permitindo definir o ambiente via virtual host.
 
 # Configura o ambiente de execução do i-Educar (production|development|testing).
 # Essa variável define qual seção de configuração do arquivo
 # configuration/ieducar.ini será carregada pelo arquivo includes/bootstrap.php
 
-# comentado definiÃ§Ã£o (uma vez que o ambiente padrÃ£o jÃ¡ Ã© production), permitindo assim definir o ambiente via virtual host.
+# comentado definição (uma vez que o ambiente padrão já é production), permitindo assim definir o ambiente via virtual host.
 #SetEnv CORE_EXT_CONFIGURATION_ENV production

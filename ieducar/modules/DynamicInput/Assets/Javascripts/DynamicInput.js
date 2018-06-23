@@ -33,7 +33,7 @@ function updateSelect($targetElement, options, emptyOptionHtml) {
 
 function resetSelect($targetElement) {
   $targetElement.children().not('[value=""]').remove();
-  $targetElement.children().first().attr('checked', 'checked');
+  $targetElement.children().first().prop('checked', 'checked');
   //$targetElement.attr('disabled', 'disabled');
 }
 
@@ -46,10 +46,10 @@ function xmlResourcesToSelectOptions(resources, parentNodeName, nodeIdAttrName, 
     var text;
 
     var $option = $j('<option />');
-    $option.attr('value', $value.attr(nodeIdAttrName));
+    $option.attr('value', $value.prop(nodeIdAttrName));
 
     if (typeof nodeValueAttrName != 'undefined')
-      text = ($value.attr(nodeValueAttrName));
+      text = safeCapitalize($value.prop(nodeValueAttrName));
     else
       text = ($value.text());
 
@@ -87,10 +87,7 @@ function jsonResourcesToSelectOptions(resources, captalizeFirstCaracter) {
       });
     }
 
-    if (captalizeFirstCaracter)
-      opt.html((newValue));
-    else
-      opt.html(newValue);
+    opt.html(safeCapitalize(newValue));
 
     options.push(opt);
   });

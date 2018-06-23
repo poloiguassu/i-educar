@@ -42,156 +42,156 @@ class clsIndexBase extends clsBase
 
 class indice extends clsDetalhe
 {
-    /**
-     * Titulo no topo da pagina
-     *
-     * @var int
-     */
-    var $titulo;
+	/**
+	 * Titulo no topo da pagina
+	 *
+	 * @var int
+	 */
+	var $titulo;
 
-    var $ref_cod_aluno;
-    var $sequencial;
-    var $ref_usuario_exc;
-    var $ref_usuario_cad;
-    var $ano;
-    var $carga_horaria;
-    var $dias_letivos;
-    var $escola;
-    var $escola_cidade;
-    var $escola_uf;
-    var $observacao;
-    var $aprovado;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+	var $ref_cod_aluno;
+	var $sequencial;
+	var $ref_usuario_exc;
+	var $ref_usuario_cad;
+	var $ano;
+	var $carga_horaria;
+	var $dias_letivos;
+	var $escola;
+	var $escola_cidade;
+	var $escola_uf;
+	var $observacao;
+	var $aprovado;
+	var $data_cadastro;
+	var $data_exclusao;
+	var $ativo;
 
-    var $ref_cod_instituicao;
-    var $nm_serie;
-    var $origem;
-    var $extra_curricular;
-    var $ref_cod_matricula;
-    var $frequencia;
+	var $ref_cod_instituicao;
+	var $nm_serie;
+	var $origem;
+	var $extra_curricular;
+	var $ref_cod_matricula;
+	var $frequencia;
 
-    function Gerar()
-    {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
+	function Gerar()
+	{
+		@session_start();
+		$this->pessoa_logada = $_SESSION['id_pessoa'];
+		session_write_close();
 
-        $this->titulo = "Hist&oacute;rico Escolar - Detalhe";
+		$this->titulo = "Hist&oacute;rico Escolar - Detalhe";
+		
+
+		$this->sequencial=$_GET["sequencial"];
+		$this->ref_cod_aluno=$_GET["ref_cod_aluno"];
+
+		$tmp_obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial );
+		$registro = $tmp_obj->detalhe();
+
+		if( ! $registro )
+		{
+			header( "location: educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
+			die();
+		}
+
+		if( class_exists( "clsPmieducarAluno" ) )
+		{
+			$obj_aluno = new clsPmieducarAluno();
+			$lst_aluno = $obj_aluno->lista( $registro["ref_cod_aluno"],null,null,null,null,null,null,null,null,null,1 );
+			if ( is_array($lst_aluno) )
+			{
+				$det_aluno = array_shift($lst_aluno);
+				$nm_aluno = $det_aluno["nome_aluno"];
+			}
+		}
+		else
+		{
+			$nm_aluno = "Erro na geracao";
+			echo "<!--\nErro\nClasse nao existente: clsPmieducarAluno\n-->";
+		}
 
 
-        $this->sequencial=$_GET["sequencial"];
-        $this->ref_cod_aluno=$_GET["ref_cod_aluno"];
+		if( $nm_aluno )
+		{
+			$this->addDetalhe( array( "Aluno", "{$nm_aluno}") );
+		}
+//		if( $registro["sequencial"] )
+//		{
+//			$this->addDetalhe( array( "Sequencial", "{$registro["sequencial"]}") );
+//		}
 
-        $tmp_obj = new clsPmieducarHistoricoEscolar( $this->ref_cod_aluno, $this->sequencial );
-        $registro = $tmp_obj->detalhe();
+		if($registro["extra_curricular"])
+		{
+			if( $registro["escola"] )
+			{
+				$this->addDetalhe( array( "Institui&ccedil;&atilde;o", "{$registro["escola"]}") );
+			}
+			if( $registro["escola_cidade"] )
+			{
+				$this->addDetalhe( array( "Cidade da Institui&ccedil;&atilde;o", "{$registro["escola_cidade"]}") );
+			}
+			if( $registro["escola_uf"] )
+			{
+				$this->addDetalhe( array( "Estado da Institui&ccedil;&atilde;o", "{$registro["escola_uf"]}") );
+			}
+			if( $registro["nm_serie"] )
+			{
+				$this->addDetalhe( array( "Eixo", "{$registro["nm_serie"]}") );
+			}
+		}
+		else
+		{
+			if( $registro["escola"] )
+			{
+				$this->addDetalhe( array( "Escola", "{$registro["escola"]}") );
+			}
+			if( $registro["escola_cidade"] )
+			{
+				$this->addDetalhe( array( "Cidade da Escola", "{$registro["escola_cidade"]}") );
+			}
+			if( $registro["escola_uf"] )
+			{
+				$this->addDetalhe( array( "Estado da Escola", "{$registro["escola_uf"]}") );
+			}
+			if( $registro["nm_serie"] )
+			{
+				$this->addDetalhe( array( "Eixo", "{$registro["nm_serie"]}") );
+			}
+		}
 
-        if( ! $registro )
-        {
-            header( "location: educar_historico_escolar_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
-            die();
-        }
+		if( $registro["nm_curso"] )
+		{
+			$this->addDetalhe( array( "Projeto", "{$registro["nm_curso"]}") );
+		}
 
-        if( class_exists( "clsPmieducarAluno" ) )
-        {
-            $obj_aluno = new clsPmieducarAluno();
-            $lst_aluno = $obj_aluno->lista( $registro["ref_cod_aluno"],null,null,null,null,null,null,null,null,null,1 );
-            if ( is_array($lst_aluno) )
-            {
-                $det_aluno = array_shift($lst_aluno);
-                $nm_aluno = $det_aluno["nome_aluno"];
-            }
-        }
-        else
-        {
-            $nm_aluno = "Erro na geracao";
-            echo "<!--\nErro\nClasse nao existente: clsPmieducarAluno\n-->";
-        }
+		if( $registro["ano"] )
+		{
+			$this->addDetalhe( array( "Ano", "{$registro["ano"]}") );
+		}
+		if( $registro["carga_horaria"] )
+		{
+			$registro["carga_horaria"] = str_replace(".",",",$registro["carga_horaria"]);
 
+			$this->addDetalhe( array( "Carga Hor&aacute;ria", "{$registro["carga_horaria"]}") );
+		}
 
-        if( $nm_aluno )
-        {
-            $this->addDetalhe( array( "Aluno", "{$nm_aluno}") );
-        }
-//      if( $registro["sequencial"] )
-//      {
-//          $this->addDetalhe( array( "Sequencial", "{$registro["sequencial"]}") );
-//      }
+		$this->addDetalhe( array( "Faltas globalizadas", is_numeric($registro["faltas_globalizadas"]) ? 'Sim' : 'Não'));
 
-        if($registro["extra_curricular"])
-        {
-            if( $registro["escola"] )
-            {
-                $this->addDetalhe( array( "Institui&ccedil;&atilde;o", "{$registro["escola"]}") );
-            }
-            if( $registro["escola_cidade"] )
-            {
-                $this->addDetalhe( array( "Cidade da Institui&ccedil;&atilde;o", "{$registro["escola_cidade"]}") );
-            }
-            if( $registro["escola_uf"] )
-            {
-                $this->addDetalhe( array( "Estado da Institui&ccedil;&atilde;o", "{$registro["escola_uf"]}") );
-            }
-            if( $registro["nm_serie"] )
-            {
-                $this->addDetalhe( array( "Série", "{$registro["nm_serie"]}") );
-            }
-        }
-        else
-        {
-            if( $registro["escola"] )
-            {
-                $this->addDetalhe( array( "Escola", "{$registro["escola"]}") );
-            }
-            if( $registro["escola_cidade"] )
-            {
-                $this->addDetalhe( array( "Cidade da Escola", "{$registro["escola_cidade"]}") );
-            }
-            if( $registro["escola_uf"] )
-            {
-                $this->addDetalhe( array( "Estado da Escola", "{$registro["escola_uf"]}") );
-            }
-            if( $registro["nm_serie"] )
-            {
-                $this->addDetalhe( array( "S&eacute;rie", "{$registro["nm_serie"]}") );
-            }
-        }
-
-        if( $registro["nm_curso"] )
-        {
-            $this->addDetalhe( array( "Curso", "{$registro["nm_curso"]}") );
-        }
-
-        if( $registro["ano"] )
-        {
-            $this->addDetalhe( array( "Ano", "{$registro["ano"]}") );
-        }
-        if( $registro["carga_horaria"] )
-        {
-            $registro["carga_horaria"] = str_replace(".",",",$registro["carga_horaria"]);
-
-            $this->addDetalhe( array( "Carga Hor&aacute;ria", "{$registro["carga_horaria"]}") );
-        }
-
-        $this->addDetalhe( array( "Faltas globalizadas", is_numeric($registro["faltas_globalizadas"]) ? 'Sim' : 'Não'));
-
-        if( $registro["dias_letivos"] )
-        {
-            $this->addDetalhe( array( "Dias Letivos", "{$registro["dias_letivos"]}") );
-        }
-        if( $registro["frequencia"] )
-        {
-            $this->addDetalhe( array( "Frequência", "{$registro["frequencia"]}") );
-        }
-        if( $registro["extra_curricular"] )
-        {
-            $this->addDetalhe( array( "Extra-Curricular", "Sim") );
-        }
-        else
-        {
-            $this->addDetalhe( array( "Extra-Curricular", "N&atilde;o") );
-        }
+		if( $registro["dias_letivos"] )
+		{
+			$this->addDetalhe( array( "Dias Letivos", "{$registro["dias_letivos"]}") );
+		}
+		if( $registro["frequencia"] )
+		{
+			$this->addDetalhe( array( "Frequência", "{$registro["frequencia"]}") );
+		}
+		if( $registro["extra_curricular"] )
+		{
+			$this->addDetalhe( array( "Extra-Curricular", "Sim") );
+		}
+		else
+		{
+			$this->addDetalhe( array( "Extra-Curricular", "N&atilde;o") );
+		}
 
     if( $registro["aceleracao"] )
         {
@@ -391,8 +391,8 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""                                  => "Atualização de históricos escolares"
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+         ""                                  => "Detalhe do hist&oacute;rico escolar"
     ));
     $this->enviaLocalizacao($localizacao->montar());
     }

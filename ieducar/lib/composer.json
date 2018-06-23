@@ -1,0 +1,17 @@
+{
+    "name": "pensesmart/trilhajovem",
+    "description": "Sistema de Gerenciamento do Projeto Trilha Jovem",
+    "type": "project",
+    "require": {
+        "php": ">=5.4",
+        "league/geotools": "0.4",
+        "twig/twig": "~1.0"
+    },
+    "authors": [
+        {
+            "name": "Helcio",
+            "email": "helcio@carmo.in"
+        }
+    ],
+    "minimum-stability": "stable"
+}

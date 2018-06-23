@@ -1,31 +1,31 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja�
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix�o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  Modules
- * @since       Arquivo disponível desde a versão 1.1.0
+ * @since       Arquivo dispon�vel desde a vers�o 1.1.0
  * @version     $Id$
  */
 
@@ -37,18 +37,18 @@ require_once 'Avaliacao/Service/Boletim.php';
 /**
  * ParecerController class.
  *
- * @author      Eriksen Costa Paixão <eriksen.paixao_bs@cobra.com.br>
+ * @author      Eriksen Costa Paix�o <eriksen.paixao_bs@cobra.com.br>
  * @category    i-Educar
  * @license     @@license@@
  * @package     Avaliacao
  * @subpackage  Modules
- * @since       Classe disponível desde a versão 1.1.0
+ * @since       Classe dispon�vel desde a vers�o 1.1.0
  * @version     @@package_version@@
  */
 class ParecerController extends Core_Controller_Page_EditController
 {
   protected $_dataMapper        = 'Avaliacao_Model_ParecerDescritivoGeralDataMapper';
-  protected $_titulo            = 'Avaliação do aluno | Parecer Descritivo';
+  protected $_titulo            = 'Avalia��o do aluno | Parecer Descritivo';
   protected $_processoAp        = 642;
   protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
   protected $_saveOption        = TRUE;
@@ -89,7 +89,7 @@ class ParecerController extends Core_Controller_Page_EditController
    */
   protected function _preConstruct()
   {
-    // Id do usuário na session
+    // Id do usu�rio na session
     $usuario = $this->getSession()->id_pessoa;
 
     $this->_options = array(
@@ -149,12 +149,12 @@ class ParecerController extends Core_Controller_Page_EditController
     $matricula = $this->_service->getOption('matriculaData');
 
     $this->campoRotulo('1nome', 'Nome', $matricula['nome']);
-    $this->campoRotulo('2curso', 'Curso', $matricula['curso_nome']);
-    $this->campoRotulo('3serie', 'Série', $matricula['serie_nome']);
+    $this->campoRotulo('2curso', 'Projeto', $matricula['curso_nome']);
+    $this->campoRotulo('3serie', 'S�rie', $matricula['serie_nome']);
     $this->campoRotulo('4turma', 'Turma', $matricula['turma_nome']);
 
     if ($this->_regra->get('parecerDescritivo') == RegraAvaliacao_Model_TipoParecerDescritivo::ETAPA_GERAL) {
-      $this->campoRotulo('5etapa', 'Etapa', $this->_etapa == 'Rc' ? 'Recuperação' : $this->_etapa);
+      $this->campoRotulo('5etapa', 'Etapa', $this->_etapa == 'Rc' ? 'Recupera��o' : $this->_etapa);
     }
     else {
       $this->campoRotulo('5etapa', 'Etapa', 'Anual');
@@ -194,10 +194,10 @@ class ParecerController extends Core_Controller_Page_EditController
       $this->_service->save();
     }
     catch (CoreExt_Service_Exception $e) {
-      // Ok. Não pode promover por se tratar de progressão manual ou por estar em andamento
+      // Ok. N�o pode promover por se tratar de progress�o manual ou por estar em andamento
     }
     catch (Exception $e) {
-      $this->mensagem = 'Erro no preenchimento do formulário. ';
+      $this->mensagem = 'Erro no preenchimento do formul�rio. ';
       return FALSE;
     }
 

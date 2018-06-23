@@ -27,6 +27,8 @@ require_once 'Portabilis/Messenger.php';
 require_once 'Portabilis/Mailer.php';
 require_once 'Portabilis/Utils/User.php';
 require_once 'Portabilis/Utils/ReCaptcha.php';
+require_once 'Portabilis/Utils/ReCaptcha.php';
+require_once 'Core/View/TemplateRenderer.php';
 
 /**
  * clsControlador class.
@@ -63,7 +65,7 @@ class clsControlador
     */
 
     @session_start();
-
+	
     if ('logado' == $_SESSION['itj_controle']) {
       $this->logado = TRUE;
     }
@@ -153,7 +155,7 @@ class clsControlador
       $user = Portabilis_Utils_User::loadUsingCredentials($username, $password);
 
       if (is_null($user)) {
-        $this->messenger->append("Usuário ou senha incorreta.", "error");
+        $this->messenger->append("Usu�rio ou senha incorretos, tente novamente.", "error");
         $this->incrementTentativasLogin();
       }
       else {
@@ -218,55 +220,29 @@ class clsControlador
   // renderiza o template de login, com as mensagens adicionadas durante validações
   protected function renderLoginPage() {
     $this->destroyLoginSession();
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
-    $parceiro = $GLOBALS['coreExt']['Config']->app->template->layout;
-    $templateName   = (trim($parceiro)=='' ? 'templates/nvp_htmlloginintranet.tpl' : 'templates/'.trim($parceiro));
-    $templateFile   = fopen($templateName, "r");
-    $templateText   = fread($templateFile, filesize($templateName));
-    $templateText   = str_replace( "<!-- #&ERROLOGIN&# -->", $this->messenger->toHtml('p'), $templateText);
 
-    $configuracoes = new clsPmieducarConfiguracoesGerais();
-    $configuracoes = $configuracoes->detalhe();
-
-    $msgCriarConta = '';
-    if (!empty($configuracoes["url_cadastro_usuario"])) {
-        $msgCriarConta  = 'Não possui uma conta? <a target="_BLANK" href="'. $configuracoes["url_cadastro_usuario"] .'">Crie sua conta agora</a>.';
-    }
-
+    $templateName = 'login';
+	
+	if ($GLOBALS['coreExt']['Config']->app->template->loginpage) {
+		$templateNamePath = PROJECT_ROOT . '/views/' . $GLOBALS['coreExt']['Config']->app->template->loginpage;
+		
+		if (file_exists($templateNamePath) && is_readable($templateNamePath))
+			$templateName = basename($templateNamePath, '.twig.html');
+	}
+	
     $requiresHumanAccessValidation = isset($_SESSION['tentativas_login_falhas']) &&
                                      is_numeric($_SESSION['tentativas_login_falhas']) &&
                                      $_SESSION['tentativas_login_falhas'] >= $this->_maximoTentativasFalhas;
-
-    if ($requiresHumanAccessValidation) {
-        $templateText = str_replace( "<!-- #&RECAPTCHA&# -->", Portabilis_Utils_ReCaptcha::getWidget(), $templateText);
-    }
-
-    $templateText = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $templateText);
-    $templateText = str_replace("<!-- #&BRASAO&# -->", $this->getLoginLogo($configuracoes), $templateText);
-    $templateText = str_replace("<!-- #&NOME_ENTIDADE&# -->", $configuracoes["ieducar_entity_name"], $templateText);
-    $templateText = str_replace("<!-- #&RODAPE_LOGIN&# -->", $configuracoes["ieducar_login_footer"], $templateText);
-    $templateText = str_replace("<!-- #&RODAPE_EXTERNO&# -->", $configuracoes["ieducar_external_footer"], $templateText);
-    $templateText = str_replace("<!-- #&LINKS_SOCIAL&# -->", $this->getSocialMediaLinks($configuracoes), $templateText);
-    $templateText = str_replace("<!-- #&CRIARCONTA&# -->", $msgCriarConta, $templateText);
-    $templateText = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $templateText);
-    $templateText = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $templateText);
-
-    if (!$configuracoes['active_on_ieducar']) {
-        $msgSuspensao = '' .
-            '<div class="box" id="mensagens">' .
-                '<div class="message message-danger">' .
-                    '<div class="icone">' .
-                        '<img src="imagens/login/icon-danger.png">' .
-                    '</div>' .
-                    '<div class="titulo">Acesso suspenso</div>' .
-                    '<div class="mensagem"><p>O sistema está temporariamente indisponível. Contate o responsável pelo sistema em seu município. Obrigado pela compreensão.</p></div>' .
-                '</div>' .
-            '</div><br><br>';
-
-        $templateText = str_replace("<!-- #&SUSPENSO&# -->", $msgSuspensao, $templateText);
-    }
-
-    fclose($templateFile);
+									 
+	// TODO: reativar captcha no login
+	
+	$params = array(
+		'message' => $this->messenger->toText(),
+	);
+	
+	$twig = new TemplateRenderer();
+	$templateText = $twig->render($templateName, $params);
+	
     die($templateText);
   }
 

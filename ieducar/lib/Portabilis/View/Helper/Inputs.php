@@ -294,62 +294,9 @@ class Portabilis_View_Helper_Inputs {
     $this->multipleSearchResourceInput('multipleSearchDeficiencias', $attrName, $inputOptions, $helperOptions);
   }
 
-  public function multipleSearchAssuntos($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->multipleSearchResourceInput('multipleSearchAssuntos', $attrName, $inputOptions, $helperOptions);
-  }
-
-  public function multipleSearchCategoriaObra($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->multipleSearchResourceInput('multipleSearchCategoriaObra', $attrName, $inputOptions, $helperOptions);
-  }
-
-  public function multipleSearchAutores($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->multipleSearchResourceInput('multipleSearchAutores', $attrName, $inputOptions, $helperOptions);
-  }
-
-  public function multipleSearchEtapacurso($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->multipleSearchResourceInput('multipleSearchEtapacurso', $attrName, $inputOptions, $helperOptions);
-  }
-
-  public function multipleSearchComponenteCurricular($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->multipleSearchResourceInput('multipleSearchComponenteCurricular', $attrName, $inputOptions, $helperOptions);
-  }
-
-  public function multipleSearchAreasConhecimento($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->multipleSearchResourceInput('multipleSearchAreasConhecimento', $attrName, $inputOptions, $helperOptions);
-  }
-
-  public function multipleSearchCursoAluno($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->multipleSearchResourceInput('multipleSearchCursoAluno', $attrName, $inputOptions, $helperOptions);
-  }
-
-  public function multipleSearchBeneficios($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->multipleSearchResourceInput('multipleSearchBeneficios', $attrName, $inputOptions, $helperOptions);
-  }
-
-  public function multipleSearchEscola($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->multipleSearchResourceInput('multipleSearchEscola', $attrName, $inputOptions, $helperOptions);
-  }
-
-  public function multipleSearchCurso($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->multipleSearchResourceInput('multipleSearchCurso', $attrName, $inputOptions, $helperOptions);
-  }
-
-  public function multipleSearchDocumentosAtestadoVaga($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->multipleSearchResourceInput('multipleSearchDocumentosAtestadoVaga', $attrName, $inputOptions, $helperOptions);
-  }
-
-  public function multipleSearchSerie($attrName, $inputOptions = array(), $helperOptions = array()) {
-      $this->multipleSearchResourceInput('multipleSearchSerie', $attrName, $inputOptions, $helperOptions);
-  }
-
-  public function multipleSearchCustom($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->multipleSearchResourceInput('multipleSearchCustom', $attrName, $inputOptions, $helperOptions);
-  }
-
-
-   /*public function multipleSearchAjaxAreasConhecimento($attrName, $inputOptions = array(), $helperOptions = array()) {
-    $this->multipleSearchResourceInput('multipleSearchAjaxAreasConhecimento', $attrName, $inputOptions, $helperOptions);
-  }*/
+  public function multipleSearchIdiomas($attrName, $inputOptions = array(), $helperOptions = array()) {
+    $this->multipleSearchResourceInput('multipleSearchIdiomas', $attrName, $inputOptions, $helperOptions);
+  }  
 
   // resource input helpers
 

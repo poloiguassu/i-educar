@@ -47,14 +47,20 @@ class indice extends clsDetalhe
      */
     var $titulo;
 
-    var $cod_telefones;
-    var $ref_funcionario_cad;
-    var $ref_funcionario_exc;
-    var $nome;
-    var $numero;
-    var $data_cadastro;
-    var $data_exclusao;
-    var $ativo;
+	var $cod_telefones;
+	var $ref_funcionario_cad;
+	var $ref_funcionario_exc;
+	var $nome;
+	var $ddd_numero;
+	var $numero;
+	var $responsavel;
+	var $ddd_celular;
+	var $celular;
+	var $email;
+	var $endereco;
+	var $data_cadastro;
+	var $data_exclusao;
+	var $ativo;
 
     function Gerar()
     {
@@ -62,8 +68,8 @@ class indice extends clsDetalhe
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $this->titulo = "Telefones - Detalhe";
-        
+		$this->titulo = "Agenda Telefonica - Detalhe";
+		
 
         $this->cod_telefones=$_GET["cod_telefones"];
 
@@ -79,14 +85,44 @@ class indice extends clsDetalhe
 
 
 
-        if( $registro["nome"] )
-        {
-            $this->addDetalhe( array( "Nome", "{$registro["nome"]}") );
-        }
-        if( $registro["numero"] )
-        {
-            $this->addDetalhe( array( "Numero", "{$registro["numero"]}") );
-        }
+		if( $registro["nome"] )
+		{
+			$this->addDetalhe( array( "Instituição", "{$registro["nome"]}") );
+		}
+		if( $registro["responsavel"] )
+		{
+			$this->addDetalhe( array( "Responsável", "{$registro["responsavel"]}") );
+		}
+		if( $registro["numero"] )
+		{
+			if($registro["ddd_numero"])
+			{
+				$this->addDetalhe(
+					array('Telefone', sprintf('(%s) %s', $registro['ddd_numero'], $registro['numero']))
+				);
+			} else {
+				$this->addDetalhe( array( "Telefone", "{$registro["numero"]}") );
+			}
+		}
+		if( $registro["celular"] )
+		{
+			if($registro["ddd_celular"])
+			{
+				$this->addDetalhe(
+					array('Celular', sprintf('(%s) %s', $registro['ddd_celular'], $registro['celular']))
+				);
+			} else {
+				$this->addDetalhe( array( "Celular", "{$registro["celular"]}") );
+			}
+		}
+		if( $registro["email"] )
+		{
+			$this->addDetalhe( array( "Email", "{$registro["email"]}") );
+		}
+		if( $registro["endereco"] )
+		{
+			$this->addDetalhe( array( "Endereço", "{$registro["endereco"]}") );
+		}
 
         $this->url_novo = "controlesis_telefones_cad.php";
         $this->url_editar = "controlesis_telefones_cad.php?cod_telefones={$registro["cod_telefones"]}";

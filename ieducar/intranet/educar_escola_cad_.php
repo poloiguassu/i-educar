@@ -1,25 +1,25 @@
 <?php
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																	     *
-	*	@author Prefeitura Municipal de Itajaí								 *
+	*	@author Prefeitura Municipal de Itaja�								 *
 	*	@updated 29/03/2007													 *
-	*   Pacote: i-PLB Software Público Livre e Brasileiro					 *
+	*   Pacote: i-PLB Software P�blico Livre e Brasileiro					 *
 	*																		 *
-	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itajaí			 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja�			 *
 	*						ctima@itajai.sc.gov.br					    	 *
 	*																		 *
-	*	Este  programa  é  software livre, você pode redistribuí-lo e/ou	 *
-	*	modificá-lo sob os termos da Licença Pública Geral GNU, conforme	 *
-	*	publicada pela Free  Software  Foundation,  tanto  a versão 2 da	 *
-	*	Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.	 *
+	*	Este  programa  �  software livre, voc� pode redistribu�-lo e/ou	 *
+	*	modific�-lo sob os termos da Licen�a P�blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers�o 2 da	 *
+	*	Licen�a   como  (a  seu  crit�rio)  qualquer  vers�o  mais  nova.	 *
 	*																		 *
-	*	Este programa  é distribuído na expectativa de ser útil, mas SEM	 *
-	*	QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-	 *
-	*	ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-	 *
-	*	sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.	 *
+	*	Este programa  � distribu�do na expectativa de ser �til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl�cita de COMERCIALI-	 *
+	*	ZA��O  ou  de ADEQUA��O A QUALQUER PROP�SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen�a  P�blica  Geral  GNU para obter mais detalhes.	 *
 	*																		 *
-	*	Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU	 *
-	*	junto  com  este  programa. Se não, escreva para a Free Software	 *
+	*	Voc�  deve  ter  recebido uma c�pia da Licen�a P�blica Geral GNU	 *
+	*	junto  com  este  programa. Se n�o, escreva para a Free Software	 *
 	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
 	*	02111-1307, USA.													 *
 	*																		 *
@@ -531,7 +531,7 @@ class indice extends clsCadastro
 				$this->campoTexto( "bairro", "Bairro",  $this->bairro, "50", "20", true );
 				$this->campoTexto( "logradouro", "Logradouro",  $this->logradouro, "50", "255",true );
 				$this->campoTexto( "complemento", "Complemento",  $this->complemento, "22", "20", false );
-				$this->campoNumero( "numero", "Número",  $this->numero, "6", "6", true );
+				$this->campoNumero( "numero", "N�mero",  $this->numero, "6", "6", true );
 
 				$this->campoTexto( "p_ddd_telefone_1", "DDD Telefone 1",  $this->p_ddd_telefone_1, "2", "2", false );
 				$this->campoTexto( "p_telefone_1", "Telefone 1",  $this->p_telefone_1, "10", "15", false );
@@ -744,7 +744,7 @@ $disabled = $this->isEnderecoExterno ? false : true ;
 						$this->campoLista( "idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, false, false, false, false, true ,true);
 						$this->campoTexto( "logradouro", "Logradouro",  $this->logradouro, "50", "255", true, false, false, "", "", "", "onKeyUp", true );
 						$this->campoTexto( "complemento", "Complemento",  $this->complemento, "22", "20", false, false );
-						$this->campoNumero("numero", "Número", $this->numero, "6", "6", false );
+						$this->campoNumero("numero", "N�mero", $this->numero, "6", "6", false );
 						$this->campoNumero("andar", "Andar", $this->andar, "2","2", false);
 					}
 					elseif($this->ref_idpes && $this->cep)
@@ -761,7 +761,7 @@ $disabled = $this->isEnderecoExterno ? false : true ;
 						$this->campoLista( "idtlog", "Tipo Logradouro", $listaTLog, $this->idtlog, "", false, "", "", false,true );
 						$this->campoTexto( "logradouro", "Logradouro",  $this->logradouro, "50", "255", true, false, false, "", "", "", "onKeyUp", false );
 						$this->campoTexto( "complemento", "Complemento",  $this->complemento, "22", "20", false, false, false, "", "", "", "onKeyUp", false );
-						$this->campoNumero( "numero", "Número",  $this->numero, 6, 6, false, "", ""  );
+						$this->campoNumero( "numero", "N�mero",  $this->numero, 6, 6, false, "", ""  );
 						$this->campoNumero( "andar", "Andar", $this->andar, "2","2", false );
 					}
 					else
@@ -933,9 +933,9 @@ if(!$this->isEnderecoExterno){
 				$opcoes = array( "" => "Erro na gera&ccedil;&atilde;o" );
 			}
 			if ( $aux )
-				$this->campoLista( "ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso,"",false,"","<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>",false,false);
+				$this->campoLista( "ref_cod_curso", "Projeto", $opcoes, $this->ref_cod_curso,"",false,"","<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>",false,false);
 			else
-				$this->campoLista( "ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso,"",false,"","<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
+				$this->campoLista( "ref_cod_curso", "Projeto", $opcoes, $this->ref_cod_curso,"",false,"","<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
 
 			$this->campoOculto( "incluir_curso", "" );
 			$this->campoQuebra();
@@ -1101,7 +1101,7 @@ if(!$this->isEnderecoExterno){
 				}
 			}
 		}
-		echo "<script> alert('É necessário adicionar pelo menos 1 Curso') </script>";
+		echo "<script> alert('� necess�rio adicionar pelo menos 1 Projeto') </script>";
 		$this->mensagem = "Cadastro n&atilde;o realizado.<br>";
 		return false;
 	}
@@ -1305,7 +1305,7 @@ if(!$this->isEnderecoExterno){
 			echo "<!--\nErro ao editar clsPmieducarEscola\nvalores obrigatorios\nif( is_numeric( $this->cod_escola ) && is_numeric( $this->pessoa_logada ) )\n-->";
 			return false;
 		}
-		echo "<script> alert('É necessário adicionar pelo menos 1 Curso') </script>";
+		echo "<script> alert('� necess�rio adicionar pelo menos 1 Projeto') </script>";
 		$this->mensagem = "Edi&ccedil;&atilde;o n&atilde;o realizada.<br>";
 		return false;
 	}

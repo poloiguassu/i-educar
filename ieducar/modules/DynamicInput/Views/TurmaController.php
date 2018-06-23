@@ -88,7 +88,7 @@ $sql    = "select cod_turma as id, nm_turma || ' - ' || COALESCE(ano::varchar,'S
         }else{
           $sql    = "select cod_turma as id, nm_turma || ' - ' || COALESCE(ano::varchar,'SEM ANO') as nome from pmieducar.turma where ref_ref_cod_escola = $1
                    and (ref_ref_cod_serie = $2 or ref_ref_cod_serie_mult = $2) and ativo = 1 and
-                   visivel != 'f' order by nm_turma asc";
+                   visivel != 'f' order by nm_turma asc, ano desc";
 
         $turmas = $this->fetchPreparedQuery($sql, array($escolaId, $serieId));
         }

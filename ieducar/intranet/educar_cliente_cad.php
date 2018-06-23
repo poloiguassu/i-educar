@@ -1,26 +1,26 @@
 <?php
 /**
  *
- * @author  Prefeitura Municipal de Itajaí
+ * @author  Prefeitura Municipal de Itaja�
  * @version SVN: $Id$
  *
- * Pacote: i-PLB Software Público Livre e Brasileiro
+ * Pacote: i-PLB Software P�blico Livre e Brasileiro
  *
- * Copyright (C) 2006 PMI - Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006 PMI - Prefeitura Municipal de Itaja�
  *            ctima@itajai.sc.gov.br
  *
- * Este  programa  é  software livre, você pode redistribuí-lo e/ou
- * modificá-lo sob os termos da Licença Pública Geral GNU, conforme
- * publicada pela Free  Software  Foundation,  tanto  a versão 2 da
- * Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.
+ * Este  programa  �  software livre, voc� pode redistribu�-lo e/ou
+ * modific�-lo sob os termos da Licen�a P�blica Geral GNU, conforme
+ * publicada pela Free  Software  Foundation,  tanto  a vers�o 2 da
+ * Licen�a   como  (a  seu  crit�rio)  qualquer  vers�o  mais  nova.
  *
- * Este programa  é distribuído na expectativa de ser útil, mas SEM
- * QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-
- * ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-
- * sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.
+ * Este programa  � distribu�do na expectativa de ser �til, mas SEM
+ * QUALQUER GARANTIA. Sem mesmo a garantia impl�cita de COMERCIALI-
+ * ZA��O  ou  de ADEQUA��O A QUALQUER PROP�SITO EM PARTICULAR. Con-
+ * sulte  a  Licen�a  P�blica  Geral  GNU para obter mais detalhes.
  *
- * Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU
- * junto  com  este  programa. Se não, escreva para a Free Software
+ * Voc�  deve  ter  recebido uma c�pia da Licen�a P�blica Geral GNU
+ * junto  com  este  programa. Se n�o, escreva para a Free Software
  * Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA
  * 02111-1307, USA.
  *
@@ -114,28 +114,28 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_biblioteca_index.php"                  => "Biblioteca",
-         ""        => "{$nomeMenu} cliente"
+         "educar_biblioteca_index.php"                  => "Trilha Jovem Iguassu - Biblioteca",
+         ""        => "{$nomeMenu} cliente"             
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
-    }
+	}
 
-    function Gerar()
-    {
-        // primary keys
-        $this->campoOculto( "cod_cliente", $this->cod_cliente );
-        $this->campoOculto("requisita_senha", "0");
-        $opcoes = array( "" => "Pesquise a pessoa clicando na lupa ao lado" );
-        if( $this->ref_idpes )
-        {
-            $objTemp = new clsPessoaFisica( $this->ref_idpes );
-            $detalhe = $objTemp->detalhe();
-            $opcoes["{$detalhe["idpes"]}"] = $detalhe["nome"];
-        }
+	function Gerar()
+	{
+		// primary keys
+		$this->campoOculto( "cod_cliente", $this->cod_cliente );
+		$this->campoOculto("requisita_senha", "0");
+		$opcoes = array( "" => "Pesquise a pessoa clicando na lupa ao lado" );
+		if( $this->ref_idpes )
+		{
+			$objTemp = new clsPessoaFisica( $this->ref_idpes );
+			$detalhe = $objTemp->detalhe();
+			$opcoes["{$detalhe["idpes"]}"] = $detalhe["nome"];
+		}
 
-    // Caso o cliente não exista, exibe um campo de pesquisa, senão, mostra um rótulo
+    // Caso o cliente n�o exista, exibe um campo de pesquisa, sen�o, mostra um r�tulo
     if (!$this->cod_cliente) {
       $parametros = new clsParametrosPesquisas();
       $parametros->setSubmit(0);
@@ -182,9 +182,9 @@ class indice extends clsCadastro
         {
             $db = new clsBanco();
 
-      // Cria campo oculto com o ID da biblioteca atual ao qual usuário está cadastrado
-            $this->ref_cod_biblioteca_atual = $this->ref_cod_biblioteca;
-            $this->campoOculto("ref_cod_biblioteca_atual", $this->ref_cod_biblioteca_atual);
+      // Cria campo oculto com o ID da biblioteca atual ao qual usu�rio est� cadastrado
+			$this->ref_cod_biblioteca_atual = $this->ref_cod_biblioteca;
+			$this->campoOculto("ref_cod_biblioteca_atual", $this->ref_cod_biblioteca_atual);
 
             //$this->ref_cod_biblioteca   = $db->CampoUnico("SELECT cod_biblioteca  FROM pmieducar.biblioteca, pmieducar.cliente_tipo_cliente ctc, pmieducar.cliente_tipo ct WHERE ref_cod_cliente = '$this->cod_cliente' AND ref_cod_cliente_tipo = cod_cliente_tipo AND ct.ref_cod_biblioteca = cod_biblioteca AND ctc.ref_cod_biblioteca = {$this->ref_cod_biblioteca}");
 
@@ -208,7 +208,7 @@ class indice extends clsCadastro
 
 
   /**
-   * Sobrescrita do método clsCadastro::Novo.
+   * Sobrescrita do m�todo clsCadastro::Novo.
    *
    * Insere novo registro nas tabelas pmieducar.cliente e pmieducar.cliente_tipo_cliente.
    */
@@ -229,7 +229,7 @@ class indice extends clsCadastro
       $lst_cliente = $obj_cliente->lista(NULL, NULL, NULL, NULL, $this->login);
 
       if ($lst_cliente && $this->login != '') {
-        $this->mensagem = "Este login já está sendo utilizado por outra pessoa!<br>";
+        $this->mensagem = "Este login j� est� sendo utilizado por outra pessoa!<br>";
       }
       else {
         $obj = new clsPmieducarCliente($this->cod_cliente, NULL, $this->pessoa_logada,
@@ -289,7 +289,7 @@ class indice extends clsCadastro
           $this->cod_cliente, NULL, NULL, $this->pessoa_logada, NULL, NULL, $this->ref_cod_biblioteca);
 
         if (!$obj_cliente_tipo_cliente->cadastra()) {
-          $this->mensagem = "Não cadastrou";
+          $this->mensagem = "N�o cadastrou";
 
           return FALSE;
                 }
@@ -300,9 +300,8 @@ class indice extends clsCadastro
           die();
                 }
       }
-            else {
-        //$this->Editar();
-        $this->mensagem = "O cliente já está cadastrado!<br>";
+			else {
+        $this->mensagem = "O cliente j� est� cadastrado!<br>";
       }
     }
   }
@@ -310,13 +309,13 @@ class indice extends clsCadastro
 
 
   /**
-   * Sobrescrita do método clsCadastro::Editar.
+   * Sobrescrita do m�todo clsCadastro::Editar.
    *
    * Verifica:
-   * - Se usuário tem permissão de edição
-   * - Se usuário existe na biblioteca atual
+   * - Se usu�rio tem permiss�o de edi��o
+   * - Se usu�rio existe na biblioteca atual
    *   - Se existir, troca pela biblioteca escolhida na interface
-   *   - Senão, cadastra como cliente da biblioteca
+   *   - Sen�o, cadastra como cliente da biblioteca
    */
   public function Editar() {
     session_start();
@@ -343,7 +342,7 @@ class indice extends clsCadastro
         $this->pessoa_logada, $this->pessoa_logada, 1, $this->ref_cod_biblioteca);
 
       // clsPmieducarClienteTipoCliente::trocaTipoBiblioteca recebe o valor antigo para usar
-      // na cláusula WHERE
+      // na cl�usula WHERE
       if ($obj_cliente_tipo->existeClienteBiblioteca($_POST['ref_cod_biblioteca_atual'])) {
         if ($obj_cliente_tipo->trocaTipoBiblioteca($_POST['ref_cod_biblioteca_atual'])) {
           $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';

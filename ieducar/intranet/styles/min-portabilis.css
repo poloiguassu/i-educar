@@ -89,10 +89,6 @@ table.nocellcolor th, .nocellcolor {
   background-color: #fff;
 }
 
-table.cellcolor th, table tr.cellcolor th, .cellcolor, tr.even {
-  background-color: #f5f9fd;
-}
-
 table.strong th , tr.strong th, tr.strong td{
   background-color: #ccdce6;
 }
@@ -241,9 +237,4 @@ select, input[type="text"], input[type="password"], textarea {
 .disabled, *[disabled] {
   cursor: not-allowed;
   background-color: #EEE;
-}
-
-.freshwidget-button {
-  position: fixed !important;
-  right: 280px !important;
 }

@@ -2,30 +2,30 @@
 // error_reporting(E_ERROR);
 // ini_set("display_errors", 1);
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-    *                                                                        *
-    *   @author Prefeitura Municipal de Itajaí                               *
-    *   @updated 29/03/2007                                                  *
-    *   Pacote: i-PLB Software Público Livre e Brasileiro                    *
-    *                                                                        *
-    *   Copyright (C) 2006  PMI - Prefeitura Municipal de Itajaí             *
-    *                       ctima@itajai.sc.gov.br                           *
-    *                                                                        *
-    *   Este  programa  é  software livre, você pode redistribuí-lo e/ou     *
-    *   modificá-lo sob os termos da Licença Pública Geral GNU, conforme     *
-    *   publicada pela Free  Software  Foundation,  tanto  a versão 2 da     *
-    *   Licença   como  (a  seu  critério)  qualquer  versão  mais  nova.    *
-    *                                                                        *
-    *   Este programa  é distribuído na expectativa de ser útil, mas SEM     *
-    *   QUALQUER GARANTIA. Sem mesmo a garantia implícita de COMERCIALI-     *
-    *   ZAÇÃO  ou  de ADEQUAÇÃO A QUALQUER PROPÓSITO EM PARTICULAR. Con-     *
-    *   sulte  a  Licença  Pública  Geral  GNU para obter mais detalhes.     *
-    *                                                                        *
-    *   Você  deve  ter  recebido uma cópia da Licença Pública Geral GNU     *
-    *   junto  com  este  programa. Se não, escreva para a Free Software     *
-    *   Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA     *
-    *   02111-1307, USA.                                                     *
-    *                                                                        *
-    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	*																	     *
+	*	@author Prefeitura Municipal de Itaja�								 *
+	*	@updated 29/03/2007													 *
+	*   Pacote: i-PLB Software P�blico Livre e Brasileiro					 *
+	*																		 *
+	*	Copyright (C) 2006	PMI - Prefeitura Municipal de Itaja�			 *
+	*						ctima@itajai.sc.gov.br					    	 *
+	*																		 *
+	*	Este  programa  �  software livre, voc� pode redistribu�-lo e/ou	 *
+	*	modific�-lo sob os termos da Licen�a P�blica Geral GNU, conforme	 *
+	*	publicada pela Free  Software  Foundation,  tanto  a vers�o 2 da	 *
+	*	Licen�a   como  (a  seu  crit�rio)  qualquer  vers�o  mais  nova.	 *
+	*																		 *
+	*	Este programa  � distribu�do na expectativa de ser �til, mas SEM	 *
+	*	QUALQUER GARANTIA. Sem mesmo a garantia impl�cita de COMERCIALI-	 *
+	*	ZA��O  ou  de ADEQUA��O A QUALQUER PROP�SITO EM PARTICULAR. Con-	 *
+	*	sulte  a  Licen�a  P�blica  Geral  GNU para obter mais detalhes.	 *
+	*																		 *
+	*	Voc�  deve  ter  recebido uma c�pia da Licen�a P�blica Geral GNU	 *
+	*	junto  com  este  programa. Se n�o, escreva para a Free Software	 *
+	*	Foundation,  Inc.,  59  Temple  Place,  Suite  330,  Boston,  MA	 *
+	*	02111-1307, USA.													 *
+	*																		 *
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 require_once ("include/clsBase.inc.php");
 require_once ("include/clsCadastro.inc.php");
 require_once ("include/clsBanco.inc.php");
@@ -103,139 +103,220 @@ class indice extends clsCadastro
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos( array(
              $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-             "educar_index.php"                  => "Escola",
-             ""        => "Registro da reclassificação da matrícula"
+             "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+             ""        => "{$nomeMenu} reclassifica&ccedil;&atilde;o da matr&iacute;cula"
         ));
         $this->enviaLocalizacao($localizacao->montar());
 
-        $this->nome_url_cancelar = "Cancelar";
-        return $retorno;
-    }
+		$this->nome_url_cancelar = "Cancelar";
+		return $retorno;
+	}
 
-    function Gerar()
-    {
-        if ( $this->ref_cod_escola )
-        {
-            $this->ref_ref_cod_escola = $this->ref_cod_escola;
-        }
+	function Gerar()
+	{
+		if ( $this->ref_cod_escola )
+		{
+			$this->ref_ref_cod_escola = $this->ref_cod_escola;
+		}
 
-        // primary keys
-        $this->campoOculto( "cod_matricula", $this->cod_matricula );
-        $this->campoOculto( "ref_cod_aluno", $this->ref_cod_aluno );
-        $this->campoOculto( "ref_cod_escola", $this->ref_ref_cod_escola );
+		// primary keys
+		$this->campoOculto( "cod_matricula", $this->cod_matricula );
+		$this->campoOculto( "ref_cod_aluno", $this->ref_cod_aluno );
+		$this->campoOculto( "ref_cod_escola", $this->ref_ref_cod_escola );
 
-        $obj_aluno = new clsPmieducarAluno();
-        $lst_aluno = $obj_aluno->lista( $this->ref_cod_aluno,null,null,null,null,null,null,null,null,null,1 );
-        if ( is_array($lst_aluno) )
-        {
-            $det_aluno = array_shift($lst_aluno);
-            $this->nm_aluno = $det_aluno["nome_aluno"];
-            $this->campoRotulo( "nm_aluno", "Aluno", $this->nm_aluno);
-        }
-
-        $cursos = array();
-
-        $escolaAluno = $this->ref_ref_cod_escola;
-
-        $objEscolaCurso = new clsPmieducarEscolaCurso();
-
-        $listaEscolaCurso = $objEscolaCurso->lista($escolaAluno);
-
-         if($listaEscolaCurso){
-            foreach($listaEscolaCurso as $escolaCurso){
-                $objCurso = new clsPmieducarCurso($escolaCurso["ref_cod_curso"]);
-                $detCurso = $objCurso->detalhe();
-                $nomeCurso = $detCurso["nm_curso"];
-                $cursos[$escolaCurso["ref_cod_curso"]] = $nomeCurso;
-            }
-         }
-
-        $this->campoOculto("serie_matricula",$this->ref_ref_cod_serie);
-        $this->campoLista("ref_cod_curso","Curso",$cursos,$this->ref_cod_curso,"getSerie();");
-        $this->campoLista("ref_ref_cod_serie","S&eacute;rie",array('' => 'Selecione uma série'),'');
-        $this->inputsHelper()->date('data_cancel', array('label' => 'Data da reclassifica&ccedil;&atilde;o', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
-        $this->campoMemo("descricao_reclassificacao","Descri&ccedil;&atilde;o",$this->descricao_reclassificacao,100,10,true);
-
-        $this->acao_enviar = 'if(confirm("Deseja reclassificar está matrícula?"))acao();';
+		$obj_aluno = new clsPmieducarAluno();
+		$lst_aluno = $obj_aluno->lista( $this->ref_cod_aluno,null,null,null,null,null,null,null,null,null,1 );
+		if ( is_array($lst_aluno) )
+		{
+			$det_aluno = array_shift($lst_aluno);
+			$this->nm_aluno = $det_aluno["nome_aluno"];
+			$this->campoRotulo( "nm_aluno", "Aluno", $this->nm_aluno);
+		}
 
 
-    }
+		$array_inicio_sequencias = clsPmieducarMatricula::getInicioSequencia();
 
-    function Novo()
-    {
-        @session_start();
-         $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-        $obj_permissoes = new clsPermissoes();
-        $obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
+		$db = new clsBanco();
 
-        $this->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
 
-        if($this->ref_ref_cod_serie == $this->ref_ref_cod_serie_antiga)
-            header("location: educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
+		$cursos = array();
+		$sql_curso_aluno = "SELECT ref_cod_curso FROM pmieducar.serie WHERE cod_serie = {$this->ref_ref_cod_serie}";
+		$this->ref_cod_curso = $db->CampoUnico($sql_curso_aluno);
 
-        $obj_matricula = new clsPmieducarMatricula($this->cod_matricula);
-        $det_matricula = $obj_matricula->detalhe();
+		foreach ($array_inicio_sequencias as $serie_inicio)
+		{
+			$serie_inicio = $serie_inicio[0];
 
-        if(is_null($det_matricula['data_matricula'])){
+			$seq_ini = $serie_inicio;
+			$seq_correta = false;
+			do
+			{
+				$sql = "SELECT o.ref_serie_origem
+				               ,s.nm_serie
+						       ,o.ref_serie_destino
+						       ,s.ref_cod_curso as ref_cod_curso_origem
+						       ,sd.ref_cod_curso as ref_cod_curso_destino
+						  FROM pmieducar.sequencia_serie o
+						       ,pmieducar.serie s
+						       ,pmieducar.serie sd
+						 WHERE s.cod_serie = o.ref_serie_origem
+						   AND s.cod_serie = $seq_ini
+				           AND sd.cod_serie = o.ref_serie_destino
+						";
+//						   AND s.ref_cod_curso = $curso
+				$db->Consulta($sql);
+				$db->ProximoRegistro();
+				$tupla = $db->Tupla();
+				$serie_origem = $tupla['ref_serie_origem'];
+				//$nm_serie_origem = $tupla['nm_serie'];
+				$curso_origem = $tupla['ref_cod_curso_origem'];
+				$curso_destino = $tupla['ref_cod_curso_destino'];
+				$seq_ini = $serie_destino = $tupla['ref_serie_destino'];
 
-            if(substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel){
+				$obj_curso = new clsPmieducarCurso($curso_origem);
+				$det_curso = $obj_curso->detalhe();
+				$cursos[$curso_origem] = $det_curso['nm_curso'];
 
-                $this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
-                return false;
-                die();
-            }
-        }else{
-            if(substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel){
-                $this->mensagem = "Data de abandono não pode ser inferior a data da matrícula.<br>";
-                return false;
-                die();
-            }
-        }
+				$obj_curso = new clsPmieducarCurso($curso_destino);
+				$det_curso = $obj_curso->detalhe();
+				$cursos[$curso_destino] = $det_curso['nm_curso'];
 
-        if(!$det_matricula || $det_matricula['aprovado'] != 3)
-            header("location: educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+				if($this->ref_ref_cod_serie == $serie_origem)
+					$seq_correta = true;
 
-        $obj_matricula = new clsPmieducarMatricula($this->cod_matricula,null,null,null,$this->pessoa_logada,null,null,5,null,null,1,null,0,null,null,$this->descricao_reclassificacao);
-        $obj_matricula->data_cancel = $this->data_cancel;
-        if(!$obj_matricula->edita())
-        {
-            echo "<script>alert('Erro ao reclassificar matrícula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
-            die("Erro ao reclassificar matrícula");
-        }
-        $obj_serie = new clsPmieducarSerie( $this->ref_ref_cod_serie );
-        $det_serie = $obj_serie->detalhe();
 
-        $obj_matricula = new clsPmieducarMatricula(null,null,$this->ref_cod_escola,$this->ref_ref_cod_serie,null,$this->pessoa_logada,$this->ref_cod_aluno,3,null,null,1,$det_matricula['ano'],1,null,null,null,1,$det_serie["ref_cod_curso"] );
-        $obj_matricula->data_matricula = $this->data_cancel;
-        $cadastrou = $obj_matricula->cadastra();
+				//$todas_sequencias .= "sequencia_serie[sequencia_serie.length] = new Array({$curso_origem},$serie_origem,'$nm_serie_origem');\n";
 
-        if(!$cadastrou){
-            echo "<script>alert('Erro ao reclassificar matrícula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
-            die("Erro ao reclassificar matrícula");
-        }else{
-            /**
-             * desativa todas as enturmacoes da matricula anterior
-             */
-            $obj_matricula_turma = new clsPmieducarMatriculaTurma($this->cod_matricula);
-            if(!$obj_matricula_turma->reclassificacao($this->data_cancel))
-            {
-                echo "<script>alert('Erro ao desativar enturmações da matrícula: {$this->cod_matricula}\nContate o administrador do sistema informando a matrícula!');</script>";
-            }
-            //window.location='educar_matricula_det.php?cod_matricula={$this->cod_matricula}&ref_cod_aluno={$this->ref_cod_aluno}';
-            echo "<script>alert('Reclassificação realizada com sucesso!\\nO Código da nova matrícula é: $cadastrou.');
-            window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';
-            </script>";
-            die('Reclassificação realizada com sucesso!');
+				$sql = "SELECT 1
+						  FROM pmieducar.sequencia_serie s
+						 WHERE s.ref_serie_origem = $seq_ini
+					    ";
+				$true = $db->CampoUnico($sql);
 
-        }
+			}while($true);
 
-    }
+			$obj_serie = new clsPmieducarSerie($serie_destino);
+			$det_serie = $obj_serie->detalhe();
 
-    function Excluir()
-    {
-        return false;
-    }
+			//$todas_sequencias .= "sequencia_serie[sequencia_serie.length] = new Array({$curso_destino},$serie_destino,'{$det_serie['nm_serie']}');\n";
+
+			if($this->ref_ref_cod_serie == $serie_destino)
+				$seq_correta = true;
+
+			if($seq_correta == false)
+			{
+				///$todas_sequencias = "var sequencia_serie = new Array();\n";
+				$cursos = array('' => 'N�o existem cursos/s�ries para reclassifica��o');
+			}else
+			{
+				break;
+			}
+		}
+
+
+
+		$this->campoOculto("serie_matricula",$this->ref_ref_cod_serie);
+
+		//echo "<script>\n{$todas_sequencias}var serie_matricula = {$this->ref_ref_cod_serie};\n</script>";
+
+
+		// foreign keys
+		//$obrigatorio = true;
+		//$get_escola = false;
+	//	$get_instituicao = false;
+	//	$get_escola_curso = true;
+		//$get_escola_curso_serie = true;
+		//$get_matricula = true;
+		//include("include/pmieducar/educar_campo_lista.php");
+
+
+
+		$this->campoLista("ref_cod_curso","Projeto",$cursos,$this->ref_cod_curso,"getSerie();");
+		$this->campoLista("ref_ref_cod_serie","Eixo",array('' => 'Selecione uma s�rie'),'');
+		//$this->campoOculto("ref_ref_cod_serie_antiga",$this->ref_ref_cod_serie);
+		$this->inputsHelper()->date('data_cancel', array('label' => 'Data da reclassifica&ccedil;&atilde;o', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y')));
+		$this->campoMemo("descricao_reclassificacao","Descri&ccedil;&atilde;o",$this->descricao_reclassificacao,100,10,true);
+
+		$this->acao_enviar = 'if(confirm("Deseja reclassificar est� matr�cula?"))acao();';
+
+
+	}
+
+	function Novo()
+	{
+		@session_start();
+		 $this->pessoa_logada = $_SESSION['id_pessoa'];
+		@session_write_close();
+		$obj_permissoes = new clsPermissoes();
+		$obj_permissoes->permissao_cadastra( 578, $this->pessoa_logada, 7, "educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}" );
+
+		$this->data_cancel = Portabilis_Date_Utils::brToPgSQL($this->data_cancel);
+
+		if($this->ref_ref_cod_serie == $this->ref_ref_cod_serie_antiga)
+			header("location: educar_matricula_det.php?cod_matricula={$this->cod_matricula}");
+
+		$obj_matricula = new clsPmieducarMatricula($this->cod_matricula);
+		$det_matricula = $obj_matricula->detalhe();
+
+		if(is_null($det_matricula['data_matricula'])){
+
+			if(substr($det_matricula['data_cadastro'], 0, 10) > $this->data_cancel){
+
+				$this->mensagem = "Data de abandono n�o pode ser inferior a data da matr�cula.<br>";
+				return false;	
+				die();							
+			} 
+		}else{
+			if(substr($det_matricula['data_matricula'], 0, 10) > $this->data_cancel){
+				$this->mensagem = "Data de abandono n�o pode ser inferior a data da matr�cula.<br>";
+				return false;
+				die();
+			}
+		}		
+
+		if(!$det_matricula || $det_matricula['aprovado'] != 3)
+			header("location: educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}");
+
+		$obj_matricula = new clsPmieducarMatricula($this->cod_matricula,null,null,null,$this->pessoa_logada,null,null,5,null,null,1,null,0,null,null,$this->descricao_reclassificacao);
+		$obj_matricula->data_cancel = $this->data_cancel;
+
+		if(!$obj_matricula->edita())
+		{
+			echo "<script>alert('Erro ao reclassificar matr�cula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
+			die("Erro ao reclassificar matr�cula");
+		}
+		$obj_serie = new clsPmieducarSerie( $this->ref_ref_cod_serie );
+		$det_serie = $obj_serie->detalhe();
+
+		$obj_matricula = new clsPmieducarMatricula(null,null,$this->ref_cod_escola,$this->ref_ref_cod_serie,null,$this->pessoa_logada,$this->ref_cod_aluno,3,null,null,1,$det_matricula['ano'],1,null,null,null,1,$det_serie["ref_cod_curso"] );
+		$cadastrou = $obj_matricula->cadastra();
+
+		if(!$cadastrou){
+			echo "<script>alert('Erro ao reclassificar matr�cula'); window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';</script>";
+			die("Erro ao reclassificar matr�cula");
+		}else{
+			/**
+			 * desativa todas as enturmacoes da matricula anterior
+			 */
+			$obj_matricula_turma = new clsPmieducarMatriculaTurma($this->cod_matricula);
+			if(!$obj_matricula_turma->reclassificacao())
+			{
+				echo "<script>alert('Erro ao desativar enturma��es da matr�cula: {$this->cod_matricula}\nContate o administrador do sistema informando a matr�cula!');</script>";
+			}
+			//window.location='educar_matricula_det.php?cod_matricula={$this->cod_matricula}&ref_cod_aluno={$this->ref_cod_aluno}';
+			echo "<script>alert('Reclassifica��o realizada com sucesso!\\nO C�digo da nova matr�cula �: $cadastrou.');
+			window.location='educar_matricula_lst.php?ref_cod_aluno={$this->ref_cod_aluno}';
+			</script>";
+			die('Reclassifica��o realizada com sucesso!');
+
+		}
+
+	}
+
+	function Excluir()
+	{
+		return false;
+	}
 }
 
 // cria uma extensao da classe base

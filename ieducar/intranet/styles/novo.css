@@ -25,7 +25,7 @@ body{
 }
 
 .brasao{
-	background: #f5f9fd;
+	background: #FAF2ED;
 	text-align: center;
 }
 
@@ -36,29 +36,19 @@ body{
 }
 
 .tableDetelheTitulo{
-	background-color: #f5f9fd;
-}
-
-.linhaBotoes{
-	background-color: #ccdce6;
-}
-
-.formdktd{
-	background-color: #ccdce6 !important;
+	background-color: #FAF2ED;
 }
 
 .formmdtd{
-	background-color: #f5f9fd;
-	vertical-align:top;
-	font-size: 11px;
-	font-family: arial, verdana, sans-serif;
+	background-color: #E4E9ED;
+	vertical-align: middle;
+	font-size: 12px;
 }
 
 .formlttd{
 	background-color: #FFFFFF;
-	vertical-align:top;
-	font-size: 11px;
-	font-family: arial, verdana, sans-serif;
+	vertical-align: middle;
+	font-size: 12px;
 }
 
 .formdestaque{
@@ -102,26 +92,18 @@ body{
 	vertical-align: top;
 	font-size: 0px;
 	margin-top: 50px;
-	background-color: #f5f9fd;
+	background-color: #fee7d7;
 }
 
 .r2c1{
-	background-color: #BECCD6;
-	height: 21px;
+	background-color: #ffffff;
+	height: 27px;
 	font-size: 10px;
 	vertical-align: middle;
-	border-left: 3px solid;
-	border-color: #495C67;
-}
-
-.r2c1A{
-	font-size: 10px;
-	vertical-align: middle;
-	color: #495C67;
 }
 
 .r2c2{
-	background-color: #495C67;
+	background-color: #371803;
 	height: 21px;
 	vertical-align: middle;
 	text-align: center;
@@ -130,10 +112,8 @@ body{
 
 .r3c1{
 	/*height: 800px;*/
-	background-color: #f5f9fd;
+	background-color: #ffffff;
 	vertical-align: top;
-	border-right: 2px solid;
-	border-color: #495C67;
 }
 
 .r3c2{
@@ -142,7 +122,7 @@ body{
 }
 
 #padraoPMI{
-	background-color: #f5f9fd;
+	background-color: #FAF2ED;
 	width: 198px;
 
 	background-repeat: no-repeat;
@@ -162,56 +142,56 @@ body{
 .nvp_tabelaMenu{
 	border: 0px solid;
 	border-color: black;
-	background-color: #BECCD6;
+	background-color: #ffffff;
 	width: 100%;
 	vertical-align: top;
 }
 
 .nvp_paginador{
 	font-size: 12px;
-	color: #495C67;
+	color: #371803;
 	font-family: arial, verdana, sans-serif, sans, helvetica, "Times New Roman";
 	text-decoration: none;
 	font-weight: bold;
 }
 
 .nvp_linkmenu{
-	color:#495c67;
+	color:#371803;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
 	font-size: 10px;
 	padding-left: 3px;
 }
 
 .nvp_linkmenu:hover{
-	color: white;
+	color: #a05a2a;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
 	font-size: 10px;
 	text-decoration: none;
 }
 
 .nvp_cor_sim{
-	background-color: #ccdce6;
+	background-color: #dddddd;
 	font-size: 10px;
 	padding-left: 5px;
 	border-bottom:1px solid #000000;
 }
 
 .nvp_cor_nao{
-	background-color: #BECCD6;
+	background-color: #ffffff;
 	font-size: 10px;
 	padding-left: 5px;
-	border-bottom:1px solid #000000;
+	border-bottom: 1px solid #3c505b;
 }
 
 .nvp_entre_linha{
 	height: 1px;
 	font-size: 0px;
-	background-color: #495C67;
+	background-color: #371803;
 }
 
 .nvp_table_corpo{
 	border: 3px solid;
-	border-color: #495C67;
+	border-color: #371803;
 	color: black;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
 	font-size: 12px;
@@ -222,7 +202,7 @@ body{
 
 .nvp_corpo_r1c1{
 	width: 21px;
-	background-color: #f5f9fd;
+	background-color: #FAF2ED;
 	vertical-align: top;
 }
 
@@ -234,18 +214,18 @@ table{
 
 .nvp_corpo_r2{
 	border-top: 3px solid;
-	border-color: #495C67;
+	border-color: #371803;
 	color: black;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
 	font-size: 12px;
 	vertical-align: middle;
-	background-color: #f5f9fd;
+	background-color: #FAF2ED;
 }
 
 
 .nvp_corpo_r2_escura{
 	border-top: 3px solid;
-	border-color: #495C67;
+	border-color: #371803;
 	padding-right: 0px;
 	color: black;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
@@ -262,21 +242,21 @@ table{
 	font-size: 0px;
 	vertical-align: top;
 	width: 19px;
-	background-color: #f5f9fd;
+	background-color: #FAF2ED;
 }
 
 a{
-	color: black;
+	color: #341803;
 }
 
 a:hover{
-	color: black;
+	color: #a05a2a;
 }
 
 .botaolistagem{
 	border: 2px solid;
-	border-color: #495C67;
-	background-color: #ccdce6;
+	border-color: #371803;
+	background-color: #A1B3BD;
 	color: black;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
 	font-size: 11px;
@@ -300,8 +280,8 @@ a:hover{
 }
 
 .rodape{
-	background-color: #ccdce6;
-	height: 36px;
+	background-color: #fde6d6;
+	height: 120px;
 	vertical-align: middle;
 }
 A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
@@ -313,8 +293,8 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
 	width: 100%;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
 	font-size: 12px;
-	border: 4px solid;
-	border-color: #495C67;
+	border: px solid;
+	border-color: #E47600;
 }
 
 .tabelanum2{
@@ -322,9 +302,7 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
 	width: 100%;
 	font-family: arial, verdana, sans-serif, "Times New Roman";
 	font-size: 12px;
-	border-top: 2px solid;
-	border-bottom: 2px solid;
-	border-color: #495C67;
+	border-top: 0px solid;
 }
 
 /* graficos diarios */
@@ -405,13 +383,13 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
 
 .fundoCalendario
 {
- 	background-color: #f5f9fd ;
+ 	background-color: #F1F1F1;
  	padding-left:5px;
  	border-width: 0.1px;
  	border-style: solid;
  	/*font-weight: bold;*/
- 	color: #495C67;
- 	border-color: #495C67;
+ 	color: #525252;
+ 	border-color: #F1F1F1;
   	width: 14%;
  	height: 60px;
  	background-repeat: no-repeat;
@@ -432,14 +410,14 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
 
 .fundoCalendarioTopo
 {
- 	background-color: #495C67;
+ 	background-color: #ee7335;
  	padding-left:5px;
  	border-width: 0.1px;
  	border-style: solid;
- 	border-color: #495C67;
+ 	border-color: #ee7335;
  	font-size: 11pt;
  	font-weight: bold;
-	font-family: verdana,heveltica,arial,sans-serif;
+ 	font-family: verdana,heveltica,arial,sans-serif;
  	color: #FFFFFF;
  	width: 14%;
 }
@@ -450,8 +428,8 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
  	padding-left:5px;
  	border-width: 0.1px;
  	border-style: solid;
- 	border-color: #495C67;
- 	color: #495C67;
+ 	border-color: #371803;
+ 	color: #371803;
    	width: 14%;
  	height: 70px;
 }
@@ -463,8 +441,8 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
  	padding-left:5px;
  	border-width: 0.1px;
  	border-style: solid;
- 	border-color: #495C67;
- 	color: #495C67;
+ 	border-color: #371803;
+ 	color: #371803;
    	width: 14%;
  	height: 70px;
 }
@@ -475,8 +453,8 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
  	padding-left:5px;
  	border-width: 0.1px;
  	border-style: solid;
- 	border-color: #495C67;
- 	color: #495C67;
+ 	border-color: #371803;
+ 	color: #371803;
   	width: 14%;
  	height: 70px;
 }
@@ -581,49 +559,32 @@ A.categoria:link, A.categoria:visited, A.categoria:active, A.categoria:hover {
 
 ul.menu
 {
-list-style: none;
-	margin:0px;
-	margin-top:-2px;
-	padding:0px;
-	width:159px;
-	/*border-right:1px solid #495C67;
-	border-bottom:1px solid #495C67;*/
-}
+	list-style: none;
+	width: 168px;
+	/*border-right:1px solid #371803;
+	border-bottom:1px solid #371803;*/
+	padding: 0;
+	margin: 0;
+	}
 ul.menu li
 {
 	margin:0px;
 	padding-left:10px;
+	padding-top: 3px;
+	padding-bottom: 3px;
 
 }
 ul.menu li a
 {
-margin:0px;
-padding:0px;
-font-family: arial,verdana,sans-serif;
-font-weight:normal;
-font-size:10px;
+	margin:0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	font-family: arial,verdana,sans-serif;
+	font-weight:normal;
+	font-size:10px;
 }
 
-.title {
--moz-border-radius-bottomleft:0pt;
--moz-border-radius-bottomright:0pt;
--moz-border-radius-topleft:0pt;
--moz-border-radius-topright:0pt;
-background:transparent url(../imagens/sec-title6.gif) no-repeat scroll 0pt;
-border:medium none;
-color:#215DC6;
-font-family:tahoma,verdana,sans-serif;
-font-size:11px;
-font-size-adjust:none;
-font-stretch:normal;
-font-style:normal;
-font-variant:normal;
-font-weight:bold;
-height:25px;
-letter-spacing:0pt;
-line-height:normal;
-width:168px;
-}
+.title {-moz-border-radius-bottomleft:0pt;-moz-border-radius-bottomright:0pt;-moz-border-radius-topleft:0pt;-moz-border-radius-topright:0pt;/* background:transparent url(../imagens/sec-title6.png) no-repeat scroll 0pt; */background-color: #ee7335;border:medium none;color:#215DC6;font-family:tahoma,verdana,sans-serif;font-size:11px;font-size-adjust:none;font-stretch:normal;font-style:normal;font-variant:normal;font-weight:bold;height:25px;letter-spacing:0pt;line-height:normal;width:168px;margin-bottom: 1px;}
 .title a
 {
 color:#ffffff;
@@ -638,9 +599,3 @@ height:19px;
 opacity:1;
 width:19px;
 }
-ul.menu li.nvp_cor_nao#busca-menu{
-  padding:0px;
-  margin:0px;
-}
-
-

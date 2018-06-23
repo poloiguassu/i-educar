@@ -1,30 +1,30 @@
 <?php
 
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006 Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006 Prefeitura Municipal de Itaja�
  * <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo dispon�vel desde a vers�o 1.0.0
  * @version   $Id$
  */
 
@@ -39,18 +39,18 @@ require_once 'lib/Portabilis/Utils/Database.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase
 {
   function Formular()
   {
-    $this->SetTitulo($this->_instituicao . ' i-Educar - Matrícula');
+    $this->SetTitulo($this->_instituicao . ' i-Educar - Matr�cula');
     $this->processoAp = 578;
     $this->addEstilo("localizacaoSistema");
   }
@@ -59,11 +59,11 @@ class clsIndexBase extends clsBase
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsCadastro
@@ -138,8 +138,8 @@ class indice extends clsCadastro
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_index.php"                  => "Escola",
-         ""        => "{$nomeMenu} matrícula"
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+         ""        => "{$nomeMenu} matr&iacute;cula"
     ));
     $this->enviaLocalizacao($localizacao->montar());
 
@@ -168,13 +168,29 @@ class indice extends clsCadastro
         $this->campoRotulo('nm_aluno', 'Aluno', $this->nm_aluno);
       }
 
-      /*
-       * Verifica se existem matrículas para o aluno para apresentar o campo
-       * transferência, necessário para o relatório de movimentação mensal.
-       */
-      $obj_matricula = new clsPmieducarMatricula();
-      $lst_matricula = $obj_matricula->lista(NULL, NULL, NULL, NULL, NULL, NULL,
-        $this->ref_cod_aluno);
+    $obj_aluno = new clsPmieducarAluno();
+    $lst_aluno = $obj_aluno->lista($this->ref_cod_aluno, NULL, NULL, NULL, NULL,
+      NULL, NULL, NULL, NULL, NULL, 1);
+
+    if (is_array($lst_aluno)) {
+      $det_aluno      = array_shift($lst_aluno);
+      $this->nm_aluno = $det_aluno['nome_aluno'];
+      $this->campoRotulo('nm_aluno', 'Aluno', $this->nm_aluno);
+    }
+
+    /*
+     * Verifica se existem matr�culas para o aluno para apresentar o campo
+     * transfer�ncia, necess�rio para o relat�rio de movimenta��o mensal.
+     */
+    $obj_matricula = new clsPmieducarMatricula();
+    $lst_matricula = $obj_matricula->lista(NULL, NULL, NULL, NULL, NULL, NULL,
+      $this->ref_cod_aluno);
+
+    // Primeira matr�cula do sistema exibe campo check
+    if (! $lst_matricula) {
+      $this->campoCheck('matricula_transferencia',
+        'Matr�cula de Transfer�ncia', '',
+        'Caso seja transf�ncia externa por favor marque esta op��o.');
     }
     if ($this->ref_cod_turma_copiar_enturmacoes)
       $this->nome_url_sucesso = Portabilis_String_Utils::toLatin1('Gravar enturmações');
@@ -182,14 +198,11 @@ class indice extends clsCadastro
 
     $anoLetivoHelperOptions = array('situacoes' => array('em_andamento', 'nao_iniciado'));
 
-    $this->inputsHelper()->dynamic(array('ano', 'instituicao', 'escola', 'curso', 'serie', 'turma'));
-    $this->inputsHelper()->date('data_matricula', array('label' => Portabilis_String_Utils::toLatin1('Data da matrícula'), 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y') ));
-    $this->inputsHelper()->hidden('ano_em_andamento', array('value' => '1'));
-
-    if($GLOBALS['coreExt']['Config']->app->matricula->dependencia == 1)
-      $this->inputsHelper()->checkbox('dependencia',
-                                      array('label' => Portabilis_String_Utils::toLatin1('Matrícula de dependência?'),
-                                            'value' => $this->dependencia));
+    $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'curso', 'serie'));
+    $this->inputsHelper()->dynamic('turma', array('required' => false, 'option value' => 'Selecione uma turma'));
+    $this->inputsHelper()->dynamic('anoLetivo', array('label' => 'Ano destino'), $anoLetivoHelperOptions);
+    $this->inputsHelper()->date('data_matricula', array('label' => 'Data da matr�cula', 'placeholder' => 'dd/mm/yyyy', 'value' => date('d/m/Y') ));
+    
 
     if (is_numeric($this->ref_cod_curso)) {
       $obj_curso = new clsPmieducarCurso($this->ref_cod_curso);
@@ -351,7 +364,7 @@ class indice extends clsCadastro
         $curso = $this->getCurso($this->ref_cod_curso);
 
         if ($m['ref_ref_cod_serie'] == $this->ref_cod_serie) {
-          $this->mensagem .= "Este aluno j&aacute; est&aacute; matriculado nesta s&eacute;rie e curso, n&atilde;o &eacute; possivel matricular um aluno mais de uma vez na mesma s&eacute;rie.<br />";
+          $this->mensagem .= "Este aluno j� est� matriculado nesta s�rie e curso, n�o � possivel matricular um aluno mais de uma vez na mesma s�rie.<br />";
 
           return false;
         }
@@ -365,7 +378,7 @@ class indice extends clsCadastro
           else
             $nomeSerie = '';
 
-          $this->mensagem .= "Este aluno j&aacute; est&aacute; matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o &eacute; multi seriado, n&atilde;o &eacute; possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
+          $this->mensagem .= "Este aluno j� est� matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n�o � multi seriado, n�o � possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
 
           return false;
         }
@@ -415,9 +428,7 @@ class indice extends clsCadastro
               $curso = $curso['nm_curso'];
             else
               $curso = '';
-
-            $this->mensagem .= "Este aluno j&aacute; est&aacute; matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transfer&ecirc;ncia ao secret&aacute;rio(a) da escola citada.<br />";
-
+            $this->mensagem .= "Este aluno j� est� matriculado no(a) '$serie' do curso '$curso' na escola '$escola', para matricular este aluno na sua escola solicite transfer�ncia ao secret�rio(a) da escola citada.<br />";
             return false;
           }
         }
@@ -501,7 +512,7 @@ class indice extends clsCadastro
 
         $editou = $obj_reserva_vaga->edita();
         if (! $editou) {
-          $this->mensagem = 'Edição não realizada.<br />';
+          $this->mensagem = 'Edi��o n�o realizada.<br />';
           return FALSE;
         }
       }
@@ -522,7 +533,7 @@ class indice extends clsCadastro
           }
         }
         else {
-          $this->mensagem = 'A s&eacute;rie selecionada n&atilde;o possui turmas cadastradas.<br />';
+          $this->mensagem = 'A s�rie selecionada n�o possui turmas cadastradas.<br />';
           return FALSE;
         }
 
@@ -550,11 +561,12 @@ class indice extends clsCadastro
         echo sprintf('
           <script>
             var msg = \'\';
-            msg += \'Excedido o n\u00famero de total de vagas para Matr\u00cdcula!\\n\';
-            msg += \'N\u00famero total de matriculados: %d\\n\';
-            msg += \'N\u00famero total de vagas reservadas: %d\\n\';
-            msg += \'N\u00famero total de vagas: %d\\n\';
-            msg += \'Deseja mesmo assim realizar a Matr\u00cdcula?\';
+            msg += \'Excedido o n�mero de total de vagas para Matricula!\\n\';
+            msg += \'N�mero total de matriculados: %d\\n\';
+            msg += \'N�mero total de vagas reservadas: %d\\n\';
+            msg += \'N�mero total de vagas: %d\\n\';
+            msg += \'Deseja mesmo assim realizar a Matr�cula?\';
+
             if (! confirm(msg)) {
               window.location = \'educar_aluno_det.php?cod_aluno=%d\';
             }
@@ -595,6 +607,15 @@ class indice extends clsCadastro
       $obj_matricula_aluno = new clsPmieducarMatricula();
       $lst_matricula_aluno = $obj_matricula_aluno->lista(NULL, NULL, NULL, NULL,
         NULL, NULL, $this->ref_cod_aluno);
+
+      if (! $lst_matricula_aluno) {
+        // Primeira matr�cula do sistema, consist�ncia (?)
+        $this->matricula_transferencia =
+          $this->matricula_transferencia == 'on' ? TRUE : FALSE;
+      }
+      else {
+        $this->matricula_transferencia = FALSE;
+      }
 
       if ($this->is_padrao == 1) {
         $this->semestre =  NULL;
@@ -669,15 +690,14 @@ class indice extends clsCadastro
                                                                                       $this->ref_cod_aluno,
                                                                                       $this->ref_cod_escola);
 
-        }
-      }
+        #Se encontrar solicita��es de transferencia externa (com data de transferencia sem codigo de matricula de entrada), inativa estas
+        /*$lst_transferencia = $obj_transferencia->lista(NULL, NULL, NULL, NULL,
+          NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL,
+          $this->ref_cod_aluno, FALSE, NULL, NULL, NULL, TRUE, FALSE);
 
-      $this->data_matricula = Portabilis_Date_Utils::brToPgSQL($this->data_matricula);
-      $obj = new clsPmieducarMatricula(NULL, $this->ref_cod_reserva_vaga,
-        $this->ref_cod_escola, $this->ref_cod_serie, NULL,
-        $this->pessoa_logada, $this->ref_cod_aluno, 3, NULL, NULL, 1, $this->ano,
-        1, NULL, NULL, NULL, NULL, $this->ref_cod_curso,
-        NULL, $this->semestre,$this->data_matricula);
+        if (is_array($lst_transferencia)) {
+          echo 'Encontrou solicita��es de transferencia externa (saida) com data de transferencia';
+          $det_transferencia = array_shift($lst_transferencia);
 
       $obj->dependencia = $dependencia;
 
@@ -687,17 +707,112 @@ class indice extends clsCadastro
 
       if ($cadastrou) {
 
-        if ($countEscolasIguais > 0){
-          $obj_crv = new clsPmieducarCandidatoReservaVaga($this->ref_cod_candidato_reserva_vaga);
-          $obj_crv->vinculaMatricula($this->ref_cod_escola, $this->cod_matricula, $this->ref_cod_aluno);
-        } else if ($this->ref_cod_candidato_fila_unica) {
-            $obj_cfu = new clsPmieducarCandidatoFilaUnica($this->ref_cod_candidato_fila_unica);
-            $obj_cfu->vinculaMatricula($this->cod_matricula);
+            if (! $editou3) {
+              $this->mensagem = 'Edi��o n�o realizada.<br />';
+              return FALSE;
+            }
+          }
+          else {
+            $this->mensagem = 'Edi��o n�o realizada.<br />';
+            return FALSE;
+          }
         }
+        #sen�o pega as solicitacoes de transferencia internas (sem data de transferencia e sem codigo de matricula de entrada) e
+        #seta a data de transferencia e codigo de matricula de entrada, atualiza a situacao da matricula para transferido e inativa a matricula turma
+        else {
+        */
+          $obj_transferencia = new clsPmieducarTransferenciaSolicitacao();
+          $lst_transferencia = $obj_transferencia->lista(NULL, NULL, NULL, NULL,
+            NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL,
+            $this->ref_cod_aluno, FALSE, NULL, NULL, NULL, FALSE, FALSE);
 
-        $this->enturmacaoMatricula($this->cod_matricula, $this->ref_cod_turma);
+          #TODO interna ?
+          // Verifica se existe solicita��o de transfer�ncia (interna) do aluno
+          if (is_array($lst_transferencia)) {
+            #echo 'Encontrou solicita��es de transferencia interna  (saida) com data de transferencia';
+            // Verifica cada solicita��o de transfer�ncia do aluno
+            foreach ($lst_transferencia as $transferencia) {
+              $obj_matricula = new clsPmieducarMatricula(
+                $transferencia['ref_cod_matricula_saida']
+              );
 
-        $this->verificaSolicitacaoTransferencia();
+              $det_matricula = $obj_matricula->detalhe();
+
+              // Se a matr�cula anterior estava em andamento, copia as notas/faltas/pareceres
+              if ($det_matricula['aprovado'] == 3){
+                $db->Consulta(" SELECT modules.copia_notas_transf({$det_matricula['cod_matricula']},{$cod_matricula})");
+              }              
+
+              // Caso a solicita��o seja para uma mesma s�rie
+              if ($det_matricula['ref_ref_cod_serie'] == $this->ref_cod_serie) {
+                $ref_cod_transferencia = $transferencia['cod_transferencia_solicitacao'];
+                break;
+              }
+              // Caso a solicita��o seja para a s�rie da sequ�ncia
+              else {
+                $obj_sequencia = new clsPmieducarSequenciaSerie(
+                  $det_matricula['ref_ref_cod_serie'], $this->ref_cod_serie,
+                  NULL, NULL, NULL, NULL, 1
+                );
+
+                if ($obj_sequencia->existe()) {
+                  $ref_cod_transferencia = $transferencia['cod_transferencia_solicitacao'];
+                  break;
+                }
+              }
+
+              $ref_cod_transferencia = $transferencia['cod_transferencia_solicitacao'];
+            }
+
+            if ($ref_cod_transferencia) {
+              $obj_transferencia = new clsPmieducarTransferenciaSolicitacao(
+                $ref_cod_transferencia, NULL, $this->pessoa_logada, NULL,
+                $cadastrou, NULL, NULL, NULL, NULL, 1, date('Y-m-d')
+              );
+
+              $editou2 = $obj_transferencia->edita();
+
+              if ($editou2) {
+                $obj_transferencia = new clsPmieducarTransferenciaSolicitacao(
+                  $ref_cod_transferencia
+                );
+
+                $det_transferencia = $obj_transferencia->detalhe();
+                $matricula_saida   = $det_transferencia['ref_cod_matricula_saida'];
+
+                $obj_matricula = new clsPmieducarMatricula($matricula_saida);
+                $det_matricula = $obj_matricula->detalhe();
+
+                // Caso a situa��o da matr�cula do aluno esteja em andamento
+                if ($det_matricula['aprovado'] == 3) {
+                  $obj_matricula = new clsPmieducarMatricula(
+                    $cadastrou, NULL, NULL, NULL, $this->pessoa_logada, NULL,
+                    NULL, NULL, NULL, NULL, 1, NULL, NULL, $det_matricula['modulo']
+                  );
+
+                  if ($obj_matricula->edita() && ! $this->desativaEnturmacoesMatricula($matricula_saida))
+                    return false;
+                }
+
+                $obj = new clsPmieducarMatricula(
+                  $matricula_saida, NULL, NULL, NULL,$this->pessoa_logada, NULL,
+                  NULL, 4, NULL, NULL, 1, NULL, 0
+                );
+
+                $editou3 = $obj->edita();
+
+                if (! $editou3) {
+                  $this->mensagem = 'Edi��o n�o realizada.<br />';
+                  return FALSE;
+                }
+              }
+              else {
+                $this->mensagem = 'Edi��o n�o realizada.<br />';
+                return FALSE;
+              }
+            }
+          }
+        //}
 
         #TODO set in $_SESSION['flash'] 'Aluno matriculado com sucesso'
         $this->mensagem .= 'Cadastro efetuado com sucesso.<br />';
@@ -705,12 +820,12 @@ class indice extends clsCadastro
         #die();
         #return true;
       }
-
-      $this->mensagem = 'Cadastro n&atilde;o realizado.<br />';
+      
+      $this->mensagem = 'Cadastro n�o realizado.<br />';
       return FALSE;
     }
     else {
-      $this->mensagem = Portabilis_String_Utils::toLatin1('O ano (letivo) selecionado não está em andamento na escola selecionada.<br />');
+      $this->mensagem = 'O ano (letivo) selecionado n�o esta em andamento na escola selecionada.<br />';
       return FALSE;
     }
   }
@@ -896,7 +1011,25 @@ class indice extends clsCadastro
       NULL, $ref_cod_serie, NULL, NULL, NULL, NULL, NULL, NULL, 1
     );
 
-    // Verifica se a série da matrícula cancelada é sequência de alguma outra série
+    // Coloca as matr�culas anteriores em andamento
+    $obj_transferencia_antiga  = new clsPmieducarTransferenciaSolicitacao();
+    $lista_transferencia = $obj_transferencia_antiga->lista(null,null,null,null,null,$this->cod_matricula);
+    if (is_array($lista_transferencia)){
+      foreach ($lista_transferencia as $transf) {
+ 
+        $obj_mat = new clsPmieducarMatricula($transf['ref_cod_matricula_saida']);
+        $obj_mat = $obj_mat->detalhe();
+          if ($obj_mat['aprovado']==4){
+            $obj_mat = new clsPmieducarMatricula($transf['ref_cod_matricula_saida'],null,null
+                         ,null,$this->pessoa_logada,null,null,3);
+           $obj_mat->edita();
+           $obj_transf  = new clsPmieducarTransferenciaSolicitacao($transf['cod_transferencia_solicitacao']);
+           $obj_transf->desativaEntradaTransferencia();
+         }
+      }
+    }    
+
+    // Verifica se a s�rie da matr�cula cancelada � sequ�ncia de alguma outra s�rie
     if (is_array($lst_sequencia)) {
       $det_sequencia    = array_shift($lst_sequencia);
       $ref_serie_origem = $det_sequencia['ref_serie_origem'];
@@ -907,7 +1040,7 @@ class indice extends clsCadastro
         NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, 0
       );
 
-      // Verifica se o aluno tem matrícula na série encontrada
+      // Verifica se o aluno tem matr�cula na s�rie encontrada
       if (is_array($lst_matricula)) {
         $det_matricula     = array_shift($lst_matricula);
         $ref_cod_matricula = $det_matricula['cod_matricula'];
@@ -919,7 +1052,7 @@ class indice extends clsCadastro
 
         $editou1 = $obj->edita();
         if (! $editou1) {
-          $this->mensagem = 'N&atilde;o foi poss&iacute;vel editar a "&Uacute;ltima Matr&iacute;cula da Sequ&ecirc;ncia".<br />';
+          $this->mensagem = 'N�o foi poss�vel editar a "�ltima Matr�cula da Sequ�ncia".<br />';
           return FALSE;
         }
       }
@@ -933,12 +1066,12 @@ class indice extends clsCadastro
     $excluiu = $obj->excluir();
 
     if ($excluiu) {
-      $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br />';
+      $this->mensagem .= 'Exclus�o efetuada com sucesso.<br />';
       header('Location: educar_aluno_det.php?cod_aluno=' . $this->ref_cod_aluno);
       die();
     }
 
-    $this->mensagem = 'Exclus&atilde;o n&atilde;o realizada.<br />';
+    $this->mensagem = 'Exclus�o n�o realizada.<br />';
     return FALSE;
   }
 
@@ -1085,15 +1218,15 @@ function enturmacaoMatricula($matriculaId, $turmaDestinoId) {
 
 }
 
-// Instancia objeto de página
+// Instancia objeto de p�gina
 $pagina = new clsIndexBase();
 
-// Instancia objeto de conteúdo
+// Instancia objeto de conte�do
 $miolo = new indice();
 
-// Atribui o conteúdo à página
+// Atribui o conte�do � p�gina
 $pagina->addForm($miolo);
 
-// Gera o código HTML
+// Gera o c�digo HTML
 $pagina->MakeAll();
 ?>

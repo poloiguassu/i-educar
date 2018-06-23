@@ -2,30 +2,30 @@
 // error_reporting(E_ALL);
 // ini_set("display_errors", 1);
 /**
- * i-Educar - Sistema de gestão escolar
+ * i-Educar - Sistema de gest�o escolar
  *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
+ * Copyright (C) 2006  Prefeitura Municipal de Itaja�
  *                     <ctima@itajai.sc.gov.br>
  *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
+ * Este programa � software livre; voc� pode redistribu�-lo e/ou modific�-lo
+ * sob os termos da Licen�a P�blica Geral GNU conforme publicada pela Free
+ * Software Foundation; tanto a vers�o 2 da Licen�a, como (a seu crit�rio)
+ * qualquer vers�o posterior.
  *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
+ * Este programa � distribu��do na expectativa de que seja �til, por�m, SEM
+ * NENHUMA GARANTIA; nem mesmo a garantia impl��cita de COMERCIABILIDADE OU
+ * ADEQUA��O A UMA FINALIDADE ESPEC�FICA. Consulte a Licen�a P�blica Geral
  * do GNU para mais detalhes.
  *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+ * Voc� deve ter recebido uma c�pia da Licen�a P�blica Geral do GNU junto
+ * com este programa; se n�o, escreva para a Free Software Foundation, Inc., no
+ * endere�o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
+ * @since     Arquivo dispon�vel desde a vers�o 1.0.0
  * @version   $Id$
  */
 
@@ -40,11 +40,11 @@ require_once 'Educacenso/Model/DocenteDataMapper.php';
 /**
  * clsIndexBase class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class clsIndexBase extends clsBase {
@@ -59,11 +59,11 @@ class clsIndexBase extends clsBase {
 /**
  * indice class.
  *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
+ * @author    Prefeitura Municipal de Itaja� <ctima@itajai.sc.gov.br>
  * @category  i-Educar
  * @license   @@license@@
  * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
+ * @since     Classe dispon�vel desde a vers�o 1.0.0
  * @version   @@package_version@@
  */
 class indice extends clsDetalhe
@@ -85,7 +85,7 @@ class indice extends clsDetalhe
   var $is_professor = FALSE;
 
   /**
-   * Implementação do método Gerar()
+   * Implementa��o do m�todo Gerar()
    */
   function Gerar()
   {
@@ -109,36 +109,31 @@ class indice extends clsDetalhe
       die();
     }
 
+    // Defici�ncia
+    $obj_ref_cod_deficiencia = new clsCadastroDeficiencia($registro['ref_cod_deficiencia']);
+    $det_ref_cod_deficiencia = $obj_ref_cod_deficiencia->detalhe();
+    $registro['ref_cod_deficiencia'] = $det_ref_cod_deficiencia['nm_deficiencia'];
+
     // Escolaridade
     $obj_ref_idesco = new clsCadastroEscolaridade($registro['ref_idesco']);
     $det_ref_idesco = $obj_ref_idesco->detalhe();
     $registro['ref_idesco'] = $det_ref_idesco['descricao'];
 
-    // Função
-    $obj_ref_cod_funcao = new clsPmieducarFuncao($registro['ref_cod_funcao'], NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
+    // Fun��o
+    $obj_ref_cod_funcao = new clsPmieducarFuncao($registro['ref_cod_funcao'],
+        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $this->ref_cod_instituicao);
     $det_ref_cod_funcao = $obj_ref_cod_funcao->detalhe();
     $registro['ref_cod_funcao'] = $det_ref_cod_funcao['nm_funcao'];
 // echo $registro['nome'];
     // Nome
 
 
-
-     $obj_cod_servidor      = new clsFuncionario($registro['cod_servidor']);
-     $det_cod_servidor      = $obj_cod_servidor->detalhe();
-     $registro['matricula'] = $det_cod_servidor['matricula'];
-
-      $obj_cod_servidor      = new clsPessoaFisica($registro['cod_servidor']);
-     $det_cod_servidor      = $obj_cod_servidor->detalhe();
-     $registro['nome'] = $det_cod_servidor['nome'];
-
-
-
-    // Instituição
+    // Institui��o
     $obj_ref_cod_instituicao = new clsPmieducarInstituicao($registro['ref_cod_instituicao']);
     $det_ref_cod_instituicao = $obj_ref_cod_instituicao->detalhe();
     $registro['ref_cod_instituicao'] = $det_ref_cod_instituicao['nm_instituicao'];
 
-    // Alocação do servidor
+    // Aloca��o do servidor
     $obj = new clsPmieducarServidorAlocacao();
     $obj->setOrderby('periodo, carga_horaria');
     $lista = $obj->lista(
@@ -180,38 +175,20 @@ class indice extends clsDetalhe
       $this->addDetalhe(array('Servidor', $registro['cod_servidor']));
     }
 
+    if ($registro['matricula']) {
+      $this->addDetalhe(array('Matr�cula', $registro['matricula']));
+    }
+
     if ($registro['nome']) {
       $this->addDetalhe(array('Nome', $registro['nome']));
     }
 
-    if ($registro['matricula']) {
-      $this->addDetalhe(array('Matrícula', $registro['matricula']));
-    }
-
-    // Dados no Educacenso/Inep.
-      $docenteMapper = new Educacenso_Model_DocenteDataMapper();
-
-      $docenteInep = null;
-      try {
-        $docenteInep = $docenteMapper->find(array('docente' => $registro['cod_servidor']));
-      } catch (Exception $e) {
-
-      }
-
-      if (isset($docenteInep)) {
-        $this->addDetalhe(array('Código Educacenso/Inep', $docenteInep->docenteInep));
-
-        if (isset($docenteInep->nomeInep)) {
-          $this->addDetalhe(array('Nome Educacenso/Inep', $docenteInep->nomeInep));
-        }
-      }
-
-    if ($registro['idpes']) {
-      $this->addDetalhe(array('Nome', $registro['Nome']));
-    }
-
     if ($registro['ref_cod_instituicao']) {
-      $this->addDetalhe( array( "Instituição", $registro['ref_cod_instituicao']));
+      $this->addDetalhe( array( "Institui��o", $registro['ref_cod_instituicao']));
+    }
+
+    if ($registro['ref_cod_deficiencia']) {
+      $this->addDetalhe(array('Defici�ncia', $registro['ref_cod_deficiencia']));
     }
 
     if( $registro['ref_idesco']) {
@@ -222,11 +199,11 @@ class indice extends clsDetalhe
       $obj_nivel = new clsPmieducarSubnivel($registro['ref_cod_subnivel']);
       $det_nivel = $obj_nivel->detalhe();
 
-      $this->addDetalhe(array('Nível', $det_nivel['nm_subnivel']));
+      $this->addDetalhe(array('N�vel', $det_nivel['nm_subnivel']));
     }
 
     if ($registro['ref_cod_funcao']) {
-      $this->addDetalhe(array('Função', $registro['ref_cod_funcao']));
+      $this->addDetalhe(array('Fun��o', $registro['ref_cod_funcao']));
     }
 
     $this->addDetalhe(
@@ -242,8 +219,8 @@ class indice extends clsDetalhe
     if ($lst_funcao) {
       $tabela .= "
         <table cellspacing='0' cellpadding='0' border='0'>
-          <tr bgcolor='#ccdce6' align='center'>
-            <td width='150'>Função</td>
+          <tr bgcolor='#A1B3BD' align='center'>
+            <td width='150'>Fun��o</td>
           </tr>";
 
       $class = 'formlttd';
@@ -334,39 +311,39 @@ class indice extends clsDetalhe
       }
 
       $tabela .= "</table>";
-      $this->addDetalhe(array('Função', "<a href='javascript:trocaDisplay(\"det_f\");' >Mostrar detalhe</a><div id='det_f' name='det_f' style='display:none;'>".$tabela."</div>"));
+      $this->addDetalhe(array('Fun��o',
+        "<a href='javascript:trocaDisplay(\"det_f\");' >Mostrar detalhe</a><div id='det_f' name='det_f' style='display:none;'>".$tabela."</div>"));
     }
 
     $tabela = NULL;
 
     /**
-     * @todo  Criar função de transformação de hora decimal. Ver educar_servidor_cad.php em 276
+     * @todo  Criar fun��o de transforma��o de hora decimal. Ver educar_servidor_cad.php em 276
      */
     if ($registro['carga_horaria']) {
       $cargaHoraria = $registro['carga_horaria'];
       $horas   = (int)$cargaHoraria;
       $minutos = round(($cargaHoraria - $horas) * 60);
       $cargaHoraria = sprintf('%02d:%02d', $horas, $minutos);
-      $this->addDetalhe(array('Carga Horária', $cargaHoraria));
+      $this->addDetalhe(array('Carga Hor�ria', $cargaHoraria));
     }
 
     $dias_da_semana = array(
       '' => 'Selecione',
       1  => 'Domingo',
       2  => 'Segunda',
-      3  => 'Terça',
+      3  => 'Ter�a',
       4  => 'Quarta',
       5  => 'Quinta',
       6  => 'Sexta',
-      7  => 'Sábado'
-    );
+      7  => 'S�bado');
 
     if ($this->alocacao_array) {
       $tabela .= "
         <table cellspacing='0' cellpadding='0' border='0'>
-          <tr bgcolor='#ccdce6' align='center'>
-            <td width='150'>Carga Horária</td>
-            <td width='80'>Período</td>
+          <tr bgcolor='#A1B3BD' align='center'>
+            <td width='150'>Carga Hor�ria</td>
+            <td width='80'>Per�odo</td>
             <td width='150'>Escola</td>
           </tr>";
 
@@ -399,20 +376,21 @@ class indice extends clsDetalhe
 
       $tabela .= "</table>";
 
-      $this->addDetalhe(array('Horários de trabalho',
+      $this->addDetalhe(array('Hor�rios de trabalho',
         "<a href='javascript:trocaDisplay(\"det_pree\");' >Mostrar detalhe</a><div id='det_pree' name='det_pree' style='display:none;'>".$tabela."</div>"));
     }
 
-    // Horários do professor
-    $horarios = $tmp_obj->getHorariosServidor($registro['cod_servidor'], $this->ref_cod_instituicao);
+    // Hor�rios do professor
+    $horarios = $tmp_obj->getHorariosServidor($registro['cod_servidor'],
+      $this->ref_cod_instituicao);
 
     if ($horarios) {
       $tabela = "
         <table cellspacing='0' cellpadding='0' border='0'>
           <tr bgcolor='#ccdce6' align='center'>
             <td width='150'>Escola</td>
-            <td width='100'>Curso</td>
-            <td width='70'>Série</td>
+            <td width='100'>Projeto</td>
+            <td width='70'>S�rie</td>
             <td width='70'>Turma</td>
             <td width='100'>Componente curricular</td>
             <td width='70'>Dia da semana</td>
@@ -444,10 +422,30 @@ class indice extends clsDetalhe
       $tabela .= "</table>";
 
       $this->addDetalhe(array(
-        'Horários de aula',
+        'Hor�rios de aula',
         "<a href='javascript:trocaDisplay(\"horarios\");' >Mostrar detalhes</a>" .
         "<div id='horarios' name='det_pree' style='display:none;'>" . $tabela . "</div>"
       ));
+    }
+
+    // Dados do docente no Educacenso/Inep.
+    if ($docente) {
+      $docenteMapper = new Educacenso_Model_DocenteDataMapper();
+
+      $docenteInep = NULL;
+      try {
+        $docenteInep = $docenteMapper->find(array('docente' => $registro['cod_servidor']));
+      }
+      catch (Exception $e) {
+      }
+
+      if (isset($docenteInep)) {
+        $this->addDetalhe(array('C�digo do docente no Educacenso/Inep', $docenteInep->docenteInep));
+
+        if (isset($docenteInep->nomeInep)) {
+          $this->addDetalhe(array('Nome do docente no Educacenso/Inep', $docenteInep->nomeInep));
+        }
+      }
     }
 
     $obj_permissoes = new clsPermissoes();
@@ -461,13 +459,10 @@ class indice extends clsDetalhe
       $this->array_botao = array();
       $this->array_botao_url_script = array();
 
-      $this->array_botao[] = 'Avaliação de Desempenho';
+      $this->array_botao[] = 'Avalia��o de Desempenho';
       $this->array_botao_url_script[] = "go(\"educar_avaliacao_desempenho_lst.php?{$get_padrao}\");";
-      /***************************************************************************************************************
-       *** Avaliando remoção pois será criado aba nova no próprio cadastro/edit do servidor com informações de cursos
-       *** e escolaridade normalizados pelo censo
-       ***************************************************************************************************************
-      $this->array_botao[] = 'Formação';
+
+      $this->array_botao[] = 'Forma��o';
       $this->array_botao_url_script[] = "go(\"educar_servidor_formacao_lst.php?{$get_padrao}\");";
 
       $this->array_botao[] = 'Cursos superiores/Licenciaturas';
@@ -482,7 +477,7 @@ class indice extends clsDetalhe
       $this->array_botao[] = 'Alocar Servidor';
       $this->array_botao_url_script[] = "go(\"educar_servidor_alocacao_lst.php?{$get_padrao}\");";
 
-      $this->array_botao[] = 'Alterar Nível';
+      $this->array_botao[] = 'Alterar N�vel';
       $this->array_botao_url_script[] = "popless();";
 
       $obj_servidor_alocacao = new clsPmieducarServidorAlocacao();
@@ -506,7 +501,7 @@ class indice extends clsDetalhe
       );
 
       if ($lista) {
-        $this->array_botao[] = 'Substituir Horário Servidor';
+        $this->array_botao[] = 'Substituir Hor�rio Servidor';
         $this->array_botao_url_script[] = "go(\"educar_servidor_substituicao_cad.php?{$get_padrao}\");";
       }
 
@@ -533,21 +528,21 @@ class indice extends clsDetalhe
     $localizacao = new LocalizacaoSistema();
     $localizacao->entradaCaminhos(array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
-         "educar_servidores_index.php"       => "Servidores",
-         "" => "Detalhe do servidor"
+         "educar_index.php"                  => "Trilha Jovem Iguassu - Escola",
+         ""                                  => "Detalhe do servidor"
     ));
 
     $this->enviaLocalizacao($localizacao->montar());
   }
 }
 
-// Instancia o objeto da página
+// Instancia o objeto da p�gina
 $pagina = new clsIndexBase();
 
-// Instancia o objeto de conteúdo
+// Instancia o objeto de conte�do
 $miolo = new indice();
 
-// Passa o conteúdo para a página
+// Passa o conte�do para a p�gina
 $pagina->addForm($miolo);
 
 // Gera o HTML

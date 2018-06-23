@@ -200,8 +200,8 @@
           serie_id : $('#ref_cod_serie').val(),
           turma_id : $('#ref_cod_turma').val(),
           ano : $('#ano').val(),
-          etapa : $('#etapa').val(),
-          dependencia : document.getElementById("alunos_dependencia").checked ? 't' : 'f'
+          etapa : $('#etapa').val()
+		  data_aula : $('data_aula').val()
         };
 
         return resourceUrlBuilder.buildUrl(urlBase, $.extend(vars, additionalVars));
@@ -363,7 +363,7 @@
           var $linha = $('<tr />');
           $('<th />').html('Selecionar').appendTo($linha);
           $('<th />').html('Curso').appendTo($linha);
-          $('<th />').html(safeUtf8Decode('Série')).appendTo($linha);
+          $('<th />').html(safeUtf8Decode('Eixo')).appendTo($linha);
           $('<th />').html('Turma').appendTo($linha);
           $('<th />').html('Matr&iacute;cula').appendTo($linha);
           $('<th />').html('Aluno').appendTo($linha);
