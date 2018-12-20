@@ -82,7 +82,6 @@ class clsListagem extends clsCampos
   var $funcAcao = '';
   var $funcAcaoNome = '';
   var $rotulo_anterior;
-  var $locale = null;
   var $appendInTop = false;
 
   var $array_botao;
@@ -175,6 +174,8 @@ class clsListagem extends clsCampos
 
       $linkFixo = $strUrl . '?';
 
+      $add_iniciolimi = null;
+
       if (is_array($mixVariaveisMantidas)) {
         foreach ($mixVariaveisMantidas as $key => $value) {
           if ($key != $getVar) {
@@ -206,9 +207,9 @@ class clsListagem extends clsCampos
       $strReturn .= "";
       $meios = array();
 
-      for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
-        $ordenacao = empty($_POST['ordenacao']) ? $_GET['ordenacao'] : $_POST['ordenacao'];
+      $ordenacao = $_POST['ordenacao'] ?? $_GET['ordenacao'] ?? $_POST['ordenacao'] ?? null;
 
+      for ($i = 0; $i <= $intPaginasExibidas * 2 && $i + $pagStart <= $totalPaginas; $i++) {
         $imagem     = ($pagStart + $i + $pag_modifier == $intPaginaAtual) ? '2' : '1';
         $compl_url  = ($add_iniciolimit) ? "&iniciolimit=" . ($pagStart + $i + $pag_modifier) : '';
         $strReturn .= "<td align=\"center\" style=\"padding-left:5px;padding-right:5px;\"><a href=\"{$linkFixo}$getVar=" . ( $pagStart + $i + $pag_modifier ) . "{$compl_url}&ordenacao={$ordenacao}\" class=\"nvp_paginador\" title=\"Ir para a p&aacute;gina " . ($pagStart + $i) . "\">" . addLeadingZero($pagStart + $i) ."</a></td>";
@@ -338,6 +339,8 @@ class clsListagem extends clsCampos
         }
       }
 
+      $janela = '';
+
       if ($this->busca_janela) {
         $janela .= "<form name='{$this->__nome}' id='{$this->__nome}' method='{$this->method}'>";
         $janela .= "<input name='busca' type='hidden' value='S'>";
@@ -396,7 +399,7 @@ class clsListagem extends clsCampos
         if ($this->campos) {
           reset($this->campos);
 
-          while (list($nome, $componente) = each($this->campos)) {
+          foreach ($this->campos as $nome => $componente) {
             if ($componente[0] == 'oculto' || $componente[0] == 'rotulo') {
               $retorno .=  "<input name='$nome' id='$nome' type='hidden' value='".urlencode($componente[3])."'>";
             }
@@ -454,7 +457,7 @@ class clsListagem extends clsCampos
         $retorno .=  "</script>";
 
         if ($this->exibirBotaoSubmit) {
-          if ($this->botao_submit) {
+          if (isset($this->botao_submit) && $this->botao_submit) {
             $retorno .=  "&nbsp;<input type='submit' class='botaolistagem' value='Buscar' id='botao_busca'>&nbsp;";
           }
           else {
@@ -515,12 +518,14 @@ class clsListagem extends clsCampos
         reset( $this->colunas );
       }
 
-      $retorno .= "<input type='hidden' id='ordenacao' name='ordenacao' value='{$_POST['ordenacao']}'>";
-      $retorno .= "<input type='hidden' id='fonte' name='fonte' value='{$_POST['fonte']}'>";
+      $ordenacao = $_POST['ordenacao'] ?? '';
+      $fonte = $_POST['fonte'] ?? '';
+      $retorno .= "<input type='hidden' id='ordenacao' name='ordenacao' value='{$ordenacao}'>";
+      $retorno .= "<input type='hidden' id='fonte' name='fonte' value='{$fonte}'>";
       $retorno .=  "
             <tr>";
 
-      while (list($i, $texto) = each($this->cabecalho)) {
+      foreach ($this->cabecalho as $i => $texto) {
         if (!empty( $this->colunas )) {
           list($i, $fmt) = each($this->colunas);
         }
@@ -548,31 +553,35 @@ class clsListagem extends clsCampos
 
     // Lista
     if (empty($this->linhas)) {
-      $retorno .=  "
-            <tr>
-              <td class='formlttd' colspan='$ncols' align='center'>N&atilde;o h&aacute; informa&ccedil;&atilde;o para ser apresentada</td>
-            </tr>";
+      $retorno .=  "<tr><td class='formlttd' colspan='$ncols' align='center'>N&atilde;o h&aacute; informa&ccedil;&atilde;o para ser apresentada</td></tr>";
     }
     else {
       reset($this->linhas);
 
-      while (list($i, $linha) = each($this->linhas)) {
+      foreach ($this->linhas as $i => $linha) {
         $classe = ($i % 2) ? 'formmdtd' : 'formlttd';
-        $retorno .=  "
-            <tr>";
+        $retornoTmp = '';
 
         if (is_array($linha)) {
+          if (
+            !empty($linha['tipo'])
+            && !empty($linha['conteudo'])
+            && $linha['tipo'] === 'html-puro'
+          ) {
+            $retorno .= $linha['conteudo'];
+            continue;
+          }
+
           reset($linha);
 
           if (!empty($this->colunas)) {
-            reset( $this->colunas );
+            reset($this->colunas);
           }
 
-          while (list($i, $celula) = each($linha)) {
+          foreach ($linha as $i => $celula) {
             if (!empty( $this->colunas)) {
-              list($i, $fmt) = each($this->colunas);
-            }
-            else {
+              $fmt = current($this->colunas);
+            } else {
               $fmt = alTopLeft;
             }
 
@@ -580,17 +589,13 @@ class clsListagem extends clsCampos
               $celula = str_replace("<img src='imagens/noticia.jpg' border=0>", "<img src='imagens/noticia.jpg' border=0 alt=''>", $celula);
             }
 
-            $retorno .=  "
-              <td class='$classe' $fmt>$celula</td>";
+            $retornoTmp .=  "<td class='$classe' $fmt>$celula</td>";
           }
-        }
-        else {
-          $retorno .=  "
-              <td class='formdktd' $fmt colspan='$ncols'>$linha</td>";
+        } else {
+          $retornoTmp .=  "<td class='formdktd' $fmt colspan='$ncols'>$linha</td>";
         }
 
-        $retorno .=  "
-            </tr>";
+        $retorno .=  '<tr>' . $retornoTmp . '</tr>';
       }
     }
 
@@ -721,13 +726,13 @@ class clsListagem extends clsCampos
 
     $botao = '';
 
-    if($this->acao_voltar) {
+    if(isset($this->acao_voltar) && $this->acao_voltar) {
       $botao = "&nbsp;&nbsp;&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->acao_voltar' value=' Voltar '>";
     }
-    if($this->acao_imprimir) {
+    if(isset($this->acao_imprimir) && $this->acao_imprimir) {
       $botao = "&nbsp;&nbsp;&nbsp;<input type='button' id='imprimir' class='botaolistagem' onclick='javascript: $this->acao_imprimir' value='$this->valor_imprimir'>";
     }
-    if ($this->acao && $this->show_botao_novo) {
+    if (!empty($this->acao) && $this->show_botao_novo) {
       $retorno .=  "
             <tr>
               <td colspan=\"$ncols\" align=\"center\"><input type='button' class='btn-green botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>$botao</td>
@@ -744,12 +749,12 @@ class clsListagem extends clsCampos
             <tr>
               <td colspan=\"$ncols\" align=\"center\">";
 
-    if (count($this->array_botao_script)) {
+    if (is_array($this->array_botao_script) && count($this->array_botao_script)) {
       for ($i = 0; $i < count($this->array_botao); $i++) {
         $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='". $this->array_botao_script[$i]."' value='".$this->array_botao[$i]."'>&nbsp;\n";
       }
     }
-    else {
+    elseif (is_array($this->array_botao)) {
       for ($i = 0; $i < count($this->array_botao); $i++) {
         $retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."'>&nbsp;\n";
       }

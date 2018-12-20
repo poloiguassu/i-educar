@@ -67,7 +67,7 @@ class clsCadastro extends clsCampos
 
   var $largura;
   var $tipoacao;
-  var $campos;
+  var $campos = [];
   var $erros;
   var $mensagem;
 
@@ -94,7 +94,6 @@ class clsCadastro extends clsCampos
   var $nome_url_alt;
   var $url_alt;
   var $help_images = FALSE;
-  var $locale = null;
 
   var $array_botao;
   var $array_botao_url;
@@ -152,12 +151,12 @@ class clsCadastro extends clsCampos
     }
     else {
       reset($_POST);
-      while (list($variavel, $valor) = each($_POST)) {
-        $this->$variavel = $valor;
+      foreach ($_POST as $variavel => $valor) {
+          $this->$variavel = $valor;
       }
 
       reset($_FILES);
-      while (list($variavel, $valor) = each($_FILES)) {
+      foreach ($_FILES as $variavel => $valor) {
         $this->$variavel = $valor;
       }
 
@@ -292,7 +291,7 @@ class clsCadastro extends clsCampos
     if ($this->campos) {
       reset($this->campos);
 
-      while (list($nome, $componente) = each($this->campos)) {
+      foreach ($this->campos as $nome => $componente) {
         if ($componente[0] == 'oculto' || $componente[0] == 'rotulo') {
           $retorno .=  "<input name='$nome' id='$nome' type='hidden' value='".urlencode($componente[3])."'>\n";
         }
@@ -312,7 +311,8 @@ class clsCadastro extends clsCampos
     }
 
     $retorno .= "<center>\n<table class='tablecadastro' $width border='0' cellpadding='2' cellspacing='0'>\n";
-    $titulo = $this->titulo ? $this->titulo : "<b>{$this->tipoacao} {$this->titulo_aplication}</b>";
+    $applicationTitle = $this->titulo_aplication ?? '';
+    $titulo = isset($this->titulo) ? $this->titulo : "<b>{$this->tipoacao} {$applicationTitle}</b>";
 
     /**
      * Adiciona os botoes de help para a pagina atual
@@ -381,7 +381,7 @@ class clsCadastro extends clsCampos
     function setColor(color)
     { \n";
       reset($this->campos);
-      while (list($nome, $componente) = each($this->campos)) {
+      foreach ($this->campos as $nome => $componente) {
         $validador = $componente[4];
 
         if (!empty($validador)) {
@@ -403,7 +403,7 @@ class clsCadastro extends clsCampos
 
     reset($this->campos);
 
-    while (list($nome, $componente) = each($this->campos)) {
+    foreach ($this->campos as $nome => $componente) {
       $nomeCampo = $componente[0];
       $validador = $componente[2];
 
@@ -443,7 +443,7 @@ class clsCadastro extends clsCampos
         $ct_campo = 0;
         $retorno .= "for(var id_campo=0;id_campo<$nome.getId();id_campo++)\n{\n";
 
-        while (list($name,$componente_campo ) = each( $componente)) {
+        foreach ($componente as $name => $componente_campo) {
           $nomeCampo =$componente_campo[1];
           $validador = $componente_campo[2];
 
@@ -666,26 +666,26 @@ class clsCadastro extends clsCampos
     $retorno .= "\n}\n";
     $retorno .=  "</script>\n";
 
-    if ($this->acao_enviar && $this->botao_enviar) {
+    if (!empty($this->acao_enviar) && !empty($this->botao_enviar)) {
       $retorno .=  "&nbsp;<input type='button' id='btn_enviar' class='botaolistagem' onclick='{$this->acao_enviar};' value='{$this->nome_url_sucesso}'>&nbsp;";
     }
 
-    if ($this->fexcluir) {
+    if (!empty($this->fexcluir)) {
       $retorno .=  "&nbsp;<input id='btn_excluir' type='button' class='botaolistagem' onclick='javascript:{$this->script_excluir}' value=' Excluir '>&nbsp;";
     }
-    if ($this->bot_alt) {
+    if (!empty($this->bot_alt)) {
       $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: go( \"$this->url_alt\" );' value=' $this->nome_url_alt '>&nbsp;";
     }
-    if ($this->excluir_Img) {
+    if (!empty($this->excluir_Img)) {
       $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:ExcluirImg();' value=' $this->nome_excluirImg '>&nbsp;";
     }
-    if ($this->acao) {
+    if (!empty($this->acao)) {
       $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->acao' value=' $this->nome_acao '>&nbsp;";
     }
-    if ($this->url_cancelar || $this->script_cancelar) {
+    if (!empty($this->url_cancelar) || !empty($this->script_cancelar)) {
       $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: $this->script_cancelar go( \"$this->url_cancelar\" );' value=' $this->nome_url_cancelar '>&nbsp;";
     }
-    if ($this->url_copiar_enturmacoes) {
+    if (!empty($this->url_copiar_enturmacoes)) {
       $retorno .=  "&nbsp;<input type='button' class='botaolistagem' onclick='javascript: go( \"$this->url_copiar_enturmacoes\" );' value=' $this->nome_url_copiar_enturmacoes '>&nbsp;";
     }
 
@@ -716,11 +716,11 @@ class clsCadastro extends clsCampos
     $retorno .=  "</table>\n</center>\n<!-- cadastro end -->\n";
     $retorno .=  "</form>\n";
 
-    if ($this->bannerClose) {
+    if (!empty($this->bannerClose)) {
       $retorno .= "</td></tr></table>";
     }
 
-    if ($this->executa_script) {
+    if (!empty($this->executa_script)) {
       $retorno .= "<script type=\"text/javascript\">{$this->executa_script}</script>";
     }
 
@@ -796,6 +796,13 @@ class clsCadastro extends clsCampos
         $obj = new clsPmieducarInstituicao($this->ref_cod_instituicao);
         $instituicao = empty($this->ref_cod_instituicao) ? $obj->primeiraAtiva() : $obj->detalhe();
         return dbBool($instituicao['obrigar_campos_censo']);
+    }
+
+    protected function sugestaoAnosLetivos()
+    {
+        $anoAtual = date('Y');
+        $anos = range($anoAtual-10, $anoAtual+1);
+        return array_combine($anos, $anos);
     }
 
   protected function inputsHelper() {

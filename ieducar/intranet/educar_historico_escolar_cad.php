@@ -148,13 +148,13 @@ class indice extends clsCadastro
 
     function Gerar()
     {
-        if(isset($_GET["ref_cod_aluno"]) && isset($_GET["sequencial"])){
+        if (isset($_GET["ref_cod_aluno"], $_GET["sequencial"])) {
             $objCodNomeEscola = new clsPmieducarHistoricoEscolar($_GET["ref_cod_aluno"], $_GET["sequencial"]);
-            $registro = $objCodNomeEscola->getCodNomeEscola();
-            if($registro){
-                $arrRegistro = explode("-", $registro);
-                $nomeEscola = $arrRegistro[0];
-                $codigoEscola = $arrRegistro[1];
+            $registro = $objCodNomeEscola->detalhe();
+
+            if ($registro) {
+                $nomeEscola = $registro['escola'];
+                $codigoEscola = $registro['ref_cod_escola'];
             }
         }
 
@@ -225,9 +225,11 @@ class indice extends clsCadastro
         $this->campoLista("ref_cod_escola", "Escola", $opcoes, null, '', false, '', '', false, true);
 
     $escola_options = array(
-      'required'    => false,
-      'label'       => 'Nome da escola',
-      'value'       => $this->escola
+      'required' => false,
+      'label' => 'Nome da escola',
+      'value' => $this->escola,
+      'max_length' => 255,
+      'size' => 80,
     );
     $this->inputsHelper()->text('escola', $escola_options);
 
@@ -277,7 +279,7 @@ class indice extends clsCadastro
         if (validaControlePosicaoHistorico()) {
             $this->campoNumero( "posicao", "Posição", $this->posicao, 1, 1, true, 'Informe a coluna equivalente a série/ano/etapa a qual o histórico pertence. Ex.: 1º ano informe 1, 2º ano informe 2' );
         }
-        $this->campoMonetario( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 8, 8, false);
+        $this->campoNumero( "carga_horaria", "Carga Hor&aacute;ria", $this->carga_horaria, 8, 8, false);
         $this->campoCheck( "cb_faltas_globalizadas", "Faltas Globalizadas", is_numeric($this->faltas_globalizadas) ? 'on' : '');
         $this->campoNumero( "faltas_globalizadas", "Faltas Globalizadas", $this->faltas_globalizadas, 4, 4, false );
         $this->campoNumero( "dias_letivos", "Dias Letivos", $this->dias_letivos, 3, 3, false);
@@ -341,7 +343,7 @@ class indice extends clsCadastro
         }
 
 
-        $this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", '<p title="Informe a carga horária somente se a disciplina não pertencer à grade curricular do município.">C.H (?)</p>', "Ordem", "Dependência"),$this->historico_disciplinas);
+        $this->campoTabelaInicio("notas","Notas",array("Disciplina","Nota","Faltas", 'C.H', "Ordem", "Dependência"),$this->historico_disciplinas);
 
         //$this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', 'autoCompleteComponentesCurricular(this)', 'onfocus' );
         $this->campoTexto( "nm_disciplina", "Disciplina", $this->nm_disciplina, 30, 255, false, false, false, '', '', '', 'onfocus' );

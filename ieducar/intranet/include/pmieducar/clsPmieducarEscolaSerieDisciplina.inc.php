@@ -50,6 +50,7 @@ class clsPmieducarEscolaSerieDisciplina
     var $carga_horaria;
     var $etapas_especificas;
     var $etapas_utilizadas;
+    var $anos_letivos;
 
     /**
      * Armazena o total de resultados obtidos na última chamada ao método lista().
@@ -112,14 +113,15 @@ class clsPmieducarEscolaSerieDisciplina
         $ativo = NULL,
         $carga_horaria = NULL,
         $etapas_especificas = NULL,
-        $etapas_utilizadas = NULL
+        $etapas_utilizadas = NULL,
+        $anos_letivos = []
     )
     {
         $db = new clsBanco();
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'escola_serie_disciplina';
 
-        $this->_campos_lista = $this->_todos_campos = 'ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina, carga_horaria, etapas_especificas, etapas_utilizadas';
+        $this->_campos_lista = $this->_todos_campos = 'ref_ref_cod_serie, ref_ref_cod_escola, ref_cod_disciplina, carga_horaria, etapas_especificas, etapas_utilizadas, ARRAY_TO_JSON(anos_letivos) AS anos_letivos ';
 
         if (is_numeric($ref_cod_disciplina)) {
             $componenteMapper = new ComponenteCurricular_Model_ComponenteDataMapper();
@@ -170,6 +172,11 @@ class clsPmieducarEscolaSerieDisciplina
 
         if (is_string($etapas_utilizadas)) {
             $this->etapas_utilizadas = $etapas_utilizadas;
+        }
+
+        if( is_array( $anos_letivos ) )
+        {
+            $this->anos_letivos = $anos_letivos;
         }
     }
 
@@ -230,6 +237,13 @@ class clsPmieducarEscolaSerieDisciplina
                 $gruda = ", ";
             }
 
+            if( is_array( $this->anos_letivos ) )
+            {
+                $campos.= "{$gruda}anos_letivos";
+                $valores .= "{$gruda} " . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
+                $grupo = ", ";
+            }
+
             $campos .= "{$gruda}ativo";
             $valores .= "{$gruda}'1'";
             $gruda = ", ";
@@ -249,35 +263,36 @@ class clsPmieducarEscolaSerieDisciplina
     {
         if (is_numeric($this->ref_ref_cod_serie) && is_numeric($this->ref_ref_cod_escola) && is_numeric($this->ref_cod_disciplina)) {
             $db = new clsBanco();
-            $set = "";
-            $gruda = "";
+            $set = [];
 
             if (is_numeric($this->ativo)) {
-                $set .= "{$gruda}ativo = '{$this->ativo}'";
-                $gruda = ", ";
+                $set[] = "ativo = '{$this->ativo}'";
             }
 
             if (is_numeric($this->carga_horaria)) {
-                $set .= "{$gruda}carga_horaria = '{$this->carga_horaria}'";
-                $gruda = ", ";
+                $set[] = "carga_horaria = '{$this->carga_horaria}'";
             } else if (is_null($this->carga_horaria)) {
-                $set .= "{$gruda}carga_horaria = NULL";
             }
 
             if (is_string($this->etapas_especificas)) {
-                $set .= "{$gruda}etapas_especificas = '{$this->etapas_especificas}'";
-                $gruda = ", ";
+                $set[] = "etapas_especificas = '{$this->etapas_especificas}'";
             }
 
             if (is_string($this->etapas_utilizadas)) {
-                $set .= "{$gruda}etapas_utilizadas = '{$this->etapas_utilizadas}'";
-                $gruda = ", ";
+                $set[] = "etapas_utilizadas = '{$this->etapas_utilizadas}'";
             } else if (is_null($this->etapas_utilizadas)) {
-                $set .= "{$gruda}etapas_utilizadas = NULL";
+                $set[] = "etapas_utilizadas = NULL";
             }
 
-            if ($set) {
-                $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}'");
+            if( is_array( $this->anos_letivos ) )
+            {
+                $set[] = "anos_letivos = " . Portabilis_Utils_Database::arrayToPgArray($this->anos_letivos) . ' ';
+            }
+
+            $fields = implode(', ', $set);
+
+            if ($fields) {
+                $db->Consulta("UPDATE {$this->_tabela} SET $fields WHERE ref_ref_cod_serie = '{$this->ref_ref_cod_serie}' AND ref_ref_cod_escola = '{$this->ref_ref_cod_escola}' AND ref_cod_disciplina = '{$this->ref_cod_disciplina}'");
                 return TRUE;
             }
         }
@@ -292,12 +307,13 @@ class clsPmieducarEscolaSerieDisciplina
      *   componentes curriculares
      */
     function lista(
-        $int_ref_ref_cod_serie = NULL,
-        $int_ref_ref_cod_escola = NULL,
-        $int_ref_cod_disciplina = NULL,
-        $int_ativo = NULL,
-        $boo_nome_disc = FALSE,
-        $int_etapa = NULL
+        $int_ref_ref_cod_serie = null,
+        $int_ref_ref_cod_escola = null,
+        $int_ref_cod_disciplina = null,
+        $int_ativo = null,
+        $boo_nome_disc = false,
+        $int_etapa = null,
+        $anoLetivo = null
     )
     {
         $whereAnd = " WHERE ";
@@ -336,6 +352,10 @@ class clsPmieducarEscolaSerieDisciplina
             $whereAnd = " AND ";
         }
 
+        if (is_numeric($anoLetivo)) {
+            $filtros .= "{$whereAnd} {$anoLetivo} = ANY (escola_serie_disciplina.anos_letivos) ";
+            $whereAnd = " AND ";
+        }
 
         $db = new clsBanco();
         $countCampos = count(explode(",", $this->_campos_lista));
@@ -623,7 +643,11 @@ class clsPmieducarEscolaSerieDisciplina
                                                     FROM pmieducar.dispensa_disciplina
                                                    WHERE dispensa_disciplina.ref_cod_disciplina NOT IN ({$componentesSelecionados})
                                                      AND dispensa_disciplina.ref_cod_escola = {$this->_tabela}.ref_ref_cod_escola
-                                                     AND dispensa_disciplina.ref_cod_serie = {$this->_tabela}.ref_ref_cod_serie))";
+                                                     AND dispensa_disciplina.ref_cod_serie = {$this->_tabela}.ref_ref_cod_serie
+                                                     AND dispensa_disciplina.ref_cod_disciplina IN (SELECT ref_cod_disciplina
+                                                                                                      FROM pmieducar.escola_serie_disciplina esd
+                                                                                                     WHERE dispensa_disciplina.ref_cod_escola = esd.ref_ref_cod_escola
+                                                                                                       AND dispensa_disciplina.ref_cod_serie = esd.ref_ref_cod_serie)))";
             return dbBool($db->CampoUnico($sql));
         }
         return FALSE;

@@ -28,10 +28,13 @@
  * @version   $Id$
  */
 
+use iEducar\Modules\ErrorTracking\TrackerFactory;
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 require_once 'clsConfigItajai.inc.php';
 require_once 'include/clsCronometro.inc.php';
 require_once 'Portabilis/Mailer.php';
-require_once 'modules/Error/Mailers/NotificationMailer.php';
 
 /**
  * clsBancoSQL_ abstract class.
@@ -428,10 +431,14 @@ abstract class clsBancoSQL_
       echo $this->strStringSQL."\n<br>";
     }
 
+    $start = microtime(true);
+
     $this->bConsulta_ID = pg_query($this->bLink_ID, $this->strStringSQL);
     $this->strErro = pg_result_error($this->bConsulta_ID);
     $this->bErro_no = ($this->strErro == '') ? FALSE : TRUE;
     $this->iLinha   = 0;
+
+    $this->logQuery($this->strStringSQL, [], $this->getElapsedTime($start));
 
     if (!$this->bConsulta_ID) {
       if ($this->getThrowException()) {
@@ -637,6 +644,13 @@ abstract class clsBancoSQL_
    */
   function ProximoRegistro()
   {
+      if (empty($this->bConsulta_ID)) {
+          $this->strErro = 'Nenhuma conexão informada.';
+          $this->bErro_no = false;
+
+          return false;
+      }
+
     // Fetch do resultado
     if ($this->getFetchMode() == self::FETCH_ARRAY) {
       $this->arrayStrRegistro = @pg_fetch_array($this->bConsulta_ID);
@@ -805,8 +819,20 @@ abstract class clsBancoSQL_
     $_SESSION['last_php_error_file']    = $lastError['file'];
     @session_write_close();
 
-    $pgErrorMsg = $getError ? pg_result_error($this->bConsulta_ID) : '';
-    (new NotificationMailer)->unexpectedDataBaseError($appErrorMsg, $pgErrorMsg, $this->strStringSQL);
+    if ($GLOBALS['coreExt']['Config']->modules->error->track) {
+        $tracker = TrackerFactory::getTracker($GLOBALS['coreExt']['Config']->modules->error->tracker_name);
+
+        $pgErrorMsg = $getError ? pg_result_error($this->bConsulta_ID) : '';
+
+        $data = [
+            'databaseError' => $pgErrorMsg,
+            'appError' => $appErrorMsg,
+            'sql' => $this->strStringSQL,
+            'request' => $_REQUEST,
+        ];
+
+        $tracker->notify(new \Exception($lastError['message']), $data);
+    }
 
     die("<script>document.location.href = '/module/Error/unexpected';</script>");
   }
@@ -832,9 +858,13 @@ abstract class clsBancoSQL_
       if (! is_array($params))
         $params = array($params);
 
+      $start = microtime(true);
+
       $this->bConsulta_ID = @pg_query_params($dbConn, $query, $params);
       $resultError = @pg_result_error($this->bConsulta_ID);
-      $errorMsgs .= trim($resultError) != '' ? $resultError : @pg_last_error($this->bConsulta_ID);
+      $errorMsgs .= trim($resultError) != '' ? $resultError : @pg_last_error($dbConn);
+
+      $this->logQuery($query, $params, $this->getElapsedTime($start));
 
       }
       catch(Exception $e) {
@@ -845,5 +875,42 @@ abstract class clsBancoSQL_
         throw new Exception("Erro ao preparar consulta ($query) no banco de dados: $errorMsgs");
 
       return $this->bConsulta_ID;
+  }
+
+  /**
+   * Lança um evento "QueryExecuted".
+   *
+   * @see \Illuminate\Database\Connection::logQuery()
+   *
+   * @param string $query
+   * @param array  $bindings
+   * @param string $time
+   *
+   * @return void
+   */
+  protected function logQuery($query, $bindings, $time)
+  {
+    if (env('APP_ENV') == 'testing') {
+        return;
+    }
+
+    /** @var \Illuminate\Database\Connection $connection */
+    $connection = app(\Illuminate\Database\Connection::class);
+
+    $connection->logQuery($query, $bindings, $time);
+  }
+
+  /**
+   * Retorna o tempo gasto na operação.
+   *
+   * @see \Illuminate\Database\Connection::getElapsedTime()
+   *
+   * @param int $start
+   *
+   * @return float
+   */
+  protected function getElapsedTime($start)
+  {
+      return round((microtime(true) - $start) * 1000, 2);
   }
 }

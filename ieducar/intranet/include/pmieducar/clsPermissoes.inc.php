@@ -95,7 +95,7 @@ class clsPermissoes
       $ok = TRUE;
     }
 
-    if ((!$detalhe['cadastra'] && !$detalhe_super_usuario)) {
+    if (!$detalhe_super_usuario && !$detalhe['cadastra']) {
       $ok = FALSE;
     }
 
@@ -260,10 +260,10 @@ class clsPermissoes
     $detalhe_usuario = $obj_usuario->detalhe();
 
     if ($detalhe_usuario) {
-      return $detalhe_usuario['ref_cod_escola'];
+      return $detalhe_usuario['ref_cod_escola'] ?? false;
     }
 
-    return FALSE;
+    return false;
   }
 
     /**

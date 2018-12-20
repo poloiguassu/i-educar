@@ -218,7 +218,7 @@ class clsControlador
   // renderiza o template de login, com as mensagens adicionadas durante validações
   protected function renderLoginPage() {
     $this->destroyLoginSession();
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/bootstrap.php';
+    require_once __DIR__.'/../../includes/bootstrap.php';
     $parceiro = $GLOBALS['coreExt']['Config']->app->template->layout;
     $templateName   = (trim($parceiro)=='' ? 'templates/nvp_htmlloginintranet.tpl' : 'templates/'.trim($parceiro));
     $templateFile   = fopen($templateName, "r");
@@ -383,7 +383,7 @@ class clsControlador
   protected function checkForMultipleAccess($user) {
     // considera como acesso multiplo, acesso em diferentes IPs em menos de $tempoMultiploAcesso minutos
     $tempoMultiploAcesso = 10;
-    $tempoEmEspera       = abs(time() - strftime("now") - strtotime($user['data_login'])) / 60;
+    $tempoEmEspera       = abs(time() - strtotime($user['data_login'])) / 60;
 
     $multiploAcesso = $tempoEmEspera <= $tempoMultiploAcesso &&
                       $user['ip_ultimo_acesso'] != $this->getClientIP();

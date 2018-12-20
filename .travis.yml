@@ -1,0 +1,24 @@
+matrix:
+  include:
+    - language: php
+      php:
+        - 7.1
+        - 7.2
+      addons:
+        postgresql: 9.5
+        apt:
+          packages:
+            - postgresql-9.5
+      env:
+        - APP_ENV=testing
+        - DB_CONNECTION=pgsql
+        - DB_HOST=localhost
+        - DB_PORT=5432
+        - DB_DATABASE=travis
+        - DB_USERNAME=postgres
+        - DB_PASSWORD=
+      cache:
+        directories:
+          - $HOME/.composer/cache
+      before_script:
+        - composer new-install

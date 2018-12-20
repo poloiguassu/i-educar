@@ -43,6 +43,7 @@ class indice extends clsCadastro
     public $passou;
     public $escola_curso;
     public $escola_curso_autorizacao;
+    public $escola_curso_anos_letivos;
     public $ref_cod_curso;
     public $autorizacao;
     public $fantasia;
@@ -87,6 +88,11 @@ class indice extends clsCadastro
     public $local_funcionamento;
     public $condicao;
     public $codigo_inep_escola_compartilhada;
+    public $codigo_inep_escola_compartilhada2;
+    public $codigo_inep_escola_compartilhada3;
+    public $codigo_inep_escola_compartilhada4;
+    public $codigo_inep_escola_compartilhada5;
+    public $codigo_inep_escola_compartilhada6;
     public $decreto_criacao;
     public $area_terreno_total;
     public $area_construida;
@@ -801,6 +807,10 @@ class indice extends clsCadastro
                 $this->escola_curso_autorizacao = unserialize(urldecode($_POST["escola_curso_autorizacao"]));
             }
 
+            if ($_POST["escola_curso_anos_letivos"]) {
+                $this->escola_curso_anos_letivos = unserialize(urldecode($_POST["escola_curso_anos_letivos"]));
+            }
+
             if (is_numeric($this->cod_escola) && !$_POST) {
                 $obj = new clsPmieducarEscolaCurso($this->cod_escola);
                 $registros = $obj->lista($this->cod_escola);
@@ -808,6 +818,7 @@ class indice extends clsCadastro
                     foreach ($registros as $campo) {
                         $this->escola_curso[$campo["ref_cod_curso"]] = $campo["ref_cod_curso"];
                         $this->escola_curso_autorizacao[$campo["ref_cod_curso"]] = $campo["autorizacao"];
+                        $this->escola_curso_anos_letivos[$campo["ref_cod_curso"]] = json_decode($campo["anos_letivos"]);
                     }
                 }
             }
@@ -817,6 +828,10 @@ class indice extends clsCadastro
 
                 if ($this->autorizacao) {
                     $this->escola_curso_autorizacao[$_POST["ref_cod_curso"]] = $this->autorizacao;
+                }
+
+                if ($this->adicionar_anos_letivos) {
+                    $this->escola_curso_anos_letivos[$_POST["ref_cod_curso"]] = $this->adicionar_anos_letivos;
                 }
 
                 unset($this->ref_cod_curso);
@@ -837,20 +852,25 @@ class indice extends clsCadastro
                         $obj_curso_det = $obj_curso->detalhe();
                         $nm_curso = $obj_curso_det["nm_curso"];
                         $nm_autorizacao = $this->escola_curso_autorizacao[$curso];
+                        $anosLetivos = $this->escola_curso_anos_letivos[$curso] ?: [];
                         $this->campoTextoInv("ref_cod_curso_{$curso}", "", $nm_curso, 50, 255, false, false, true);
-                        $this->campoTextoInv("autorizacao_{$curso}", "", $nm_autorizacao, 20, 255, false, false, false, "", "<a href='#' onclick=\"getElementById('excluir_curso').value = '{$curso}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>");
+                        $this->campoTextoInv("autorizacao_{$curso}", "", $nm_autorizacao, 20, 255);
+                        $this->campoTextoInv("anos_letivos_{$curso}", "", 'Anos: '.implode(',', $anosLetivos), 20, 255, false, false, false, "", "<a href='#' onclick=\"getElementById('excluir_curso').value = '{$curso}'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bola_xis.gif' title='Excluir' border=0></a>");
                         $aux[$curso] = $curso;
                         $aux_autorizacao[$curso] = $nm_autorizacao;
+                        $auxAnosLetivos[$curso] = $anosLetivos;
                     }
                 }
 
                 unset($this->escola_curso);
                 $this->escola_curso = $aux;
                 $this->escola_curso_autorizacao = $aux_autorizacao;
+                $this->escola_curso_anos_letivos = $auxAnosLetivos;
             }
 
             $this->campoOculto("escola_curso", serialize($this->escola_curso));
             $this->campoOculto("escola_curso_autorizacao", serialize($this->escola_curso_autorizacao));
+            $this->campoOculto("escola_curso_anos_letivos", serialize($this->escola_curso_anos_letivos));
             $opcoes = array("" => "Selecione");
 
             if (class_exists("clsPmieducarCurso")) {
@@ -873,11 +893,26 @@ class indice extends clsCadastro
 
             if ($aux) {
                 $this->campoLista("ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso, "", false, "", "<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>", false, false);
-                $this->campoTexto("autorizacao", "Autorização", "", 30, 255, false);
             } else {
                 $this->campoLista("ref_cod_curso", "Curso", $opcoes, $this->ref_cod_curso, "", false, "", "<a href='#' onclick=\"getElementById('incluir_curso').value = 'S'; getElementById('tipoacao').value = ''; {$this->__nome}.submit();\"><img src='imagens/nvp_bot_adiciona.gif' title='Incluir' border=0></a>");
-                $this->campoTexto("autorizacao", "Autorização", "", 30, 255, false);
             }
+
+            $this->campoTexto("autorizacao", "Autorização", "", 30, 255, false);
+
+            $helperOptions = [
+                'objectName' => 'adicionar_anos_letivos'
+            ];
+
+            $options = [
+                'label' => 'Anos letivos',
+                'required' => FALSE,
+                'size' => 50,
+                'value' => '',
+                'options' => [
+                    'all_values' => $this->sugestaoAnosLetivos()
+                ]
+            ];
+            $this->inputsHelper()->multipleSearchCustom('', $options, $helperOptions);
 
             $this->campoOculto("incluir_curso", "");
             $this->campoQuebra();
@@ -906,12 +941,7 @@ class indice extends clsCadastro
             $options = array('disabled' => $disabled, 'label' => 'Forma de ocupação do prédio', 'resources' => $resources, 'value' => $this->condicao, 'size' => 70, 'required' => false);
             $this->inputsHelper()->select('condicao', $options);
 
-            $options = array('label' => 'Código da escola que compartilha o prédio',
-                'disabled' => $disabled,
-                'label_hint' => 'Caso compartilhe o prédio escolar com outra escola preencha com o código INEP',
-                'resources' => $resources, 'value' => $this->codigo_inep_escola_compartilhada, 'required' => false,
-                'size' => 8, 'max_length' => 8, 'placeholder' => '');
-            $this->inputsHelper()->integer('codigo_inep_escola_compartilhada', $options);
+            $this->geraCamposCodigoInepEscolaCompartilhada();
 
             $resources = array(null => 'Selecione',
                 1 => 'Difícil',
@@ -1335,8 +1365,13 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'Código da escola que compartilha o prédio')) {
-            return false;
+        for ( $i = 1; $i <= 6; $i++) {
+            $seq = $i == 1 ? '' : $i;
+            $campo = 'codigo_inep_escola_compartilhada'.$seq;
+            $ret = $this->validaDigitosInepEscola($this->$campo, 'Código da escola que compartilha o prédio '.$i);
+            if (!$ret) {
+                return false;
+            }
         }
 
         if (in_array(5, $this->abastecimento_agua) && count($this->abastecimento_agua) > 1) {
@@ -1379,6 +1414,11 @@ class indice extends clsCadastro
                     $obj->local_funcionamento = $this->local_funcionamento;
                     $obj->condicao = $this->condicao;
                     $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
+                    $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
+                    $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
+                    $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
+                    $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
+                    $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
                     $obj->decreto_criacao = $this->decreto_criacao;
                     $obj->area_terreno_total = $this->area_terreno_total;
                     $obj->area_construida = $this->area_construida;
@@ -1502,10 +1542,11 @@ class indice extends clsCadastro
                         //-----------------------CADASTRA CURSO------------------------//
                         $this->escola_curso = unserialize(urldecode($this->escola_curso));
                         $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
+                        $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos));
 
                         if ($this->escola_curso) {
                             foreach ($this->escola_curso as $campo) {
-                                $curso_escola = new clsPmieducarEscolaCurso($cadastrou1, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo]);
+                                $curso_escola = new clsPmieducarEscolaCurso($cadastrou1, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo], $this->escola_curso_anos_letivos[$campo]);
                                 $cadastrou_ = $curso_escola->cadastra();
 
                                 if (!$cadastrou_) {
@@ -1547,6 +1588,11 @@ class indice extends clsCadastro
             $obj->local_funcionamento = $this->local_funcionamento;
             $obj->condicao = $this->condicao;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
+            $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
+            $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
+            $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
+            $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
+            $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
             $obj->decreto_criacao = $this->decreto_criacao;
             $obj->area_terreno_total = $this->area_terreno_total;
             $obj->area_construida = $this->area_construida;
@@ -1640,10 +1686,11 @@ class indice extends clsCadastro
                     //-----------------------CADASTRA CURSO------------------------//
                     $this->escola_curso = unserialize(urldecode($this->escola_curso));
                     $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
+                    $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos));
 
                     if ($this->escola_curso) {
                         foreach ($this->escola_curso as $campo) {
-                            $curso_escola = new clsPmieducarEscolaCurso($cadastrou, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo]);
+                            $curso_escola = new clsPmieducarEscolaCurso($cadastrou, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo], $this->escola_curso_anos_letivos[$campo]);
                             $cadastrou_ = $curso_escola->cadastra();
 
                             if (!$cadastrou_) {
@@ -1695,8 +1742,13 @@ class indice extends clsCadastro
             return false;
         }
 
-        if (!$this->validaDigitosInepEscola($this->codigo_inep_escola_compartilhada, 'Código da escola que compartilha o prédio')) {
-            return false;
+        for ( $i = 1; $i <= 6; $i++) {
+            $seq = $i == 1 ? '' : $i;
+            $campo = 'codigo_inep_escola_compartilhada'.$seq;
+            $ret = $this->validaDigitosInepEscola($this->$campo, 'Código da escola que compartilha o prédio '.$i);
+            if (!$ret) {
+                return false;
+            }
         }
 
         $mantenedora_escola_privada = implode(',', $this->mantenedora_escola_privada);
@@ -1741,8 +1793,11 @@ class indice extends clsCadastro
             $obj->local_funcionamento = $this->local_funcionamento;
             $obj->condicao = $this->condicao;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
-            $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
-            $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
+            $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
+            $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
+            $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
+            $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
+            $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
             $obj->decreto_criacao = $this->decreto_criacao;
             $obj->area_terreno_total = $this->area_terreno_total;
             $obj->area_construida = $this->area_construida;
@@ -1843,6 +1898,11 @@ class indice extends clsCadastro
             $obj->local_funcionamento = $this->local_funcionamento;
             $obj->condicao = $this->condicao;
             $obj->codigo_inep_escola_compartilhada = $this->codigo_inep_escola_compartilhada;
+            $obj->codigo_inep_escola_compartilhada2 = $this->codigo_inep_escola_compartilhada2;
+            $obj->codigo_inep_escola_compartilhada3 = $this->codigo_inep_escola_compartilhada3;
+            $obj->codigo_inep_escola_compartilhada4 = $this->codigo_inep_escola_compartilhada4;
+            $obj->codigo_inep_escola_compartilhada5 = $this->codigo_inep_escola_compartilhada5;
+            $obj->codigo_inep_escola_compartilhada6 = $this->codigo_inep_escola_compartilhada6;
             $obj->decreto_criacao = $this->decreto_criacao;
             $obj->area_terreno_total = $this->area_terreno_total;
             $obj->area_construida = $this->area_construida;
@@ -1985,13 +2045,14 @@ class indice extends clsCadastro
                         //-----------------------EDITA CURSO------------------------//
                         $this->escola_curso = unserialize(urldecode($this->escola_curso));
                         $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
+                        $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos));
                         $obj = new clsPmieducarEscolaCurso($this->cod_escola);
                         $excluiu = $obj->excluirTodos();
 
                         if ($excluiu) {
                             if ($this->escola_curso) {
                                 foreach ($this->escola_curso as $campo) {
-                                    $obj = new clsPmieducarEscolaCurso($this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo]);
+                                    $obj = new clsPmieducarEscolaCurso($this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo], $this->escola_curso_anos_letivos[$campo]);
                                     $cadastrou_ = $obj->cadastra();
 
                                     if (!$cadastrou_) {
@@ -2017,13 +2078,14 @@ class indice extends clsCadastro
                     //-----------------------EDITA CURSO------------------------//
                     $this->escola_curso = unserialize(urldecode($this->escola_curso));
                     $this->escola_curso_autorizacao = unserialize(urldecode($this->escola_curso_autorizacao));
+                    $this->escola_curso_anos_letivos = unserialize(urldecode($this->escola_curso_anos_letivos));
                     $obj = new clsPmieducarEscolaCurso($this->cod_escola);
                     $excluiu = $obj->excluirTodos();
 
                     if ($excluiu) {
                         if ($this->escola_curso) {
                             foreach ($this->escola_curso as $campo) {
-                                $obj = new clsPmieducarEscolaCurso($this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo]);
+                                $obj = new clsPmieducarEscolaCurso($this->cod_escola, $campo, null, $this->pessoa_logada, null, null, 1, $this->escola_curso_autorizacao[$campo], $this->escola_curso_anos_letivos[$campo]);
                                 $cadastrou_ = $obj->cadastra();
                                 if (!$cadastrou_) {
                                     $this->mensagem = "Edição não realizada.<br>";
@@ -2235,6 +2297,21 @@ class indice extends clsCadastro
             return false;
         }
         return true;
+    }
+
+    protected function geraCamposCodigoInepEscolaCompartilhada()
+    {
+        $options = array('label_hint' => 'Caso compartilhe o prédio escolar com outra escola preencha com o código INEP',
+                        'required' => false, 'size' => 8, 'max_length' => 8, 'placeholder' => '');
+
+        for ( $i = 1; $i <= 6; $i++){
+            $seq = $i == 1 ? '' : $i;
+            $options['label'] = 'Código da escola que compartilha o prédio '.$i;
+            $campo = 'codigo_inep_escola_compartilhada'.$seq;
+            $options['value'] = $this->$campo;
+            $this->inputsHelper()->integer('codigo_inep_escola_compartilhada'.$seq, $options);
+        }
+
     }
 }
 
