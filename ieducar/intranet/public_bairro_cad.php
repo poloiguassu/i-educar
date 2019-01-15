@@ -258,6 +258,8 @@ class indice extends clsCadastro
     $this->pessoa_logada = $_SESSION['id_pessoa'];
     session_write_close();
 
+    print("inicando cadastro");
+
     $obj = new clsPublicBairro($this->idmun, NULL, NULL, $this->nome, NULL,
       NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9,
       $this->zona_localizacao, $this->iddis);
@@ -299,6 +301,8 @@ class indice extends clsCadastro
       $this->zona_localizacao, $this->iddis);
     $obj->idsetorbai = $this->idsetorbai;
 
+    print("iniciando editar");
+
     $editou = $obj->edita();
     if ($editou) {
 
@@ -307,7 +311,7 @@ class indice extends clsCadastro
       $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
 
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      header('Location: public_bairro_lst.php');
+      //header('Location: public_bairro_lst.php');
       die();
     }
 

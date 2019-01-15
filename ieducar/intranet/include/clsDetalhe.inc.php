@@ -283,6 +283,12 @@ class clsDetalhe extends Core_Controller_Page_Abstract
         </table>";
     }
 
-    return $retorno;
+    $formulario = array(
+      'dados' => array(
+          'html' => $retorno
+      )
+    );
+
+    return $formulario;
   }
 }

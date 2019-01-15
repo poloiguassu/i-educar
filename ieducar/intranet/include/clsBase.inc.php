@@ -53,7 +53,9 @@ require_once 'Portabilis/String/Utils.php';
 require_once 'Portabilis/Assets/Version.php';
 require_once 'include/pessoa/clsCadastroFisicaFoto.inc.php';
 
-if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente){
+require_once 'Core/View/TemplateRenderer.php';
+
+if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
     header("Location: /404.html");
 }
 
@@ -73,6 +75,7 @@ if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente){
 class clsBase extends clsConfig
 {
     var $titulo = 'Prefeitura Cobra Tecnologia';
+    var $template;
     var $clsForm = array();
     var $bodyscript = NULL;
     var $processoAp;
@@ -140,7 +143,7 @@ class clsBase extends clsConfig
     function MakeHeadHtml()
     {
 
-        $saida = $this->OpenTpl('htmlhead');
+        /*$saida = $this->OpenTpl('htmlhead');
         $saida = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $saida);
         $saida = str_replace("<!-- #&USER_ID&# -->", $_SESSION['id_pessoa'], $saida);
         $saida = str_replace("<!-- #&TITULO&# -->", $this->titulo, $saida);
@@ -177,7 +180,7 @@ class clsBase extends clsConfig
             $saida = str_replace("<!-- #&SCRIPT_HEADER&# -->", "", $saida);
         }
 
-        $saida = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $saida);
+        $saida = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $saida);*/
 
         // nome completo usuario
         // @TODO: jeito mais eficiente de usar estes dados, já que eles são
@@ -186,11 +189,32 @@ class clsBase extends clsConfig
         list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), "nome", "email");
         $nomePessoa = ($nomePessoa) ? $nomePessoa : 'Visitante';
 
-        $saida = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $saida);
-        $saida = str_replace("<!-- #&USERLOGADO&# -->", trim($nomePessoa), $saida);
-        $saida = str_replace("<!-- #&USEREMAIL&# -->", trim($email), $saida);
+        $retorno = array(
+            'ambiente' => CORE_EXT_CONFIGURATION_ENV,
+            'user_id' => $_SESSION['id_pessoa'],
+            'titulo' => $this->titulo,
+            'meta' => array(
+                'equiv' => 'refresh',
+                'content' => 60
+            ),
+            'assets' => array(
+                'styles' => $this->estilos,
+                'scripts' => $this->scripts,
+                'version' => Portabilis_Assets_Version::VERSION
+            ),
+            'body_script' => $this->bodyscript,
+            'head_script' => $this->script_header,
+            'google_tag_manager' => $GLOBALS['coreExt']['Config']->app->gtm->id,
+            'slug' => $GLOBALS['coreExt']['Config']->app->database->dbname,
+            'user_name' => trim($nomePessoa),
+            'user_email' => trim($email)
+        );
 
-        return $saida;
+        /*$saida = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $saida);
+        $saida = str_replace("<!-- #&USERLOGADO&# -->", trim($nomePessoa), $saida);
+        $saida = str_replace("<!-- #&USEREMAIL&# -->", trim($email), $saida);*/
+
+        return $retorno;
     }
 
     function addEstilo($estilo_nome)
@@ -205,13 +229,17 @@ class clsBase extends clsConfig
 
     function MakeFootHtml()
     {
-        $saida = $this->OpenTpl('htmlfoot');
+        $saida = array(
+            'script' => $this->script_footer,
+        );
+
+        /*$saida = $this->OpenTpl('htmlfoot');
 
         if ($this->script_footer) {
             $saida = str_replace("<!-- #&SCRIPT_FOOTER&# -->", $this->script_footer, $saida);
         } else {
             $saida = str_replace("<!-- #&SCRIPT_FOOTER&# -->", "", $saida);
-        }
+        }*/
 
         return $saida;
     }
@@ -540,17 +568,32 @@ class clsBase extends clsConfig
     function MakeBody()
     {
         $corpo = '';
+        $scripts = '';
+        $templateForm = array();
+
         foreach ($this->clsForm as $form) {
-            $corpo .= $form->RenderHTML();
+            if (method_exists($form, 'getTemplate')) {
+                $corpo = $form->RenderHTML();
+                $this->template = $form->getTemplate();
+            } else {
+                $this->template = '@pages/base';
+                $corpo = array(
+                    'dados' => array(
+                        'html' => $form->RenderHTML()
+                    )
+                );
+            }
+
+            $corpo['instancia'] = $form;
 
             // Prepend output.
             if (method_exists($form, 'getPrependedOutput')) {
-                $corpo = $form->getPrependedOutput() . $corpo;
+                $scripts = $form->getPrependedOutput() . $scripts;
             }
 
             // Append output.
             if (method_exists($form, 'getAppendedOutput')) {
-                $corpo = $corpo . $form->getAppendedOutput();
+                $scripts = $scripts . $form->getAppendedOutput();
             }
 
             if (!isset($form->prog_alert)) {
@@ -670,7 +713,21 @@ class clsBase extends clsConfig
         $saida .= "<script type=\"text/javascript\" src=\"/intranet/scripts/select2/pt-BR.js\"></script>";
         $saida .= "<link type=\"text/css\" rel=\"stylesheet\" href=\"/intranet/scripts/select2/select2.min.css\" />";
 
-        return $saida;
+        $retorno = array(
+            'render_menu' => $this->renderMenu,
+            'render_menu_suspenso' => $this->renderMenuSuspenso,
+            'render_banner' => $this->renderBanner,
+            'scripts' => $scripts,
+            'menu' => $menu,
+            'content' => $corpo,
+            'user' => array(
+                'name' => $nomePessoa,
+                'email' => $email,
+                'foto' => $foto,
+            )
+        );
+
+        return $retorno;
     }
 
     function organiza($listaBanners)
@@ -768,8 +825,6 @@ class clsBase extends clsConfig
             $cronometro->marca('inicio');
             $liberado = TRUE;
 
-            $saida_geral = '';
-
             if ($this->convidado) {
                 @session_start();
                 $_SESSION['convidado'] = TRUE;
@@ -785,24 +840,19 @@ class clsBase extends clsConfig
                 $this->Formular();
                 $this->VerificaPermicao();
                 $this->CadastraAcesso();
-                $saida_geral = $this->MakeHeadHtml();
 
-                if ($this->renderMenu) {
-                    $saida_geral .= $this->MakeBody();
-                } else {
-                    foreach ($this->clsForm as $form) {
-                        $saida_geral .= $form->RenderHTML();
-                    }
-                }
+                $saida_head = $this->MakeHeadHtml();
 
-                $saida_geral .= $this->MakeFootHtml();
+                $saida_body = $this->MakeBody();
+
+                $saida_foot = $this->MakeFootHtml();
 
                 $suspenso = $_GET['suspenso'] ?? $_SESSION['suspenso'] ?? null;
                 $tipoMenu = $_SESSION["tipo_menu"] ?? null;
 
                 if ($suspenso == 1 || $tipoMenu == 1) {
                     if ($this->renderMenuSuspenso) {
-                        $saida_geral = str_replace("<!-- #&MENUSUSPENSO&# -->", $this->makeMenuSuspenso(), $saida_geral);
+                        $menu_suspenso = $this->makeMenuSuspenso();
                     }
 
                     if ($suspenso == 1) {
@@ -818,9 +868,9 @@ class clsBase extends clsConfig
                     $this->mostraSupenso();
                 }
 
-                $saida_geral .= $this->MakeHeadHtml();
+                $saida_head = $this->MakeHeadHtml();
                 $controlador->Logar(false);
-                $saida_geral .= $this->MakeFootHtml();
+                $saida_foot = $this->MakeFootHtml();
             } else {
                 $controlador->Logar(true);
                 $referer = $_SERVER['HTTP_REFERER'];
@@ -829,7 +879,19 @@ class clsBase extends clsConfig
                 die();
             }
 
-            echo $saida_geral;
+            $configuracoes = new clsPmieducarConfiguracoesGerais();
+            $configuracoes = $configuracoes->detalhe();
+
+            $params = array(
+                'head' => $saida_head,
+                'body' => $saida_body,
+                'foot' => $saida_foot,
+                'config' => $configuracoes,
+                'menu_suspenso' => $menu_suspenso
+            );
+
+            $twig = new TemplateRenderer();
+            echo $twig->render($this->template, $params);
 
             $cronometro->marca('fim');
             $tempoTotal = $cronometro->getTempoTotal();

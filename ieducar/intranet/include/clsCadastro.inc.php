@@ -127,6 +127,8 @@ class clsCadastro extends clsCampos
   {
     parent::__construct();
     $this->tipoacao = @$_POST['tipoacao'];
+
+    $this->setTemplate('base');
   }
 
   function enviaLocalizacao($localizao){
@@ -726,7 +728,13 @@ class clsCadastro extends clsCampos
 
     Portabilis_View_Helper_Application::embedJavascriptToFixupFieldsWidth($this);
 
-    return $retorno;
+    $formulario = array(
+      'dados' => array(
+          'html' => $retorno
+      )
+    );
+
+    return $formulario;
   }
 
   function isNullNow()

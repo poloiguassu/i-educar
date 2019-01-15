@@ -1,0 +1,140 @@
+{% extends '@pages/base.html.twig' %}
+
+{% block head %}
+
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="/css/datatables.min.css"/>
+
+    {% block head_jquery %}
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.1.1/jqc-1.12.4/jszip-2.5.0/dt-1.10.18/b-1.5.2/b-colvis-1.5.1/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
+        <script src="http://code.jquery.com/jquery-migrate-1.1.0.js"></script>
+    {% endblock %}
+
+{% endblock %}
+
+{% block body_content %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        (function($) {
+            $(document).ready(function() {
+                $.noConflict();
+                $('[data-toggle="popover"]').popover()
+                $.fn.dataTable.ext.search.push(
+                    function( settings, data, dataIndex ) {
+                        var min = parseInt( $('#min_Idade').val(), 10 );
+                        var max = parseInt( $('#max_Idade').val(), 10 );
+                        var age = parseFloat( data[5] ) || 0; // use data for the age column
+                        if ( ( isNaN( min ) && isNaN( max ) ) ||
+                                ( isNaN( min ) && age <= max ) ||
+                                ( min <= age   && isNaN( max ) ) ||
+                                ( min <= age   && age <= max ) )
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                );
+                var table = $('#table_id').DataTable({
+                    colReorder: true,
+                    responsivel: false,
+                    select: true,
+                    lengthChange: true,
+                    pageLength: 25,
+                    dom: "lf<'floatright'B>rtip",
+                    select: true,
+                    buttons: [
+                        "excel",
+                        {
+                            extend: "print",
+                            exportOptions: {
+                                columns: ":visible",
+                                modifier: { search: "applied" }
+                            }
+                        },
+                        {
+                            extend: "pdfHtml5",
+                            orientation: "landscape",
+                            pageSize: "LEGAL",
+                            download: "open",
+                            exportOptions: {
+                                columns: ":visible",
+                                modifier: { search: "applied" }
+                            }
+                        },
+                        "colvis"
+                    ],
+                    language: {
+                        url: '/language/datatable.pt_BR.json'
+                    },
+                });
+                $('#min_Idade, #max_Idade').on('keyup change', function () {
+                    table.draw();
+                } );
+                $("#table_id tfoot input.input-texto").on('keyup change', function () {
+                    table
+                    .column( $(this).parent().index()+':visible' )
+                    .search(this.value, true, false)
+                    .draw();
+                } );
+            }); // ready
+        })(jQuery);
+    </script>
+
+    {% set instance = body.content.instance %}
+    {% set dados = body.content.dados %}
+    {% set cabecalho = body.content.dados.cabecalho %}
+    {% set linhas = body.content.dados.linhas %}
+
+    {#{% if instance.banner %}
+        <table width='100%' style="height:100%" border='0' cellpadding='0' cellspacing='0'><tr>
+        <td valign='top'>
+    {% endif %}
+
+    {% if instance.locale and instance.appendInTop %}
+        <table class='tablelistagem' id='tableLocalizacao'width='100%' border='0'  cellpadding='0' cellspacing='0'>
+            <tr height='10px'>
+                <td class='fundoLocalizacao' colspan='2'>{{ instance.locale|raw }}</td>
+            </tr>
+        </table>
+    {% endif %}#}
+
+    <table id="table_id" class="tablelistagem table table-striped" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                {% for coluna in cabecalho %}
+                    <th>{{ coluna }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                {% for coluna in cabecalho %}
+                    {% if coluna in ['Idade'] %}
+                        <th>
+                            <input type="text" id="min_{{ coluna }}" placeholder="Minimo" maxlength="2" size="4">
+                            <input type="text" id="max_{{ coluna }}" placeholder="Maximo" maxlength="2" size="4">
+                        </th>
+                    {% else %}
+                        <th>
+                            <input type="text" class="input-texto" placeholder="Pesquisar {{ coluna }}">
+                        </th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for linha in linhas %}
+                <tr>
+                    {% for coluna in linha %}
+                        <th>{{ coluna|raw }}</th>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+    </tbody>
+    </table>
+
+    {{ dados.botoes|raw }}
+{% endblock %}
