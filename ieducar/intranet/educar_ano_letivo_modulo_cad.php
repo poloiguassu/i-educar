@@ -230,7 +230,7 @@ class indice extends clsCadastro
 
         $this->campoQuebra();
 
-        if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola) && !$_POST) {
+        if (is_numeric($this->ref_ano) && is_numeric($this->ref_ref_cod_escola) && $_POST) {
             $qtd_registros = 0;
 
             foreach ($this->etapas as $campo) {
@@ -294,6 +294,7 @@ class indice extends clsCadastro
             $cadastrou = $obj->cadastra();
 
             if ($cadastrou) {
+
                 foreach ($this->data_inicio as $key => $campo) {
                     $this->data_inicio[$key] = dataToBanco($this->data_inicio[$key]);
                     $this->data_fim[$key] = dataToBanco($this->data_fim[$key]);
