@@ -33,6 +33,7 @@ require_once 'include/pmieducar/clsPmieducarEscolaRedeEnsino.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscolaSerie.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscolaSerieDisciplina.inc.php';
 require_once 'include/pmieducar/clsPmieducarFaltaAluno.inc.php';
+require_once 'include/pmieducar/clsPmieducarFaltaDiariaAluno.inc.php';
 require_once 'include/pmieducar/clsPmieducarFaltaAtraso.inc.php';
 require_once 'include/pmieducar/clsPmieducarFaltaAtrasoCompensado.inc.php';
 require_once 'include/pmieducar/clsPmieducarFuncao.inc.php';

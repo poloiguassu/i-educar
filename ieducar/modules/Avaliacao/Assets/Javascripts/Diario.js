@@ -41,7 +41,8 @@ var deleteResourceUrlBuilder = {
       serie_id : $j('#ref_ref_cod_serie').val(),
       turma_id : $j('#ref_cod_turma').val(),
       ano_escolar : $j('#ano').val(),
-      etapa : $j('#etapa').val()
+      etapa : $j('#etapa').val(),
+      quadro_horario_horarios : $j('#quadro_horario_horarios').val()
     };
 
     return resourceUrlBuilder.buildUrl(urlBase, $j.extend(vars, additionalVars));
@@ -63,7 +64,8 @@ var postResourceUrlBuilder = {
       ano_escolar : $j('#ano').val(),
       componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
       etapa : $j('#etapa').val(),
-      matricula_id : $j('#etapa').val()
+      matricula_id : $j('#etapa').val(),
+      quadro_horario_horarios : $j('#quadro_horario_horarios').val()
     };
 
     return resourceUrlBuilder.buildUrl(urlBase, $j.extend(vars, additionalVars));
@@ -86,7 +88,8 @@ var getResourceUrlBuilder = {
       ano_escolar : $j('#ano').val(),
       componente_curricular_id : $j('#ref_cod_componente_curricular').val(),
       etapa : $j('#etapa').val(),
-      matricula_id : $j('#ref_cod_matricula').val()
+      matricula_id : $j('#ref_cod_matricula').val(),
+      quadro_horario_horarios : $j('#quadro_horario_horarios').val()
     };
 
     return resourceUrlBuilder.buildUrl(urlBase, $j.extend(vars, additionalVars));
@@ -177,6 +180,18 @@ var changeParecer = function(event) {
   }
 };
 
+var changeConteudo = function(event) {
+  var $element = $j(this);
+  var regra = $j(this).closest('tr').data('regra');
+  changeResource($element, postConteudoAula, deleteConteudoAula);
+
+    var $fieldsParecerMatricula = $element.closest('table').find('.conteudo-aula-cc')
+                                                                 .not($element);
+
+    $fieldsParecerMatricula.val($element.val());
+    $fieldsParecerMatricula.data('old_value', $element.val());
+};
+
 var changeNotaGeralEtapa = function(event) {
   var $element = $j(this);
   // setDefaultFaltaIfEmpty($element.data('matricula_id'), $element.data('componente_curricular_id'));
@@ -233,8 +248,8 @@ function postNota($notaFieldElement) {
 
     var additionalVars = {
       matricula_id             : $notaFieldElement.data('matricula_id'),
-      componente_curricular_id : $notaFieldElement.data('componente_curricular_id'),
-      nota_original            : $notaFieldElement.val()
+      quadro_horario_horarios  : $notaFieldElement.data('quadro_horario_horarios'),
+      situacao                 : $notaFieldElement.val()
     };
 
     var options = {
@@ -244,7 +259,7 @@ function postNota($notaFieldElement) {
       success : function(dataResponse) {
         afterChangeResource($notaFieldElement);
         handleChange(dataResponse);
-        checkIfShowNotaRecuperacaoParalelaField($notaFieldElement.val(), dataResponse);
+        //checkIfShowNotaRecuperacaoParalelaField($notaFieldElement.val(), dataResponse);
       }
     };
 
@@ -419,6 +434,27 @@ function getEtapaParecer(regra) {
   return etapaParecer;
 }
 
+function postConteudoAula($conteudoFieldElement) {
+  beforeChangeResource($conteudoFieldElement);
+
+  var additionalVars = {
+    quadro_horario_horarios : $conteudoFieldElement.data('quadro_horario_horarios'),
+  };
+
+  var options = {
+    url : postResourceUrlBuilder.buildUrl(API_URL_BASE, 'conteudo', additionalVars),
+    dataType : 'json',
+    data : {att_value : $conteudoFieldElement.val()},
+    success : function(dataResponse) {
+      afterChangeResource($conteudoFieldElement);
+
+      handleMessages(dataResponse.msgs, 'conteudo-aula-cc');
+    }
+  };
+
+  $conteudoFieldElement.data('old_value', $conteudoFieldElement.val());
+  postResource(options, handleErrorOnPostResource);
+}
 
 function postParecer($parecerFieldElement) {
   var regra = $parecerFieldElement.closest('tr').data('regra');
@@ -562,7 +598,7 @@ function deleteNota($notaFieldElement) {
     serie_id : $j('#ref_ref_cod_serie').val(),
     turma_id : $j('#ref_cod_turma').val(),
     ano_escolar : $j('#ano').val(),
-    componente_curricular_id : $notaFieldElement.data('componente_curricular_id'),
+    quadro_horario_horarios : $notaFieldElement.data('quadro_horario_horarios'),
     etapa : $j('#etapa').val(),
     matricula_id : $notaFieldElement.data('matricula_id')
    };
@@ -706,6 +742,48 @@ function deleteParecer($parecerFieldElement) {
   deleteResource(resourceName, $parecerFieldElement, options, handleErrorOnDeleteResource);
 }
 
+function deleteConteudoAula($conteudoFieldElement) {
+  beforeChangeResource($conteudoFieldElement);
+  var resourceName = 'conteudo';
+
+  var additionalVars = {
+    quadro_horario_horarios : $conteudoFieldElement.data('quadro_horario_horarios'),
+  };
+
+  var options = {
+    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
+    dataType : 'json',
+    data : {att_value : $conteudoFieldElement.val()},
+    success : function(dataResponse) {
+      afterChangeResource($conteudoFieldElement);
+
+      handleMessages(dataResponse.msgs, 'conteudo-aula-cc');
+    }
+  };
+
+  $conteudoFieldElement.data('old_value', $conteudoFieldElement.val());
+  deleteResource(resourceName, $conteudoFieldElement, options, handleErrorOnDeleteResource);
+  /*var regra = $parecerFieldElement.closest('tr').data('regra');
+  var resourceName = 'parecer';
+
+  var additionalVars = {
+    componente_curricular_id : $parecerFieldElement.data('componente_curricular_id'),
+    matricula_id             : $parecerFieldElement.data('matricula_id'),
+    etapa                    : getEtapaParecer(regra)
+   };
+
+  var options = {
+    url : deleteResourceUrlBuilder.buildUrl(API_URL_BASE, resourceName, additionalVars),
+    dataType : 'json',
+    success : function(dataResponse) {
+      afterChangeResource($parecerFieldElement);
+      handleChange(dataResponse);
+    }
+  };
+
+  deleteResource(resourceName, $parecerFieldElement, options, handleErrorOnDeleteResource);*/
+}
+
 function deleteNotaGeral($notaGeralElementField) {
   resourceName = 'nota_geral';
 
@@ -766,21 +844,13 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
   var $linha = $j('<tr />');
 
   if (componenteCurricularSelected) {
-    $j('<th />').html('&Aacute;rea de Conhecimento').appendTo($linha);
-    $j('<th />').html('Componente curricular').appendTo($linha);
+    $j('<th />').html('Área de Conhecimento').appendTo($linha);
+    $j('<th />').html('Oficina').appendTo($linha);
   }
 
   $j('<th />').html('Etapa').appendTo($linha);
   $j('<th />').html('Turma').appendTo($linha);
-  $j('<th />').html(safeUtf8Decode('Série')).appendTo($linha);
   $j('<th />').html('Ano').appendTo($linha);
-  $j('<th />').html('Escola').appendTo($linha);
-  $j('<th />').html('Regra avalia&#231;&#227;o').appendTo($linha);
-  $j('<th />').html('Tipo nota').appendTo($linha);
-  $j('<th />').html('Tipo presen&#231;a').appendTo($linha);
-  $j('<th />').html('Tipo parecer').appendTo($linha);
-  $j('<th />').html(safeUtf8Decode('Recuperação paralela')).appendTo($linha);
-  $j('<th />').html(safeUtf8Decode('Nota geral por etapa')).appendTo($linha);
 
   $linha.appendTo($tableSearchDetails);
   $j.each(dataDetails, function(){
@@ -789,36 +859,14 @@ function setTableSearchDetails($tableSearchDetails, dataDetails) {
     var $linha = $j('<tr />').addClass('cellColor');
 
     if (componenteCurricularSelected) {
-      $j('<td />').html(($j('#ref_cod_componente_curricular :selected').parent().attr('label'))).appendTo($linha);
-      $j('<td />').html(($j('#ref_cod_componente_curricular :selected').html())).appendTo($linha);
+      $j('<td />').html(($j('#ref_cod_componente_curricular optgroup').children("[selected='selected']").parent().attr('label'))).appendTo($linha);
+      $j('<td />').html(($j('#ref_cod_componente_curricular optgroup').children("[selected='selected']").html())).appendTo($linha);
     }
 
     $j('<td />').html(safeToUpperCase($j('#etapa').children("[selected='selected']").html())).appendTo($linha);
     $j('<td />').html(safeToUpperCase($j('#ref_cod_turma').children("[selected='selected']").html())).appendTo($linha);
-    $j('<td />').html(safeToUpperCase($j('#ref_cod_serie').children("[selected='selected']").html())).appendTo($linha);
     $j('<td />').html($j('#ano').val()).appendTo($linha);
 
-    //field escola pode ser diferente de select caso usuario comum
-    var $htmlEscolaField = $j('#ref_cod_escola').children("[selected='selected']").html() ||
-                           $j('#tr_nm_escola span:last').html();
-
-    $j('<td />').html(safeToUpperCase($htmlEscolaField)).appendTo($linha);
-    var descricaoCompletaRegra = regra.id + ' - ' +safeToUpperCase(regra.nome);
-    if(regra.id == regraDiferenciadaId){
-      descricaoCompletaRegra = `* ${descricaoCompletaRegra}`;
-    }
-    $j('<td />').html(descricaoCompletaRegra).appendTo($linha);
-
-    //corrige acentuação
-    var tipoNota = regra.tipo_nota.replace('_', ' ');
-    if (tipoNota == 'numerica')
-      tipoNota = 'numérica';
-    $j('<td />').html(safeToUpperCase(safeUtf8Decode(tipoNota))).appendTo($linha);
-
-    $j('<td />').html(safeToUpperCase(regra.tipo_presenca.replace('_', ' '))).appendTo($linha);
-    $j('<td />').html(safeToUpperCase(regra.tipo_parecer_descritivo.replace('_', ' '))).appendTo($linha);
-    $j('<td />').html(safeToUpperCase(regra.tipo_recuperacao_paralela.replace('_', ' '))).appendTo($linha);
-    $j('<td />').html(safeToUpperCase(regra.nota_geral_por_etapa.replace('_', ' '))).appendTo($linha);
     $linha.appendTo($tableSearchDetails);
   });
 
@@ -852,7 +900,9 @@ function setNextTabIndex($element) {
 
 function handleSearch($resultTable, dataResponse) {
 
+  //console.log(dataResponse);
   var regras = $tableSearchDetails.data('regras');
+  console.log(regras);
   var useNota                 = regras.filter(function(regra){return regra.tipo_nota != 'nenhum'; }).length > 0;
   var ultimaEtapa             = regras[0]['quantidade_etapas'] == $j('#etapa').val();
   var definirComponentesEtapa = regras.filter(function(regra){return regra.definir_componente_por_etapa; }).length > 0;
@@ -925,6 +975,21 @@ function handleSearch($resultTable, dataResponse) {
 
   });
 
+  var $linha = $j('<tr />');
+  var $emptyTd = $j('<td/>').addClass('center');
+
+  $emptyTd.clone().appendTo($linha);
+  $j('<td />').html('CONTEÚDO DA AULA')
+              .attr('colspan', 1)
+              .appendTo($linha);
+
+  $emptyTd.clone().appendTo($linha);
+  $emptyTd.clone().appendTo($linha);;
+  conteudoField(regras[0]['conteudo']).appendTo($linha);
+
+  $j('<tr />').appendTo($linha);
+  $linha.appendTo($resultTable);
+
   // seta colspan [th, td].aluno quando exibe nota exame
   if (useNota &&
       (ultimaEtapa || definirComponentesEtapa)) {
@@ -943,6 +1008,7 @@ function handleSearch($resultTable, dataResponse) {
   var $notaGeralEtapaFields = $resultTable.find('.nota-geral-etapa');
   var $mediaFields = $resultTable.find('.media-cc');
   var $situacaoField = $resultTable.find('.situacao-cc');
+  var $conteudoField = $resultTable.find('.conteudo-aula-cc');
 
   $notaFields.on('change', changeNota);
   $notaExameFields.on('change', changeNotaExame);
@@ -953,6 +1019,7 @@ function handleSearch($resultTable, dataResponse) {
   $notaGeralEtapaFields.on('change', changeNotaGeralEtapa);
   $mediaFields.on('change', changeMedia);
   $situacaoField.on('change', changeSituacao);
+  $conteudoField.on('change', changeConteudo);
 
   $resultTable.addClass('styled').find('.tabable:first').focus();
   navegacaoTab(dataResponse.navegacao_tab);
@@ -983,12 +1050,18 @@ function _notaField(matriculaId, componenteCurricularId, klass, id, value, areaC
                      .data('matricula_id', matriculaId)
                      .data('componente_curricular_id', componenteCurricularId);
 
+    opcoesNotas = [
+       {'valor_minimo': 0, 'valor_maximo': 0, 'descricao': "Ausente"},
+       {'valor_minimo': 1, 'valor_maximo': 1, 'descricao': "Presente"},
+       {'valor_minimo': 2, 'valor_maximo': 2, 'descricao': "Justificado"},
+    ];
+
     // adiciona opcoes notas ao select
     var $option = $j('<option />').appendTo($notaField);
     for(var i = 0; i < opcoesNotas.length; i++) {
       var $option = $j('<option />').val(opcoesNotas[i].valor_maximo).html(opcoesNotas[i].descricao);
 
-      if (value == opcoesNotas[i].valor_maximo)
+      if (value.length && value == opcoesNotas[i].valor_maximo)
         $option.attr('selected', 'selected');
 
       $option.appendTo($notaField);
@@ -1136,6 +1209,19 @@ function parecerField(matriculaId, componenteCurricularId, value) {
 
   setNextTabIndex($parecerField);
   return $j('<td />').addClass('center').html($parecerField);
+}
+
+function conteudoField(value) {
+  var $conteudoField = $j('<textarea />').attr('cols', '40')
+                                        .attr('rows', '5')
+                                        .addClass('conteudo-aula-cc')
+                                        .addClass('conteudo-aula')
+                                        .attr('id', 'conteudo-aula-cc')
+                                        .val(value)
+                                        .data('old_value', value)
+
+  setNextTabIndex($conteudoField);
+  return $j('<td />').addClass('center').html($conteudoField);
 }
 
 function notaRecuperacaoParalelaField(matriculaId, componenteCurricularId, value, areaConhecimentoId, maxLength, regra) {
@@ -1298,20 +1384,16 @@ function updateComponenteCurricular($targetElement, matriculaId, cc, regra) {
       $emptyTd.clone().appendTo($targetElement);
     }
   }
+  
+  $j('<td />').html('<a href="#" onClick="javascript:showExpansivelIframe(710, 725, \'/intranet/educar_matricula_ocorrencia_disciplinar_cad.php?pop=1&ref_cod_matricula=' + matriculaId + '\');">Fazer elogio ou ocorrência</a>')
+    .addClass('center')
+    .appendTo($targetElement);
 
-  if(usaNotaGeralPorEtapa){
-    notaGeralEtapaField(matriculaId, cc.id, cc.nota_geral_etapa, 5).appendTo($targetElement);
-  } else if(hUsaNotaGeralPorEtapa){
-    $emptyTd.clone().appendTo($targetElement);
-  }
-
-  faltaField(matriculaId, cc.id, cc.falta_atual).appendTo($targetElement);
-
-  if (useParecer){
+  /*if (useParecer){
     parecerField(matriculaId, cc.id, cc.parecer_atual).appendTo($targetElement);
   }else if(hUseParecer){
     $emptyTd.clone().appendTo($targetElement);
-  }
+  }*/
 }
 
 var hHabilitaCampoEtapaEspecifica;
@@ -1341,7 +1423,7 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
   $tagElement.clone().addClass('center').html(safeUtf8Decode('Situação')).appendTo($targetElement);
 
   if (hUseNota) {
-    $tagElement.clone().addClass('center').html('Nota').appendTo($targetElement);
+    $tagElement.clone().addClass('center').html('Presença').appendTo($targetElement);
 
     if(hUsaRecuperacaoParalelaPorEtapa){
       $tagElement.clone().addClass('center').html(safeUtf8Decode('Recuperação paralela')).appendTo($targetElement);
@@ -1360,10 +1442,6 @@ function updateComponenteCurricularHeaders($targetElement, $tagElement) {
       }
     }
   }
-  if(hUsaNotaGeralPorEtapa){
-    $tagElement.clone().addClass('center').html('Nota geral da etapa').appendTo($targetElement);
-  }
-  $tagElement.clone().addClass('center').html('Falta').appendTo($targetElement);
 
   if (hUseParecer)
     $tagElement.clone().addClass('center').html('Parecer descritivo').appendTo($targetElement);
