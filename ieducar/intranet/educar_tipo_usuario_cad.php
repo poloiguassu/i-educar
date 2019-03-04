@@ -1,35 +1,5 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author      Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @license     http://creativecommons.org/licenses/GPL/2.0/legalcode.pt  CC GNU GPL
- * @package     Core
- * @subpackage  pmieducar
- * @subpackage  Administrativo
- * @subpackage  TipoUsuario
- * @since       Arquivo disponível desde a versão 1.0.0
- * @version     $Id$
- */
-
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -48,10 +18,6 @@ class clsIndexBase extends clsBase
 
 class indice extends clsCadastro
 {
-    /**
-     * Referência a usuário da sessão.
-     * @var int
-     */
     var $pessoa_logada;
 
     var $cod_tipo_usuario;
@@ -75,8 +41,10 @@ class indice extends clsCadastro
 
         // Verifica se o usuário tem permissão para realizar o cadastro
         $obj_permissao = new clsPermissoes();
-        $obj_permissao->permissao_cadastra(554, $this->pessoa_logada, 7,
-            'educar_tipo_usuario_lst.php', true);
+        $obj_permissao->permissao_cadastra(
+            554, $this->pessoa_logada, 7,
+            'educar_tipo_usuario_lst.php', true
+        );
 
         $this->cod_tipo_usuario = $_GET['cod_tipo_usuario'];
 
@@ -92,7 +60,9 @@ class indice extends clsCadastro
                     $this->$campo = $val;
                 }
 
-                $this->fexcluir = $obj_permissao->permissao_excluir(554, $this->pessoa_logada, 7, null, true);
+                $this->fexcluir = $obj_permissao->permissao_excluir(
+                    554, $this->pessoa_logada, 7, null, true
+                );
 
                 $retorno = "Editar";
             }
@@ -106,11 +76,13 @@ class indice extends clsCadastro
 
         $nomeMenu = $retorno == "Editar" ? $retorno : "Cadastrar";
         $localizacao = new LocalizacaoSistema();
-        $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
-            "educar_configuracoes_index.php" => "Configurações",
-            "" => "{$nomeMenu} tipo de usu&aacute;rio"
-        ));
+        $localizacao->entradaCaminhos(
+            array(
+                $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
+                "educar_configuracoes_index.php" => "Configurações",
+                "" => "{$nomeMenu} tipo de usuário"
+            )
+        );
         $this->enviaLocalizacao($localizacao->montar());
 
         return $retorno;
@@ -121,7 +93,9 @@ class indice extends clsCadastro
         // Primary key
         $this->campoOculto('cod_tipo_usuario', $this->cod_tipo_usuario);
 
-        $this->campoTexto('nm_tipo', 'Tipo de Usuário', $this->nm_tipo, 40, 255, true);
+        $this->campoTexto(
+            'nm_tipo', 'Tipo de Usuário', $this->nm_tipo, 40, 255, true
+        );
 
         $array_nivel = array(
             '8' => 'Biblioteca',
@@ -132,8 +106,12 @@ class indice extends clsCadastro
 
         $this->campoLista('nivel', 'N&iacute;vel', $array_nivel, $this->nivel);
 
-        $this->campoMemo('descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 37, 5, false);
-        $this->campoRotulo('listagem_menu', '<b>Permiss&otilde;es de acesso aos menus</b>', '');
+        $this->campoMemo(
+            'descricao', 'Descri&ccedil;&atilde;o', $this->descricao, 37, 5, false
+        );
+        $this->campoRotulo(
+            'listagem_menu', '<b>Permiss&otilde;es de acesso aos menus</b>', ''
+        );
         $objTemp = new clsBanco();
 
         // cod menu 55 = ieducar, 57 = biblioteca (ambos sistema = ieducar (2) )
@@ -183,39 +161,56 @@ class indice extends clsCadastro
             'U' => 'Desmarcar Todos'
         );
 
-        $this->campoLista('todos', 'Op&ccedil;&otilde;es', $array_opcoes_, '',
-            "selAction('-', '-', this)", false, '', '', false, false);
+        $this->campoLista(
+            'todos', 'Opções', $array_opcoes_, '',
+            "selAction('-', '-', this)", false, '', '', false, false
+        );
         $script = "menu = [];\n";
 
         foreach ($opcoes as $id_pai => $menu) {
             $this->campoQuebra();
             $this->campoRotulo($id_pai, '<b>' . $id_pai . '-</b>', '');
 
-            $this->campoLista($id_pai . ' 1', 'Op&ccedil;&otilde;es', $array_opcoes,
-                '', "selAction('$id_pai', 'visualiza', this)", true, '', '', false, false);
+            $this->campoLista(
+                $id_pai . ' 1', 'Op&ccedil;&otilde;es', $array_opcoes,
+                '', "selAction('$id_pai', 'visualiza', this)", true, '',
+                '', false, false
+            );
 
-            $this->campoLista($id_pai . ' 2', 'Op&ccedil;&otilde;es', $array_opcoes,
-                '', "selAction('$id_pai', 'cadastra', this)", true, '', '', false, false);
+            $this->campoLista(
+                $id_pai . ' 2', 'Op&ccedil;&otilde;es', $array_opcoes,
+                '', "selAction('$id_pai', 'cadastra', this)", true, '',
+                '', false, false
+            );
 
-            $this->campoLista($id_pai . ' 3', 'Op&ccedil;&otilde;es', $array_opcoes,
-                '', "selAction('$id_pai', 'exclui', this)", false, '', '', false, false);
+            $this->campoLista(
+                $id_pai . ' 3', 'Op&ccedil;&otilde;es', $array_opcoes,
+                '', "selAction('$id_pai', 'exclui', this)", false, '',
+                '', false, false
+            );
 
             $script .= "menu['$id_pai'] = [];\n";
 
             foreach ($menu as $id => $submenu) {
-                $obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario, $id);
-                $obj_menu_tipo_usuario->setCamposLista('cadastra', 'visualiza', 'exclui');
+                $obj_menu_tipo_usuario = new clsPmieducarMenuTipoUsuario(
+                    $this->cod_tipo_usuario, $id
+                );
+                $obj_menu_tipo_usuario->setCamposLista(
+                    'cadastra', 'visualiza', 'exclui'
+                );
                 $obj_det = $obj_menu_tipo_usuario->detalhe();
 
                 if ($this->tipoacao == 'Novo') {
-                    $obj_det['visualiza'] = $obj_det['cadastra'] = $obj_det['exclui'] = 1;
+                    $obj_det['visualiza']
+                        = $obj_det['cadastra'] = $obj_det['exclui'] = 1;
                 }
 
                 $script .= "menu['$id_pai'][menu['$id_pai'].length] = $id; \n";
 
                 $this->campoOculto("permissoes[{$id}][id]", $id);
 
-                /* alterado para campos não usar inline, pois por algum motivo os dois primeiros checkboxes
+                /* alterado para campos não usar inline,
+                   pois por algum motivo os dois primeiros checkboxes
                    não estavam funcionando devidamente */
 
                 // visualiza
@@ -227,7 +222,9 @@ class indice extends clsCadastro
                     'inline' => true
                 );
 
-                $this->inputsHelper()->checkbox("permissoes[{$id}][visualiza]", $options);
+                $this->inputsHelper()->checkbox(
+                    "permissoes[{$id}][visualiza]", $options
+                );
 
 
                 // cadastra
@@ -239,7 +236,9 @@ class indice extends clsCadastro
                     'inline' => true
                 );
 
-                $this->inputsHelper()->checkbox("permissoes[{$id}][cadastra]", $options);
+                $this->inputsHelper()->checkbox(
+                    "permissoes[{$id}][cadastra]", $options
+                );
 
 
                 // excluir
@@ -250,7 +249,9 @@ class indice extends clsCadastro
                     'label_hint' => 'Excluir'
                 );
 
-                $this->inputsHelper()->checkbox("permissoes[{$id}][exclui]", $options);
+                $this->inputsHelper()->checkbox(
+                    "permissoes[{$id}][exclui]", $options
+                );
             }
 
         }
@@ -264,14 +265,18 @@ class indice extends clsCadastro
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, $this->pessoa_logada, null,
-            $this->nm_tipo, $this->descricao, $this->nivel, null, null, 1);
+        $tipoUsuario = new clsPmieducarTipoUsuario(
+            $this->cod_tipo_usuario, $this->pessoa_logada, null,
+            $this->nm_tipo, $this->descricao, $this->nivel, null, null, 1
+        );
         $this->cod_tipo_usuario = $tipoUsuario->cadastra();
 
         if ($this->cod_tipo_usuario) {
             $tipo_usuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario);
             $tipo_usuario = $tipo_usuario->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral("tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario);
+            $auditoria = new clsModulesAuditoriaGeral(
+                "tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario
+            );
             $auditoria->inclusao($tipo_usuario);
 
             $this->createMenuTipoUsuario();
@@ -287,13 +292,17 @@ class indice extends clsCadastro
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, null, $this->pessoa_logada,
-            $this->nm_tipo, $this->descricao, $this->nivel, null, null, 1);
+        $tipoUsuario = new clsPmieducarTipoUsuario(
+            $this->cod_tipo_usuario, null, $this->pessoa_logada,
+            $this->nm_tipo, $this->descricao, $this->nivel, null, null, 1
+        );
 
         $detalheAntigo = $tipoUsuario->detalhe();
         if ($tipoUsuario->edita()) {
             $detalheAtual = $tipoUsuario->detalhe();
-            $auditoria = new clsModulesAuditoriaGeral("tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario);
+            $auditoria = new clsModulesAuditoriaGeral(
+                "tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario
+            );
             $auditoria->alteracao($detalheAntigo, $detalheAtual);
             $this->createMenuTipoUsuario();
         }
@@ -307,12 +316,16 @@ class indice extends clsCadastro
         if ($this->permissoes) {
 
             // remove todos menus vinculados ao tipo de usuário.
-            $menuTipoUsuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario);
+            $menuTipoUsuario = new clsPmieducarMenuTipoUsuario(
+                $this->cod_tipo_usuario
+            );
             $menuTipoUsuario->excluirTudo();
 
             // vinvula ao tipo de usuário, menus com alguma permissão marcada
             foreach ($this->permissoes as $menuSubmenuId => $permissao) {
-                if ($permissao['cadastra'] || $permissao['visualiza'] || $permissao['exclui']) {
+                if ($permissao['cadastra'] || $permissao['visualiza']
+                    || $permissao['exclui']
+                ) {
 
                     // recebe código falso em algum momento?
                     if ($this->cod_tipo_usuario == false) {
@@ -328,7 +341,8 @@ class indice extends clsCadastro
                     );
 
                     if (!$menuTipoUsuario->cadastra()) {
-                        $this->mensagem .= "Erro ao cadastrar acessos aos menus.<br>";
+                        $this->mensagem
+                            .= "Erro ao cadastrar acessos aos menus.<br>";
                         return false;
                     }
 
@@ -347,7 +361,9 @@ class indice extends clsCadastro
         $this->pessoa_logada = $_SESSION['id_pessoa'];
         session_write_close();
 
-        $tipoUsuario = new clsPmieducarTipoUsuario($this->cod_tipo_usuario, null, $this->pessoa_logada);
+        $tipoUsuario = new clsPmieducarTipoUsuario(
+            $this->cod_tipo_usuario, null, $this->pessoa_logada
+        );
         $detalhe = $tipoUsuario->detalhe();
 
         if ($tipoUsuario->possuiUsuarioRelacionado()) {
@@ -356,11 +372,15 @@ class indice extends clsCadastro
         }
 
         if ($tipoUsuario->excluir()) {
-            $auditoria = new clsModulesAuditoriaGeral("tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario);
+            $auditoria = new clsModulesAuditoriaGeral(
+                "tipo_usuario", $this->pessoa_logada, $this->cod_tipo_usuario
+            );
             $auditoria->exclusao($detalhe);
             $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
 
-            $menuTipoUsuario = new clsPmieducarMenuTipoUsuario($this->cod_tipo_usuario);
+            $menuTipoUsuario = new clsPmieducarMenuTipoUsuario(
+                $this->cod_tipo_usuario
+            );
             $menuTipoUsuario->excluirTudo();
 
             header('Location: educar_tipo_usuario_lst.php');
