@@ -707,7 +707,7 @@ class clsPmieducarAluno
 
       if ($set) {
         $db->Consulta("UPDATE {$this->_tabela} SET $set WHERE cod_aluno = '{$this->cod_aluno}'" );
-        return TRUE;
+        return $this->cod_aluno;
       }
     }
 
