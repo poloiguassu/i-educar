@@ -51,7 +51,7 @@ class indice extends clsListagem
     {
         parent::__construct();
 
-        $this->setTemplate('listagemEstatistica');
+        $this->setTemplate('report');
     }
 
     public function Gerar()
