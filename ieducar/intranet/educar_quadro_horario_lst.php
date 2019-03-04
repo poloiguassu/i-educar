@@ -44,7 +44,7 @@ class indice extends clsListagem
     {
         parent::__construct();
 
-        $this->setTemplate('cronograma');
+        $this->setTemplate('class_schedule');
     }
 
     public function Gerar()
@@ -181,7 +181,7 @@ class indice extends clsListagem
 
                     $begin = new DateTime($det_modulo['data_inicio']);
                     $end = new DateTime($det_modulo['data_fim']);
-                    
+
                     $interval = new DateInterval('P1D');
                     $daterange = new DatePeriod($begin, $interval ,$end);
 
@@ -223,12 +223,12 @@ class indice extends clsListagem
                             $data_aula = $date->format("Y-m-d");
 
                             if ($resultado[$data_aula] != null) {
-                                foreach($resultado[$data_aula] as $registro) { 
+                                foreach($resultado[$data_aula] as $registro) {
                                     $componente = $componenteMapper->find($registro['ref_cod_disciplina']);
-    
+
                                     // Servidor
                                     $obj_servidor = new clsPmieducarServidor();
-    
+
                                     if ($registro['ref_servidor_substituto']) {
                                         $det_servidor =  array_shift(
                                             $obj_servidor->lista(
@@ -274,9 +274,9 @@ class indice extends clsListagem
                                             )
                                         );
                                     }
-    
+
                                     $det_servidor['nome'] = array_shift(explode(' ', $det_servidor['nome']));
-    
+
                                     //$texto .= "<div  style='text-align: center;background-color: #F6F6F6;font-size: 11px; width: 100px; margin: 3px; border: 1px solid #CCCCCC; padding:5px; '>". substr($registro['hora_inicial'], 0, 5) . ' - ' . substr($registro['hora_final'], 0, 5) . " <br> {$componente->abreviatura} <br> {$det_servidor["nome"]}</div>";
                                     $detalhes = sprintf(
                                         '%s - %s<br />%s<br />%s',
@@ -285,11 +285,11 @@ class indice extends clsListagem
                                         $componente->abreviatura,
                                         $det_servidor['nome']
                                     );
-    
+
                                     if (!empty($registro['cor'])) {
                                         $cor = "background: #{$registro['cor']}; color: #fff;";
                                     }
-    
+
                                     $texto .= sprintf(
                                         '<div class="horario" style="min-height: 51px; %s">%s</div>',
                                         $cor,
@@ -297,7 +297,7 @@ class indice extends clsListagem
                                     );
                                 }
                             } else {
-                                $texto .= 
+                                $texto .=
                                     '<div class="horario" style="min-height: 51px;">
                                         Sem Aula
                                     </div>';

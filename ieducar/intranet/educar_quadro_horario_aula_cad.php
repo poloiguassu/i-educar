@@ -50,8 +50,8 @@ class indice extends clsListagem
     public function __construct()
     {
         parent::__construct();
- 
-        $this->setTemplate('novoCronograma');
+
+        $this->setTemplate('new_schedule');
     }
 
     function Gerar()
