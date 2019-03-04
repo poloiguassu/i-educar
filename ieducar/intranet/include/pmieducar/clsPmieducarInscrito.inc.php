@@ -145,9 +145,28 @@ class clsPmieducarInscrito
             $whereAnd = ' AND ';
         }
 
-        $where   .= 'i.ref_cod_aluno = a.cod_aluno AND f.idpes = a.ref_idpes
-            AND p.idpes = a.ref_idpes AND d.idpes = a.ref_idpes 
-            AND e.idpes = a.ref_idpes AND m.ref_cod_aluno = i.ref_cod_aluno';
+        $join = "LEFT JOIN
+                    cadastro.pessoa as p
+                ON
+                    p.idpes = a.ref_idpes
+                LEFT JOIN
+                    cadastro.fisica as f
+                ON
+                    f.idpes = a.ref_idpes
+                LEFT JOIN
+                    cadastro.documento as d
+                ON
+                    d.idpes = a.ref_idpes
+                LEFT JOIN
+                    cadastro.endereco_pessoa as e
+                ON
+                    e.idpes = a.ref_idpes
+                LEFT JOIN
+                    modules.ficha_medica_aluno as m
+                ON
+                    m.ref_cod_aluno = a.cod_aluno ";
+
+        $where   .= "i.ref_cod_aluno = a.cod_aluno ";
         $whereAnd = ' AND ';
 
         if ($inicio_limite !== false && $qtd_registros) {
@@ -165,12 +184,12 @@ class clsPmieducarInscrito
         $db  = new clsBanco();
 
         if ($where) {
-            $where = 'WHERE '.$where;
+            $where = 'WHERE '. $where;
         }
 
-        $tabela = "{$this->_tabela}, cadastro.pessoa as p, cadastro.fisica f,
-            cadastro.documento d, cadastro.endereco_pessoa e, pmieducar.aluno as a,
-            modules.ficha_medica_aluno m";
+        $where = $join . $where;
+
+        $tabela = "{$this->_tabela}, pmieducar.aluno as a";
         $campos = "{$this->_campos_lista}, p.nome, f.data_nasc, f.sexo, f.cpf,
             p.email, d.rg, e.cep, m.grupo_sanguineo, m.fator_rh";
 
