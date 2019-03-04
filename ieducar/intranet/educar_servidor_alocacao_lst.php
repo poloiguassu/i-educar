@@ -109,7 +109,8 @@ class indice extends clsListagem
       'Ano',
       'Período',
       'Carga horária',
-      'Vínculo'
+      'Vínculo',
+      ''
     ));
 
     $fisica = new clsPessoaFisica($this->ref_cod_servidor);

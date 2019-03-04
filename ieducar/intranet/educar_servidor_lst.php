@@ -102,7 +102,9 @@ class indice extends clsListagem
       'Nome do Servidor',
       'Matrícula',
       'CPF',
-      'Instituição'
+      'Instituição',
+      'Hora Aula Dada',
+      'Tempo de Atraso'
     ));
 
     $this->inputsHelper()->dynamic(array('instituicao', 'escola', 'anoLetivo'));
@@ -209,6 +211,8 @@ class indice extends clsListagem
           $url->l($registro['matricula_servidor'], $path, $options),
           $url->l($registro['cpf'], $path, $options),
           $url->l($registro['ref_cod_instituicao'], $path, $options),
+          "4h",
+          "25min",
         ));
       }
     }
