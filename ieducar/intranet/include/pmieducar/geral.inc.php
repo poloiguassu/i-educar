@@ -115,6 +115,8 @@ require_once 'include/pmieducar/clsPmieducarResponsaveisAluno.inc.php';
 
 require_once 'include/pmieducar/clsPmieducarProcessoSeletivo.inc.php';
 require_once 'include/pmieducar/clsPmieducarInscrito.inc.php';
+require_once 'include/pmieducar/clsPmieducarInscritoEtapa.inc.php';
+
 require_once 'include/pmieducar/clsPmieducarVPSJornadaTrabalho.inc.php';
 require_once 'include/pmieducar/clsPmieducarVPSFuncao.inc.php';
 require_once 'include/pmieducar/clsPmieducarVPSIdioma.inc.php';
