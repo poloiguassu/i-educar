@@ -1,5 +1,5 @@
-@extends('layout.blank')
+@extends('layout.default')
 
-@section('content')
+@section('body')
     {!! $body !!}
 @endsection
