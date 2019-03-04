@@ -325,6 +325,11 @@ class Portabilis_View_Helper_Inputs
         $this->resourceInput('religiao', $this->mergeInputOptions($inputOptions, $helperOptions));
     }
 
+    public function processoSeletivo($inputOptions = [], $helperOptions = [])
+    {
+        $this->resourceInput('processoSeletivo', $this->mergeInputOptions($inputOptions, $helperOptions));
+    }
+
     public function beneficio($inputOptions = [], $helperOptions = [])
     {
         $this->resourceInput('beneficio', $this->mergeInputOptions($inputOptions, $helperOptions));
