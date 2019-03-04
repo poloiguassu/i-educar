@@ -138,31 +138,33 @@ class indice extends clsCadastro
 
         // cod menu 55 = ieducar, 57 = biblioteca (ambos sistema = ieducar (2) )
 
-        $objTemp->Consulta('
-      SELECT
-        sub.cod_menu_submenu,
-        sub.nm_submenu,
-        m.nm_menu
-      FROM
-        menu_submenu sub,
-        menu_menu m
-      WHERE
-        sub.ref_cod_menu_menu = m.cod_menu_menu
-        AND ((m.cod_menu_menu = 55 OR m.ref_cod_menu_pai = 55) OR
-            (m.cod_menu_menu = 69 OR m.ref_cod_menu_pai = 69) OR
-            (m.cod_menu_menu = 68 OR m.ref_cod_menu_pai = 68) OR
-            (m.cod_menu_menu = 7 OR m.ref_cod_menu_pai = 7) OR
-            (m.cod_menu_menu = 23 OR m.ref_cod_menu_pai = 23) OR
-            (m.cod_menu_menu = 5 OR m.ref_cod_menu_pai = 5) OR
-            (m.cod_menu_menu = 25 OR m.ref_cod_menu_pai = 25) OR
-            (m.cod_menu_menu = 38 OR m.ref_cod_menu_pai = 38) OR
-            (m.cod_menu_menu = 57 OR m.ref_cod_menu_pai = 57) OR
-            (m.cod_menu_menu = 56 OR m.ref_cod_menu_pai = 56) OR
-            (m.cod_menu_menu = 70 OR m.ref_cod_menu_pai = 70) OR
-            (m.cod_menu_menu = 71 OR m.ref_cod_menu_pai = 71))
-      ORDER BY
-        cod_menu_menu, upper(sub.nm_submenu)
-    ');
+        $objTemp->Consulta(
+            "SELECT
+                sub.cod_menu_submenu,
+                sub.nm_submenu,
+                m.nm_menu
+            FROM
+                menu_submenu sub,
+                menu_menu m
+            WHERE
+                sub.ref_cod_menu_menu = m.cod_menu_menu
+                AND ((m.cod_menu_menu = 55 OR m.ref_cod_menu_pai = 55) OR
+                    (m.cod_menu_menu = 69 OR m.ref_cod_menu_pai = 69) OR
+                    (m.cod_menu_menu = 68 OR m.ref_cod_menu_pai = 68) OR
+                    (m.cod_menu_menu = 7 OR m.ref_cod_menu_pai = 7) OR
+                    (m.cod_menu_menu = 23 OR m.ref_cod_menu_pai = 23) OR
+                    (m.cod_menu_menu = 5 OR m.ref_cod_menu_pai = 5) OR
+                    (m.cod_menu_menu = 25 OR m.ref_cod_menu_pai = 25) OR
+                    (m.cod_menu_menu = 38 OR m.ref_cod_menu_pai = 38) OR
+                    (m.cod_menu_menu = 57 OR m.ref_cod_menu_pai = 57) OR
+                    (m.cod_menu_menu = 56 OR m.ref_cod_menu_pai = 56) OR
+                    (m.cod_menu_menu = 70 OR m.ref_cod_menu_pai = 70) OR
+                    (m.cod_menu_menu = 71 OR m.ref_cod_menu_pai = 71) OR
+                    (m.cod_menu_menu = 72 OR m.ref_cod_menu_pai = 72) OR
+                    (m.cod_menu_menu = 73 OR m.ref_cod_menu_pai = 73))
+            ORDER BY
+                cod_menu_menu, upper(sub.nm_submenu)"
+        );
 
         while ($objTemp->ProximoRegistro()) {
             list($codigo, $nome, $menu_pai) = $objTemp->Tupla();
