@@ -21,7 +21,7 @@ RUN rm -rf /tmp/pear
 ENV XDEBUG_IDEKEY xdebug
 ENV XDEBUG_REMOTE_HOST 127.0.0.1
 ENV XDEBUG_REMOTE_PORT 9000
-ENV XDEBUG_REMOTE_ENABLE 0
+ENV XDEBUG_REMOTE_ENABLE 1
 
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
