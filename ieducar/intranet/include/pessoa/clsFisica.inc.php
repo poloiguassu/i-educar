@@ -39,7 +39,7 @@ class clsFisica
     public $ref_cod_sistema;
     public $cpf;
     public $ref_cod_religiao;
-    public $sus;
+    public $sus = false;
     public $nis_pis_pasep;
     public $ocupacao;
     public $empresa;
@@ -322,7 +322,7 @@ class clsFisica
             if (is_numeric($this->ref_cod_religiao)) {
                 $campos .= ', ref_cod_religiao';
                 $valores .= ", $this->ref_cod_religiao";
-            } else {
+            } elseif ($this->ref_cod_religiao !== false) {
                 $campos .= ', ref_cod_religiao';
                 $valores .= ', NULL';
             }
@@ -560,6 +560,9 @@ class clsFisica
             if ($this->sus) {
                 $set .= "$gruda sus = '{$this->sus}'";
                 $gruda = ', ';
+            } elseif ($this->sus !== false) {
+                $set .= "$gruda sus = NULL";
+                $gruda = ', ';
             }
 
             if ($this->nis_pis_pasep) {
@@ -575,7 +578,7 @@ class clsFisica
             if (is_numeric($this->ref_cod_religiao)) {
                 $set .= "$gruda ref_cod_religiao = {$this->ref_cod_religiao}";
                 $gruda = ', ';
-            } else {
+            } elseif ($this->ref_cod_religiao !== false) {
                 $set .= "$gruda ref_cod_religiao = NULL";
                 $gruda = ', ';
             }
@@ -676,7 +679,6 @@ class clsFisica
                 $detalheAntigo = $this->detalheSimples();
 
                 $detalheAntigo['cpf'] = str_pad((string)$detalheAntigo['cpf'], 11, '0', STR_PAD_LEFT);
-
                 $db->Consulta("UPDATE {$this->schema}.{$this->tabela} $set WHERE idpes = '$this->idpes'");
 
                 $detalheAtual = $this->detalheSimples();

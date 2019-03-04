@@ -426,7 +426,7 @@ class indice extends clsCadastro
                         $nomeSerie = '';
                     }
 
-                    $this->mensagem .= "Este aluno j&aacute; est&aacute; matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o &eacute; multi seriado, n&atilde;o &eacute; possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
+                    $this->mensagem .= "Este aluno j&aacute; est&aacute; matriculado no(a) '$nomeSerie' deste curso e escola. Como este curso n&atilde;o &eacute; multisseriado, n&atilde;o &eacute; possivel manter mais de uma matricula em andamento para o mesmo curso.<br />";
 
                     return false;
                 }
@@ -876,6 +876,12 @@ class indice extends clsCadastro
             $dataTransferencia = $obj->pegaDataDeTransferencia($this->ref_cod_aluno, $this->ano);
             $dataAnoLetivoInicio = $obj->pegaDataAnoLetivoInicio($this->ref_cod_turma);
             $dataAnoLetivoTermino = $obj->pegaDataAnoLetivoFim($this->ref_cod_turma);
+
+            if (empty($dataAnoLetivoTermino)) {
+                $this->mensagem = 'Não está definida a data de término do ano letivo.';
+
+                return false;
+            }
 
             if ($dataTransferencia && $dataMatriculaObj <= $dataTransferencia) {
                 $this->mensagem .= sprintf(

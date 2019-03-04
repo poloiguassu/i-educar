@@ -415,7 +415,7 @@ class indice extends clsCadastro
       false
     );
 
-    $this->inputsHelper()->checkbox('multi_seriado', array( 'label' => 'Multi-seriado', 'value' => $this->multi_seriado));
+    $this->inputsHelper()->checkbox('multi_seriado', array( 'label' => 'Multisseriado', 'value' => $this->multi_seriado));
 
     // Dados do docente no Inep/Educacenso.
     if ($this->docente) {
@@ -1030,6 +1030,12 @@ class indice extends clsCadastro
         }
       }
     }
+  }
+
+  function excluiFuncoes()
+  {
+      $obj_servidor_funcao = new clsPmieducarServidorFuncao($this->ref_cod_instituicao, $this->cod_servidor);
+      $obj_servidor_funcao->excluirTodos();
   }
 
   function excluiFuncoesRemovidas($funcoes)

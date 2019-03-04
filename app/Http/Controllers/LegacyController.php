@@ -7,6 +7,7 @@ use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -178,7 +179,7 @@ class LegacyController extends Controller
      */
     private function getHttpStatusCode()
     {
-        return http_response_code();
+        return http_response_code() ?: Response::HTTP_OK;
     }
 
     /**
@@ -217,7 +218,11 @@ class LegacyController extends Controller
      */
     private function startLegacySession()
     {
-        @session_start();
+        try {
+            session_start();
+        } catch (Exception $e) {
+
+        }
     }
 
     /**
@@ -230,7 +235,7 @@ class LegacyController extends Controller
         $_SERVER['REQUEST_URI'] = $_SERVER['REQUEST_URI'] ?? $this->request->getRequestUri();
 
         $_GET = empty($_GET) ? $this->request->query->all() : $_GET;
-        $_POST = empty($_POST) ? $this->request->request->all() : $_POST;
+        $_POST = (empty($_POST) && $this->request->isMethod('post')) ? $this->request->request->all() : $_POST;
         $_FILES = empty($_FILES) ? $this->request->files->all() : $_FILES;
         $_COOKIE = empty($_COOKIE) ? $this->request->cookies->all() : $_COOKIE;
     }

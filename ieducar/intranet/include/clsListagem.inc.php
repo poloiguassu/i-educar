@@ -1,5 +1,8 @@
 <?php
 
+use iEducar\Support\Navigation\Breadcrumb;
+use Illuminate\Support\Facades\View;
+
 require_once 'include/clsCampos.inc.php';
 
 if (class_exists('clsPmiajudaPagina')) {
@@ -238,31 +241,38 @@ class clsListagem extends clsCampos
         $this->numeropaginador++;
     }
 
-    /**
-     * Cria o código HTML.
-     *
-     * @param string $caminho
-     * @param int    $qdt_registros
-     * @param int    $limite
-     * @param string $link_atual
-     *
-     * @return NULL
-     */
-    public function paginador($caminho, $qdt_registros, $limite, $link_atual)
-    {
-        $this->addPaginador2(
-            '',
-            $qdt_registros,
-            $_GET,
-            'formulario',
-            $limite,
-            3,
-            'pos_atual',
-            -1,
-            true
-        );
+    $this->numeropaginador++;
+  }
 
-        return null;
+  /**
+   * Cria o código HTML.
+   *
+   * @param string $caminho
+   * @param int $qdt_registros
+   * @param int $limite
+   * @param string $link_atual
+   * @return NULL
+   */
+  function paginador($caminho, $qdt_registros, $limite, $link_atual)
+  {
+    $this->addPaginador2('', $qdt_registros, $_GET, 'formulario', $limite, 3,
+      'pos_atual', -1, TRUE);
+
+    return NULL;
+  }
+
+  function RenderHTML()
+  {
+    $this->_preRender();
+    $this->Gerar();
+
+    View::share('title', $this->titulo);
+
+    $retorno = '';
+
+    if ($this->banner) {
+      $retorno .= "<table width='100%' style=\"height:100%\" border='0' cellpadding='0' cellspacing='0'><tr>";
+      $retorno .= "<td valign='top'>";
     }
 
     public function RenderHTML()
@@ -272,151 +282,30 @@ class clsListagem extends clsCampos
 
         $retorno = '';
 
-        if ($this->banner) {
-            $retorno .= '<table width=\'100%\' border=\'0\' cellpadding=\'0\' cellspacing=\'0\'><tr>';
-            $retorno .= '<td valign=\'top\'>';
-        }
+    if ($this->locale && $this->appendInTop){
+        app(Breadcrumb::class)->setLegacy($this->locale);
+    }
 
-        $retorno .= '
-          <script type="text/javascript">function go(url) { document.location = url; }
-          var goodIE = (document.all) ? 1:0;
-          var netscape6 = (document.getElementById && !document.all) ? 1:0;
-          var aux = \'\';
-          var aberto = false;';
+    if ($this->campos) {
+      $width = empty($this->largura) ? '' : "width='$this->largura'";
 
-        $retorno .= $this->MakeFormat();
-        $retorno .= '</script>';
+      $barra = '<b>Filtros de busca</b>';
 
-        if ($this->locale && $this->appendInTop) {
-            $retorno .=  '
-                <table class=\'tablelistagem\' id=\'tableLocalizacao\'width=\'100%\' border=\'0\'  cellpadding=\'0\' cellspacing=\'0\'>';
-
-            $retorno .=  "
-                    <tr height='10px'>
-                        <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
-                    </tr>";
-
-            $retorno .= '</table>';
-        }
-
-        if ($this->campos) {
-            $width = empty($this->largura) ? '' : "width='$this->largura'";
-
-            /**
-             * Adiciona o help da página.
-             */
-            $url = parse_url($_SERVER['REQUEST_URI']);
-            $url = preg_replace('/^\//', '', $url['path']);
-
-            if (strpos($url, '_det.php') !== false) {
-                $tipo = 'det';
-            } elseif (strpos($url, '_lst.php') !== false) {
-                $tipo = 'lst';
-            } elseif (strpos($url, '_pdf.php') !== false) {
-                $tipo = 'pdf';
-            } else {
-                $tipo = 'cad';
-            }
-
-            $server = $_SERVER['SERVER_NAME'];
-            $endereco = $_SERVER ['REQUEST_URI'];
-            $enderecoPagina = $_SERVER['PHP_SELF'];
-
-            $barra = '<b>Filtros de busca</b>';
-
-            if (class_exists('clsPmiajudaPagina')) {
-                $ajudaPagina = new clsPmiajudaPagina();
-                $lista = $ajudaPagina->lista(null, null, $url);
-                if ($lista) {
-                    $barra = "
-          <table border=\"0\" cellpading=\"0\" cellspacing=\"0\" width=\"100%\">
-            <tr>
-            <script type=\"text/javascript\">document.help_page_index = 0;</script>
-            <td width=\"20\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]['ref_cod_topico']}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botï¿½o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta pï¿½gina\"></a></td>
-            <td><b>Filtros de busca</b></td>
-            <td align=\"right\"><a href=\"javascript:showExpansivelIframe(700,500,'ajuda_mostra.php?cod_topico={$lista[0]['ref_cod_topico']}&tipo={$tipo}');\"><img src=\"imagens/banco_imagens/interrogacao.gif\" border=\"0\" alt=\"Botï¿½o de Ajuda\" title=\"Clique aqui para obter ajuda sobre esta pï¿½gina\"></a></td>
-            </tr>
-          </table>";
-                }
-            }
-
-            if ($this->busca_janela) {
-                $janela .= "<form name='{$this->__nome}' id='{$this->__nome}' method='{$this->method}'>";
-                $janela .= '<input name=\'busca\' type=\'hidden\' value=\'S\'>';
-                $janela .= '<table class=\'tablelistagem\' border=\'0\' cellpadding=\'2\' cellspacing=\'1\'>';
-
-                if ($this->campos) {
-                    reset($this->campos);
-
-                    while (list($nome, $componente) = each($this->campos)) {
-                        if ($componente[0] == 'oculto' || $componente[0] == 'rotulo') {
-                            $janela .=  "<input name='$nome' id='$nome' type='hidden' value='".urlencode($componente[3]).'\'>';
-                        }
-                    }
-                }
-
-                $janela .=  "<tr><td class='formdktd' colspan='2' height='24'>{$barra}</td></tr>";
-
-                if (empty($this->campos)) {
-                    $janela .=  '<tr><td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>N&atilde;o existem campos definidos para o formul&aacute;rio</span></td></tr>';
-                } else {
-                    $janela .= $this->MakeCampos();
-                }
-
-                $janela  .= '<tr><td class=\'formdktd\' colspan=\'2\'></td></tr>';
-                $janela  .= '<tr><td colspan=\'2\' align=\'center\'>';
-                $retorno .= '<script type="text/javascript" language=\'javascript\'>';
-
-                if ($this->funcAcao) {
-                    $retorno .=  $this->funcAcao;
-                } else {
-                    $retorno .=  "function acao{$this->funcAcaoNome}() { document.$this->__nome.submit(); } ";
-                }
-
-                $retorno .= '</script>';
-                $janela  .= "<input type='button' class='botaolistagem' value='Busca' onclick='javascript:acao{$this->funcAcaoNome}();'>";
-                $janela  .= '</td></tr>';
-                $janela  .= '</table>';
-                $janela  .= '</form>';
-
-                $janela = str_replace('"', '\'', $janela);
-                $janela = str_replace('\'', "\'", $janela);
-                $janela = str_replace("\n", '', $janela);
-
-                $retorno .= '<br><table class="tablelistagem" width="90%"  border="0" cellpadding="3" cellspacing="1" align="center"  >';
-                $retorno .=  "<td align=\"center\" class='formdktd' colspan='2' height='24' valign='middle'><input type=\"button\" class=\"botaolistagem\" onclick=\"javascript:showExpansivel(0,0, '$janela');\" value=\"Pesquisar\">&nbsp;";
-                $retorno .=  '</td></tr>';
-                $retorno .=  '</table>';
-            } else {
-                $retorno .=  "<!-- begin formulario -->
+        $retorno .=  "<!-- begin formulario -->
         <form name='{$this->__nome}' id='{$this->__nome}' method='{$this->method}' action=\"\">
           <input name='busca' type='hidden' value='S'>";
 
                 if ($this->campos) {
                     reset($this->campos);
 
-                    while (list($nome, $componente) = each($this->campos)) {
-                        if ($componente[0] == 'oculto' || $componente[0] == 'rotulo') {
-                            $retorno .=  "<input name='$nome' id='$nome' type='hidden' value='".urlencode($componente[3]).'\'>';
-                        }
-                    }
-                }
-
-                if ($this->locale && !$this->appendInTop) {
-                    $retorno .=  "
-            <table class='tablelistagem' $width border='0'  cellpadding='0' cellspacing='0'>";
-
-                    $retorno .=  "<tr height='10px'>
-                          <td class='fundoLocalizacao' colspan='2'>{$this->locale}</td>
-                        </tr>";
-
-                    $retorno .= '</table>';
-                }
+        if ($this->locale && !$this->appendInTop){
+            app(Breadcrumb::class)->setLegacy($this->locale);
+        }
 
                 $retorno .=  "
           <table class='tablelistagem' $width border='0' cellpadding='2' cellspacing='1'>";
 
-                $retorno .=  "
+        $retorno .=  "
             <tr>
               <td class='formdktd' colspan='2' height='24'>{$barra}</td>
             </tr>";
@@ -460,9 +349,11 @@ class clsListagem extends clsCampos
             </tr>
           </table>
         <!-- cadastro end -->
-        </form>';
-            }
-        }
+        </form>";
+
+    }
+
+    $retorno .=  "<br>";
 
         $retorno .=  '<br>';
 

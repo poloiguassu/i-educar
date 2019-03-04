@@ -119,6 +119,14 @@ class Avaliacao_Service_SituacaoTest extends Avaliacao_Service_TestCommon
                 ->method('getSituacaoNotas')
                 ->will($this->returnValue($nota));
 
+        $service->expects($this->any())
+                ->method('hasRegraAvaliacaoMediaRecuperacao')
+                ->willReturn(true);
+
+        $service->expects($this->any())
+                ->method('getRegraAvaliacaoTipoNota')
+                ->willReturn(null);
+
         $situacao = $service->getSituacaoAluno();
 
         $this->assertEquals($expected[$i][$ii][0], $situacao->aprovado, "Aprovado, caso $i - $ii");

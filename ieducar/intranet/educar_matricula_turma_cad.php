@@ -1,33 +1,5 @@
 <?php
 
-/**
- * i-Educar - Sistema de gestão escolar
- *
- * Copyright (C) 2006  Prefeitura Municipal de Itajaí
- *                     <ctima@itajai.sc.gov.br>
- *
- * Este programa é software livre; você pode redistribuí-lo e/ou modificá-lo
- * sob os termos da Licença Pública Geral GNU conforme publicada pela Free
- * Software Foundation; tanto a versão 2 da Licença, como (a seu critério)
- * qualquer versão posterior.
- *
- * Este programa é distribuí­do na expectativa de que seja útil, porém, SEM
- * NENHUMA GARANTIA; nem mesmo a garantia implí­cita de COMERCIABILIDADE OU
- * ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública Geral
- * do GNU para mais detalhes.
- *
- * Você deve ter recebido uma cópia da Licença Pública Geral do GNU junto
- * com este programa; se não, escreva para a Free Software Foundation, Inc., no
- * endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Arquivo disponível desde a versão 1.0.0
- * @version   $Id$
- */
-
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsCadastro.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -35,16 +7,6 @@ require_once 'include/pmieducar/geral.inc.php';
 require_once 'include/pmieducar/clsPmieducarMatricula.inc.php';
 require_once 'lib/Portabilis/Date/Utils.php';
 
-/**
- * clsIndexBase class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
 class clsIndexBase extends clsBase
 {
   function Formular()
@@ -55,16 +17,6 @@ class clsIndexBase extends clsBase
   }
 }
 
-/**
- * indice class.
- *
- * @author    Prefeitura Municipal de Itajaí <ctima@itajai.sc.gov.br>
- * @category  i-Educar
- * @license   @@license@@
- * @package   iEd_Pmieducar
- * @since     Classe disponível desde a versão 1.0.0
- * @version   @@package_version@@
- */
 class indice extends clsCadastro
 {
   var $pessoa_logada;
@@ -114,22 +66,30 @@ class indice extends clsCadastro
     $this->enviaLocalizacao($localizacao->montar());
 
     //nova lógica
+    $retorno = false;
     if (is_numeric($this->ref_cod_matricula)) {
-
       if ($this->ref_cod_turma_origem == 'remover-enturmacao-destino') {
-        $this->removerEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
+        $retorno = $this->removerEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
       } elseif (! is_numeric($this->ref_cod_turma_origem)) {
-        $this->novaEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
+        $retorno = $this->novaEnturmacao($this->ref_cod_matricula, $this->ref_cod_turma_destino);
       } else {
-        $this->transferirEnturmacao(
+        $retorno = $this->transferirEnturmacao(
           $this->ref_cod_matricula,
           $this->ref_cod_turma_origem,
           $this->ref_cod_turma_destino
         );
       }
-
-      header('Location: educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula);
-      die();
+      if (!$retorno) {
+          $alert = sprintf('
+                <script type="text/javascript">
+                    window.alert("%s");
+                    window.location.href= "./educar_matricula_det.php?cod_matricula=%u";
+                </script>', $this->mensagem, $this->ref_cod_matricula);
+          echo $alert;
+      } else {
+        header('Location: educar_matricula_det.php?cod_matricula=' . $this->ref_cod_matricula);
+        die();
+      }
     }
     else {
       header('Location: /intranet/educar_aluno_lst.php');
@@ -171,7 +131,7 @@ class indice extends clsCadastro
     return false;
   }
 
-  public function validaDataEnturmacao($matriculaId, $turmaDestinoId)
+  public function validaDataEnturmacao($matriculaId, $turmaDestinoId, $transferir = false)
   {
     $dataObj = new \DateTime($this->data_enturmacao . ' 23:59:59');
     $matriculaObj = new clsPmieducarMatricula();
@@ -179,17 +139,28 @@ class indice extends clsCadastro
     $dataAnoLetivoInicio = $matriculaObj->pegaDataAnoLetivoInicio($turmaDestinoId);
     $dataAnoLetivoFim = $matriculaObj->pegaDataAnoLetivoFim($turmaDestinoId);
     $exclusaoEnturmacao = $enturmacaoObj->getDataExclusaoUltimaEnturmacao($matriculaId);
+    $maiorDataEnturmacao = $enturmacaoObj->getMaiorDataEnturmacao($matriculaId);
     $dataSaidaDaTurma = !empty($exclusaoEnturmacao)
         ? new \DateTime($exclusaoEnturmacao)
         : null;
 
+    $maiorDataEnturmacao = !empty($maiorDataEnturmacao)
+        ? new \DateTime($maiorDataEnturmacao)
+        : null;
+
     if ($dataObj > $dataAnoLetivoFim) {
+        $this->mensagem = 'Não foi possível enturmar, data de enturmação maior que data do fim do ano letivo.';
         return false;
     }
 
-    if ($dataSaidaDaTurma !== null && $dataObj < $dataSaidaDaTurma) {
+    if ($transferir && !empty($maiorDataEnturmacao) && $dataObj < $maiorDataEnturmacao ) {
+        $this->mensagem = 'Não foi possível enturmar, data de enturmação menor que data de entrada da última enturmação.';
+        return false;
+    } elseif ($dataSaidaDaTurma !== null && $dataObj < $dataSaidaDaTurma) {
+        $this->mensagem = 'Não foi possível enturmar, data de enturmação menor que data de saída da última enturmação.';
         return false;
     } elseif ($dataObj < $dataAnoLetivoInicio) {
+        $this->mensagem = 'Não foi possível enturmar, data de enturmação menor que data do início do ano letivo.';
         return false;
     }
 
@@ -197,7 +168,7 @@ class indice extends clsCadastro
   }
 
   function transferirEnturmacao($matriculaId, $turmaOrigemId, $turmaDestinoId) {
-    if (!$this->validaDataEnturmacao($matriculaId, $turmaDestinoId)) {
+    if (!$this->validaDataEnturmacao($matriculaId, $turmaDestinoId, true)) {
         return false;
     }
 
@@ -208,6 +179,21 @@ class indice extends clsCadastro
     return false;
   }
 
+    /**
+     * Retorna a data base de remanejamento para a instituição.
+     *
+     * @param int $instituicao
+     *
+     * @return string|null
+     */
+  public function getDataBaseRemanejamento($instituicao)
+  {
+      $instituicao = new clsPmieducarInstituicao($instituicao);
+
+      $instituicao = $instituicao->detalhe();
+
+      return $instituicao['data_base_remanejamento'];
+  }
 
   function removerEnturmacao($matriculaId, $turmaId, $remanejado = FALSE) {
 
@@ -261,12 +247,21 @@ class indice extends clsCadastro
 
   function atualizaUltimaEnturmacao($matriculaId)
   {
-    $objMatriculaTurma = new clsPmieducarMatriculaTurma();
+    $objMatriculaTurma = new clsPmieducarMatriculaTurma($matriculaId);
     $ultima_turma = $objMatriculaTurma->getUltimaTurmaEnturmacao($matriculaId);
     $sequencial = $objMatriculaTurma->getMaxSequencialEnturmacao($matriculaId);
     $lst_ativo = $objMatriculaTurma->lista($matriculaId, $ultima_turma, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $sequencial);
+
     $ativo = $lst_ativo[0]['ativo'];
-    if ($sequencial >= 1) {
+    $data_exclusao = $lst_ativo[0]['data_exclusao'];
+
+    $dataBaseRemanejamento = $this->getDataBaseRemanejamento(
+        $objMatriculaTurma->getInstituicao()
+    );
+
+    $marcarAlunoComoRemanejado = is_null($dataBaseRemanejamento) || strtotime($dataBaseRemanejamento) < strtotime(date('Y-m-d'));
+
+    if ($sequencial >= 1 && $marcarAlunoComoRemanejado) {
         $remanejado = TRUE;
         $enturmacao = new clsPmieducarMatriculaTurma(
             $matriculaId,
@@ -274,7 +269,7 @@ class indice extends clsCadastro
             $this->pessoa_logada,
             $this->pessoa_logada,
             NULL,
-            NULL,
+            $data_exclusao,
             $ativo,
             NULL,
             $sequencial,
