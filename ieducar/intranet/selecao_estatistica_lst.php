@@ -23,7 +23,7 @@ class indice extends clsListagem
     {
         parent::__construct();
 
-        $this->setTemplate('estatisticaSelecao');
+        $this->setTemplate('report_selection');
     }
 
     function Gerar()
@@ -115,7 +115,7 @@ class indice extends clsListagem
                 AND
                     idpes = ref_idpes
                 GROUP BY idade";
-        
+
         $idadeInscritos = Portabilis_Utils_Database::fetchPreparedQuery($sql);
 
         $sql = "SELECT
