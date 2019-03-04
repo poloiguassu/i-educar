@@ -388,13 +388,33 @@ class clsPmieducarTurmaModulo
      */
     function detalhe()
     {
-        if( is_numeric( $this->ref_cod_turma ) && is_numeric( $this->ref_cod_modulo ) && is_numeric( $this->sequencial ) )
+        if( is_numeric( $this->ref_cod_turma ) && is_numeric( $this->sequencial ) )
         {
 
-        $db = new clsBanco();
-        $db->Consulta( "SELECT {$this->_todos_campos} FROM {$this->_tabela} WHERE ref_cod_turma = '{$this->ref_cod_turma}' AND ref_cod_modulo = '{$this->ref_cod_modulo}' AND sequencial = '{$this->sequencial}'" );
-        $db->ProximoRegistro();
-        return $db->Tupla();
+            $filtros = "";
+
+            $whereAnd = " AND ";
+    
+            if (is_numeric($this->ref_cod_modulo)) {
+                $filtros .= "{$whereAnd} ref_cod_modulo = '{$this->ref_cod_modulo}'";
+                $whereAnd = " AND ";
+            }
+
+            $db = new clsBanco();
+
+            $db->Consulta(
+                "SELECT
+                    {$this->_todos_campos}
+                FROM
+                    {$this->_tabela}
+                WHERE
+                    ref_cod_turma = '{$this->ref_cod_turma}'
+                AND
+                    sequencial = '{$this->sequencial}' {$filtros}"
+            );
+
+            $db->ProximoRegistro();
+            return $db->Tupla();
         }
         return false;
     }
