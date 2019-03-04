@@ -241,38 +241,31 @@ class clsListagem extends clsCampos
         $this->numeropaginador++;
     }
 
-    $this->numeropaginador++;
-  }
+    /**
+     * Cria o código HTML.
+     *
+     * @param string $caminho
+     * @param int    $qdt_registros
+     * @param int    $limite
+     * @param string $link_atual
+     *
+     * @return NULL
+     */
+    public function paginador($caminho, $qdt_registros, $limite, $link_atual)
+    {
+        $this->addPaginador2(
+            '',
+            $qdt_registros,
+            $_GET,
+            'formulario',
+            $limite,
+            3,
+            'pos_atual',
+            -1,
+            true
+        );
 
-  /**
-   * Cria o código HTML.
-   *
-   * @param string $caminho
-   * @param int $qdt_registros
-   * @param int $limite
-   * @param string $link_atual
-   * @return NULL
-   */
-  function paginador($caminho, $qdt_registros, $limite, $link_atual)
-  {
-    $this->addPaginador2('', $qdt_registros, $_GET, 'formulario', $limite, 3,
-      'pos_atual', -1, TRUE);
-
-    return NULL;
-  }
-
-  function RenderHTML()
-  {
-    $this->_preRender();
-    $this->Gerar();
-
-    View::share('title', $this->titulo);
-
-    $retorno = '';
-
-    if ($this->banner) {
-      $retorno .= "<table width='100%' style=\"height:100%\" border='0' cellpadding='0' cellspacing='0'><tr>";
-      $retorno .= "<td valign='top'>";
+        return null;
     }
 
     public function RenderHTML()
@@ -282,78 +275,98 @@ class clsListagem extends clsCampos
 
         $retorno = '';
 
-    if ($this->locale && $this->appendInTop){
-        app(Breadcrumb::class)->setLegacy($this->locale);
-    }
+        if ($this->banner) {
+            $retorno .= '<table width=\'100%\' border=\'0\' cellpadding=\'0\' cellspacing=\'0\'><tr>';
+            $retorno .= '<td valign=\'top\'>';
+        }
 
-    if ($this->campos) {
-      $width = empty($this->largura) ? '' : "width='$this->largura'";
+        $retorno .= '
+          <script type="text/javascript">function go(url) { document.location = url; }
+          var goodIE = (document.all) ? 1:0;
+          var netscape6 = (document.getElementById && !document.all) ? 1:0;
+          var aux = \'\';
+          var aberto = false;';
 
-      $barra = '<b>Filtros de busca</b>';
+        $retorno .= $this->MakeFormat();
+        $retorno .= '</script>';
 
-        $retorno .=  "<!-- begin formulario -->
-        <form name='{$this->__nome}' id='{$this->__nome}' method='{$this->method}' action=\"\">
-          <input name='busca' type='hidden' value='S'>";
-
-                if ($this->campos) {
-                    reset($this->campos);
-
-        if ($this->locale && !$this->appendInTop){
+        if ($this->locale && $this->appendInTop) {
             app(Breadcrumb::class)->setLegacy($this->locale);
         }
 
-                $retorno .=  "
-          <table class='tablelistagem' $width border='0' cellpadding='2' cellspacing='1'>";
+        if ($this->campos) {
+            $width = empty($this->largura) ? '' : "width='$this->largura'";
 
-        $retorno .=  "
-            <tr>
-              <td class='formdktd' colspan='2' height='24'>{$barra}</td>
-            </tr>";
+            $barra = '<b>Filtros de busca</b>';
 
-                if (empty($this->campos)) {
-                    $retorno .=  '
-            <tr>
-              <td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>N&atilde;o existem campos definidos para o formul&aacute;rio</span></td>
-            </tr>';
-                } else {
-                    $retorno .= $this->MakeCampos();
-                }
+            
+            $retorno .=  "<!-- begin formulario -->
+    <form name='{$this->__nome}' id='{$this->__nome}' method='{$this->method}' action=\"\">
+    <input name='busca' type='hidden' value='S'>";
 
-                $retorno .=  '
-            <tr>
-              <td class=\'formdktd\' colspan=\'2\'></td>
-            </tr>';
-                $retorno .=  '
-            <tr>
-              <td colspan=\'2\' align=\'center\'>
-                <script type="text/javascript" language=\'javascript\'>';
+            if ($this->campos) {
+                reset($this->campos);
 
-                if ($this->funcAcao) {
-                    $retorno .=  $this->funcAcao;
-                } else {
-                    $retorno .=  "function acao{$this->funcAcaoNome}() { document.{$this->__nome}.submit(); } ";
-                }
-
-                $retorno .=  '</script>';
-
-                if ($this->exibirBotaoSubmit) {
-                    if ($this->botao_submit) {
-                        $retorno .=  '&nbsp;<input type=\'submit\' class=\'botaolistagem\' value=\'Buscar\' id=\'botao_busca\'>&nbsp;';
-                    } else {
-                        $retorno .=  "&nbsp;<input type='button' class='botaolistagem btn-green' onclick='javascript:acao{$this->funcAcaoNome}();' value='Buscar' id='botao_busca'>&nbsp;";
+                while (list($nome, $componente) = each($this->campos)) {
+                    if ($componente[0] == 'oculto' || $componente[0] == 'rotulo') {
+                        $retorno .=  "<input name='$nome' id='$nome' type='hidden' value='".urlencode($componente[3]).'\'>';
                     }
                 }
+            }
 
+            if ($this->locale && !$this->appendInTop) {
+                app(Breadcrumb::class)->setLegacy($this->locale);
+            }
+
+            $retorno .=  "
+    <table class='tablelistagem' $width border='0' cellpadding='2' cellspacing='1'>";
+
+            $retorno .=  "
+        <tr>
+        <td class='formdktd' colspan='2' height='24'>{$barra}</td>
+        </tr>";
+
+            if (empty($this->campos)) {
                 $retorno .=  '
+        <tr>
+        <td class=\'formlttd\' colspan=\'2\'><span class=\'form\'>N&atilde;o existem campos definidos para o formul&aacute;rio</span></td>
+        </tr>';
+            } else {
+                $retorno .= $this->MakeCampos();
+            }
+
+            $retorno .=  '
+        <tr>
+        <td class=\'formdktd\' colspan=\'2\'></td>
+        </tr>';
+            $retorno .=  '
+        <tr>
+        <td colspan=\'2\' align=\'center\'>
+            <script type="text/javascript" language=\'javascript\'>';
+
+            if ($this->funcAcao) {
+                $retorno .=  $this->funcAcao;
+            } else {
+                $retorno .=  "function acao{$this->funcAcaoNome}() { document.{$this->__nome}.submit(); } ";
+            }
+
+            $retorno .=  '</script>';
+
+            if ($this->exibirBotaoSubmit) {
+                if ($this->botao_submit) {
+                    $retorno .=  '&nbsp;<input type=\'submit\' class=\'botaolistagem\' value=\'Buscar\' id=\'botao_busca\'>&nbsp;';
+                } else {
+                    $retorno .=  "&nbsp;<input type='button' class='botaolistagem btn-green' onclick='javascript:acao{$this->funcAcaoNome}();' value='Buscar' id='botao_busca'>&nbsp;";
+                }
+            }
+
+            $retorno .=  '
               </td>
             </tr>
           </table>
         <!-- cadastro end -->
-        </form>";
-
-    }
-
-    $retorno .=  "<br>";
+        </form>';
+        }
 
         $retorno .=  '<br>';
 
@@ -667,7 +680,7 @@ class clsListagem extends clsCampos
             )
         );
 
-        return $formulario;
+        return $retorno;
     }
 
     /**
