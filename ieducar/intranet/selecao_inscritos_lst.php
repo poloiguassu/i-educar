@@ -20,7 +20,7 @@ class indice extends clsListagem
     {
         parent::__construct();
 
-        $this->setTemplate('filtrarListagem');
+        $this->setTemplate('list_filter');
     }
 
     public function Gerar()

@@ -81,7 +81,7 @@ class indice extends clsListagem
 
         $this->titulo = 'Atribuir Entrevistas - Listagem';
 
-        $this->setTemplate('filtrarListagem');
+        $this->setTemplate('list_filter');
 
         foreach ($_GET as $var => $val) { // passa todos os valores obtidos no GET para atributos do objeto
             $this->$var = ($val === '') ? null: $val;
@@ -91,12 +91,12 @@ class indice extends clsListagem
             'ID',
             'Nome',
             'Prioridade',
-            'N�mero de entrevistas',
-            'Situa��o VPS',
+            'Número de entrevistas',
+            'Situação VPS',
             'Idade',
             'Sexo',
             'Estudando?',
-            'Turno Col�gio',
+            'Turno Colégio',
             'Bairro'
         ]);
 
