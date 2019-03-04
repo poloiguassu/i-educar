@@ -111,6 +111,17 @@ require_once 'include/pmieducar/clsPmieducarConfiguracoesGerais.inc.php';
 require_once 'include/pmieducar/clsPmieducarCandidatoFilaUnica.inc.php';
 require_once 'include/pmieducar/clsPmieducarEscolaCandidatoFilaUnica.inc.php';
 require_once 'include/pmieducar/clsPmieducarResponsaveisAluno.inc.php';
+require_once 'include/pmieducar/clsPmieducarVPSJornadaTrabalho.inc.php';
+require_once 'include/pmieducar/clsPmieducarVPSFuncao.inc.php';
+require_once 'include/pmieducar/clsPmieducarVPSIdioma.inc.php';
+require_once 'include/pmieducar/clsPmieducarVPSResponsavelEntrevista.inc.php';
+require_once 'include/pmieducar/clsPmieducarVPSContratacaoTipo.inc.php';
+require_once 'include/pmieducar/clsPmieducarVPSEntrevista.inc.php';
+require_once 'include/pmieducar/clsPmieducarVPSEntrevistaResponsavel.inc.php';
+require_once 'include/pmieducar/clsPmieducarVPSAlunoEntrevista.inc.php';
+require_once 'include/pmieducar/clsPmieducarVPSVisita.inc.php';
+require_once 'include/pmieducar/clsPmieducarAlunoVPS.inc.php';
+
 require_once 'include/pmieducar/clsPmieducarBiblioteca.inc.php';
 require_once 'include/pmieducar/clsPmieducarAcervoIdioma.inc.php';
 require_once 'include/pmieducar/clsPmieducarAcervoColecao.inc.php';
