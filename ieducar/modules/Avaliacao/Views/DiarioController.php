@@ -54,7 +54,7 @@ class DiarioController extends Portabilis_Controller_Page_ListController
   {
     parent::__construct();
 
-    $this->setTemplate('base');
+    $this->setTemplate('default');
   }
 
   protected $_titulo     = 'Lan&ccedil;amento por turma';
@@ -73,7 +73,7 @@ class DiarioController extends Portabilis_Controller_Page_ListController
 
     $navegacaoTab = array('1' => 'Horizontal(padr&atilde;o)',
                           '2' => 'Vertical',);
-                             
+
     $options      = array('label'     =>'Navega&ccedil;&atilde;o do cursor(tab)',
                           'resources' => $navegacaoTab,
                           'required'  => false,
@@ -98,10 +98,10 @@ class DiarioController extends Portabilis_Controller_Page_ListController
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_index.php"                  => "Escola",
-         ""                                  => "Lan&ccedil;amento de notas"             
+         ""                                  => "Lan&ccedil;amento de notas"
     ));
-    $this->enviaLocalizacao($localizacao->montar(), true);     
-  }  
+    $this->enviaLocalizacao($localizacao->montar(), true);
+  }
 }
 ?>
 
