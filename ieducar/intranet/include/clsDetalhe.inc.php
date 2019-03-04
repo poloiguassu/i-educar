@@ -93,7 +93,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
   function enviaLocalizacao($localizao){
     if($localizao)
       $this->locale = $localizao;
-  }  
+  }
 
   function Gerar() {
     return FALSE;
@@ -281,9 +281,7 @@ class clsDetalhe extends Core_Controller_Page_Abstract
     }
 
     $formulario = array(
-      'dados' => array(
-          'html' => $retorno
-      )
+        'html' => $retorno
     );
 
     return $formulario;

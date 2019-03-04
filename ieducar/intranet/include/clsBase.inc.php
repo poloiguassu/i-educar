@@ -40,7 +40,7 @@ if ($GLOBALS['coreExt']['Config']->app->ambiente_inexistente) {
 class clsBase extends clsConfig
 {
     var $titulo = 'Prefeitura Cobra Tecnologia';
-    var $template;
+    var $view = 'legacy.body';
     var $clsForm = array();
     var $bodyscript = NULL;
     var $processoAp;
@@ -100,7 +100,7 @@ class clsBase extends clsConfig
         $this->titulo = $titulo;
     }
 
-    function AddForm($form)
+    function addForm($form)
     {
         $this->clsForm[] = $form;
     }
@@ -108,7 +108,7 @@ class clsBase extends clsConfig
     function MakeHeadHtml()
     {
 
-        /*$saida = $this->OpenTpl('htmlhead');
+        $saida = $this->OpenTpl('htmlhead');
         $saida = str_replace("<!-- #&CORE_EXT_CONFIGURATION_ENV&# -->", CORE_EXT_CONFIGURATION_ENV, $saida);
         $saida = str_replace("<!-- #&USER_ID&# -->", $_SESSION['id_pessoa'], $saida);
         $saida = str_replace("<!-- #&TITULO&# -->", $this->titulo, $saida);
@@ -145,7 +145,7 @@ class clsBase extends clsConfig
             $saida = str_replace("<!-- #&SCRIPT_HEADER&# -->", "", $saida);
         }
 
-        $saida = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $saida);*/
+        $saida = str_replace("<!-- #&GOOGLE_TAG_MANAGER_ID&# -->", $GLOBALS['coreExt']['Config']->app->gtm->id, $saida);
 
         // nome completo usuario
         // @TODO: jeito mais eficiente de usar estes dados, já que eles são
@@ -154,32 +154,11 @@ class clsBase extends clsConfig
         list($nomePessoa, $email) = $nomePessoa->queryRapida($this->currentUserId(), "nome", "email");
         $nomePessoa = ($nomePessoa) ? $nomePessoa : 'Visitante';
 
-        $retorno = array(
-            'ambiente' => CORE_EXT_CONFIGURATION_ENV,
-            'user_id' => $_SESSION['id_pessoa'],
-            'titulo' => $this->titulo,
-            'meta' => array(
-                'equiv' => 'refresh',
-                'content' => 60
-            ),
-            'assets' => array(
-                'styles' => $this->estilos,
-                'scripts' => $this->scripts,
-                'version' => Portabilis_Assets_Version::VERSION
-            ),
-            'body_script' => $this->bodyscript,
-            'head_script' => $this->script_header,
-            'google_tag_manager' => $GLOBALS['coreExt']['Config']->app->gtm->id,
-            'slug' => $GLOBALS['coreExt']['Config']->app->database->dbname,
-            'user_name' => trim($nomePessoa),
-            'user_email' => trim($email)
-        );
-
-        /*$saida = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $saida);
+        $saida = str_replace("<!-- #&SLUG&# -->", $GLOBALS['coreExt']['Config']->app->database->dbname, $saida);
         $saida = str_replace("<!-- #&USERLOGADO&# -->", trim($nomePessoa), $saida);
-        $saida = str_replace("<!-- #&USEREMAIL&# -->", trim($email), $saida);*/
+        $saida = str_replace("<!-- #&USEREMAIL&# -->", trim($email), $saida);
 
-        return $retorno;
+        return $saida;
     }
 
     function addEstilo($estilo_nome)
@@ -194,17 +173,13 @@ class clsBase extends clsConfig
 
     function MakeFootHtml()
     {
-        $saida = array(
-            'script' => $this->script_footer,
-        );
-
-        /*$saida = $this->OpenTpl('htmlfoot');
+        $saida = $this->OpenTpl('htmlfoot');
 
         if ($this->script_footer) {
             $saida = str_replace("<!-- #&SCRIPT_FOOTER&# -->", $this->script_footer, $saida);
         } else {
             $saida = str_replace("<!-- #&SCRIPT_FOOTER&# -->", "", $saida);
-        }*/
+        }
 
         return $saida;
     }
@@ -323,34 +298,35 @@ class clsBase extends clsConfig
      */
     function MakeBody()
     {
-        $corpo = '';
+        $corpo = array();
         $scripts = '';
-        $templateForm = array();
 
-        foreach ($this->clsForm as $form) {
+        foreach ($this->clsForm as $key=>$form) {
             if (method_exists($form, 'getTemplate')) {
-                $corpo = $form->RenderHTML();
-                $this->template = $form->getTemplate();
+                $corpo[$key] = $form->RenderHTML();
+                $corpo[$key]['template'] = $form->getTemplate();
             } else {
-                $this->template = '@pages/base';
-                $corpo = array(
-                    'dados' => array(
-                        'html' => $form->RenderHTML()
-                    )
+                $corpo[$key] = array(
+                    'html' => $form->RenderHTML()
                 );
+                $corpo[$key]['template'] = 'page.default';
             }
 
-            $corpo['instancia'] = $form;
+            $corpo[$key]['instance'] = $form;
+
+            $html = $corpo[$key]['html'];
 
             // Prepend output.
             if (method_exists($form, 'getPrependedOutput')) {
-                $scripts = $form->getPrependedOutput() . $scripts;
+                $html = $form->getPrependedOutput() . $html;
             }
 
             // Append output.
             if (method_exists($form, 'getAppendedOutput')) {
-                $scripts = $scripts . $form->getAppendedOutput();
+                $html = $html . $form->getAppendedOutput();
             }
+
+            $corpo[$key]['html'] = $html;
 
             if (!isset($form->prog_alert)) {
                 continue;
@@ -360,41 +336,7 @@ class clsBase extends clsConfig
                 $this->prog_alert .= $form->prog_alert;
             }
         }
-
-        $saida = $corpo;
-
-        // Pega o endereço IP do host, primeiro com HTTP_X_FORWARDED_FOR (para pegar o IP real
-        // caso o host esteja atrás de um proxy)
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
-            // No caso de múltiplos IPs, pega o último da lista
-            $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-            $ip_maquina = trim(array_pop($ip));
-        } else {
-            $ip_maquina = $_SERVER['REMOTE_ADDR'];
-        }
-
-        $sql = "UPDATE funcionario SET ip_logado = '$ip_maquina' , data_login = NOW() WHERE ref_cod_pessoa_fj = {$this->currentUserId()}";
-        $this->db()->Consulta($sql);
-
-        $saida .= "<script type=\"text/javascript\" src=\"/intranet/scripts/select2/select2.full.min.js\"></script>";
-        $saida .= "<script type=\"text/javascript\" src=\"/intranet/scripts/select2/pt-BR.js\"></script>";
-        $saida .= "<link type=\"text/css\" rel=\"stylesheet\" href=\"/intranet/scripts/select2/select2.min.css\" />";
-
-        $retorno = array(
-            'render_menu' => $this->renderMenu,
-            'render_menu_suspenso' => $this->renderMenuSuspenso,
-            'render_banner' => $this->renderBanner,
-            'scripts' => $scripts,
-            'menu' => $menu,
-            'content' => $corpo,
-            'user' => array(
-                'name' => $nomePessoa,
-                'email' => $email,
-                'foto' => $foto,
-            )
-        );
-
-        return $retorno;
+        return $corpo;
     }
 
     function Formular()
@@ -445,14 +387,11 @@ class clsBase extends clsConfig
                 $this->Formular();
                 $this->VerificaPermicao();
                 $this->CadastraAcesso();
-                $saida_geral = '';
 
                 app(TopMenu::class)->current($this->processoAp,  request()->getRequestUri());
                 View::share('title', $this->titulo);
 
-                $saida_head = $this->MakeHeadHtml();
-
-                $saida_body = $this->MakeBody();
+                $saida_geral = $this->MakeBody();
 
             } elseif ((empty($_POST['login'])) || (empty($_POST['senha'])) && $liberado) {
                 $force = !empty($_GET['force']) ? true : false;
@@ -460,10 +399,15 @@ class clsBase extends clsConfig
                 if (!$force) {
                     $this->mostraSupenso();
                 }
+                $saida = '';
 
-                $saida_head = $this->MakeHeadHtml();
+                $saida .= $this->MakeHeadHtml();
                 $controlador->Logar(false);
-                $saida_foot = $this->MakeFootHtml();
+                $saida .= $this->MakeFootHtml();
+
+                $saida_geral[0] = array(
+                    'html' => $saida
+                );
             } else {
                 $controlador->Logar(true);
                 $referer = $_SERVER['HTTP_REFERER'];
@@ -472,18 +416,18 @@ class clsBase extends clsConfig
                 die();
             }
 
-            $view = 'legacy.body';
-
             if (!$this->renderMenu || !$this->renderMenuSuspenso) {
-                $view = 'legacy.blank';
+                $this->view = 'legacy.blank';
             }
 
-            echo view($view, ['body' => $saida_geral])->render();
+            echo view($this->view, ['body' => $saida_geral])->render();
 
         } catch (Exception $e) {
 
             if ($GLOBALS['coreExt']['Config']->modules->error->track) {
-                $tracker = TrackerFactory::getTracker($GLOBALS['coreExt']['Config']->modules->error->tracker_name);
+                $tracker = TrackerFactory::getTracker(
+                    $GLOBALS['coreExt']['Config']->modules->error->tracker_name
+                );
                 $tracker->notify($e);
             }
 

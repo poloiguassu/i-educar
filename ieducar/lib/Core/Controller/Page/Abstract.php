@@ -26,7 +26,7 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
         'url_cancelar' => null,
     ];
 
-    protected $template = '@pages/base';
+    protected $template = 'page.default';
 
     /**
      * Coleção de mensagens de erros retornados pelos validadores de
@@ -225,11 +225,11 @@ abstract class Core_Controller_Page_Abstract extends CoreExt_Controller_Abstract
         return $this;
     }
 
-    public function setTemplate($template)
+    public function setTemplate($template, $folder = 'page')
     {
-        $this->template = '@pages/' . $template;
+        $this->template = "{$folder}.{$template}";
     }
-  
+
     public function getTemplate()
     {
         return $this->template;

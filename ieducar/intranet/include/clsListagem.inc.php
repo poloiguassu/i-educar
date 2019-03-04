@@ -89,7 +89,7 @@ class clsListagem extends clsCampos
     {
         parent::__construct();
 
-        $this->setTemplate('listagem');
+        $this->setTemplate('list');
     }
 
     public function Gerar()
@@ -299,7 +299,7 @@ class clsListagem extends clsCampos
 
             $barra = '<b>Filtros de busca</b>';
 
-            
+
             $retorno .=  "<!-- begin formulario -->
     <form name='{$this->__nome}' id='{$this->__nome}' method='{$this->method}' action=\"\">
     <input name='busca' type='hidden' value='S'>";
@@ -672,15 +672,13 @@ class clsListagem extends clsCampos
         Portabilis_View_Helper_Application::embedJavascriptToFixupFieldsWidth($this);
 
         $formulario = array(
-            'dados' => array(
-                'html' => $retorno,
-                'botoes' => $retorno_botao,
-                'cabecalho' => $this->cabecalho,
-                'linhas' => $this->linhas
-            )
+            'html' => $retorno,
+            'buttons' => $retorno_botao,
+            'table_header' => $this->cabecalho,
+            'table_lines' => $this->linhas
         );
 
-        return $retorno;
+        return $formulario;
     }
 
     /**

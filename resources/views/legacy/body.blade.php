@@ -1,5 +1,9 @@
 @extends('layout.default')
 
+@foreach ($body as $content)
+    @include($content['template'], $content)
+@endforeach
+
 @section('head')
     @parent
 
@@ -60,8 +64,10 @@
             });
         }
     </script>
+
+    @stack('page_scripts')
 @endsection
 
 @section('content')
-    {!! $body !!}
+    @stack('page_content')
 @endsection
