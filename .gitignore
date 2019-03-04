@@ -2,6 +2,7 @@
 /database/data
 /database/migrations/extras
 /public/modules
+/public/uploads/*
 /vendor
 /ieducar-*
 ieducar-*.tar.gz
