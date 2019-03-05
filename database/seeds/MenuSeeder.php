@@ -11,6 +11,7 @@ class MenuSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(MenuVPSSeeder::class);
         $this->call(MenuSelectiveSeeder::class);
     }
 }
