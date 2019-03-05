@@ -9,7 +9,7 @@ class clsIndex extends clsBase
     function Formular()
     {
         $this->SetTitulo("Processo Seletivo");
-        $this->processoAp = 21454;
+        $this->processoAp = 21472;
         $this->addEstilo('localizacaoSistema');
     }
 }

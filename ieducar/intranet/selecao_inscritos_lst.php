@@ -9,8 +9,8 @@ class clsIndex extends clsBase
     public function Formular()
     {
         $this->SetTitulo('Informações Alunos');
-        $this->processoAp = 21454;
         $this->addEstilo('localizacaoSistema');
+        $this->processoAp = 21469;
     }
 }
 

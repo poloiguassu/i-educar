@@ -12,7 +12,7 @@ class clsIndex extends clsBase
     function Formular()
     {
         $this->SetTitulo("Estatísticas Processo Seletivo");
-        $this->processoAp = 21454;
+        $this->processoAp = 21470;
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -114,7 +114,8 @@ class indice extends clsListagem
                     ref_cod_aluno = cod_aluno
                 AND
                     idpes = ref_idpes
-                GROUP BY idade";
+                GROUP BY idade
+                ORDER BY idade";
 
         $idadeInscritos = Portabilis_Utils_Database::fetchPreparedQuery($sql);
 
@@ -142,6 +143,11 @@ class indice extends clsListagem
                     egresso is not null";
 
         $egresso = Portabilis_Utils_Database::selectField($sql);
+
+        $idadeInscritos[] = array(
+            'idade' => 'Egresso',
+            'count' => $egresso
+        );
 
         $estudandoInscritos = array();
 

@@ -22,7 +22,7 @@ class clsIndex extends clsBase
     function Formular()
     {
         $this->SetTitulo($this->_instituicao . ' Processo Seletivo - Cadastro');
-        $this->processoAp = 43;
+        $this->processoAp = 21472;
         $this->addEstilo('localizacaoSistema');
     }
 }
@@ -102,7 +102,7 @@ class indice extends clsCadastro
         include 'include/pmieducar/educar_campo_lista.php';
 
         $this->inputsHelper()->dynamic(
-            'anoLetivo', 
+            'anoLetivo',
             array('disabled' => $bloqueia)
         );
 
@@ -140,7 +140,7 @@ class indice extends clsCadastro
 
         if ($cadastrou) {
             $this->mensagem .= 'Cadastro efetuado com sucesso.';
-            header('Location: selecao_inscritos_lst.php');
+            header('Location: selecao_processo_lst.php');
             die();
         }
 
