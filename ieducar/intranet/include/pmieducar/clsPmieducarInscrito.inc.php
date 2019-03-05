@@ -89,7 +89,7 @@ class clsPmieducarInscrito
 
         $this->_campos_lista = $this->_todos_campos = 'i.cod_inscrito,
             i.ref_cod_selecao_processo, i.ref_cod_aluno, i.estudando_serie, i.egresso,
-            i.estudando_turno, i.guarda_mirim, indicacao, i.copia_rg, i.copia_residencia,
+            i.estudando_turno, i.guarda_mirim, i.copia_rg, i.copia_residencia,
             i.copia_historico, i.copia_renda, i.encaminhamento, i.ref_usuario_exc,
             i.ref_usuario_cad, i.data_cadastro, i.data_exclusao, i.ativo';
     }
