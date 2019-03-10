@@ -17,4 +17,9 @@ class AvaliacaoEtapa
         ];
     }
 
+    public static function getDescriptiveValue($value)
+    {
+        return $self::getDescriptiveValues()[$value];
+    }
+
 }
