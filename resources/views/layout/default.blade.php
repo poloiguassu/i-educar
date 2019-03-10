@@ -129,7 +129,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td height="100%" valign="top" id="corpo">
+                                    <td valign="top" id="corpo">
                                         <table class='tablelistagem' width='100%' border='0' cellpadding='0'
                                             cellspacing='0'>
                                             <tr height='10px'>
