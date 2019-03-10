@@ -15,6 +15,14 @@
         .jexcel-header {
             position: fixed;
         }
+
+        #feedback-messages {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(255, 255, 255, 0);
+            z-index: 1050;
+        }
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -36,7 +44,7 @@
 
 @push('page_content')
 
-    <div id="my" style="width: 100%;"></div>
+    <div id="corpo" style="width: 100%;"></div>
 
     <script>
         data = {!! $data !!};
@@ -54,21 +62,9 @@
         (function($) {
             $(document).ready(function() {
                 $.noConflict();
-                onload = function (instance) {
-                    // Get last header
-                    var lastColumn = $(instance).find('.jexcel_headers td').last();
-                    // Get actual table width
-                    var mainTable = $('.jexcel table');
-                    // New last header column width
-                    var width = parseInt($(lastColumn).width()) + parseInt($(instance).width() - $(mainTable).width());
-                    // Update width
-                    $(lastColumn).width(width);
-                }
-
                 var handler = function(instance, cell, value) {
                     var cellChanged = $(instance).jexcel('getColumnNameFromId', $(cell).prop('id'));
                     var position = $(cell).prop('id').split('-');
-                    console.log('Atualizando ' + value);
                     if(position[0] == 3) {
                         var data = {
                             id: meta[position[1]],
@@ -82,13 +78,16 @@
                             data: data,
 
                             success: function (dataResponse) {
+                                messageUtils.success('Situação etapa 1 alterada com sucesso.');
                             }
                         };
                         postResource(options);
                     } else if (position[0] > 3) {
+                        documento = documentos[position[0]-4];
+
                         var data = {
                             id: meta[position[1]],
-                            documento: documentos[position[0]-4],
+                            documento: documento,
                             situacao: value
                         };
 
@@ -98,6 +97,7 @@
                             data: data,
 
                             success: function (dataResponse) {
+                                messageUtils.success('Situação documento ' + documento + ' alterado com sucesso.');
                             }
                         };
 
@@ -105,7 +105,7 @@
                     }
                 }
 
-                $('#my').jexcel({
+                $('#corpo').jexcel({
                     data: data,
                     editable: true,
                     colHeaders: header,
@@ -133,7 +133,7 @@
                     onchange: handler
                 });
 
-                $('#my').jexcel('updateSettings', {
+                $('#corpo').jexcel('updateSettings', {
                     table: function (instance, cell, col, row, val, id) {
                         // Odd row colours
                         if (col == 3) {
