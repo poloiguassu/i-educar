@@ -15,8 +15,8 @@ class Inscrito extends Migration
     {
         Schema::create(
             'pmieducar.inscrito',
-            function (Blueprint $table) {        
-                $table->increments('cod_inscrito');
+            function (Blueprint $table) {
+                $table->increments('cod_inscrito')->unique();
                 $table->integer('ref_cod_selecao_processo');
                 $table->integer('ref_cod_aluno');
                 $table->integer('estudando_serie')->nullable();
@@ -35,6 +35,10 @@ class Inscrito extends Migration
                 $table->date('data_cadastro')->nullable();
                 $table->date('data_exclusao')->nullable();
                 $table->smallInteger('ativo')->default(1);
+
+                $table->dropPrimary('cod_inscrito');
+
+                $table->index(['ref_cod_selecao_processo', 'ref_cod_aluno']);
 
                 $table->foreign('ref_cod_aluno')
                     ->references('cod_aluno')->on('pmieducar.aluno')
