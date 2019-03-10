@@ -10,6 +10,7 @@ class clsPmieducarInscrito
     public $estudando_turno;
     public $guarda_mirim;
     public $indicacao;
+    public $area_interesse;
     public $copia_rg;
     public $copia_cpf;
     public $copia_residencia;
@@ -494,6 +495,12 @@ class clsPmieducarInscrito
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->area_interesse)) {
+                $campos  .= "{$gruda}area_interesse";
+                $valores .= "{$gruda}'{$this->area_interesse}'";
+                $gruda = ', ';
+            }
+
             if (is_numeric($this->copia_rg)) {
                 $campos  .= "{$gruda}copia_rg";
                 $valores .= "{$gruda}'{$this->copia_rg}'";
@@ -596,6 +603,11 @@ class clsPmieducarInscrito
 
             if (is_numeric($this->indicacao)) {
                 $set .= "$gruda indicacao =  '$this->indicacao' ";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->area_interesse)) {
+                $set .= "$gruda area_interesse =  '$this->area_interesse' ";
                 $gruda = ', ';
             }
 

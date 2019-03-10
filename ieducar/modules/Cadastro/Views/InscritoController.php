@@ -6,6 +6,7 @@ use iEducar\Modules\Inscritos\Model\SerieEstudo;
 use iEducar\Modules\Inscritos\Model\TurnoEstudo;
 use iEducar\Modules\Inscritos\Model\AvaliacaoEtapa;
 use iEducar\Modules\Inscritos\Model\DocumentoSituacao;
+use iEducar\Modules\Inscritos\Model\AreaInteresse;
 
 require_once 'include/clsCadastro.inc.php';
 require_once "include/clsBanco.inc.php";
@@ -608,6 +609,19 @@ class InscritoController extends Portabilis_Controller_Page_EditController
         $this->campoCheck('guarda_mirim', 'Guarda Mirim', $this->guarda_mirim, '', FALSE, FALSE);
 
         $this->campoCheck('encaminhamento', 'Encaminhado pela rede de proteção', $this->encaminhamento, '', FALSE, FALSE);
+
+        $resources = AreaInteresse::getDescriptiveValues();
+        $resources = array_replace([null => 'Selecione a Área de Interesse'], $resources);
+
+        $options = array(
+            'required' => false,
+            'label'    => "Área de Interesse",
+            'inline'   => false,
+            'value'     => $this->area_interesse,
+            'resources' => $resources
+        );
+
+        $this->inputsHelper()->select('area_interesse', $options);
 
         $resources = AvaliacaoEtapa::getDescriptiveValues();
         $resources = array_replace([null => '1ª Etapa'], $resources);

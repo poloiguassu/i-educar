@@ -363,6 +363,7 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#turno').val(dataResponse.estudando_turno);
     $j('#guarda_mirim').prop('checked', dataResponse.guarda_mirim);
     $j('#encaminhamento').prop('checked', dataResponse.encaminhamento);
+    $j('#area_interesse').val(dataResponse.area_interesse);
     $j('#copia_rg').val(dataResponse.copia_rg);
     $j('#copia_cpf').val(dataResponse.copia_cpf);
     $j('#copia_residencia').val(dataResponse.copia_residencia);

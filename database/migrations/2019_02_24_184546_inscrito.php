@@ -24,7 +24,7 @@ class Inscrito extends Migration
                 $table->smallInteger('estudando_turno')->nullable();
                 $table->smallInteger('guarda_mirim')->default(0);
                 $table->integer('escola')->nullable();
-                $table->integer('area_interesse')->default(0);
+                $table->integer('area_interesse')->nullable();
                 $table->smallInteger('copia_rg')->default(0);
                 $table->smallInteger('copia_residencia')->default(0);
                 $table->smallInteger('copia_historico')->default(0);

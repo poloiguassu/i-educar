@@ -302,6 +302,7 @@ class InscritoController extends ApiCoreController
         $inscrito->egresso = $this->getRequest()->egresso;
         $inscrito->guarda_mirim = $this->getRequest()->guarda_mirim;
         $inscrito->encaminhamento = $this->getRequest()->encaminhamento;
+        $inscrito->area_interesse = $this->getRequest()->area_interesse;
         $inscrito->copia_rg = $this->getRequest()->copia_rg;
         $inscrito->copia_cpf = $this->getRequest()->copia_cpf;
         $inscrito->copia_residencia = $this->getRequest()->copia_residencia;
@@ -596,6 +597,7 @@ class InscritoController extends ApiCoreController
                 'egresso',
                 'estudando_turno',
                 'guarda_mirim',
+                'area_interesse',
                 'copia_rg',
                 'copia_cpf',
                 'copia_residencia',
