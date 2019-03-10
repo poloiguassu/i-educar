@@ -82,7 +82,7 @@ class clsPmieducarProcessoSeletivo
 
         $this->_campos_lista = $this->_todos_campos =  "cod_selecao_processo,
             ref_cod_escola, ref_ano, ref_cod_curso, numero_selecionados,
-            total_etapas, finalizado, ref_usuario_exc, ref_usuario_cad,
+            total_etapas, status, ref_usuario_exc, ref_usuario_cad,
             data_cadastro, data_exclusao, ativo";
     }
 

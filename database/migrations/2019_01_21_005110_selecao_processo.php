@@ -15,14 +15,14 @@ class SelecaoProcesso extends Migration
     {
         Schema::create(
             'pmieducar.selecao_processo',
-            function (Blueprint $table) {        
+            function (Blueprint $table) {
                 $table->increments('cod_selecao_processo');
                 $table->integer('ref_cod_escola');
                 $table->integer('ref_ano');
                 $table->integer('ref_cod_curso');
                 $table->smallInteger('numero_selecionados');
                 $table->smallInteger('total_etapas');
-                $table->boolean('finalizado')->default(0);
+                $table->smallInteger('status')->default(0);
                 $table->integer('ref_usuario_exc')->nullable();
                 $table->integer('ref_usuario_cad');
                 $table->date('data_cadastro')->nullable();
