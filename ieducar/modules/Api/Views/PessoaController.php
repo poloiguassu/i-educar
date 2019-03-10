@@ -182,8 +182,10 @@ class PessoaController extends ApiCoreController
                          WHERE idpes = $2) as distrito,
               (SELECT fone_pessoa.fone FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 1) as fone_fixo,
               (SELECT fone_pessoa.fone FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as fone_mov,
+              (SELECT fone_pessoa.fone FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 5) as fone_whatsapp,
               (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 1) as ddd_fone_fixo,
               (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 2) as ddd_fone_mov,
+              (SELECT fone_pessoa.ddd FROM cadastro.fone_pessoa WHERE fone_pessoa.idpes = $2 AND fone_pessoa.tipo = 5) as ddd_fone_whatsapp,
 
              (SELECT idlog FROM cadastro.endereco_pessoa WHERE idpes = $2) as idlog
             from cadastro.fisica
@@ -241,6 +243,8 @@ class PessoaController extends ApiCoreController
             'fone_fixo',
             'fone_mov',
             'ddd_fone_mov',
+            'fone_whatsapp',
+            'ddd_fone_whatsapp',
             'pais_origem_id',
             'tipo_nacionalidade',
             'zona_localizacao_censo',
@@ -279,6 +283,8 @@ class PessoaController extends ApiCoreController
         $details['fone_fixo'] = $this->toUtf8($details['fone_fixo']);
         $details['ddd_fone_mov'] = $this->toUtf8($details['ddd_fone_mov']);
         $details['fone_mov'] = $this->toUtf8($details['fone_mov']);
+        $details['ddd_fone_whatsapp'] = $this->toUtf8($details['ddd_fone_whatsapp']);
+        $details['fone_whatsapp'] = $this->toUtf8($details['fone_whatsapp']);
         $details['falecido'] = $this->toUtf8($details['falecido']);
 
         $details['pais_origem_nome'] = $this->toUtf8($details['pais_origem_nome']);
@@ -549,6 +555,8 @@ class PessoaController extends ApiCoreController
         $fone_fixo = $this->getRequest()->telefone_1;
         $ddd_fone_mov = $this->getRequest()->ddd_telefone_mov;
         $fone_mov = $this->getRequest()->telefone_mov;
+        $ddd_fone_whatsapp = $this->getRequest()->ddd_telefone_whatsapp;
+        $fone_whatsapp = $this->getRequest()->telefone_whatsapp;
         $fisica->falecido = $this->getRequest()->falecido == 'true';
         $fisica->idpais_estrangeiro = $this->getRequest()->pais_origem_id;
         $fisica->nacionalidade = $this->getRequest()->tipo_nacionalidade;
@@ -580,6 +588,12 @@ class PessoaController extends ApiCoreController
             $ddd_mov = $ddd_fone_mov;
             $fone_mov = $fone_mov;
             $telefone = new clsPessoaTelefone($fisica->idpes, 2, $fone_mov, $ddd_mov);
+            $telefone->cadastra();
+        }
+        if ($fone_whatsapp || $fone_whatsapp == '') {
+            $ddd_whatsapp = $ddd_fone_whatsapp;
+            $fone_whatsapp = $fone_whatsapp;
+            $telefone = new clsPessoaTelefone($fisica->idpes, 5, $fone_whatsapp, $ddd_whatsapp);
             $telefone->cadastra();
         }
     }

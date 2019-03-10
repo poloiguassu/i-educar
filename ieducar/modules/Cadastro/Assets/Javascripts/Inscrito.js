@@ -944,6 +944,9 @@ function canShowParentsFields() {
                       <label style="display: inline;" id="telefone_cel_dois">Celular</label>
                       <input placeholder="ddd" type="text " name="ddd_telefone_cel" id="ddd_telefone_cel" size="3" maxlength="3" style="display: inline; padding: 4px 6px;">
                       <input placeholder="n\u00famero" type="text " name="telefone_cel" id="telefone_cel" size="9" maxlength="9" style="display: inline; padding: 4px 6px;">
+                      <label style="display: inline;" id="telefone_whatsapp_dois">Whatsapp</label>
+                      <input placeholder="ddd" type="text " name="ddd_telefone_whatsapp" id="ddd_telefone_whatsapp" size="3" maxlength="3" style="display: inline; padding: 4px 6px;">
+                      <input placeholder="n\u00famero" type="text " name="telefone_whatsapp" id="telefone_whatsapp" size="9" maxlength="9" style="display: inline; padding: 4px 6px;">
                       <label style="display: block;" for="naturalidade_pessoa-aluno"> Naturalidade<span class="campo_obrigatorio">*</span> </label>
                     </fieldset>
                   </td>
@@ -975,15 +978,17 @@ function canShowParentsFields() {
             municipio_id = $j("#naturalidade_aluno_id"),
             telefone_1 = $j("#telefone_fixo"),
             telefone_mov = $j("#telefone_cel"),
+            telefone_whatsapp = $j("#telefone_whatsapp"),
             ddd_telefone_1 = $j("#ddd_telefone_fixo"),
             ddd_telefone_mov = $j("#ddd_telefone_cel"),
+            ddd_telefone_whatsapp = $j("#ddd_telefone_whatsapp"),
             complemento = $j("#complemento"),
             numero = $j("#numero"),
             letra = $j("#letra"),
             apartamento = $j("#apartamento"),
             bloco = $j("#bloco"),
             andar = $j("#andar"),
-            allFields = $j([]).add(name).add(nome_social).add(sexo).add(estadocivil).add(datanasc).add(municipio).add(ddd_telefone_1).add(telefone_1).add(ddd_telefone_mov).add(telefone_mov).add(municipio_id).add(complemento).add(numero).add(letra).add(apartamento).add(bloco).add(andar);
+            allFields = $j([]).add(name).add(nome_social).add(sexo).add(estadocivil).add(datanasc).add(municipio).add(ddd_telefone_1).add(telefone_1).add(ddd_telefone_mov).add(telefone_mov).add(ddd_telefone_whatsapp).add(telefone_whatsapp).add(municipio_id).add(complemento).add(numero).add(letra).add(apartamento).add(bloco).add(andar);
 
         municipio.show().toggleClass('geral text').attr('display', 'block').appendTo('#dialog-form-pessoa-aluno tr td:first-child fieldset');
 
@@ -1046,9 +1051,12 @@ function canShowParentsFields() {
         $j('#ddd_telefone_fixo').css('display', 'inline');
         $j('#telefone_fixo').css('display', 'inline');
         $j('#ddd_telefone_cel').css('display', 'inline');
+        $j('#ddd_telefone_whatsapp').css('display', 'inline');
+        $j('#telefone_whatsapp').css('display', 'inline');
         $j('#telefone_cel').css('display', 'inline');
         $j('#telefone_fixo_dois').css('display', 'block');
         $j('#telefone_cel_dois').css('display', 'block');
+        $j('#telefone_whatsapp_dois').css('display', 'block');
 
 
         $j("#dialog-form-pessoa-aluno").dialog({
@@ -1086,7 +1094,7 @@ function canShowParentsFields() {
                     }
 
                     if (bValid) {
-                        postPessoa($j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), undefined,
+                        postPessoa($j('#pessoa_nome'), name.val(), sexo.val(), estadocivil.val(), datanasc.val(), municipio_id.val(), (editar_pessoa ? $j('#pessoa_id').val() : null), null, ddd_telefone_1.val(), telefone_1.val(), ddd_telefone_mov.val(), telefone_mov.val(), ddd_telefone_whatsapp.val(), telefone_whatsapp.val(), undefined,
                           $j('#tipo_nacionalidade').val(), $j('#pais_origem_id').val(), $j('#zona_localizacao_censo').val(), nome_social.val());
                         $j(this).dialog("close");
                     }
@@ -1149,7 +1157,7 @@ function canShowParentsFields() {
 
 
                     if (bValid) {
-                        postPessoa(nameParent, nameParent.val(), sexoParent.val(), estadocivilParent.val(), datanascParent.val(), null, (editar_pessoa ? $j('#' + pessoaPaiOuMae + '_id').val() : null), pessoaPaiOuMae, null, null, null, null, falecidoParent.is(':checked'));
+                        postPessoa(nameParent, nameParent.val(), sexoParent.val(), estadocivilParent.val(), datanascParent.val(), null, (editar_pessoa ? $j('#' + pessoaPaiOuMae + '_id').val() : null), pessoaPaiOuMae, null, null, null, null, null, null, falecidoParent.is(':checked'));
                         $j(this).dialog("close");
                     }
                 },
@@ -1233,7 +1241,9 @@ function canShowParentsFields() {
             $j('#ddd_telefone_fixo').val(person_details.ddd_fone_fixo);
             $j('#telefone_fixo').val(person_details.fone_fixo);
             $j('#ddd_telefone_cel').val(person_details.ddd_fone_mov);
+            $j('#ddd_telefone_whatsapp').val(person_details.ddd_fone_whatsapp);
             $j('#telefone_cel').val(person_details.fone_mov);
+            $j('#telefone_whatsapp').val(person_details.fone_whatsapp);
             $j('#distrito_id').val(person_details.iddis);
 
             if ($j('#cep_').val()) {
@@ -1531,7 +1541,7 @@ function canShowParentsFields() {
     }); // ready
 
 
-    function postPessoa($pessoaField, nome, sexo, estadocivil, datanasc, naturalidade, pessoa_id, parentType, ddd_telefone_1, telefone_1, ddd_telefone_mov, telefone_mov, falecido,
+    function postPessoa($pessoaField, nome, sexo, estadocivil, datanasc, naturalidade, pessoa_id, parentType, ddd_telefone_1, telefone_1, ddd_telefone_mov, telefone_mov, ddd_telefone_whatsapp, telefone_whatsapp, falecido,
       tipo_nacionalidade, pais_origem_id, cor_raca, zona_localizacao_censo, nome_social) {
         var data = {
             nome: nome,
@@ -1542,6 +1552,8 @@ function canShowParentsFields() {
             telefone_1: telefone_1,
             ddd_telefone_mov: ddd_telefone_mov,
             telefone_mov: telefone_mov,
+            ddd_telefone_whatsapp: ddd_telefone_whatsapp,
+            telefone_whatsapp: telefone_whatsapp,
             naturalidade: naturalidade,
             pessoa_id: pessoa_id,
             falecido: falecido,
@@ -1590,8 +1602,6 @@ function canShowParentsFields() {
                 letra: $j('#letra').val(),
                 bloco: $j('#bloco').val(),
                 andar: $j('#andar').val()
-                // telefone_1         : $j('#telefone_1').val()
-                // telefone_mov       : $j('#telefone_mov').val()
             };
 
             var options = {
