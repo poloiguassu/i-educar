@@ -347,8 +347,6 @@ class InscritoController extends ApiCoreController
 
     protected function createOrUpdateEtapa($id, $etapa, $situacao)
     {
-        $id = null;
-
         if (is_numeric($id) && is_numeric($etapa)
             && is_numeric($situacao)
         ) {
