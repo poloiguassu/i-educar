@@ -1,5 +1,8 @@
 <?php
 
+use iEducar\Modules\Inscritos\Model\SerieEstudo;
+use iEducar\Modules\Inscritos\Model\TurnoEstudo;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsDetalhe.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -364,7 +367,7 @@ class indice extends clsDetalhe
         if ($det_fisica['nome_social']) {
             $this->addDetalhe(['Nome Social', strtoupper($det_fisica['nome_social'])]);
         }
-        
+
         if (idFederal2int($registro['cpf'])) {
             $this->addDetalhe(['CPF', $registro['cpf']]);
         }
@@ -1016,13 +1019,97 @@ class indice extends clsDetalhe
             $this->addDetalhe(['<span id="fprojeto"></span>Projetos', $tabela_projetos]);
         }
 
+        $objInscrito = new clsPmieducarInscrito();
+        $objInscrito->ref_cod_aluno = $this->cod_aluno;
+        $processoSeletivo = $objInscrito->getUltimoProcessoSeletivo();
+
+        if ($processoSeletivo) {
+            $objInscrito->ref_cod_selecao_processo = $processoSeletivo['ref_cod_selecao_processo'];
+            $reg = $objInscrito->detalhe();
+
+            if ($reg) {
+
+                $this->addDetalhe(
+                    [
+                        '<span id=\'fselecao\'></span>Proceso Seletivo',
+                        $processoSeletivo['ref_ano']
+                    ]
+                );
+
+                if ($reg['estudando_serie']) {
+                    $resources = SerieEstudo::getDescriptiveValues();
+
+                    $this->addDetalhe(
+                        ['Série em que estuda', $resources[$reg['estudando_serie']]]
+                    );
+                }
+
+                if ($reg['estudando_turno']) {
+                    $resources = TurnoEstudo::getDescriptiveValues();
+
+                    $this->addDetalhe(
+                        ['Turno em que estuda', $resources[$reg['estudando_turno']]]
+                    );
+                }
+
+                if ($reg['egresso']) {
+                    $this->addDetalhe(
+                        ['Ano de conclusão estudo', $reg['egresso']]
+                    );
+                }
+
+                $this->addDetalhe(
+                    [
+                        'Inscrito na Guarda Mirim',
+                        ($reg['guarda_mirim'] ? 'Sim' : 'Não')
+                    ]
+                );
+                $this->addDetalhe(
+                    [
+                        'Encaminhado pela rede de Proteção',
+                        ($reg['encaminhamento'] ? 'Sim' : 'Não')
+                    ]
+                );
+                $this->addDetalhe(
+                    [
+                        'Entregou cópia RG',
+                        ($reg['copia_rg'] == '2' ? 'Sim' : 'Não')
+                    ]
+                );
+                $this->addDetalhe(
+                    [
+                        'Entregou cópia CPF',
+                        ($reg['copia_cpf'] == '2' ? 'Sim' : 'Não')
+                    ]
+                );
+                $this->addDetalhe(
+                    [
+                        'Entregou cópia Comprovante de residência',
+                        ($reg['copia_residencia'] == '2' ? 'Sim' : 'Não')
+                    ]
+                );
+                $this->addDetalhe(
+                    [
+                        'Entregou cópia histórico / comprovante matrícula',
+                        ($reg['copia_historico'] == '2' ? 'Sim' : 'Não')
+                    ]
+                );
+                $this->addDetalhe(
+                    [
+                        'Entregou comprovante de renda',
+                        ($reg['copia_renda'] == '2' ? 'Sim' : 'Não')
+                    ]
+                );
+            }
+        }
+
         $this->url_cancelar = 'educar_aluno_lst.php';
         $this->largura = '100%';
         $this->addDetalhe("<input type='hidden' id='escola_id' name='aluno_id' value='{$registro['ref_cod_escola']}' />");
         $this->addDetalhe("<input type='hidden' id='aluno_id' name='aluno_id' value='{$registro['cod_aluno']}' />");
         $mostraDependencia = $GLOBALS['coreExt']['Config']->app->matricula->dependencia;
         $this->addDetalhe("<input type='hidden' id='can_show_dependencia' name='can_show_dependencia' value='{$mostraDependencia}' />");
-        
+
         $this->breadcrumb('Aluno', ['/intranet/educar_index.php' => 'Escola']);
         // js
         $scripts = [
