@@ -80,8 +80,6 @@ class indice extends clsListagem
             $par_etapa_2 = $_GET['etapa_2'];
         }
 
-        $objPessoa = new clsPmieducarInscrito();
-
         // Paginador
         $limite = 200;
         $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite-$limite: 0;
