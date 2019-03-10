@@ -64,6 +64,9 @@ class indice extends clsListagem
         $this->acao = "go(\"selecao_processo_cad.php\")";
         $this->nome_acao = "Novo";
 
+        $this->array_botao_url[] = 'selecao_importar_inscritos.php';
+        $this->array_botao[]     = 'Importar inscritos';
+
         $this->largura = "100%";
         $this->addPaginador2(
             "selecao_processo_lst.php",
