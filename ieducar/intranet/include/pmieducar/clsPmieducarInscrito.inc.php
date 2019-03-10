@@ -208,6 +208,8 @@ class clsPmieducarInscrito
         $str_nome = false,
         $numeric_cpf = false,
         $numeric_rg = false,
+        $inicial_min = false,
+        $inicial_max = false,
         $inicio_limite = false,
         $qtd_registros = false,
         $str_orderBy = false
@@ -236,11 +238,13 @@ class clsPmieducarInscrito
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($numeric_etapa_1)) {
-            $where   .= "{$whereAnd} etapa_1 = '$numeric_etapa_1'";
+        if (preg_match('/^[a-zA-Z]/i', $inicial_min)) {
+            $where   .= "{$whereAnd} fcn_upper_nrm(nome) >= '$inicial_min'";
             $whereAnd = ' AND ';
         }
 
+        if (preg_match('/^[a-zA-Z]/i', $inicial_max)) {
+            $where   .= "{$whereAnd} fcn_upper_nrm(nome) < '$inicial_max'";
             $whereAnd = ' AND ';
         }
 

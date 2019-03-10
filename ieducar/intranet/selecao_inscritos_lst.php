@@ -16,6 +16,11 @@ class clsIndex extends clsBase
 
 class indice extends clsListagem
 {
+    var $nm_inscrito = null;
+    var $processo_seletivo_id = null;
+    var $inicial_min = null;
+    var $inicial_max = null;
+
     public function __construct()
     {
         parent::__construct();
@@ -129,14 +134,27 @@ class indice extends clsListagem
             $etapas[$i] = $this->{'etapa_' . $i};
         }
 
-        $par_id_federal = false;
+        $options = [
+            'required' => false,
+            'label' => 'Letra inicial do nome entre',
+            'placeholder' => '',
+            'value' => $this->inicial_min,
+            'max_length' => 1,
+            'size' => 1,
+            'inline' => true
+        ];
 
-        if ($_GET['id_federal']) {
-            $par_id_federal = idFederal2Int($_GET['id_federal']);
-        }
+        $this->inputsHelper()->text('inicial_min', $options);
 
-        $par_etapa_1 = null;
-
+        $options = [
+            'required' => false,
+            'label' => ' e',
+            'placeholder' => '',
+            'value' => $this->inicial_max,
+            'max_length' => 1,
+            'size' => 1,
+            'inline' => true
+        ];
 
         $this->inputsHelper()->text('inicial_max', $options);
 
@@ -167,6 +185,8 @@ class indice extends clsListagem
             $this->nm_inscrito,
             $this->id_federal,
             null,
+            $this->inicial_min,
+            $this->inicial_max,
             $iniciolimit,
             $limite
         );
