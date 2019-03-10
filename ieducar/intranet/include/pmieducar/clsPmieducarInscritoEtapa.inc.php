@@ -6,7 +6,6 @@ require_once 'include/Geral.inc.php';
 class clsPmieducarInscritoEtapa
 {
     public $ref_cod_inscrito;
-    public $ref_cod_selecao_processo;
     public $etapa;
     public $situacao;
 
@@ -18,16 +17,11 @@ class clsPmieducarInscritoEtapa
     */
     public function __construct(
         $ref_cod_inscrito = null,
-        $ref_cod_selecao_processo = null,
         $etapa = null,
         $situacao = null
     ) {
         if (is_numeric($ref_cod_inscrito)) {
             $this->ref_cod_inscrito = $ref_cod_inscrito;
-        }
-
-        if (is_numeric($ref_cod_selecao_processo)) {
-            $this->ref_cod_selecao_processo = $ref_cod_selecao_processo;
         }
 
         if (is_numeric($etapa)) {
@@ -42,12 +36,11 @@ class clsPmieducarInscritoEtapa
         $this->_tabela = $this->_schema . 'inscrito_etapa';
 
         $this->_campos_lista = $this->_todos_campos =  'ref_cod_inscrito,
-            ref_cod_selecao_processo, etapa, situacao';
+            etapa, situacao';
     }
 
     public function lista(
         $ref_cod_inscrito = null,
-        $ref_cod_selecao_processo = null,
         $etapa = null,
         $situacao = null
     ) {
@@ -56,11 +49,6 @@ class clsPmieducarInscritoEtapa
 
         if (is_numeric($ref_cod_inscrito)) {
             $where   .= "{$whereAnd} ref_cod_inscrito = '$ref_cod_inscrito'";
-            $whereAnd = ' AND ';
-        }
-
-        if (is_numeric($ref_cod_selecao_processo)) {
-            $where   .= "{$whereAnd} ref_cod_selecao_processo = '$ref_cod_selecao_processo'";
             $whereAnd = ' AND ';
         }
 
@@ -116,7 +104,7 @@ class clsPmieducarInscritoEtapa
     {
         // verificacoes de campos obrigatorios para insercao
         if (is_numeric($this->ref_cod_inscrito)
-            && is_numeric($this->ref_cod_selecao_processo)
+            && is_numeric($this->etapa)
         ) {
             $db = new clsBanco();
 
@@ -127,12 +115,6 @@ class clsPmieducarInscritoEtapa
             if (is_numeric($this->ref_cod_inscrito)) {
                 $campos  .= "{$gruda}ref_cod_inscrito";
                 $valores .= "{$gruda}'{$this->ref_cod_inscrito}'";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->ref_cod_selecao_processo)) {
-                $campos  .= "{$gruda}ref_cod_selecao_processo";
-                $valores .= "{$gruda}'{$this->ref_cod_selecao_processo}'";
                 $gruda = ', ';
             }
 
@@ -162,23 +144,13 @@ class clsPmieducarInscritoEtapa
     {
         // verificacoes de campos obrigatorios para insercao
         if (is_numeric($this->ref_cod_inscrito)
-            && is_numeric($this->ref_cod_selecao_processo)
+            && is_numeric($this->etapa)
         ) {
             $set = '';
             $gruda = '';
 
             if (is_numeric($this->ref_cod_inscrito)) {
                 $set .= " ref_cod_inscrito =  '$this->ref_cod_inscrito' ";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->ref_cod_selecao_processo)) {
-                $set .= "$gruda ref_cod_selecao_processo =  '$this->ref_cod_selecao_processo' ";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->ref_cod_curso)) {
-                $set .= "$gruda ref_cod_curso =  '$this->ref_cod_curso' ";
                 $gruda = ', ';
             }
 
@@ -195,14 +167,14 @@ class clsPmieducarInscritoEtapa
             if ($set) {
                 $db = new clsBanco();
                 $db->Consulta(
-                    "UPDATE 
+                    "UPDATE
                         {$this->_tabela}
-                    SET 
+                    SET
                         $set
                     WHERE
                         ref_cod_inscrito = {$this->ref_cod_inscrito}
                     AND
-                        ref_cod_selecao_processo = {$this->ref_cod_selecao_processo}"
+                        etapa = {$this->etapa}"
                 );
 
                 return true;
@@ -215,7 +187,6 @@ class clsPmieducarInscritoEtapa
     public function detalhe()
     {
         if (is_numeric($this->ref_cod_inscrito)
-            && is_numeric($this->ref_cod_selecao_processo)
             && is_numeric($this->etapa)
         ) {
             $db = new clsBanco();
@@ -226,8 +197,6 @@ class clsPmieducarInscritoEtapa
                     {$this->_tabela}
                 WHERE
                     ref_cod_inscrito = {$this->ref_cod_inscrito}
-                AND
-                    ref_cod_selecao_processo = {$this->ref_cod_selecao_processo}
                 AND
                     etapa = {$this->etapa}"
             );
@@ -245,7 +214,6 @@ class clsPmieducarInscritoEtapa
     public function excluir()
     {
         if (is_numeric($this->ref_cod_inscrito)
-            && is_numeric($this->ref_cod_selecao_processo)
             && is_numeric($this->etapa)
         ) {
             $db  = new clsBanco();
@@ -255,8 +223,6 @@ class clsPmieducarInscritoEtapa
                     {$this->_tabela}
                 WHERE
                     cod_selecao_processo = {$this->cod_selecao_processo}
-                AND
-                    ref_cod_selecao_processo = {$this->ref_cod_selecao_processo}
                 AND
                     etapa = {$this->etapa}"
             );

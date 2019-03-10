@@ -9,8 +9,10 @@ class clsIndex extends clsBase
     public function Formular()
     {
         $this->SetTitulo('Informações Alunos');
-        $this->addEstilo('localizacaoSistema');
         $this->processoAp = 21469;
+
+        $this->renderMenu = false;
+        $this->renderMenuSuspenso = false;
     }
 }
 
@@ -20,7 +22,7 @@ class indice extends clsListagem
     {
         parent::__construct();
 
-        $this->setTemplate('list_filter');
+        $this->setTemplate('edit_sheet');
     }
 
     public function Gerar()
@@ -30,21 +32,14 @@ class indice extends clsListagem
         $this->addCabecalhos(
             [
                 'Nome',
-                'Data Nascimento',
-                'Idade',
                 'Sexo',
-                'CPF',
-                'RG',
-                'Escola',
-                'Série',
-                'Turno',
-                'Ano Conclusão',
-                'Area de Interesse',
-                'Tipagem Sanguinea',
-                'E-mail',
-                'CEP',
-                'Bairro',
-                'Região'
+                'Idade',
+                'Etapa 1',
+                'Cópia RG',
+                'Cópia CPF',
+                'Comprovante de Residência',
+                'Cópia Histórico',
+                'Comprovante de Renda'
             ]
         );
 
@@ -58,6 +53,16 @@ class indice extends clsListagem
         );
 
         $this->campoCpf('id_federal', 'CPF', $_GET['id_federal'], '50', '', true);
+
+        $script = "javascript:showExpansivelIframe(520, 120, 'educar_escola_rede_ensino_cad_pop.php');";
+        $script = "<img id='img_rede_ensino' style='display:\'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
+
+        $this->inputsHelper()->processoSeletivo(
+            array(
+                'required' => true,
+                'label' => 'Processo Seletivo'
+            )
+        );
 
         $options = [
             'required' => false,
@@ -117,45 +122,21 @@ class indice extends clsListagem
         $objPessoa = new clsPmieducarInscrito();
 
         // Paginador
-        $limite = 200;
+        $limite = 1200;
         $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite-$limite: 0;
 
-        $turno_campo = [
-            '0' => 'Não definido',
-            '1' => 'Manhã',
-            '2' => 'Tarde',
-            '3' => 'Noite'
-        ];
-
-        $avaliacao = [
-            '1' => 'Não Adequado',
-            '2' => 'Parcialmente Adequado',
-            '3' => 'Adequado'
-        ];
-
-        $pessoas = $objPessoa->lista(
-            $par_etapa_1,
-            $par_etapa_2,
-            null,
-            null,
-            $par_nome,
-            $par_id_federal,
-            null,
-            $iniciolimit,
-            $limite
-        );
+        $pessoas = $objPessoa->listaAvaliacao();
 
         if ($pessoas) {
-            foreach ($pessoas as $pessoa) {
-                $cod = $pessoa['cod_inscrito'];
-                $total = $pessoa['total'];
-                $cpf = $pessoa['cpf'] ? int2CPF($pessoa['cpf']) : '';
+            $meta = [];
 
-                if ($pessoa['egresso'] > 0) {
-                    $turno = 'Egresso ' . $pessoa['egresso'];
-                } else {
-                    $turno = $turno_campo[$pessoa['turno']];
-                }
+            foreach ($pessoas as $key => $pessoa) {
+                $objEtapa = new clsPmieducarInscritoEtapa();
+                $inscritoEtapa = $objEtapa->lista($pessoa['cod_inscrito']);
+
+                $pessoa['etapa_1'] = (!empty($inscritoEtapa)) ? $inscritoEtapa[0]['situacao'] : '';
+
+                $total = $pessoa['total'];
 
                 $data_nasc = $pessoa['data_nasc'];
 
@@ -166,45 +147,31 @@ class indice extends clsListagem
 
                 $idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
 
-                $pessoa['grupo_sanguineo'] .= $pessoa['fator_rh'];
+                $pessoa['nome'] = trim($pessoa['nome']);
 
-                $telefone = '';
-                if ($pessoa['telefone_1']) {
-                    $telefone = "({$pessoa['ddd_telefone_1']}) {$pessoa['telefone_1']}";
-                } else {
-                    $telefone = "({$pessoa['ddd_telefone_2']}) {$pessoa['telefone_2']}";
-                }
+                $meta[$key] = $pessoa['cod_inscrito'];
 
-                $bairro = $pessoa['bairro'];
-                $regiao = $pessoa['regiao'];
-
-                $etapa_1 = $avaliacao[$pessoa['etapa_1']];
-                $etapa_2 = $avaliacao[$pessoa['etapa_2']];
-                $etapa_3 = $avaliacao[$pessoa['etapa_3']];
+                $sexo = array(
+                    'F' => 'Feminino',
+                    'M' => 'Masculino'
+                );
 
                 $this->addLinhas(
                     [
-                        "<img src='imagens/noticia.jpg' border=0>
-                        <a href='selecao_inscritos_det.php?cod_pessoa={$cod}'>
-                        {$pessoa['nome']}</a>",
-                        $data_nasc,
+                        $pessoa['nome'],
+                        $sexo[$pessoa['sexo']],
                         $idade,
-                        $pessoa['sexo'],
-                        $cpf,
-                        $pessoa['rg'],
-                        'ESCOLA',
-                        $pessoa['estudando_serie'],
-                        $pessoa['estudando_turno'],
-                        $pessoa['egresso'],
-                        'Area Interesse',
-                        $pessoa['grupo_sanguineo'],
-                        $pessoa['email'],
-                        $pessoa['cep'],
-                        $bairro,
-                        $regiao,
+                        $pessoa['etapa_1'],
+                        $pessoa['copia_rg'],
+                        $pessoa['copia_cpf'],
+                        $pessoa['copia_residencia'],
+                        $pessoa['copia_historico'],
+                        $pessoa['copia_renda']
                     ]
                 );
             }
+
+            View::share('sheet_meta', json_encode($meta, JSON_UNESCAPED_SLASHES));
         }
 
         $this->acao = 'go("selecao_inscritos_cad.php")';
@@ -213,8 +180,8 @@ class indice extends clsListagem
         $this->array_botao_url[] = 'selecao_inscritos_lst.php?fullscreen=1';
         $this->array_botao[]     = 'Tela cheia';
 
-        $this->array_botao_url[] = 'selecao_avaliacao_lst.php';
-        $this->array_botao[]     = 'Avaliar Candidatos';
+        $this->array_botao_url[] = 'selecao_importar_inscritos.php';
+        $this->array_botao[]     = 'Importar inscritos';
 
         $this->largura = '100%';
         $this->addPaginador2(

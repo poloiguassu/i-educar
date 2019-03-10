@@ -94,11 +94,115 @@ class clsPmieducarInscrito
             i.ref_usuario_cad, i.data_cadastro, i.data_exclusao, i.ativo';
     }
 
-    public function lista(
+    public function listaAvaliacao(
         $numeric_etapa_1 = false,
         $numeric_etapa_2 = false,
         $numeric_etapa_3 = false,
         $int_cod_inscrito = false,
+        $inicio_limite = false,
+        $qtd_registros = false,
+        $str_orderBy = false,
+        $int_ref_cod_sistema = false
+    ) {
+        $whereAnd = '';
+        $where    = '';
+        $limite   = '';
+
+        if (is_numeric($int_cod_inscrito)) {
+            $where   .= "{$whereAnd} cod_inscrito = '$int_cod_inscrito'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($numeric_etapa_1)) {
+            $where   .= "{$whereAnd} etapa_1 = '$numeric_etapa_1'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($numeric_etapa_2)) {
+            $where   .= "{$whereAnd} etapa_2 = '$numeric_etapa_2'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($numeric_etapa_3)) {
+            $where   .= "{$whereAnd} etapa_3 = '$numeric_etapa_3'";
+            $whereAnd = ' AND ';
+        }
+
+        $join = "LEFT JOIN
+                    cadastro.pessoa as p
+                ON
+                    p.idpes = a.ref_idpes
+                LEFT JOIN
+                    cadastro.fisica as f
+                ON
+                    f.idpes = a.ref_idpes ";
+
+        $where   .= "i.ref_cod_aluno = a.cod_aluno ";
+        $whereAnd = ' AND ';
+
+        if ($inicio_limite !== false && $qtd_registros) {
+            $limite = "LIMIT $qtd_registros OFFSET $inicio_limite ";
+        }
+
+        $orderBy = ' ORDER BY ';
+
+        if ($str_orderBy) {
+            $orderBy .= $str_orderBy . ' ';
+        } else {
+            $orderBy .= 'fcn_upper_nrm(nome) ';
+        }
+
+        $db  = new clsBanco();
+
+        if ($where) {
+            $where = 'WHERE '. $where;
+        }
+
+        $where = $join . $where;
+
+        $tabela = "{$this->_tabela}, pmieducar.aluno as a";
+        $campos = $this->_campos_lista;
+
+        $this->_campos_lista = " cod_inscrito, fcn_upper_nrm(nome),
+            data_nasc, sexo, copia_rg, copia_cpf, copia_residencia,
+            copia_historico, copia_renda";
+
+        $total = $db->CampoUnico(
+            "SELECT
+                COUNT(0)
+            FROM
+                {$tabela}
+                {$where}"
+        );
+
+        $db->Consulta(
+            "SELECT
+                {$this->_campos_lista}
+            FROM
+                {$tabela}
+                {$where} {$orderBy} {$limite}"
+        );
+
+        $this->_campos_lista = $campos;
+
+        $resultado = [];
+
+        while ($db->ProximoRegistro()) {
+            $tupla = $db->Tupla();
+            $tupla['nome']  = transforma_minusculo($tupla['nome']);
+            $tupla['total'] = $total;
+
+            $resultado[] = $tupla;
+        }
+
+        if (count($resultado) > 0) {
+            return $resultado;
+        }
+
+        return false;
+    }
+
+    public function lista(
         $str_nome = false,
         $numeric_cpf = false,
         $numeric_rg = false,

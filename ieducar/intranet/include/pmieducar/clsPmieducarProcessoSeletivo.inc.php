@@ -91,6 +91,7 @@ class clsPmieducarProcessoSeletivo
     ) {
         $whereAnd = '';
         $where    = '';
+        $limite   = '';
 
         if (is_numeric($numeric_ref_cod_escola)) {
             $where   .= "{$whereAnd} ref_cod_escola = '$numeric_ref_cod_escola'";
@@ -255,9 +256,9 @@ class clsPmieducarProcessoSeletivo
             if ($set) {
                 $db = new clsBanco();
                 $db->Consulta(
-                    "UPDATE 
+                    "UPDATE
                         {$this->_tabela}
-                    SET 
+                    SET
                         $set
                     WHERE
                         cod_selecao_processo = {$this->cod_selecao_processo}"
@@ -288,6 +289,34 @@ class clsPmieducarProcessoSeletivo
             }
         }
 
+        return false;
+    }
+
+    public function getUltimoProcessoSeletivo()
+    {
+        $db = new clsBanco();
+
+        $ano_atual = date('Y');
+
+        $ultimo_ano = $db->Consulta(
+            "SELECT
+                cod_selecao_processo, ref_ano, total_etapas
+            FROM
+                pmieducar.selecao_processo
+            WHERE
+                ref_ano = {$ano_atual}
+            OR
+                status < 2
+            AND
+                ativo = true
+            ORDER BY ref_ano DESC"
+        );
+
+        if ($db->ProximoRegistro()) {
+            $tupla = $db->Tupla();
+
+            return $tupla;
+        }
         return false;
     }
 
