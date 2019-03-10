@@ -1,5 +1,8 @@
 <?php
 
+set_time_limit(0);
+ini_set('memory_limit', '-1');
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsBanco.inc.php';
 require_once 'include/clsCadastro.inc.php';
@@ -22,31 +25,25 @@ class clsIndex extends clsBase
     function Formular()
     {
         $this->SetTitulo($this->_instituicao . ' Processo Seletivo - Cadastro');
-        $this->processoAp = 43;
+        $this->processoAp = 21469;
         $this->addEstilo('localizacaoSistema');
     }
 }
 
 class indice extends clsCadastro
 {
-    var $cod_selecao_processo;
-    var $ref_cod_escola;
-    var $ano_letivo;
-    var $ref_cod_curso;
-    var $numero_selecionados;
-    var $total_etapas;
-    var $status;
-    var $ativo;
-
-    var $caminho_det;
-    var $caminho_lst;
+    var $processo_seletivo_id;
+    var $documento;
 
     function Inicializar()
     {
-        $this->cod_selecao_processo = @$_GET['cod_selecao_processo'];
-        $this->retorno       = 'Novo';
+        if (@$_GET['processo_seletivo_id']) {
+            $this->processo_seletivo_id = $_GET['processo_seletivo_id'];
+        }
 
-        $this->nome_url_cancelar = 'Cancelar';
+        $this->retorno = 'Novo';
+
+        $this->nome_url_cancelar = 'voltar';
 
         $nomeMenu = $this->retorno == "Editar" ? $this->retorno : "Cadastrar";
         $localizacao = new LocalizacaoSistema();
@@ -65,16 +62,30 @@ class indice extends clsCadastro
 
     function Gerar()
     {
-        $this->url_cancelar = $this->retorno == 'Editar' ?
-            'selecao_processo_det.php?cod_selecao_processo=' . $this->cod_selecao_processo : 'selecao_processo_lst.php';
+        $this->url_cancelar = 'selecao_inscritos_lst.php?processo_seletivo_id=' . $this->processo_seletivo_id;
+
+        $this->nome_url_sucesso = "Importar";
+
+        $this->inputsHelper()->processoSeletivo(
+            array(
+                'required' => true,
+                'value'     => $this->processo_seletivo_id,
+                'label' => 'Processo Seletivo'
+            )
+        );
 
         $this->campoArquivo(
-            'documento', 'Arquivo', $this->documento, 40, 
+            'documento', 'Arquivo', $this->documento, 40,
             Portabilis_String_Utils::toLatin1(
                 "<br/> <span id='span-documento' style='font-style: italic; font-size= 10px;''> São aceitos arquivos nos formatos jpg, png, pdf e gif. Tamanho máximo: 250KB</span>",
                 array('escape' => false)
             )
         );
+    }
+
+    function Editar()
+    {
+        $this->Novo();
     }
 
     function Novo()
@@ -83,98 +94,74 @@ class indice extends clsCadastro
             $this->pessoa_logada = $_SESSION['id_pessoa'];
         @session_write_close();
 
-
-        print_r($this->documento);
-        $csv = array_map("str_getcsv", file($this->documento['tmp_name'], FILE_SKIP_EMPTY_LINES));
-        $keys = array_shift($csv);
-
-        $db = new clsBanco();
-        $cadastrados = 0;
-
-        foreach ($csv as $i => $row) {
-            $csv[$i] = array_combine($keys, $row);
-            if (!empty($csv[$i])) {
-                $cpf = idFederal2Int($csv[$i]['cpf']);
-
-                if(is_numeric($cpf)) {
-                    $sql = 'SELECT idpes FROM cadastro.fisica WHERE cpf = $1 LIMIT 1';
-                    $pessoaId = Portabilis_Utils_Database::selectField($sql, $cpf);
-                } else {
-                    $rg = idFederal2Int($csv[$i]['rg']);
-                    $sql = 'SELECT idpes FROM cadastro.documento WHERE rg = $1 LIMIT 1';
-                    $pessoaId = Portabilis_Utils_Database::selectField($sql, $rg);
-                }
-
-                $pessoaId = $this->createOrUpdatePessoa($csv[$i], $pessoaId);
-
-                if (is_numeric($pessoaId)) {
-                    $this->createOrUpdatePessoaFisica($pessoaId, $csv[$i]);
-                    $this->createOrUpdateDocumentos($pessoaId, $csv[$i]);
-                    $this->createOrUpdatePessoaEndereco(
-                        $pessoaId,
-                        $csv[$i]['cpf'],
-                        $csv[$i]['numero']
-                    );
-
-                    $sql = 'SELECT cod_aluno FROM pmieducar.aluno WHERE ref_idpes = $1 LIMIT 1';
-
-                    $alunoId = Portabilis_Utils_Database::selectField($sql, $pessoaId);
-
-                    $alunoId = $this->createOrUpdateAluno($pessoaId, $alunoId);
-
-                    echo "Cadastrou pessoa {$pessoaId}";
-
-                    if (is_numeric($alunoId)) {
-                        $sql = 'SELECT cod_inscrito FROM pmieducar.inscrito WHERE ref_cod_aluno = $1 LIMIT 1';
-
-                        $inscritoId = Portabilis_Utils_Database::selectField($sql, $alunoId);
-    
-                        $inscritoId = $this->createOrUpdateInscrito($csv[$i], $alunoId, $inscritoId);
-
-                        echo "Cadastrou inscrito {$inscritoId}";
-                        $cadastrados++;
-                    }
-                }
-
-
-
-                /*if ($csv[$i]['cep']) {
-                    echo "checando CEP {$csv[$i]['cep']} - {$csv[$i]['bairro']} - {$csv[$i]['endereco']}";
-                    $objCepLogBairro = new clsCepLogradouroBairro();
-                    $listaCepLogBairro = $objCepLogBairro->lista(false, $csv[$i]['cep']);
-                    //print("<pre>".print_r($listaCepLogBairro,true)."</pre>");
-                    if(!$listaCepLogBairro[0][0]) {
-                        echo "não possui idlog {$csv[$i]['cep']}";
-                    }
-                    //$teste = $db->CampoUnico("SELECT cep FROM urbano.cep_logradouro_bairro  WHERE cep = {$csv[$i]['cep']}");
-                    if (is_null($listaCepLogBairro)) {
-                        echo "{$csv[$i]['cep']} não cadastrado";
-                    }
-                } else {
-                    echo "CEP inexistente para o usuário {$csv[$i]['nome']}";
-                }
-                if ($csv[$i]['bairro']) {
-                    $teste = $db->CampoUnico("SELECT idbai FROM public.bairro  WHERE nome = '{$csv[$i]['bairro']}'");
-                    if (is_null($teste)) {
-                        echo "{$csv[$i]['bairro']} não cadastrado";
-                    }
-                } else {
-                    echo "CEP inexistente para o usuário {$csv[$i]['nome']}";
-                }*/
-            }
-        }
-
-        //print("<pre>".print_r($csv,true)."</pre>");
-
-        if ($cadastrados > 0) {
-            $this->mensagem .= "{$cadastrados} pré inscritos Cadastrados";
-            //header('Location: selecao_inscritos_lst.php');
-            //die();
+        if (!$this->documento['tmp_name']) {
+            $this->mensagem = "Selecione um arquivo para a importação.";
             return false;
         }
 
-        $this->mensagem = Portabilis_String_utils::toLatin1('Cadastro não realizado.');
+        $cadastrados = 0;
 
+        if (is_numeric($this->processo_seletivo_id)) {
+
+            $csv = array_map("str_getcsv", file($this->documento['tmp_name'], FILE_SKIP_EMPTY_LINES));
+            $keys = array_shift($csv);
+
+            $db = new clsBanco();
+
+            foreach ($csv as $i => $row) {
+                $csv[$i] = array_combine($keys, $row);
+                if (!empty($csv[$i])) {
+                    $cpf = idFederal2Int($csv[$i]['cpf']);
+
+                    if (is_numeric($cpf)) {
+                        $sql = 'SELECT idpes FROM cadastro.fisica WHERE cpf = $1 LIMIT 1';
+                        $pessoaId = Portabilis_Utils_Database::selectField($sql, $cpf);
+                    } else {
+                        $rg = idFederal2Int($csv[$i]['rg']);
+                        $sql = 'SELECT idpes FROM cadastro.documento WHERE rg = $1 LIMIT 1';
+                        $pessoaId = Portabilis_Utils_Database::selectField($sql, $rg);
+                    }
+
+                    $pessoaId = $this->createOrUpdatePessoa($csv[$i], $pessoaId);
+
+                    if (is_numeric($pessoaId)) {
+                        $this->createOrUpdatePessoaFisica($pessoaId, $csv[$i]);
+                        $this->createOrUpdateDocumentos($pessoaId, $csv[$i]);
+                        $this->createOrUpdatePessoaEndereco(
+                            $pessoaId,
+                            $csv[$i]['cpf'],
+                            $csv[$i]['numero']
+                        );
+
+                        $sql = 'SELECT cod_aluno FROM pmieducar.aluno WHERE ref_idpes = $1 LIMIT 1';
+
+                        $alunoId = Portabilis_Utils_Database::selectField($sql, $pessoaId);
+
+                        $alunoId = $this->createOrUpdateAluno($pessoaId, $alunoId);
+
+                        if (is_numeric($alunoId)) {
+                            $sql = 'SELECT cod_inscrito FROM pmieducar.inscrito WHERE ref_cod_aluno = $1 LIMIT 1';
+
+                            $inscritoId = Portabilis_Utils_Database::selectField($sql, $alunoId);
+
+                            $inscritoId = $this->createOrUpdateInscrito($csv[$i], $alunoId, $inscritoId);
+
+                            $cadastrados++;
+                        }
+                    }
+                }
+            }
+        } else {
+            $this->mensagem = "Selecione um processo seletivo para importar.";
+            return false;
+        }
+
+        if ($cadastrados > 0) {
+            $this->mensagem = "{$cadastrados} pré inscritos Cadastrados";
+            return false;
+        }
+
+        $this->mensagem = "Cadastro não realizado.";
         return false;
     }
 
@@ -182,7 +169,6 @@ class indice extends clsCadastro
     {
         if (!empty($dados)) {
 
-            echo "entrou aqui";
             $pessoa = new clsPessoa_();
             $pessoa->idpes = $pessoaId;
             $pessoa->nome = $dados['nome'];
@@ -190,7 +176,7 @@ class indice extends clsCadastro
 
             $sql = "SELECT 1 FROM cadastro.pessoa WHERE idpes = $1 LIMIT 1";
 
-            if (!$pessoaId 
+            if (!$pessoaId
                 || Portabilis_Utils_Database::selectField($sql, $pessoaId) != 1
             ) {
                 $pessoa->tipo = 'F';
@@ -247,7 +233,7 @@ class indice extends clsCadastro
         $objCepLogBairro = new clsCepLogradouroBairro();
         $listaCepLogBairro = $objCepLogBairro->lista(false, $cep);
 
-        if (!empty($listaCepLogBairro) 
+        if (!empty($listaCepLogBairro)
             && is_numeric($listaCepLogBairro[0][0])
             && is_numeric($listaCepLogBairro[0][2])
         ) {
@@ -298,7 +284,7 @@ class indice extends clsCadastro
     {
         $inscrito = new clsPmieducarInscrito();
         $inscrito->cod_inscrito = $inscritoId;
-        $inscrito->ref_cod_selecao_processo = @$_GET['cod_selecao_processo'];
+        $inscrito->ref_cod_selecao_processo = $this->processo_seletivo_id;
 
         if ($dados['estudando'] === 'A1') {
             $inscrito->estudando_serie = $this->getSerieIdFromCSV($dados['serie']);
