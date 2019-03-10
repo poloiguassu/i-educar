@@ -23,6 +23,11 @@ class indice extends clsListagem
         parent::__construct();
 
         $this->setTemplate('edit_sheet');
+
+        foreach ($_GET as $nm => $var)
+        {
+            $this->$nm = $var;
+        }
     }
 
     public function Gerar()
@@ -43,89 +48,35 @@ class indice extends clsListagem
             ]
         );
 
-        $this->campoTexto(
-            'nm_inscrito',
-            'Nome',
-            $_GET['nm_inscrito'],
-            '50',
-            '255',
-            true
+        $registroSelecao = array();
+        $etapas = array();
+
+        if (is_null($this->processo_seletivo_id)) {
+            $objSelecao = new clsPmieducarProcessoSeletivo();
+            $registroSelecao = $objSelecao->getUltimoProcessoSeletivo();
+            $this->processo_seletivo_id = $registroSelecao['cod_selecao_processo'];
+        }
+
+        $objSelecao = new clsPmieducarProcessoSeletivo(
+            $this->processo_seletivo_id
         );
 
-        $this->campoCpf('id_federal', 'CPF', $_GET['id_federal'], '50', '', true);
+        $registroSelecao = $objSelecao->detalhe();
 
-        $script = "javascript:showExpansivelIframe(520, 120, 'educar_escola_rede_ensino_cad_pop.php');";
-        $script = "<img id='img_rede_ensino' style='display:\'\'' src='imagens/banco_imagens/escreve.gif' style='cursor:hand; cursor:pointer;' border='0' onclick=\"{$script}\">";
-
-        $this->inputsHelper()->processoSeletivo(
-            array(
-                'required' => true,
-                'label' => 'Processo Seletivo'
-            )
-        );
-
-        $options = [
-            'required' => false,
-            'label'    => 'Avaliação Projeto Etapa 1',
-            'value'     => $_GET['etapa_1'],
-            'resources' => [
-                '' => '1ª Etapa',
-                '1' => 'Não Adequado',
-                '2' => 'Parcialmente Adequado',
-                '3' => 'Adequado'
-            ],
-        ];
-
-        $this->inputsHelper()->select('etapa_1', $options);
-
-        $options = [
-            'required' => false,
-            'label'    => 'Avaliação Projeto Etapa 2',
-            'value'     => $_GET['etapa_2'],
-            'resources' => [
-                '' => '2ª Etapa',
-                '-1' => 'Não Avaliado',
-                '1' => 'Não Adequado',
-                '2' => 'Parcialmente Adequado',
-                '3' => 'Adequado'
-            ],
-        ];
-
-        $this->inputsHelper()->select('etapa_2', $options);
-
-        $where = '';
-
-        $par_nome = false;
-
-        if ($_GET['nm_inscrito']) {
-            $par_nome = $_GET['nm_inscrito'];
+        for ($i = 1; $i <= $registroSelecao['total_etapas']; $i++) {
+            $+etapas[$i] = $this->{'etapa_' . $i};
         }
-
-        $par_id_federal = false;
-
-        if ($_GET['id_federal']) {
-            $par_id_federal = idFederal2Int($_GET['id_federal']);
-        }
-
-        $par_etapa_1 = null;
-
-        if ($_GET['etapa_1']) {
-            $par_etapa_1 = $_GET['etapa_1'];
-        }
-
-        if ($_GET['etapa_2']) {
-            $par_etapa_2 = $_GET['etapa_2'];
-        }
-
-        $dba = $db = new clsBanco();
 
         $objPessoa = new clsPmieducarInscrito();
-
-        // Paginador
-        $limite = 1200;
-        $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite-$limite: 0;
-
-        $pessoas = $objPessoa->listaAvaliacao();
+        $pessoas = $objPessoa->listaAvaliacao(
+            $etapas,
+            $this->ref_cod_selecao_processo,
+            $this->nm_inscrito,
+            $this->id_federal,
+            null,
+            $this->inicial_min,
+            $this->inicial_max
+        );
 
         if ($pessoas) {
             $meta = [];

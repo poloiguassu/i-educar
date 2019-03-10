@@ -97,10 +97,13 @@ class clsPmieducarInscrito
     }
 
     public function listaAvaliacao(
-        $numeric_etapa_1 = false,
-        $numeric_etapa_2 = false,
-        $numeric_etapa_3 = false,
-        $int_cod_inscrito = false,
+        $array_etapas = array(),
+        $int_ref_cod_selecao_processo = false,
+        $str_nome = false,
+        $numeric_cpf = false,
+        $numeric_rg = false,
+        $inicial_min = false,
+        $inicial_max = false,
         $inicio_limite = false,
         $qtd_registros = false,
         $str_orderBy = false,
@@ -110,24 +113,43 @@ class clsPmieducarInscrito
         $where    = '';
         $limite   = '';
 
-        if (is_numeric($int_cod_inscrito)) {
-            $where   .= "{$whereAnd} cod_inscrito = '$int_cod_inscrito'";
+        if (is_string($str_nome) && $str_nome != '') {
+            $str_nome = addslashes($str_nome);
+            $str_nome = str_replace(' ', '%', $str_nome);
+
+            $where   .= "{$whereAnd} fcn_upper_nrm(nome) ILIKE E'%{$str_nome}%' ";
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($numeric_etapa_1)) {
-            $where   .= "{$whereAnd} etapa_1 = '$numeric_etapa_1'";
+        if (is_string($numeric_cpf)) {
+            $numeric_cpf = addslashes($numeric_cpf);
+
+            $where   .= "{$whereAnd} cpf::text ILIKE E'%{$numeric_cpf}%' ";
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($numeric_etapa_2)) {
-            $where   .= "{$whereAnd} etapa_2 = '$numeric_etapa_2'";
+        if (is_numeric($int_ref_cod_selecao_processo)) {
+            $where   .= "{$whereAnd} ref_cod_selecao_processo = '$int_ref_cod_selecao_processo'";
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($numeric_etapa_3)) {
-            $where   .= "{$whereAnd} etapa_3 = '$numeric_etapa_3'";
+        if (preg_match('/^[a-zA-Z]/i', $inicial_min)) {
+            $where   .= "{$whereAnd} fcn_upper_nrm(p.nome) >= '$inicial_min'";
             $whereAnd = ' AND ';
+        }
+
+        if (preg_match('/^[a-zA-Z]/i', $inicial_max)) {
+            $where   .= "{$whereAnd} fcn_upper_nrm(p.nome) < '$inicial_max'";
+            $whereAnd = ' AND ';
+        }
+
+        if (!empty($array_etapas)) {
+            foreach ($array_etapas as $etapa => $situacao) {
+                if (is_numeric($situacao)) {
+                    $where   .= "{$whereAnd} et.etapa = '{$etapa}' AND et.situacao = '{$situacao}'";
+                    $whereAnd = ' AND ';
+                }
+            }
         }
 
         $join = "LEFT JOIN
@@ -137,9 +159,14 @@ class clsPmieducarInscrito
                 LEFT JOIN
                     cadastro.fisica as f
                 ON
-                    f.idpes = a.ref_idpes ";
+                    f.idpes = a.ref_idpes,
+                {$this->_tabela}
+                LEFT JOIN
+                    pmieducar.inscrito_etapa as et
+                ON
+                    et.ref_cod_inscrito = i.cod_inscrito ";
 
-        $where   .= "i.ref_cod_aluno = a.cod_aluno ";
+        $where   .= "{$whereAnd} i.ref_cod_aluno = a.cod_aluno ";
         $whereAnd = ' AND ';
 
         if ($inicio_limite !== false && $qtd_registros) {
@@ -162,7 +189,7 @@ class clsPmieducarInscrito
 
         $where = $join . $where;
 
-        $tabela = "{$this->_tabela}, pmieducar.aluno as a";
+        $tabela = "pmieducar.aluno as a";
         $campos = $this->_campos_lista;
 
         $this->_campos_lista = " cod_inscrito, fcn_upper_nrm(nome),

@@ -27,6 +27,7 @@ class clsIndex extends clsBase
 
 class indice extends clsListagem
 {
+    var $etapas = [];
     var $nm_inscrito = null;
     var $processo_seletivo_id = null;
     var $inicial_min = null;
@@ -68,18 +69,19 @@ class indice extends clsListagem
             ]
         );
 
-        $ultimaSelecao = array();
+        $registroSelecao = array();
 
         if (is_null($this->processo_seletivo_id)) {
             $objSelecao = new clsPmieducarProcessoSeletivo();
-            $ultimaSelecao = $objSelecao->getUltimoProcessoSeletivo();
-            $this->processo_seletivo_id = $ultimaSelecao['cod_selecao_processo'];
-        } else {
-            $objSelecao = new clsPmieducarProcessoSeletivo(
-                $this->processo_seletivo_id
-            );
-            $ultimaSelecao = $objSelecao->detalhe();
+            $registroSelecao = $objSelecao->getUltimoProcessoSeletivo();
+            $this->processo_seletivo_id = $registroSelecao['cod_selecao_processo'];
         }
+
+        $objSelecao = new clsPmieducarProcessoSeletivo(
+            $this->processo_seletivo_id
+        );
+
+        $registroSelecao = $objSelecao->detalhe();
 
         $this->inputsHelper()->processoSeletivo(
             array(
@@ -100,9 +102,7 @@ class indice extends clsListagem
 
         $this->campoCpf('id_federal', 'CPF', $_GET['id_federal'], '50', '', true);
 
-        $etapas = array();
-
-        for ($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= $registroSelecao['total_etapas']; $i++) {
             $resources = AvaliacaoEtapa::getDescriptiveValues();
             $resources = array_replace([null => $i . 'ª Etapa'], $resources);
 
@@ -115,7 +115,7 @@ class indice extends clsListagem
 
             $this->inputsHelper()->select('etapa_' . $i, $options);
 
-            $etapas[$i] = $this->{'etapa_' . $i};
+            $this->etapas[$i] = $this->{'etapa_' . $i};
         }
 
         $options = [
@@ -161,8 +161,8 @@ class indice extends clsListagem
         $this->id_federal = idFederal2int($this->id_federal);
 
         $pessoas = $objPessoa->lista(
-            $etapas,
-            $this->ref_cod_selecao_processo,
+            $this->etapas,
+            $this->processo_seletivo_id,
             $this->nm_inscrito,
             $this->id_federal,
             null,
@@ -240,11 +240,27 @@ class indice extends clsListagem
         );
         $this->nome_acao = 'Novo';
 
-        $this->array_botao_url[] = 'selecao_inscritos_lst.php?fullscreen=1';
-        $this->array_botao[]     = 'Tela cheia';
+        $etapaQuery = '';
 
-        $this->array_botao_url[] = 'selecao_avaliacao_lst.php';
-        $this->array_botao[]     = 'Avaliar Candidatos';
+        foreach ($this->etapas as $key => $etapa) {
+            if (is_numeric($etapa) && is_numeric($key)) {
+                $etapaQuery .= "&etapa_{$key}=$etapa";
+            }
+        }
+
+        $this->array_botao = ['Tela cheia', 'Avaliar Candidatos'];
+        $this->array_botao_url = array(
+            "selecao_inscritos_lst.php?fullscreen=1",
+            sprintf(
+                "selecao_avaliacao_lst.php?busca=S&processo_seletivo_id=%s&nm_inscrito=%s&id_federal=%s&inicial_min=%s&inicial_max=%s%s",
+                $this->processo_seletivo_id,
+                $this->nm_inscrito,
+                $this->id_federal,
+                $this->inicial_min,
+                $this->inicial_max,
+                $etapaQuery
+            )
+        );
 
         $this->largura = '100%';
         $this->addPaginador2(
