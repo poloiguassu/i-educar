@@ -1,12 +1,13 @@
 <?php
 
+use iEducar\Modules\Inscritos\Model\SerieEstudo;
+use iEducar\Modules\Inscritos\Model\TurnoEstudo;
+
 require_once('include/clsBase.inc.php');
 require_once('include/clsListagem.inc.php');
 require_once('include/clsBanco.inc.php');
 require_once('include/pmieducar/geral.inc.php');
 require_once('include/localizacaoSistema.php');
-require_once('lib/App/Model/SerieEstudo.php');
-require_once('lib/App/Model/TurnoEstudo.php');
 require_once('lib/App/Model/PrioridadeVPSHTML.php');
 require_once('lib/App/Model/VivenciaProfissionalSituacao.php');
 
@@ -195,11 +196,15 @@ class indice extends clsListagem
                     if ($registroSelecao['egresso']) {
                         $estudando = 'Egresso';
                     } else {
-                        $serieEstudo = App_Model_SerieEstudo::getInstance()->getValue($registroSelecao['serie']);
+                        $serieEstudo = AvaliacaoEtapa::getDescriptiveValue(
+                            $registroSelecao['serie']
+                        );
                         $estudando = "Sim ({$serieEstudo})";
 
                         if ($registroSelecao['turno']) {
-                            $turno = App_Model_TurnoEstudo::getInstance()->getValue($registroSelecao['turno']);
+                            $turno = SerieTurno::getDescriptiveValue(
+                                $registroSelecao['turno']
+                            );
                         }
                     }
                 }
