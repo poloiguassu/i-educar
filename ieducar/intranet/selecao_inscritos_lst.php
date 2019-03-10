@@ -233,7 +233,10 @@ class indice extends clsListagem
             }
         }
 
-        $this->acao = 'go("selecao_inscritos_cad.php")';
+        $this->acao = sprintf(
+            'go("/module/Cadastro/Inscrito?cod_selecao_processo=%s")',
+            $this->processo_seletivo_id
+        );
         $this->nome_acao = 'Novo';
 
         $this->array_botao_url[] = 'selecao_inscritos_lst.php?fullscreen=1';
