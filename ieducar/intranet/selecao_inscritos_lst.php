@@ -1,5 +1,12 @@
 <?php
 
+use iEducar\Modules\Inscritos\Model\AvaliacaoEtapa;
+use iEducar\Modules\Inscritos\Model\AreaInteresse;
+use iEducar\Modules\Inscritos\Model\SerieEstudo;
+use iEducar\Modules\Inscritos\Model\TurnoEstudo;
+
+
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -35,7 +42,7 @@ class indice extends clsListagem
 
     public function Gerar()
     {
-        $this->titulo = 'Informações Alunos';
+        $this->titulo = 'Informações dos Candidatos';
 
         $this->addCabecalhos(
             [
@@ -90,32 +97,6 @@ class indice extends clsListagem
 
         $this->campoCpf('id_federal', 'CPF', $_GET['id_federal'], '50', '', true);
 
-        $options = [
-            'required' => false,
-            'label'    => 'Avaliação Projeto Etapa 1',
-            'value'     => $_GET['etapa_1'],
-            'resources' => [
-                '' => '1ª Etapa',
-                '1' => 'Não Adequado',
-                '2' => 'Parcialmente Adequado',
-                '3' => 'Adequado'
-            ],
-        ];
-
-        $this->inputsHelper()->select('etapa_1', $options);
-
-        $options = [
-            'required' => false,
-            'label'    => 'Avaliação Projeto Etapa 2',
-            'value'     => $_GET['etapa_2'],
-            'resources' => [
-                '' => '2ª Etapa',
-                '-1' => 'Não Avaliado',
-                '1' => 'Não Adequado',
-                '2' => 'Parcialmente Adequado',
-                '3' => 'Adequado'
-            ],
-        ];
         $etapas = array();
 
         for ($i = 1; $i <= 2; $i++) {
@@ -166,18 +147,15 @@ class indice extends clsListagem
         $limite = 2000;
         $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite-$limite: 0;
 
-        $turno_campo = [
-            '0' => 'Não definido',
-            '1' => 'Manhã',
-            '2' => 'Tarde',
-            '3' => 'Noite'
-        ];
+        $turno_campo = TurnoEstudo::getDescriptiveValues();
 
-        $avaliacao = [
-            '1' => 'Não Adequado',
-            '2' => 'Parcialmente Adequado',
-            '3' => 'Adequado'
-        ];
+        $serie_campo = SerieEstudo::getDescriptiveValues();
+
+        $avaliacao_campo = AvaliacaoEtapa::getDescriptiveValues();
+
+        $area_interesse = AreaInteresse::getDescriptiveValues();
+
+        $this->id_federal = idFederal2int($this->id_federal);
 
         $pessoas = $objPessoa->lista(
             $etapas,
@@ -198,10 +176,12 @@ class indice extends clsListagem
                 $cpf = $pessoa['cpf'] ? int2CPF($pessoa['cpf']) : '';
 
                 if ($pessoa['egresso'] > 0) {
-                    $turno = 'Egresso ' . $pessoa['egresso'];
+                    $serie = 'Egresso ' . $pessoa['egresso'];
                 } else {
-                    $turno = $turno_campo[$pessoa['turno']];
+                    $serie = $serie_campo[$pessoa['estudando_serie']];
                 }
+
+                $turno = $turno_campo[$pessoa['estudando_turno']];
 
                 $data_nasc = $pessoa['data_nasc'];
 
@@ -230,19 +210,17 @@ class indice extends clsListagem
 
                 $this->addLinhas(
                     [
-                        "<img src='imagens/noticia.jpg' border=0>
-                        <a href='selecao_inscritos_det.php?cod_pessoa={$cod}'>
+                        "<a href='selecao_inscritos_det.php?cod_inscrito={$cod}'>
                         {$pessoa['nome']}</a>",
-                        $data_nasc,
+                        Portabilis_Date_Utils::pgSQLToBr($data_nasc),
                         $idade,
                         $pessoa['sexo'],
                         $cpf,
                         $pessoa['rg'],
                         'ESCOLA',
-                        $pessoa['estudando_serie'],
-                        $pessoa['estudando_turno'],
-                        $pessoa['egresso'],
-                        'Area Interesse',
+                        $serie,
+                        $turno,
+                        $area_interesse[$pessoa['area_interesse']],
                         $pessoa['grupo_sanguineo'],
                         $pessoa['email'],
                         $pessoa['cep'],
