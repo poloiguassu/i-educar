@@ -21,6 +21,11 @@ class indice extends clsListagem
         parent::__construct();
 
         $this->setTemplate('list_filter');
+
+        foreach ($_GET as $nm => $var)
+        {
+            $this->$nm = $var;
+        }
     }
 
     public function Gerar()
@@ -48,10 +53,31 @@ class indice extends clsListagem
             ]
         );
 
+        $ultimaSelecao = array();
+
+        if (is_null($this->processo_seletivo_id)) {
+            $objSelecao = new clsPmieducarProcessoSeletivo();
+            $ultimaSelecao = $objSelecao->getUltimoProcessoSeletivo();
+            $this->processo_seletivo_id = $ultimaSelecao['cod_selecao_processo'];
+        } else {
+            $objSelecao = new clsPmieducarProcessoSeletivo(
+                $this->processo_seletivo_id
+            );
+            $ultimaSelecao = $objSelecao->detalhe();
+        }
+
+        $this->inputsHelper()->processoSeletivo(
+            array(
+                'required' => true,
+                'label' => 'Processo Seletivo',
+                'value' => $this->processo_seletivo_id
+            )
+        );
+
         $this->campoTexto(
             'nm_inscrito',
             'Nome',
-            $_GET['nm_inscrito'],
+            $this->nm_inscrito,
             '50',
             '255',
             true
@@ -85,15 +111,22 @@ class indice extends clsListagem
                 '3' => 'Adequado'
             ],
         ];
+        $etapas = array();
 
-        $this->inputsHelper()->select('etapa_2', $options);
+        for ($i = 1; $i <= 2; $i++) {
+            $resources = AvaliacaoEtapa::getDescriptiveValues();
+            $resources = array_replace([null => $i . 'ª Etapa'], $resources);
 
-        $where = '';
+            $options = [
+                'required' => false,
+                'label'    => 'Avaliação Projeto Etapa ' . $i,
+                'value'     => $this->{'etapa_' . $i},
+                'resources' => $resources,
+            ];
 
-        $par_nome = false;
+            $this->inputsHelper()->select('etapa_' . $i, $options);
 
-        if ($_GET['nm_inscrito']) {
-            $par_nome = $_GET['nm_inscrito'];
+            $etapas[$i] = $this->{'etapa_' . $i};
         }
 
         $par_id_federal = false;
@@ -104,20 +137,15 @@ class indice extends clsListagem
 
         $par_etapa_1 = null;
 
-        if ($_GET['etapa_1']) {
-            $par_etapa_1 = $_GET['etapa_1'];
-        }
 
-        if ($_GET['etapa_2']) {
-            $par_etapa_2 = $_GET['etapa_2'];
-        }
+        $this->inputsHelper()->text('inicial_max', $options);
 
         $dba = $db = new clsBanco();
 
         $objPessoa = new clsPmieducarInscrito();
 
         // Paginador
-        $limite = 200;
+        $limite = 2000;
         $iniciolimit = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $limite-$limite: 0;
 
         $turno_campo = [
@@ -134,12 +162,10 @@ class indice extends clsListagem
         ];
 
         $pessoas = $objPessoa->lista(
-            $par_etapa_1,
-            $par_etapa_2,
-            null,
-            null,
-            $par_nome,
-            $par_id_federal,
+            $etapas,
+            $this->ref_cod_selecao_processo,
+            $this->nm_inscrito,
+            $this->id_federal,
             null,
             $iniciolimit,
             $limite

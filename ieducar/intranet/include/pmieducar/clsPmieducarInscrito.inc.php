@@ -203,34 +203,36 @@ class clsPmieducarInscrito
     }
 
     public function lista(
+        $array_etapas = array(),
+        $int_ref_cod_selecao_processo = false,
         $str_nome = false,
         $numeric_cpf = false,
         $numeric_rg = false,
         $inicio_limite = false,
         $qtd_registros = false,
-        $str_orderBy = false,
-        $int_ref_cod_sistema = false
+        $str_orderBy = false
     ) {
         $whereAnd = '';
         $where    = '';
+        $limite   = '';
 
         if (is_string($str_nome) && $str_nome != '') {
             $str_nome = addslashes($str_nome);
             $str_nome = str_replace(' ', '%', $str_nome);
 
-            $where   .= "{$whereAnd} nome ILIKE E'%{$str_nome}%' ";
+            $where   .= "{$whereAnd} fcn_upper_nrm(nome) ILIKE E'%{$str_nome}%' ";
             $whereAnd = ' AND ';
         }
 
         if (is_string($numeric_cpf)) {
             $numeric_cpf = addslashes($numeric_cpf);
 
-            $where   .= "{$whereAnd} cpf ILIKE E'%{$numeric_cpf}%' ";
+            $where   .= "{$whereAnd} cpf::text ILIKE E'%{$numeric_cpf}%' ";
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($int_cod_inscrito)) {
-            $where   .= "{$whereAnd} cod_inscrito = '$int_cod_inscrito'";
+        if (is_numeric($int_ref_cod_selecao_processo)) {
+            $where   .= "{$whereAnd} ref_cod_selecao_processo = '$int_ref_cod_selecao_processo'";
             $whereAnd = ' AND ';
         }
 
@@ -239,14 +241,16 @@ class clsPmieducarInscrito
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($numeric_etapa_2)) {
-            $where   .= "{$whereAnd} etapa_2 = '$numeric_etapa_2'";
             $whereAnd = ' AND ';
         }
 
-        if (is_numeric($numeric_etapa_3)) {
-            $where   .= "{$whereAnd} etapa_3 = '$numeric_etapa_3'";
-            $whereAnd = ' AND ';
+        if (!empty($array_etapas)) {
+            foreach ($array_etapas as $etapa => $situacao) {
+                if (is_numeric($situacao)) {
+                    $where   .= "{$whereAnd} et.etapa = '{$etapa}' AND et.situacao = '{$situacao}'";
+                    $whereAnd = ' AND ';
+                }
+            }
         }
 
         $join = "LEFT JOIN
@@ -268,9 +272,14 @@ class clsPmieducarInscrito
                 LEFT JOIN
                     modules.ficha_medica_aluno as m
                 ON
-                    m.ref_cod_aluno = a.cod_aluno ";
+                    m.ref_cod_aluno = a.cod_aluno,
+                {$this->_tabela}
+                LEFT JOIN
+                    pmieducar.inscrito_etapa as et
+                ON
+                    et.ref_cod_inscrito = i.cod_inscrito ";
 
-        $where   .= "i.ref_cod_aluno = a.cod_aluno ";
+        $where   .= "{$whereAnd} i.ref_cod_aluno = a.cod_aluno ";
         $whereAnd = ' AND ';
 
         if ($inicio_limite !== false && $qtd_registros) {
@@ -282,7 +291,7 @@ class clsPmieducarInscrito
         if ($str_orderBy) {
             $orderBy .= $str_orderBy . ' ';
         } else {
-            $orderBy .= 'fcn_upper_nrm(nome) ';
+            $orderBy .= 'fcn_upper_nrm(p.nome) ';
         }
 
         $db  = new clsBanco();
@@ -293,8 +302,10 @@ class clsPmieducarInscrito
 
         $where = $join . $where;
 
-        $tabela = "{$this->_tabela}, pmieducar.aluno as a";
-        $campos = "{$this->_campos_lista}, p.nome, f.data_nasc, f.sexo, f.cpf,
+        $tabela = "pmieducar.aluno as a";
+        $campos = $this->_campos_lista;
+
+        $this->_campos_lista .= " ,p.nome, f.data_nasc, f.sexo, f.cpf,
             p.email, d.rg, e.cep, m.grupo_sanguineo, m.fator_rh";
 
         $total = $db->CampoUnico(
@@ -307,11 +318,13 @@ class clsPmieducarInscrito
 
         $db->Consulta(
             "SELECT
-                {$campos}
+                {$this->_campos_lista}
             FROM
                 {$tabela}
                 {$where} {$orderBy} {$limite}"
         );
+
+        $this->_campos_lista = $campos;
 
         $resultado = [];
 
@@ -637,23 +650,100 @@ class clsPmieducarInscrito
 
     public function detalhe()
     {
-        if ($this->cod_inscrito) {
+        if ($this->cod_inscrito || $this->ref_cod_aluno) {
+            $where = '';
+            $whereAnd = '';
+
+            if (is_numeric($this->cod_inscrito)) {
+                $where   .= "{$whereAnd} cod_inscrito = '{$this->cod_inscrito}'";
+                $whereAnd = ' AND ';
+            }
+
+            if (is_numeric($this->ref_cod_aluno)) {
+                $where   .= "{$whereAnd} ref_cod_aluno = '{$this->ref_cod_aluno}'";
+                $whereAnd = ' AND ';
+            }
+
+            if (is_numeric($this->ref_cod_selecao_processo)) {
+                $where   .= "{$whereAnd} ref_cod_selecao_processo = '{$this->ref_cod_selecao_processo}'";
+                $whereAnd = ' AND ';
+            }
+
+            if ($where) {
+                $where = 'WHERE '.$where;
+            }
+
             $db = new clsBanco();
             $db->Consulta(
                 "SELECT
                     {$this->_campos_lista}
                 FROM
-                    {$this->_tabela}
-                WHERE
-                    cod_inscrito = '{$this->cod_inscrito}'"
+                    {$this->_tabela} {$where}"
             );
 
-            $teste = "SELECT
-            {$this->_campos_lista}
-        FROM
-            {$this->_tabela}
-        WHERE
-            cod_inscrito = '{$this->cod_inscrito}'";
+            if ($db->ProximoRegistro()) {
+                $tupla = $db->Tupla();
+
+                return $tupla;
+            }
+        }
+
+        return false;
+    }
+
+    public function listaProcessoSeletivos($cod_aluno)
+    {
+        if ($cod_aluno) {
+            $db->Consulta(
+                "SELECT
+                    ref_ano, ref_cod_selecao_processo
+                FROM
+                    pmieducar.inscrito,
+                    pmieducar.selecao_processo
+                WHERE
+                    ref_cod_selecao_processo = cod_selecao_processo
+                AND
+                    ref_cod_aluno = {$cod_aluno}
+                ORDER BY ref_ano"
+            );
+
+            $resultado = [];
+
+            while ($db->ProximoRegistro()) {
+                $tupla          = $db->Tupla();
+                $tupla['total'] = $total;
+
+                $resultado[] = $tupla;
+            }
+
+            if (count($resultado) > 0) {
+                return $resultado;
+            }
+
+            return false;
+        }
+
+        return false;
+    }
+
+    public function getUltimoProcessoSeletivo()
+    {
+        if ($this->ref_cod_aluno) {
+
+            $db = new clsBanco();
+
+            $db->Consulta(
+                "SELECT
+                    ref_ano, ref_cod_selecao_processo
+                FROM
+                    pmieducar.inscrito,
+                    pmieducar.selecao_processo
+                WHERE
+                    ref_cod_selecao_processo = cod_selecao_processo
+                AND
+                    ref_cod_aluno = {$this->ref_cod_aluno}
+                ORDER BY ref_ano"
+            );
 
             if ($db->ProximoRegistro()) {
                 $tupla = $db->Tupla();
