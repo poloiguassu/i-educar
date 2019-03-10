@@ -5,6 +5,7 @@ class clsPmieducarInscrito
     public $cod_inscrito;
     public $ref_cod_selecao_processo;
     public $ref_cod_aluno;
+    public $estudando_escola;
     public $estudando_serie;
     public $egresso;
     public $estudando_turno;
@@ -89,7 +90,7 @@ class clsPmieducarInscrito
         $this->_tabela = $this->_schema . 'inscrito as i';
 
         $this->_campos_lista = $this->_todos_campos = 'i.cod_inscrito,
-            i.ref_cod_selecao_processo, i.ref_cod_aluno, i.estudando_serie, i.egresso,
+            i.ref_cod_selecao_processo, i.ref_cod_aluno, i.estudando_escola, i.estudando_serie, i.egresso,
             i.estudando_turno, i.guarda_mirim, i.copia_rg, i.copia_cpf, i.copia_residencia,
             i.copia_historico, i.copia_renda, i.area_interesse, i.encaminhamento, i.ref_usuario_exc,
             i.ref_usuario_cad, i.data_cadastro, i.data_exclusao, i.ativo';
@@ -465,6 +466,12 @@ class clsPmieducarInscrito
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->estudando_escola)) {
+                $campos  .= "{$gruda}estudando_escola";
+                $valores .= "{$gruda}'{$this->estudando_escola}'";
+                $gruda = ', ';
+            }
+
             if (is_numeric($this->estudando_serie)) {
                 $campos  .= "{$gruda}estudando_serie";
                 $valores .= "{$gruda}'{$this->estudando_serie}'";
@@ -578,6 +585,11 @@ class clsPmieducarInscrito
 
             if ($this->ref_cod_aluno) {
                 $set .= "$gruda ref_cod_aluno =  '$this->ref_cod_aluno' ";
+                $gruda = ', ';
+            }
+
+            if ($this->estudando_escola) {
+                $set .= "$gruda estudando_escola =  '$this->estudando_escola' ";
                 $gruda = ', ';
             }
 

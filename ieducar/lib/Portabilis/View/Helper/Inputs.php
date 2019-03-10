@@ -283,7 +283,7 @@ class Portabilis_View_Helper_Inputs
     public function multipleSearchIdiomas($attrName, $inputOptions = [], $helperOptions = [])
     {
         $this->multipleSearchResourceInput('multipleSearchIdiomas', $attrName, $inputOptions, $helperOptions);
-    }  
+    }
 
     public function multipleSearchCursoAluno($attrName, $inputOptions = [], $helperOptions = [])
     {
@@ -328,6 +328,12 @@ class Portabilis_View_Helper_Inputs
     public function processoSeletivo($inputOptions = [], $helperOptions = [])
     {
         $this->resourceInput('processoSeletivo', $this->mergeInputOptions($inputOptions, $helperOptions));
+    }
+
+
+    public function escolaMunicipio($inputOptions = [], $helperOptions = [])
+    {
+        $this->resourceInput('escolaMunicipio', $this->mergeInputOptions($inputOptions, $helperOptions));
     }
 
     public function beneficio($inputOptions = [], $helperOptions = [])

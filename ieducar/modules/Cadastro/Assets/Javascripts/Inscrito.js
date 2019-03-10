@@ -358,6 +358,7 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#responsavel_parentesco_celular').val(dataResponse.responsavel_parentesco_celular);
 
     $j('#processo_seletivo_id').val(dataResponse.ref_cod_selecao_processo);
+    $j('#escola_municipio_id').val(dataResponse.estudando_escola);
     $j('#serie').val(dataResponse.estudando_serie);
     $j('#egresso').val(dataResponse.egresso);
     $j('#turno').val(dataResponse.estudando_turno);

@@ -297,6 +297,7 @@ class InscritoController extends ApiCoreController
             $inscrito->ref_usuario_exc = $this->getSession()->id_pessoa;
         }
 
+        $inscrito->estudando_escola = $this->getRequest()->escola_municipio_id;
         $inscrito->estudando_serie = $this->getRequest()->serie;
         $inscrito->estudando_turno = $this->getRequest()->turno;
         $inscrito->egresso = $this->getRequest()->egresso;
@@ -593,6 +594,7 @@ class InscritoController extends ApiCoreController
                 'ref_usuario_exc' => 'destroyed_by',
                 'data_exclusao' => 'destroyed_at',
                 'ref_cod_selecao_processo',
+                'estudando_escola',
                 'estudando_serie',
                 'egresso',
                 'estudando_turno',

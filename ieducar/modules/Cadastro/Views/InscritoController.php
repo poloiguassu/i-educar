@@ -571,6 +571,10 @@ class InscritoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->select('zona_localizacao_censo', $options);
 
+        $this->inputsHelper()->escolaMunicipio(
+            array('required' => false, 'label' => 'Escola em que estuda')
+        );
+
         $resources = SerieEstudo::getDescriptiveValues();
         $resources = array_replace([null => 'Série'], $resources);
 

@@ -19,11 +19,11 @@ class Inscrito extends Migration
                 $table->increments('cod_inscrito')->unique();
                 $table->integer('ref_cod_selecao_processo');
                 $table->integer('ref_cod_aluno');
-                $table->integer('estudando_serie')->nullable();
-                $table->integer('egresso')->nullable();
+                $table->integer('estudando_escola')->nullable();
+                $table->smallInteger('estudando_serie')->nullable();
                 $table->smallInteger('estudando_turno')->nullable();
+                $table->integer('egresso')->nullable();
                 $table->smallInteger('guarda_mirim')->default(0);
-                $table->integer('escola')->nullable();
                 $table->integer('area_interesse')->nullable();
                 $table->smallInteger('copia_rg')->default(0);
                 $table->smallInteger('copia_residencia')->default(0);
@@ -40,8 +40,14 @@ class Inscrito extends Migration
 
                 $table->index(['ref_cod_selecao_processo', 'ref_cod_aluno']);
 
+
                 $table->foreign('ref_cod_aluno')
                     ->references('cod_aluno')->on('pmieducar.aluno')
+                    ->onUpdate('restrict')
+                    ->onDelete('restrict');
+
+                $table->foreign('estudando_escola')
+                    ->references('idescola')->on('public.escola_municipio')
                     ->onUpdate('restrict')
                     ->onDelete('restrict');
 
