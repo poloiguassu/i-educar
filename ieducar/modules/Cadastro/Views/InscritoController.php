@@ -5,6 +5,7 @@
 use iEducar\Modules\Inscritos\Model\SerieEstudo;
 use iEducar\Modules\Inscritos\Model\TurnoEstudo;
 use iEducar\Modules\Inscritos\Model\AvaliacaoEtapa;
+use iEducar\Modules\Inscritos\Model\DocumentoSituacao;
 
 require_once 'include/clsCadastro.inc.php';
 require_once "include/clsBanco.inc.php";
@@ -26,7 +27,7 @@ class InscritoController extends Portabilis_Controller_Page_EditController
 
     protected $_nivelAcessoOption = App_Model_NivelAcesso::SOMENTE_ESCOLA;
 
-    protected $_processoAp = 43;
+    protected $_processoAp = 21469;
 
     protected $_deleteOption = true;
 
@@ -88,7 +89,7 @@ class InscritoController extends Portabilis_Controller_Page_EditController
         $nomeMenu = $this->getRequest()->id == null ? "Cadastrar" : "Editar";
         $localizacao = new LocalizacaoSistema();
         $localizacao->entradaCaminhos(array(
-            $_SERVER['SERVER_NAME'] . "/intranet" => "In&iacute;cio",
+            $_SERVER['SERVER_NAME'] . "/intranet" => "Início",
             "educar_index.php" => "Escola",
             "" => "$nomeMenu aluno"
         ));
@@ -122,7 +123,8 @@ class InscritoController extends Portabilis_Controller_Page_EditController
             $this->inputsHelper()->hidden('justificativa_falta_documentacao_obrigatorio');
         }
 
-        $cod_inscrito = $_GET['id'];
+        $cod_inscrito = @$_GET['id'];
+        $this->processo_seletivo_id = @$_GET['cod_selecao_processo'];
 
         if ($cod_inscrito or $_GET['person']) {
             if ($_GET['person']) {
@@ -219,7 +221,7 @@ class InscritoController extends Portabilis_Controller_Page_EditController
         $options = array(
             'required' => false,
             'label' => '',
-            'placeholder' => 'Data emiss\u00e3o',
+            'placeholder' => 'Data emissão',
             'value' => $documentos['data_exp_rg'],
             'size' => 19
         );
@@ -373,6 +375,8 @@ class InscritoController extends Portabilis_Controller_Page_EditController
         // fator_rh
         $options = array('label' => $this->_getLabel('fator_rh'), 'size' => 5, 'max_length' => 1, 'required' => false, 'placeholder' => '');
         $this->inputsHelper()->text('fator_rh', $options);
+
+        $this->inputsHelper()->simpleSearchMunicipio('pessoa-aluno', array('required' => false, 'size' => 57), array('objectName' => 'naturalidade_aluno'));
 
         $enderecamentoObrigatorio = false;
         $desativarCamposDefinidosViaCep = true;
@@ -566,19 +570,6 @@ class InscritoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->select('zona_localizacao_censo', $options);
 
-        $resources = AvaliacaoEtapa::getDescriptiveValues();
-        $resources = array_replace([null => '1ª Etapa'], $resources);
-
-        $options = array(
-            'required' => false,
-            'label'    => "Avaliação Projeto Etapa 1",
-            'inline'   => false,
-            'value'     => $this->etapa_1,
-            'resources' => $resources
-        );
-
-        $this->inputsHelper()->select('etapa_1', $options);
-
         $resources = SerieEstudo::getDescriptiveValues();
         $resources = array_replace([null => 'Série'], $resources);
 
@@ -618,40 +609,71 @@ class InscritoController extends Portabilis_Controller_Page_EditController
 
         $this->campoCheck('encaminhamento', 'Encaminhado pela rede de proteção', $this->encaminhamento, '', FALSE, FALSE);
 
-        $this->campoCheck(
-            'copia_rg', 'Cópia do RG', $this->copia_rg, '', false, false
+        $resources = AvaliacaoEtapa::getDescriptiveValues();
+        $resources = array_replace([null => '1ª Etapa'], $resources);
+
+        $options = array(
+            'required' => false,
+            'label'    => "Avaliação Projeto Etapa 1",
+            'inline'   => false,
+            'value'     => $this->etapa_1,
+            'resources' => $resources
         );
 
-        $this->campoCheck(
-            'copia_cpf', 'Cópia do CPF', $this->copia_cpf, '', false, false
+        $this->inputsHelper()->select('etapa_1', $options);
+
+        $resources = DocumentoSituacao::getDescriptiveValues();
+        $resources = array_replace([null => 'Selecione a situação'], $resources);
+
+        $options = array(
+            'required' => false,
+            'label'    => "Cópia do RG",
+            'inline'   => false,
+            'value'     => $this->copia_rg,
+            'resources' => $resources
         );
 
-        $this->campoCheck(
-            'copia_residencia',
-            'Cópia do Comprovante de Residencia',
-            $this->copia_residencia, 
-            '',
-            false,
-            false
+        $this->inputsHelper()->select('copia_rg', $options);
+
+        $options = array(
+            'required' => false,
+            'label'    => "Cópia do CPF",
+            'inline'   => false,
+            'value'     => $this->copia_cpf,
+            'resources' => $resources
         );
 
-        $this->campoCheck(
-            'copia_historico',
-            'Cópia do Histório / Declaração',
-            $this->copia_historico,
-            '',
-            false,
-            false
+        $this->inputsHelper()->select('copia_cpf', $options);
+
+        $options = array(
+            'required' => false,
+            'label'    => "Cópia do Comprovante de Residencia",
+            'inline'   => false,
+            'value'     => $this->copia_residencia,
+            'resources' => $resources
         );
 
-        $this->campoCheck(
-            'copia_renda',
-            'Comprovante de renda',
-            $this->copia_renda,
-            '',
-            false,
-            false
+        $this->inputsHelper()->select('copia_residencia', $options);
+
+        $options = array(
+            'required' => false,
+            'label'    => "Cópia do Histório / Declaração",
+            'inline'   => false,
+            'value'     => $this->copia_historico,
+            'resources' => $resources
         );
+
+        $this->inputsHelper()->select('copia_historico', $options);
+
+        $options = array(
+            'required' => false,
+            'label'    => "Comprovante de renda",
+            'inline'   => false,
+            'value'     => $this->copia_renda,
+            'resources' => $resources
+        );
+
+        $this->inputsHelper()->select('copia_renda', $options);
     }
 
 

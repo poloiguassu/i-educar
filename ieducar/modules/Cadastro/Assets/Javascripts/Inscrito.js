@@ -59,7 +59,7 @@ var $loadingLaudoMedico = $j('<img>')
 function possuiDocumentoObrigatorio() {
     var cpf = $j('#id_federal').val();
     var rg = $j('#rg').val();
-    
+
     return cpf || rg;
   }
 
@@ -236,7 +236,7 @@ var $linkToEditPessoaResponsavel = $linkToEditPessoaPai
 // adiciona id 'stop' na linha separadora
 $j('.tableDetalheLinhaSeparador').closest('tr').attr('id', 'stop');
 // Adiciona abas na página
-$j('td .formdktd:first').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Documentos</span></div></li><li><div id="tab6" class="alunoTab"> <span class="tabText" style="">Projetos</span></div></li></ul></div>');
+$j('td .formdktd:first').append('<div id="tabControl"><ul><li><div id="tab1" class="alunoTab"> <span class="tabText">Dados pessoais</span></div></li><li><div id="tab2" class="alunoTab"> <span class="tabText">Processo Seletivo</span></div></li><li><div id="tab6" class="alunoTab"> <span class="tabText" style="">Projetos</span></div></li></ul></div>');
 
 // Adiciona estilo de aba selecionada a primeira aba
 $j('#tab1').addClass('alunoTab-active').removeClass('alunoTab');
@@ -263,7 +263,7 @@ resourceOptions.handlePost = function (dataResponse) {
 
     if (!dataResponse.any_error_msg) {
         window.setTimeout(function () {
-            document.location = '/intranet/educar_aluno_det.php?cod_aluno=' + resource.id();
+            document.location = '/intranet/selecao_inscritos_det.php?cod_inscrito=' + resource.id();
         }, 500);
     } else {
         $submitButton.removeAttr('disabled').val('Gravar');
@@ -273,7 +273,7 @@ resourceOptions.handlePost = function (dataResponse) {
 resourceOptions.handlePut = function (dataResponse) {
     if (!dataResponse.any_error_msg) {
         window.setTimeout(function () {
-            document.location = '/intranet/educar_aluno_det.php?cod_aluno=' + resource.id();
+            document.location = '/intranet/selecao_inscritos_det.php?cod_inscrito=' + resource.id();
         }, 500);
     } else {
         $submitButton.removeAttr('disabled').val('Gravar');
@@ -343,6 +343,11 @@ resourceOptions.handleGet = function (dataResponse) {
         }
     }
 
+    if (dataResponse.hasOwnProperty('etapas')) {
+      $j.each(dataResponse.etapas, function (i, object) {
+        $j('#etapa_' + i).val(dataResponse.etapas[i]);
+      });
+    }
 
     // campos texto
     $j('#grupo_sanguineo').val(dataResponse.grupo_sanguineo);
@@ -351,6 +356,18 @@ resourceOptions.handleGet = function (dataResponse) {
     $j('#responsavel_parentesco').val(dataResponse.responsavel_parentesco);
     $j('#responsavel_parentesco_telefone').val(dataResponse.responsavel_parentesco_telefone);
     $j('#responsavel_parentesco_celular').val(dataResponse.responsavel_parentesco_celular);
+
+    $j('#processo_seletivo_id').val(dataResponse.ref_cod_selecao_processo);
+    $j('#serie').val(dataResponse.estudando_serie);
+    $j('#egresso').val(dataResponse.egresso);
+    $j('#turno').val(dataResponse.estudando_turno);
+    $j('#guarda_mirim').prop('checked', dataResponse.guarda_mirim);
+    $j('#encaminhamento').prop('checked', dataResponse.encaminhamento);
+    $j('#copia_rg').val(dataResponse.copia_rg);
+    $j('#copia_cpf').val(dataResponse.copia_cpf);
+    $j('#copia_residencia').val(dataResponse.copia_residencia);
+    $j('#copia_renda').val(dataResponse.copia_renda);
+    $j('#copia_historico').val(dataResponse.copia_historico);
 };
 
 

@@ -173,9 +173,9 @@ class InscritoController extends ApiCoreController
     protected function loadNomeInscrito($inscritoId)
     {
         $sql = 'SELECT
-                    nome 
+                    nome
                 FROM
-                    cadastro.pessoa, pmieducar.aluno, pmieducar.inscrito 
+                    cadastro.pessoa, pmieducar.aluno, pmieducar.inscrito
                 WHERE
                     idpes = ref_idpes AND cod_aluno = ref_cod_aluno
                 AND
@@ -287,7 +287,7 @@ class InscritoController extends ApiCoreController
     {
         $inscrito = new clsPmieducarInscrito();
         $inscrito->cod_inscrito = $id;
-        $inscrito->ref_cod_selecao_processo = 1; // $this->getRequest()->selecao_id;
+        $inscrito->ref_cod_selecao_processo = $this->getRequest()->processo_seletivo_id;
 
         // após cadastro não muda mais id pessoa
         if (is_null($id)) {
@@ -318,6 +318,48 @@ class InscritoController extends ApiCoreController
             $id = $inscrito->edita();
             $auditoria = new clsModulesAuditoriaGeral('inscrito', $this->getSession()->id_pessoa, $id);
             $auditoria->alteracao($detalheAntigo, $inscrito->detalhe());
+        }
+
+        $sql = "SELECT
+                    total_etapas
+                FROM
+                    pmieducar.selecao_processo
+                WHERE
+                    cod_selecao_processo = $1";
+
+        $total_etapas = Portabilis_Utils_Database::selectField(
+            $sql,
+            $inscrito->ref_cod_selecao_processo
+        );
+
+        for ($i = 1; $i <= $total_etapas; $i++) {
+            $situacao = $this->getRequest()->{'etapa_' . $i};
+
+            if ($situacao) {
+                $this->createOrUpdateEtapa($inscrito, $i, $situacao);
+            }
+        }
+
+        return $id;
+    }
+
+    protected function createOrUpdateEtapa($id, $etapa, $situacao)
+    {
+        $id = null;
+
+        if (is_numeric($id) && is_numeric($etapa)
+            && is_numeric($situacao)
+        ) {
+            $sql = "INSERT INTO
+                    pmieducar.inscrito_etapa
+                VALUES
+                    ({$id}, {$etapa}, {$situacao})
+                ON CONFLICT
+                    (ref_cod_inscrito, etapa)
+                DO UPDATE SET
+                    situacao = {$situacao}";
+
+            $id = $this->fetchPreparedQuery($sql);
         }
 
         return $id;
@@ -513,12 +555,12 @@ class InscritoController extends ApiCoreController
     protected function loadBeneficios($alunoId)
     {
         $sql = "SELECT
-                    aluno_beneficio_id as id, nm_beneficio as nome 
+                    aluno_beneficio_id as id, nm_beneficio as nome
                 FROM
                     pmieducar.aluno_aluno_beneficio,
                     pmieducar.aluno_beneficio
                 WHERE
-                    aluno_beneficio_id = cod_aluno_beneficio 
+                    aluno_beneficio_id = cod_aluno_beneficio
                 AND
                     aluno_id = $1";
 
@@ -547,17 +589,15 @@ class InscritoController extends ApiCoreController
             $attrs = [
                 'cod_inscrito' => 'id',
                 'ref_cod_aluno' => 'aluno_id',
-                'tipo_responsavel' => 'tipo_responsavel',
                 'ref_usuario_exc' => 'destroyed_by',
                 'data_exclusao' => 'destroyed_at',
-                'url_foto_inscrito',
                 'ref_cod_selecao_processo',
                 'estudando_serie',
                 'egresso',
                 'estudando_turno',
                 'guarda_mirim',
-                'indicacao',
                 'copia_rg',
+                'copia_cpf',
                 'copia_residencia',
                 'copia_historico',
                 'copia_renda',
@@ -567,21 +607,20 @@ class InscritoController extends ApiCoreController
 
             $inscrito = Portabilis_Array_Utils::filter($inscrito, $attrs);
 
+            $objEtapa = new clsPmieducarInscritoEtapa();
+            $registroEtapa = $objEtapa->lista($id);
+
+            foreach ($registroEtapa as $registro) {
+                if (is_numeric($registro['situacao'])) {
+                    $inscrito['etapas'][$registro['etapa']]
+                        = $registro['situacao'];
+                }
+            }
+
             $alunoId = $inscrito['aluno_id'];
             $aluno = new clsPmieducarAluno();
             $aluno->cod_aluno = $alunoId;
             $aluno = $aluno->detalhe();
-
-            /*$attrs = [
-                'ref_idpes' => 'pessoa_id',
-                'tipo_responsavel' => 'tipo_responsavel',
-                'autorizado_um',
-                'parentesco_um',
-                'autorizado_dois',
-                'parentesco_dois',
-            ];
-
-            $aluno = Portabilis_Array_Utils::filter($aluno, $attrs);*/
 
             $inscrito['nome'] = $this->loadNomeInscrito($id);
             $inscrito['tipo_responsavel'] = $this->tipoResponsavel($aluno);
@@ -602,8 +641,8 @@ class InscritoController extends ApiCoreController
 
             if ($objFichaMedica->existe()) {
                 $objFichaMedica = $objFichaMedica->detalhe();
-                $inscrito['grupo_sanquineo']= Portabilis_String_Utils::toUtf8($objFichaMedica['grupo_sanquineo']);
-                $inscrito['fator_rg'] = Portabilis_String_Utils::toUtf8($objFichaMedica['fator_rg']);
+                $inscrito['grupo_sanguineo']= Portabilis_String_Utils::toUtf8($objFichaMedica['grupo_sanguineo']);
+                $inscrito['fator_rh'] = Portabilis_String_Utils::toUtf8($objFichaMedica['fator_rh']);
             }
 
             $sql = "SELECT sus, ref_cod_religiao FROM cadastro.fisica WHERE idpes = $1";
@@ -688,11 +727,11 @@ class InscritoController extends ApiCoreController
                             cod_inscrito as inscrito_id, pessoa.nome as nome_inscrito
                         FROM
                             pmieducar.inscrito
-                        INNER JOIN 
+                        INNER JOIN
                             pmieducar.aluno
                         ON
                             (inscrito.ref_cod_aluno = aluno.cod_aluno)
-                        INNER JOIN 
+                        INNER JOIN
                             cadastro.fisica
                         ON
                             (aluno.ref_idpes = fisica.idpes)
@@ -757,6 +796,51 @@ class InscritoController extends ApiCoreController
         return substr($palavra, 0, strpos($palavra, ' -'));
     }
 
+    protected function postEtapa()
+    {
+        $id = $this->getRequest()->id;
+
+        $etapa = $this->getRequest()->etapa_id;
+        $situacao = $this->getRequest()->situacao;
+
+        $id = $this->createOrUpdateEtapa($id, $etapa, $situacao);
+
+        if ($id) {
+            $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
+        } else {
+            $this->messenger->append('Aparentemente o inscrito não pode ser cadastrado, por favor, verifique.');
+        }
+
+        return ['id' => $id];
+    }
+
+    protected function putCopiaDocumento()
+    {
+        $id = $this->getRequest()->id;
+
+        $documento = $this->getRequest()->documento;
+        $situacao = $this->getRequest()->situacao;
+
+        if (is_numeric($id) && is_string($documento)
+            && is_numeric($situacao)
+        ) {
+            $sql = "UPDATE
+                    pmieducar.inscrito
+                SET
+                    copia_{$documento} = {$situacao}
+                WHERE
+                    cod_inscrito = {$id}";
+
+            $id = $this->fetchPreparedQuery($sql);
+
+            $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
+        } else {
+            $this->messenger->append('Aparentemente o inscrito não pode ser cadastrado, por favor, verifique.');
+        }
+
+        return ['id' => $id];
+    }
+
     protected function post()
     {
         if ($this->canPost()) {
@@ -793,7 +877,7 @@ class InscritoController extends ApiCoreController
         if ($this->canPut() && $this->createOrUpdateInscrito($id)) {
             $alunoId = $this->getRequest()->aluno_id;
             $pessoaId = $this->getRequest()->pessoa_id;
-    
+
             $this->createOrUpdateAluno($alunoId);
             $this->createOrUpdateFichaMedica($alunoId);
 
@@ -998,8 +1082,8 @@ class InscritoController extends ApiCoreController
                     pmieducar.inscrito
                 WHERE
                     1";
-            
-        
+
+
     }
 
     public function Gerar()
@@ -1016,6 +1100,10 @@ class InscritoController extends ApiCoreController
             $this->appendResponse($this->getInscritosByGuardianCpf());
         } elseif ($this->isRequestFor('get', 'estatisticas')) {
             $this->appendResponse($this->getEstatisticas());
+        } elseif ($this->isRequestFor('post', 'inscrito-etapa')) {
+            $this->appendResponse($this->postEtapa());
+        } elseif ($this->isRequestFor('put', 'inscrito-documento')) {
+            $this->appendResponse($this->putCopiaDocumento());
         } elseif ($this->isRequestFor('post', 'inscrito')) {
             $this->appendResponse($this->post());
         } elseif ($this->isRequestFor('put', 'inscrito')) {

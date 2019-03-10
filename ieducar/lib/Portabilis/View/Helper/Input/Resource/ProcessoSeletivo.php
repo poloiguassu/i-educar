@@ -11,7 +11,11 @@ class Portabilis_View_Helper_Input_Resource_ProcessoSeletivo extends Portabilis_
         if (empty($options['resources'])) {
             $resources = new clsPmieducarProcessoSeletivo();
             $resources = $resources->lista();
-            $resources = Portabilis_Array_Utils::setAsIdValue($resources, 'cod_selecao_processo', 'ref_ano');
+            $resources = Portabilis_Array_Utils::setAsIdValue(
+                $resources,
+                'cod_selecao_processo',
+                'ref_ano'
+            );
         }
 
         return $this->insertOption(null, Portabilis_String_Utils::toLatin1('Processo Seletivo'), $resources);
