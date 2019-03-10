@@ -88,6 +88,8 @@ class clsPessoaFj
   var $fone_2;
   var $ddd_fax;
   var $fone_fax;
+  var $ddd_whatsapp;
+  var $fone_whatsapp;
   var $ddd_mov;
   var $fone_mov;
 
@@ -352,6 +354,15 @@ class clsPessoaFj
 
             $this->ddd_fax  = $fone['ddd'];
             $this->fone_fax = $fone['fone'];
+          }
+          if ($fone['tipo'] == 5) {
+            $detalhePessoa['ddd_whatsapp']  = $fone['ddd'];
+            $detalhePessoa[]           = & $detalhePessoa['ddd_whatsapp'];
+            $detalhePessoa['fone_whatsapp'] = $fone['fone'];
+            $detalhePessoa[]           = & $detalhePessoa['fone_whatsapp'];
+
+            $this->ddd_whatsapp  = $fone['ddd'];
+            $this->fone_whatsapp = $fone['fone'];
           }
         }
       }

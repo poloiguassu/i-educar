@@ -49,6 +49,8 @@ class indice extends clsCadastro
     public $telefone_mov;
     public $ddd_telefone_fax;
     public $telefone_fax;
+    public $ddd_telefone_whatsapp;
+    public $telefone_whatsapp;
     public $email;
     public $tipo_pessoa;
     public $sexo;
@@ -98,8 +100,8 @@ class indice extends clsCadastro
             list($this->nm_pessoa, $this->id_federal, $this->data_nasc,
                 $this->ddd_telefone_1, $this->telefone_1, $this->ddd_telefone_2,
                 $this->telefone_2, $this->ddd_telefone_mov, $this->telefone_mov,
-                $this->ddd_telefone_fax, $this->telefone_fax, $this->email,
-                $this->tipo_pessoa, $this->sexo, $this->cidade,
+                $this->ddd_telefone_fax, $this->telefone_fax, $this->ddd_telefone_whatsapp, $this->telefone_whatsapp,
+                $this->email, $this->tipo_pessoa, $this->sexo, $this->cidade,
                 $this->bairro, $this->logradouro, $this->cep, $this->idlog, $this->idbai,
                 $this->idtlog, $this->sigla_uf, $this->complemento, $this->numero,
                 $this->bloco, $this->apartamento, $this->andar, $this->zona_localizacao, $this->estado_civil,
@@ -121,6 +123,8 @@ class indice extends clsCadastro
                 'fone_mov',
                 'ddd_fax',
                 'fone_fax',
+                'ddd_whatsapp',
+                'fone_whatsapp',
                 'email',
                 'tipo',
                 'sexo',
@@ -223,6 +227,8 @@ class indice extends clsCadastro
             'fone_mov',
             'ddd_fax',
             'fone_fax',
+            'ddd_whatsapp',
+            'fone_whatsapp',
             'email',
             'url',
             'tipo',
@@ -1004,6 +1010,7 @@ class indice extends clsCadastro
         $this->campoRotulo('contato', '<b>Contato</b>', '', '', 'Informações de contato da pessoa');
         $this->inputTelefone('1', 'Telefone residencial');
         $this->inputTelefone('2', 'Celular');
+        $this->inputTelefone('whatsapp', 'Whatsapp');
         $this->inputTelefone('mov', 'Telefone adicional');
         $this->inputTelefone('fax', 'Fax');
         $this->campoTexto('email', 'E-mail', $this->email, '50', '255', false);
@@ -1684,6 +1691,7 @@ class indice extends clsCadastro
         $telefones[] = new clsPessoaTelefone($pessoaId, 2, $this->telefone_2, $this->ddd_telefone_2);
         $telefones[] = new clsPessoaTelefone($pessoaId, 3, $this->telefone_mov, $this->ddd_telefone_mov);
         $telefones[] = new clsPessoaTelefone($pessoaId, 4, $this->telefone_fax, $this->ddd_telefone_fax);
+        $telefones[] = new clsPessoaTelefone($pessoaId, 5, $this->telefone_whatsapp, $this->ddd_telefone_whatsapp);
 
         foreach ($telefones as $telefone) {
             $telefone->cadastra();

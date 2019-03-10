@@ -218,14 +218,18 @@ class clsPessoaFisica extends clsPessoaFj
             $tupla['nome']  = transforma_minusculo($tupla['nome']);
             $tupla['total'] = $total;
 
-            $dba->Consulta(sprintf(
-                'SELECT
-                ddd_1, fone_1, ddd_2, fone_2, ddd_mov, fone_mov, ddd_fax, fone_fax
-                FROM
-                cadastro.v_fone_pessoa
-                WHERE idpes = %d',
-                $tupla['idpes']
-            ));
+            $dba->Consulta(
+                sprintf(
+                    'SELECT
+                        ddd_1, fone_1, ddd_2, fone_2, ddd_mov, fone_mov,
+                        ddd_fax, fone_fax, ddd_whatsapp, fone_whatsapp
+                    FROM
+                        cadastro.v_fone_pessoa
+                    WHERE
+                        idpes = %d',
+                    $tupla['idpes']
+                )
+            );
 
             if ($dba->ProximoRegistro()) {
                 $tupla_fone = $dba->Tupla();
@@ -241,6 +245,8 @@ class clsPessoaFisica extends clsPessoaFj
             $tupla['fone_mov'] = $tupla_fone['fone_mov'];
             $tupla['ddd_fax']  = $tupla_fone['ddd_fax'];
             $tupla['fone_fax'] = $tupla_fone['fone_fax'];
+            $tupla['ddd_whatsapp']  = $tupla_fone['ddd_whatsapp'];
+            $tupla['fone_whatsapp'] = $tupla_fone['fone_whatsapp'];
 
             $resultado[] = $tupla;
         }
