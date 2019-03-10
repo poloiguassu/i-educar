@@ -273,6 +273,12 @@ class clsListagem extends clsCampos
         $this->_preRender();
         $this->Gerar();
 
+        if ($_GET['fullscreen']) {
+            $this->setTemplate('list_fullscreen');
+            $this->renderMenu = false;
+            $this->renderMenuSuspenso = false;
+        }
+
         $retorno = '';
 
         if ($this->banner) {

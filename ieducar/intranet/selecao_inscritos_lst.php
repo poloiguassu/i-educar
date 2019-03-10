@@ -210,8 +210,8 @@ class indice extends clsListagem
         $this->acao = 'go("selecao_inscritos_cad.php")';
         $this->nome_acao = 'Novo';
 
-        $this->array_botao_url[] = 'selecao_estatistica_lst.php';
-        $this->array_botao[]     = 'Relatórios';
+        $this->array_botao_url[] = 'selecao_inscritos_lst.php?fullscreen=1';
+        $this->array_botao[]     = 'Tela cheia';
 
         $this->array_botao_url[] = 'selecao_importar_inscritos.php';
         $this->array_botao[]     = 'Importar inscritos';
