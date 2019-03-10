@@ -241,12 +241,12 @@ class clsPmieducarInscrito
         }
 
         if (preg_match('/^[a-zA-Z]/i', $inicial_min)) {
-            $where   .= "{$whereAnd} fcn_upper_nrm(nome) >= '$inicial_min'";
+            $where   .= "{$whereAnd} fcn_upper_nrm(p.nome) >= '$inicial_min'";
             $whereAnd = ' AND ';
         }
 
         if (preg_match('/^[a-zA-Z]/i', $inicial_max)) {
-            $where   .= "{$whereAnd} fcn_upper_nrm(nome) < '$inicial_max'";
+            $where   .= "{$whereAnd} fcn_upper_nrm(p.nome) < '$inicial_max'";
             $whereAnd = ' AND ';
         }
 
@@ -283,7 +283,11 @@ class clsPmieducarInscrito
                 LEFT JOIN
                     pmieducar.inscrito_etapa as et
                 ON
-                    et.ref_cod_inscrito = i.cod_inscrito ";
+                    et.ref_cod_inscrito = i.cod_inscrito
+                LEFT JOIN
+                    public.escola_municipio as em
+                ON
+                    em.idescola = i.estudando_escola ";
 
         $where   .= "{$whereAnd} i.ref_cod_aluno = a.cod_aluno ";
         $whereAnd = ' AND ';
@@ -312,7 +316,8 @@ class clsPmieducarInscrito
         $campos = $this->_campos_lista;
 
         $this->_campos_lista .= " ,p.nome, f.data_nasc, f.sexo, f.cpf,
-            p.email, d.rg, e.cep, m.grupo_sanguineo, m.fator_rh";
+            p.email, d.rg, e.cep, m.grupo_sanguineo, m.fator_rh,
+            em.nome as nome_escola";
 
         $total = $db->CampoUnico(
             "SELECT

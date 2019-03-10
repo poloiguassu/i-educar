@@ -16,8 +16,12 @@ class clsIndex extends clsBase
     public function Formular()
     {
         $this->SetTitulo('Informações Alunos');
-        $this->addEstilo('localizacaoSistema');
         $this->processoAp = 21469;
+
+        if ($_GET['fullscreen']) {
+            $this->renderMenu = false;
+            $this->renderMenuSuspenso = false;
+        }
     }
 }
 
@@ -55,7 +59,6 @@ class indice extends clsListagem
                 'Escola',
                 'Série',
                 'Turno',
-                'Ano Conclusão',
                 'Area de Interesse',
                 'Tipagem Sanguinea',
                 'E-mail',
@@ -217,7 +220,7 @@ class indice extends clsListagem
                         $pessoa['sexo'],
                         $cpf,
                         $pessoa['rg'],
-                        'ESCOLA',
+                        $pessoa['nome_escola'],
                         $serie,
                         $turno,
                         $area_interesse[$pessoa['area_interesse']],
