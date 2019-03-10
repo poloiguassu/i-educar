@@ -56,14 +56,36 @@
             }
         });
 
+        var chart = AmCharts.makeChart( "grafico_escolaridade", {
+            "type": "pie",
+            "theme": "light",
+            "dataProvider": [
+                @foreach($lines[0][3] as $key => $item)
+                    {
+                        "label": "{{ $key }}",
+                        "ammount": "{{ $item }}"
+                    },
+                @endforeach
+            ],
+            "valueField": "ammount",
+            "titleField": "label",
+            "outlineAlpha": 0.4,
+            "depth3D": 15,
+            "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[ammount]]</b> ([[percents]]%)</span>",
+            "angle": 30,
+            "export": {
+                "enabled": true
+            }
+        });
+
         var chart = AmCharts.makeChart( "grafico_idade", {
             "type": "serial",
             "theme": "light",
             "dataProvider": [
                 @foreach($lines[0][2] as $item)
                     {
-                        "country": "{{ $item.idade }}",
-                        "visits": "{{ $item.count }}"
+                        "country": "{{ $item['idade'] }}",
+                        "visits": "{{ $item['count'] }}"
                     },
                 @endforeach
             ],
@@ -90,27 +112,5 @@
                 "enabled": true
             }
         } );
-
-        var chart = AmCharts.makeChart( "grafico_escolaridade", {
-            "type": "pie",
-            "theme": "light",
-            "dataProvider": [
-                @foreach($lines[0][3] as $key => $item)
-                    {
-                        "label": "{{ $key }}",
-                        "ammount": "{{ $value }}"
-                    },
-                @endforeach
-            ],
-            "valueField": "ammount",
-            "titleField": "label",
-            "outlineAlpha": 0.4,
-            "depth3D": 15,
-            "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[ammount]]</b> ([[percents]]%)</span>",
-            "angle": 30,
-            "export": {
-                "enabled": true
-            }
-        });
     </script>
 @endpush
