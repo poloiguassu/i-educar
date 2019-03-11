@@ -338,7 +338,7 @@ class InscritoController extends ApiCoreController
             $situacao = $this->getRequest()->{'etapa_' . $i};
 
             if ($situacao) {
-                $this->createOrUpdateEtapa($inscrito, $i, $situacao);
+                $this->createOrUpdateEtapa($inscrito->cod_inscrito, $i, $situacao);
             }
         }
 
