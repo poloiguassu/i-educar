@@ -64,7 +64,7 @@ class indice extends clsListagem
         $registroSelecao = $objSelecao->detalhe();
 
         for ($i = 1; $i <= $registroSelecao['total_etapas']; $i++) {
-            $+etapas[$i] = $this->{'etapa_' . $i};
+            $etapas[$i] = $this->{'etapa_' . $i};
         }
 
         $objPessoa = new clsPmieducarInscrito();
