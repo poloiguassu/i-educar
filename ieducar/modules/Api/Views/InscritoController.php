@@ -301,8 +301,8 @@ class InscritoController extends ApiCoreController
         $inscrito->estudando_serie = $this->getRequest()->serie;
         $inscrito->estudando_turno = $this->getRequest()->turno;
         $inscrito->egresso = $this->getRequest()->egresso;
-        $inscrito->guarda_mirim = $this->getRequest()->guarda_mirim;
-        $inscrito->encaminhamento = $this->getRequest()->encaminhamento;
+        $inscrito->guarda_mirim = $this->getRequest()->guarda_mirim == "on" ? 1 : 0;
+        $inscrito->encaminhamento = $this->getRequest()->encaminhamento == "on" ? 1 : 0;
         $inscrito->area_interesse = $this->getRequest()->area_interesse;
         $inscrito->copia_rg = $this->getRequest()->copia_rg;
         $inscrito->copia_cpf = $this->getRequest()->copia_cpf;
@@ -631,6 +631,8 @@ class InscritoController extends ApiCoreController
             $inscrito['parentesco_um'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_um']);
             $inscrito['autorizado_dois'] = Portabilis_String_Utils::toUtf8($aluno['autorizado_dois']);
             $inscrito['parentesco_dois'] = Portabilis_String_Utils::toUtf8($aluno['parentesco_dois']);
+            $inscrito['guarda_mirim'] = $inscrito['guarda_mirim'] == 1;
+        $inscrito['encaminhamento'] = $inscrito['encaminhamento'] == 1;
 
             // destroyed_by username
             $dataMapper = $this->getDataMapperFor('usuario', 'funcionario');

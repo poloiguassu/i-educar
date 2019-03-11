@@ -610,9 +610,13 @@ class InscritoController extends Portabilis_Controller_Page_EditController
 
         $this->inputsHelper()->integer('egresso', $options);
 
-        $this->campoCheck('guarda_mirim', 'Guarda Mirim', $this->guarda_mirim, '', FALSE, FALSE);
+        $this->inputsHelper()->checkbox('guarda_mirim', array(
+            'label' => 'Guarda Mirim',
+        ));
 
-        $this->campoCheck('encaminhamento', 'Encaminhado pela rede de proteção', $this->encaminhamento, '', FALSE, FALSE);
+        $this->inputsHelper()->checkbox('encaminhamento', array(
+            'label' => 'Encaminhado pela rede de proteção',
+        ));
 
         $resources = AreaInteresse::getDescriptiveValues();
         $resources = array_replace([null => 'Selecione a Área de Interesse'], $resources);

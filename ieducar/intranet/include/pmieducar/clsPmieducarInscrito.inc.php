@@ -640,7 +640,7 @@ class clsPmieducarInscrito
                 $gruda = ', ';
             }
 
-            if ($this->guarda_mirim) {
+            if (is_numeric($this->guarda_mirim)) {
                 $set .= "$gruda guarda_mirim =  '$this->guarda_mirim' ";
                 $gruda = ', ';
             }
