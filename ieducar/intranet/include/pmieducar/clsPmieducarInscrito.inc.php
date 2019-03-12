@@ -117,11 +117,11 @@ class clsPmieducarInscrito
             $str_nome = addslashes($str_nome);
             $str_nome = str_replace(' ', '%', $str_nome);
 
-            $where   .= "{$whereAnd} fcn_upper_nrm(nome) ILIKE E'%{$str_nome}%' ";
+            $where   .= "{$whereAnd} fcn_upper_nrm(p.nome) ILIKE fcn_upper_nrm(E'%{$str_nome}%') ";
             $whereAnd = ' AND ';
         }
 
-        if (is_string($numeric_cpf)) {
+        if (is_string($numeric_cpf) && !empty($numeric_cpf)) {
             $numeric_cpf = addslashes($numeric_cpf);
 
             $where   .= "{$whereAnd} cpf::text ILIKE E'%{$numeric_cpf}%' ";
@@ -251,11 +251,11 @@ class clsPmieducarInscrito
             $str_nome = addslashes($str_nome);
             $str_nome = str_replace(' ', '%', $str_nome);
 
-            $where   .= "{$whereAnd} fcn_upper_nrm(nome) ILIKE E'%{$str_nome}%' ";
+            $where   .= "{$whereAnd} fcn_upper_nrm(p.nome) ILIKE fcn_upper_nrm(E'%{$str_nome}%') ";
             $whereAnd = ' AND ';
         }
 
-        if (is_string($numeric_cpf)) {
+        if (is_string($numeric_cpf) && !empty($numeric_cpf)) {
             $numeric_cpf = addslashes($numeric_cpf);
 
             $where   .= "{$whereAnd} cpf::text ILIKE E'%{$numeric_cpf}%' ";
@@ -362,8 +362,6 @@ class clsPmieducarInscrito
                 {$where} {$orderBy} {$limite}"
         );
 
-        $this->_campos_lista = $campos;
-
         $resultado = [];
 
         while ($db->ProximoRegistro()) {
@@ -373,6 +371,8 @@ class clsPmieducarInscrito
 
             $resultado[] = $tupla;
         }
+
+        $this->_campos_lista = $campos;
 
         if (count($resultado) > 0) {
             return $resultado;
@@ -401,7 +401,7 @@ class clsPmieducarInscrito
             $str_nome = addslashes($str_nome);
             $str_nome = str_replace(' ', '%', $str_nome);
 
-            $where   .= "{$whereAnd} nome ILIKE E'%{$str_nome}%' ";
+            $where   .= "{$whereAnd} fcn_upper_nrm(p.nome) ILIKE fcn_upper_nrm(E'%{$str_nome}%') ";
             $whereAnd = ' AND ';
         }
 
