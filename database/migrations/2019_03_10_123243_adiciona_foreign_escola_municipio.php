@@ -14,6 +14,8 @@ class AdicionaForeignEscolaMunicipio extends Migration
     public function up()
     {
         Schema::table('pmieducar.inscrito', function (Blueprint $table) {
+            $table->renameColumn('escola', 'estudando_escola');
+
             $table->foreign('estudando_escola')
                 ->references('idescola')->on('public.escola_municipio')
                 ->onUpdate('restrict')
