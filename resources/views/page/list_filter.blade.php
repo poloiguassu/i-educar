@@ -3,8 +3,7 @@
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.1.1/jqc-1.12.4/jszip-2.5.0/dt-1.10.18/b-1.5.2/b-colvis-1.5.1/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
-    <script src="http://code.jquery.com/jquery-migrate-1.1.0.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.1.1/jqc-1.12.4/jszip-2.5.0/dt-1.10.18/b-1.5.4/b-colvis-1.5.4/b-html5-1.5.4/b-print-1.5.4/cr-1.5.0/r-2.2.2/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
 @endpush
 
 @php
@@ -37,7 +36,7 @@
                 );
                 var table = $('#table_id').DataTable({
                     colReorder: true,
-                    responsivel: false,
+                    responsive: true,
                     select: true,
                     lengthChange: true,
                     pageLength: 25,
@@ -81,7 +80,7 @@
         })(jQuery);
     </script>
 
-    <table id="table_id" class="tablelistagem table table-striped" cellspacing="0" width="100%">
+    <table id="table_id" class="table table-striped table-bordered" cellspacing="0" width="100%">
         <thead>
             <tr>
                 @foreach($columns as $column)
@@ -92,16 +91,7 @@
         <tfoot>
             <tr>
                 @foreach($columns as $column)
-                    @if(in_array($column, ['idade']))
-                        <th>
-                            <input type="text" id="min_{{ $column }}" placeholder="Minimo" maxlength="2" size="4">
-                            <input type="text" id="max_{{ $column }}" placeholder="Maximo" maxlength="2" size="4">
-                        </th>
-                    @else
-                        <th>
-                            <input type="text" class="input-texto" placeholder="Pesquisar {{ $column }}">
-                        </th>
-                    @endif
+                    <th>{{ $column }}</th>
                 @endforeach
             </tr>
         </tfoot>
