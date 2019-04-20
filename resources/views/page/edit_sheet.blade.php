@@ -82,7 +82,42 @@
                             }
                         };
                         postResource(options);
-                    } else if (position[0] > 3) {
+                    } else if(position[0] == 4) {
+                        var data = {
+                            id: meta[position[1]],
+                            etapa_id: 2,
+                            situacao: value
+                        };
+
+                        var options = {
+                            url: postResourceUrlBuilder.buildUrl('/module/Api/inscrito', 'inscrito-etapa', {}),
+                            dataType: 'json',
+                            data: data,
+
+                            success: function (dataResponse) {
+                                messageUtils.success('Situação etapa 2 alterada com sucesso.');
+                            }
+                        };
+                        postResource(options);
+                    } else if (position[0] == 5) {
+                        var data = {
+                            id: meta[position[1]],
+                            area_selecionado: value
+                        };
+
+                        var options = {
+                            url: putResourceUrlBuilder.buildUrl('/module/Api/inscrito', 'area-selecionado', {}),
+                            dataType: 'json',
+                            data: data,
+
+                            success: function (dataResponse) {
+                                console.log(dataResponse);
+                                messageUtils.success('Turma alterada com sucesso.');
+                            }
+                        };
+
+                        putResource(options);
+                    } else if (position[0] > 5) {
                         documento = documentos[position[0]-4];
 
                         var data = {
@@ -116,7 +151,9 @@
                         { type: 'text', readOnly: true },
                         { type: 'text', readOnly: true },
                         { type: 'text', readOnly: true },
-                        { type: 'dropdown', source:[{'id':'0', 'name':'Não Compareceu'}, {'id':'1', 'name':'Não Aprovado'}, {'id':'2', 'name':'Aprovado Aparcialmente'}, {'id':'3', 'name':'Aprovado'}] },
+                        { type: 'dropdown', source:[{'id':'0', 'name':'Não Compareceu'}, {'id':'1', 'name':'Inadequado'}, {'id':'2', 'name':'Parcialmente Adequado'}, {'id':'3', 'name':'Adequado'}] },
+                        { type: 'dropdown', source:[{'id':'0', 'name':'Não Compareceu'}, {'id':'1', 'name':'Não Aprovado'}, {'id':'2', 'name':'Lista de Espera'}, {'id':'3', 'name':'Aprovado'}] },
+                        { type: 'dropdown', source:[{'id':'3', 'name':'T&A - Manhã'}, {'id':'4', 'name':'T&A - Tarde'}, {'id':'5', 'name':'Comércio - Manhã'}, {'id':'6', 'name':'Comércio - Tarde'}, {'id':'7', 'name':'Hospedagem - Manhã'}, {'id':'8', 'name':'Eventos - Tarde'}] },
                         { type: 'dropdown', source:[{'id':'0', 'name':'Não Entregue'}, {'id':'1', 'name':'Documento Inválido'}, {'id':'2', 'name':'Entregue'}] },
                         { type: 'dropdown', source:[{'id':'0', 'name':'Não Entregue'}, {'id':'1', 'name':'Documento Inválido'}, {'id':'2', 'name':'Entregue'}] },
                         { type: 'dropdown', source:[{'id':'0', 'name':'Não Entregue'}, {'id':'1', 'name':'Documento Inválido'}, {'id':'2', 'name':'Entregue'}] },
@@ -136,14 +173,14 @@
                 $('#corpo').jexcel('updateSettings', {
                     table: function (instance, cell, col, row, val, id) {
                         // Odd row colours
-                        if (col == 3) {
+                        if (col == 3 || col == 4) {
                             if (val >= 2) {
                                 $(cell).css('background-color', '#b7e1cd');
                             } else if (val != '' && val < 2) {
                                 $(cell).css('background-color', '#f4cccc');
                             }
                         }
-                        if(col > 3) {
+                        if(col > 5) {
                             if (val == 2) {
                                 $(cell).css('background-color', '#b7e1cd');
                             } else if (val == 1) {
