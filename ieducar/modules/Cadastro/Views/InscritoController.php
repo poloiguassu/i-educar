@@ -127,6 +127,18 @@ class InscritoController extends Portabilis_Controller_Page_EditController
         $cod_inscrito = @$_GET['id'];
         $this->processo_seletivo_id = @$_GET['cod_selecao_processo'];
 
+        if (is_null($this->processo_seletivo_id)) {
+            $objSelecao = new clsPmieducarProcessoSeletivo();
+            $registroSelecao = $objSelecao->getUltimoProcessoSeletivo();
+            $this->processo_seletivo_id = $registroSelecao['cod_selecao_processo'];
+        }
+
+        $objSelecao = new clsPmieducarProcessoSeletivo(
+            $this->processo_seletivo_id
+        );
+
+        $registroSelecao = $objSelecao->detalhe();
+
         if ($cod_inscrito or $_GET['person']) {
             if ($_GET['person']) {
                 $this->cod_pessoa_fj = $_GET['person'];
@@ -643,6 +655,22 @@ class InscritoController extends Portabilis_Controller_Page_EditController
         );
 
         $this->inputsHelper()->select('etapa_1', $options);
+
+        for ($i = 1; $i <= $registroSelecao['total_etapas']; $i++) {
+            $resources = AvaliacaoEtapa::getDescriptiveValues();
+            $resources = array_replace([null => $i . 'ª Etapa'], $resources);
+
+            $options = [
+                'required' => false,
+                'label'    => 'Avaliação Projeto Etapa ' . $i,
+                'value'     => $this->{'etapa_' . $i},
+                'resources' => $resources,
+            ];
+
+            $this->inputsHelper()->select('etapa_' . $i, $options);
+
+            $this->etapas[$i] = $this->{'etapa_' . $i};
+        }
 
         $resources = DocumentoSituacao::getDescriptiveValues();
         $resources = array_replace([null => 'Selecione a situação'], $resources);
