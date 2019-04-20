@@ -40,6 +40,8 @@ class indice extends clsListagem
                 'Sexo',
                 'Idade',
                 'Etapa 1',
+                'Etapa 2',
+                'Turma',
                 'Cópia RG',
                 'Cópia CPF',
                 'Comprovante de Residência',
@@ -75,7 +77,9 @@ class indice extends clsListagem
             $this->id_federal,
             null,
             $this->inicial_min,
-            $this->inicial_max
+            $this->inicial_max,
+            $this->turno,
+            $this->encaminhamento
         );
 
         if ($pessoas) {
@@ -86,6 +90,7 @@ class indice extends clsListagem
                 $inscritoEtapa = $objEtapa->lista($pessoa['cod_inscrito']);
 
                 $pessoa['etapa_1'] = (!empty($inscritoEtapa)) ? $inscritoEtapa[0]['situacao'] : '';
+                $pessoa['etapa_2'] = (!empty($inscritoEtapa)) ? $inscritoEtapa[1]['situacao'] : '';
 
                 $total = $pessoa['total'];
 
@@ -113,6 +118,8 @@ class indice extends clsListagem
                         $sexo[$pessoa['sexo']],
                         $idade,
                         $pessoa['etapa_1'],
+                        $pessoa['etapa_2'],
+                        $pessoa['area_selecionado'],
                         $pessoa['copia_rg'],
                         $pessoa['copia_cpf'],
                         $pessoa['copia_residencia'],

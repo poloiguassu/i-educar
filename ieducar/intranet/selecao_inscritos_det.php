@@ -24,8 +24,8 @@ class clsIndexBase extends clsBase
 {
     public function Formular()
     {
-        $this->SetTitulo($this->_instituicao . ' i-Educar - Aluno');
-        $this->processoAp = 578;
+        $this->SetTitulo($this->_instituicao . ' Candidato Processo Seletivo');
+        $this->processoAp = 21469;
     }
 }
 class indice extends clsDetalhe
@@ -63,13 +63,13 @@ class indice extends clsDetalhe
         $this->obj_permissao = new clsPermissoes();
 
         if ($_GET['cod_inscrito']) {
-            $this->cod_inscrito = $this->getQueryString('cod_inscrito');
+            $this->cod_inscrito = $_GET['cod_inscrito'];
             $objInscrito = new clsPmieducarInscrito();
             $objInscrito->cod_inscrito = $this->cod_inscrito;
-            $registro = $objInscrito->detalhe();
-            $this->cod_aluno = $registro['ref_cod_aluno'];
+            $registroInscrito = $objInscrito->detalhe();
+            $this->cod_aluno = $registroInscrito['ref_cod_aluno'];
         } elseif ($_GET['cod_aluno']) {
-            $this->cod_aluno = $this->getQueryString('cod_aluno');
+            $this->cod_aluno = $_GET['cod_aluno'];
             $objInscrito = new clsPmieducarInscrito();
             $objInscrito->cod_aluno = $this->cod_aluno;
             $processoSeletivo = $objInscrito->getUltimoProcessoSeletivo();
@@ -77,8 +77,8 @@ class indice extends clsDetalhe
                 $objInscrito->ref_cod_selecao_processo
                     = $processoSeletivo['ref_cod_selecao_processo'];
             }
-            $registro = $objInscrito->detalhe();
-            $this->cod_inscrito = $registro['cod_inscrito'];
+            $registroAluno = $objInscrito->detalhe();
+            $this->cod_inscrito = $registroAluno['cod_inscrito'];
         }
 
         $this->nivel_usuario = $this->obj_permissao->nivel_acesso($this->pessoa_logada);
@@ -761,14 +761,31 @@ class indice extends clsDetalhe
                     if ($etapa['etapa'] && $etapa['situacao']) {
                         $this->addDetalhe(
                             [
-                                'Situação Etapa' . $etapa['etapa'],
+                                'Situação Etapa ' . $etapa['etapa'],
                                 $avaliacao[$etapa['situacao']]
                             ]
                         );
                     }
                 }
 
+                $area_selecionado = array(
+                    ''  => 'Selecione uma turma',
+                    3   => 'T&A - Manhã',
+                    4   => 'T&A - Tarde',
+                    5   => 'Comércio - Manhã',
+                    6   => 'Comércio - Tarde',
+                    7   => 'Hospedagem - Manhã',
+                    8   => 'Eventos - Tarde'
+                );
 
+                if (!empty($reg['area_selecionado'])) {
+                    $this->addDetalhe(
+                        [
+                            'Turma',
+                            $area_selecionado[$reg['area_selecionado']]
+                        ]
+                    );
+                }
 
                 $this->addDetalhe(
                     [
@@ -815,7 +832,7 @@ class indice extends clsDetalhe
             }
         }
 
-        $this->url_cancelar = 'educar_aluno_lst.php';
+        $this->url_cancelar = 'selecao_inscritos_lst.php';
 
         $this->url_editar = '/module/Cadastro/Inscrito?id=' . $this->cod_inscrito;
 
