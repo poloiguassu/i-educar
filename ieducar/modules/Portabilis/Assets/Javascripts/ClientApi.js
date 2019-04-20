@@ -105,11 +105,11 @@ var getResources = function(options, errorCallback) {
 };
 
 var postResource = function(options, errorCallback){
-  $j.ajax(options).error(errorCallback || handleErrorOnPostResource);
+  $j.ajax(options);
 };
 
 var putResource = function(options, errorCallback){
-  $j.ajax(options).error(errorCallback || handleErrorOnPutResource);
+  $j.ajax(options)
 };
 
 function deleteResource(options, errorCallback){
