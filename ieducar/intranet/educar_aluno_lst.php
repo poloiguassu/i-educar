@@ -80,9 +80,9 @@ class indice extends clsListagem
 
         if ($configuracoes['mostrar_codigo_inep_aluno']) {
             $this->campoNumero('cod_inep', 'Código INEP', $this->cod_inep, 20, 255, false);
+            $this->campoRA('aluno_estado_id', 'Código rede estadual do aluno (RA)', $this->aluno_estado_id, false);
         }
 
-        $this->campoRA('aluno_estado_id', 'Código rede estadual do aluno (RA)', $this->aluno_estado_id, false);
         $this->campoTexto('nome_aluno', 'Nome do aluno', $this->nome_aluno, 50, 255, false);
         $this->campoData('data_nascimento', 'Data de Nascimento', $this->data_nascimento);
         $this->campoTexto('nome_pai', 'Nome do Pai', $this->nome_pai, 50, 255);
@@ -118,7 +118,7 @@ class indice extends clsListagem
                 'value' => $this->ref_cod_escola
             ]
         );
-        $this->inputsHelper()->dynamic(['curso', 'serie'], ['required' => false]);
+        $this->inputsHelper()->dynamic(['curso', 'serie', 'turma'], ['required' => false]);
 
         //$this->inputsHelper()->select('periodo', array('required' => false, 'value' => $this->periodo, 'resources' => array(null => 'Selecione', 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral' )));
 
@@ -132,9 +132,6 @@ class indice extends clsListagem
                 $ref_cod_escola = $cod_escola;
             }
         }
-
-        $array_matriculado = ['S' => 'Sim', 'N' => 'Não'];
-        $nivel_usuario = $obj_permissoes->nivel_acesso($this->pessoa_logada);
 
         if (!$configuracoes['mostrar_codigo_inep_aluno']) {
             $cabecalhos = ['Código Aluno',
@@ -154,7 +151,7 @@ class indice extends clsListagem
         $this->addCabecalhos($cabecalhos);
 
         // Paginador
-        $this->limite = 20;
+        $this->limite = 1000;
         $this->offset = ($_GET["pagina_{$this->nome}"]) ? $_GET["pagina_{$this->nome}"] * $this->limite - $this->limite : 0;
 
         $aluno = new clsPmieducarAluno();
