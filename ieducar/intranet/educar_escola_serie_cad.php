@@ -668,8 +668,10 @@ class indice extends clsCadastro
         $anosLetivosDisponiveis = [];
 
         if (is_numeric($this->ref_cod_escola) && is_numeric($this->ref_cod_curso)) {
+            print("teste");
             $objEscolaCurso = new clsPmieducarEscolaCurso($this->ref_cod_escola, $this->ref_cod_curso);
             if ($escolaCurso = $objEscolaCurso->detalhe()) {
+                print_r($escolaCurso);
                 $anosLetivosDisponiveis = json_decode($escolaCurso['anos_letivos']) ?: [];
             }
         }
