@@ -817,6 +817,30 @@ class InscritoController extends ApiCoreController
 
         return ['id' => $id];
     }
+    
+    protected function putAreaSelecionado()
+    {
+        $id = $this->getRequest()->id;
+
+        $area_selecionado = $this->getRequest()->area_selecionado;
+
+        if (is_numeric($id) && is_string($area_selecionado)) {
+            $sql = "UPDATE
+                    pmieducar.inscrito
+                SET
+                    area_selecionado = {$area_selecionado}
+                WHERE
+                    cod_inscrito = {$id}";
+
+            $id = $this->fetchPreparedQuery($sql);
+
+            $this->messenger->append('Cadastrado realizado com sucesso', 'success', false, 'error');
+        } else {
+            $this->messenger->append('Aparentemente o inscrito não pode ser cadastrado, por favor, verifique.');
+        }
+
+        return ['id' => $id];
+    }
 
     protected function putCopiaDocumento()
     {
@@ -923,26 +947,21 @@ class InscritoController extends ApiCoreController
     protected function delete()
     {
         $id = $this->getRequest()->id;
-        $matriculaAtiva = dbBool($this->possuiMatriculaAtiva($id));
 
-        if (!$matriculaAtiva) {
-            if ($this->canDelete()) {
-                $inscrito = new clsPmieducarInscrito();
-                $inscrito->cod_inscrito = $id;
-                $inscrito->ref_usuario_exc = $this->getSession()->id_pessoa;
+        if ($this->canDelete()) {
+            $inscrito = new clsPmieducarInscrito();
+            $inscrito->cod_inscrito = $id;
+            $inscrito->ref_usuario_exc = $this->getSession()->id_pessoa;
 
-                $detalheInscrito = $inscrito->detalhe();
+            $detalheInscrito = $inscrito->detalhe();
 
-                if ($inscrito->excluir()) {
-                    $auditoria = new clsModulesAuditoriaGeral('inscrito', $this->getSession()->id_pessoa, $id);
-                    $auditoria->exclusao($detalheInscrito);
-                    $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
-                } else {
-                    $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.', 'error', false, 'error');
-                }
+            if ($inscrito->excluir()) {
+                $auditoria = new clsModulesAuditoriaGeral('inscrito', $this->getSession()->id_pessoa, $id);
+                $auditoria->exclusao($detalheInscrito);
+                $this->messenger->append('Cadastro removido com sucesso', 'success', false, 'error');
+            } else {
+                $this->messenger->append('Aparentemente o cadastro não pode ser removido, por favor, verifique.', 'error', false, 'error');
             }
-        } else {
-            $this->messenger->append('O cadastro não pode ser removido, pois existem matrículas vinculadas.', 'error', false, 'error');
         }
 
         return ['id' => $id];
@@ -1106,6 +1125,8 @@ class InscritoController extends ApiCoreController
             $this->appendResponse($this->getEstatisticas());
         } elseif ($this->isRequestFor('post', 'inscrito-etapa')) {
             $this->appendResponse($this->postEtapa());
+        } elseif ($this->isRequestFor('put', 'area-selecionado')) {
+            $this->appendResponse($this->putAreaSelecionado());
         } elseif ($this->isRequestFor('put', 'inscrito-documento')) {
             $this->appendResponse($this->putCopiaDocumento());
         } elseif ($this->isRequestFor('post', 'inscrito')) {
