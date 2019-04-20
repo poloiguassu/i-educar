@@ -76,6 +76,8 @@
 
     <link rel=stylesheet type='text/css' href='{{ Asset::get('/intranet/styles/custom.css') }}'/>
     @show
+
+    @stack('styles')
 </head>
 
 <body>

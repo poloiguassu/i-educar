@@ -640,13 +640,16 @@ class clsListagem extends clsCampos
             <tr>
               <td colspan=\"$ncols\" align=\"center\">";
 
-        if (count($this->array_botao_script)) {
+        if (is_array($this->array_botao_script) && count($this->array_botao_script)) {
             for ($i = 0; $i < count($this->array_botao); $i++) {
-                $retorno_botao .= '&nbsp;<input type=\'button\' class=\'botaolistagem\' onclick=\''. $this->array_botao_script[$i].'\' value=\''.$this->array_botao[$i]."'>&nbsp;\n";
+                $btnTemplate = '&nbsp;<input type=\'button\' class=\'botaolistagem\' onclick=\'%s\' value=\'%s\' id=\'%s\'>&nbsp;';
+                $retorno_botao .= sprintf($btnTemplate, $this->array_botao_script[$i], $this->array_botao[$i], $this->array_botao_id[$i] ?? '');
+                //$retorno .= "&nbsp;<input type='button' class='botaolistagem' onclick='". $this->array_botao_script[$i]."' value='".$this->array_botao[$i]."'>&nbsp;\n";
             }
-        } else {
+        }
+        elseif (is_array($this->array_botao)) {
             for ($i = 0; $i < count($this->array_botao); $i++) {
-                $retorno_botao .= '&nbsp;<input type=\'button\' class=\'botaolistagem\' onclick=\'javascript:go( "'.$this->array_botao_url[$i].'" );\' value=\''.$this->array_botao[$i]."'>&nbsp;\n";
+                $retorno_botao .= "&nbsp;<input type='button' class='botaolistagem' onclick='javascript:go( \"".$this->array_botao_url[$i]."\" );' value='".$this->array_botao[$i]."'>&nbsp;\n";
             }
         }
 

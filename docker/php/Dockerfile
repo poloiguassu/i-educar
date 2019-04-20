@@ -44,10 +44,13 @@ RUN docker-php-ext-install zip
 
 RUN apt-get install -y unzip
 
-RUN ln -s /application/artisan /usr/local/bin/artisan
+RUN ln -s /var/www/ieducar/artisan /usr/local/bin/artisan
 
 RUN mkdir -p /usr/share/man/man7
 RUN apt-get install -y postgresql-client
+
+RUN apt-get install -y libpng-dev
+RUN docker-php-ext-install gd
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_PROCESS_TIMEOUT 900

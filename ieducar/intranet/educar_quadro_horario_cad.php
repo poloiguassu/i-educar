@@ -98,10 +98,6 @@ class indice extends clsCadastro
     {
         $retorno = 'Novo';
 
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $this->ref_cod_turma       = $_GET['ref_cod_turma'];
         $this->ref_cod_serie       = $_GET['ref_cod_serie'];
         $this->ref_cod_curso       = $_GET['ref_cod_curso'];
@@ -214,8 +210,7 @@ class indice extends clsCadastro
             $auditoria->inclusao($quadroHorario);
 
             $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-            header("Location: educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}&busca=S");
-            die();
+            $this->simpleRedirect("educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}&busca=S");
         }
 
         $this->mensagem = 'Cadastro não realizado.<br>';
@@ -229,42 +224,38 @@ class indice extends clsCadastro
 
     public function Excluir()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        @session_write_close();
-
         $obj_permissoes = new clsPermissoes();
         $obj_permissoes->permissao_excluir(
-        641,
-        $this->pessoa_logada,
-        7,
-      "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}"
-    );
+            641,
+            $this->pessoa_logada,
+            7,
+            "educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}"
+        );
 
         if (is_numeric($this->cod_quadro_horario)) {
             $obj_horarios = new clsPmieducarQuadroHorarioHorarios(
-        $this->cod_quadro_horario,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-        null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          1
-      );
+                $this->cod_quadro_horario,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                1
+            );
 
             if ($obj_horarios->excluirTodos()) {
                 $obj_quadro = new clsPmieducarQuadroHorario(
-            $this->cod_quadro_horario,
-          $this->pessoa_logada
-        );
+                    $this->cod_quadro_horario,
+                    $this->pessoa_logada
+                );
 
                 $quadroHorario = $obj_quadro->detalhe();
 
@@ -273,8 +264,7 @@ class indice extends clsCadastro
                     $auditoria->exclusao($quadroHorario);
 
                     $this->mensagem .= 'Exclus&atilde;o efetuada com sucesso.<br>';
-                    header("Location: educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}");
-                    die();
+                    $this->simpleRedirect("educar_quadro_horario_lst.php?ref_cod_turma={$this->ref_cod_turma}&ref_cod_serie={$this->ref_cod_serie}&ref_cod_curso={$this->ref_cod_curso}&ref_cod_escola={$this->ref_cod_escola}&ref_cod_instituicao={$this->ref_cod_instituicao}&ano={$this->ano}");
                 }
             }
         }
@@ -296,3 +286,4 @@ $pagina->addForm($miolo);
 
 // Gera o código HTML
 $pagina->MakeAll();
+?>

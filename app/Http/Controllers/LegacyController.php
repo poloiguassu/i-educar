@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Exception;
 use Throwable;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -55,6 +55,10 @@ class LegacyController extends Controller
      */
     private function configureErrorsAndExceptions()
     {
+        if (config('legacy.display_errors')) {
+            return;
+        }
+
         ini_set('display_errors', 'off');
 
         error_reporting(0);
@@ -113,6 +117,7 @@ class LegacyController extends Controller
      *
      * @return void
      *
+     * @throws HttpResponseException
      * @throws HttpException
      * @throws Exception
      */
@@ -121,6 +126,14 @@ class LegacyController extends Controller
         try {
             require_once $filename;
             return;
+        } catch (HttpResponseException $exception) {
+
+            // Para evitar encerrar a aplicação com `die` ou `exit`, é lançada
+            // uma exceção do tipo `HttpResponseException` com uma `Response`
+            // interna que será a resposta devolvida pela aplicação.
+
+            throw $exception;
+
         } catch (Exception $exception) {
 
             // A maioria das vezes será pega a Exception neste catch, apenas
@@ -140,8 +153,6 @@ class LegacyController extends Controller
                 $throwable->getMessage(), $throwable->getCode(), $throwable
             );
         }
-
-        app(ExceptionHandler::class)->report($exception);
 
         if (config('app.debug')) {
             throw $exception;
@@ -190,13 +201,13 @@ class LegacyController extends Controller
      *
      * @return Response
      *
+     * @throws HttpResponseException
      * @throws Exception
      */
     private function requireFileFromLegacy($filename)
     {
         ob_start();
 
-        $this->startLegacySession();
         $this->overrideGlobals();
         $this->configureErrorsAndExceptions();
         $this->loadLegacyBootstrapFile();
@@ -209,20 +220,6 @@ class LegacyController extends Controller
         return new Response(
             $content, $this->getHttpStatusCode(), $this->getHttpHeaders()
         );
-    }
-
-    /**
-     * Start session.
-     *
-     * @return void
-     */
-    private function startLegacySession()
-    {
-        try {
-            session_start();
-        } catch (Exception $e) {
-
-        }
     }
 
     /**
@@ -247,6 +244,7 @@ class LegacyController extends Controller
      *
      * @return Response
      *
+     * @throws HttpResponseException
      * @throws Exception
      */
     public function intranet($uri)
@@ -259,6 +257,7 @@ class LegacyController extends Controller
      *
      * @return Response
      *
+     * @throws HttpResponseException
      * @throws Exception
      */
     public function module()
@@ -273,10 +272,24 @@ class LegacyController extends Controller
      *
      * @return Response
      *
+     * @throws HttpResponseException
      * @throws Exception
      */
     public function modules($uri)
     {
         return $this->requireFileFromLegacy('modules/' . $uri);
+    }
+
+    /**
+     * Load module route file and generate a response for API.
+     *
+     * @return Response
+     *
+     * @throws HttpResponseException
+     * @throws Exception
+     */
+    public function api()
+    {
+        return $this->requireFileFromLegacy('module/index.php');
     }
 }

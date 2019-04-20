@@ -98,10 +98,6 @@ class indice extends clsCadastro
   function Inicializar()
   {
     $retorno = 'Novo';
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $this->idbai = $_GET['idbai'];
 
     if (is_numeric($this->idbai)) {
@@ -133,9 +129,9 @@ class indice extends clsCadastro
     $localizacao->entradaCaminhos( array(
          $_SERVER['SERVER_NAME']."/intranet" => "In&iacute;cio",
          "educar_enderecamento_index.php"    => "Endereçamento",
-         ""        => "{$nomeMenu} bairro"             
+         ""        => "{$nomeMenu} bairro"
     ));
-    $this->enviaLocalizacao($localizacao->montar());    
+    $this->enviaLocalizacao($localizacao->montar());
 
     return $retorno;
   }
@@ -236,7 +232,7 @@ class indice extends clsCadastro
         foreach ($lista as $registro) {
           $opcoes[$registro['idsetorbai']] = $registro['nome'];
         }
-      }      
+      }
     }
     else {
       echo '<!--\nErro\nClasse clsMunicipio nao encontrada\n-->';
@@ -254,12 +250,6 @@ class indice extends clsCadastro
 
   function Novo()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
-    print("inicando cadastro");
-
     $obj = new clsPublicBairro($this->idmun, NULL, NULL, $this->nome, NULL,
       NULL, 'U', $this->pessoa_logada, NULL, 'I', NULL, 9,
       $this->zona_localizacao, $this->iddis);
@@ -275,8 +265,7 @@ class indice extends clsCadastro
       $auditoria->inclusao($enderecamento);
 
       $this->mensagem .= 'Cadastro efetuado com sucesso.<br>';
-      header('Location: public_bairro_lst.php');
-      die();
+      $this->simpleRedirect('public_bairro_lst.php');
     }
 
     $this->mensagem = 'Cadastro n&atilde;o realizado.<br>';
@@ -287,11 +276,6 @@ class indice extends clsCadastro
 
   function Editar()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
-
     $enderecamentoDetalhe = new clsPublicBairro(null, null, $this->idbai);
     $enderecamentoDetalhe->cadastrou = $this->idbai;
     $enderecamentoDetalheAntes = $enderecamentoDetalhe->detalhe();
@@ -311,8 +295,7 @@ class indice extends clsCadastro
       $auditoria->alteracao($enderecamentoDetalheAntes, $enderecamentoDetalheDepois);
 
       $this->mensagem .= "Edi&ccedil;&atilde;o efetuada com sucesso.<br>";
-      //header('Location: public_bairro_lst.php');
-      die();
+      $this->simpleRedirect('public_bairro_lst.php');
     }
 
     $this->mensagem = 'Edi&ccedil;&atilde;o n&atilde;o realizada.<br>';
@@ -323,17 +306,12 @@ class indice extends clsCadastro
 
   function Excluir()
   {
-    session_start();
-    $this->pessoa_logada = $_SESSION['id_pessoa'];
-    session_write_close();
-
     $obj = new clsPublicBairro(NULL, NULL, $this->idbai, NULL, $this->pessoa_logada);
     $excluiu = $obj->excluir();
 
     if ($excluiu) {
       $this->mensagem .= 'Exclusão efetuada com sucesso.<br>';
-      header('Location: public_bairro_lst.php');
-      die();
+      $this->simpleRedirect('public_bairro_lst.php');
     }
 
     $this->mensagem = 'Exclusão não realizada.<br>';

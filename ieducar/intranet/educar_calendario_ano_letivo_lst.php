@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Session;
+
 require_once 'include/clsBase.inc.php';
 require_once 'include/clsListagem.inc.php';
 require_once 'include/clsBanco.inc.php';
@@ -48,10 +50,6 @@ class indice extends clsListagem
 
     function renderHTML()
     {
-        @session_start();
-        $this->pessoa_logada = $_SESSION['id_pessoa'];
-        session_write_close();
-
         $obj_permissoes = new clsPermissoes();
 
         $nivel = $obj_permissoes->nivel_acesso($this->pessoa_logada);
@@ -96,8 +94,8 @@ class indice extends clsListagem
         }
 
         if ($_POST) {
-            $this->ref_cod_escola = $_POST['ref_cod_escola'] ? $_POST['ref_cod_escola'] : $_SESSION['calendario']['ref_cod_escola'];
-            $this->ref_cod_instituicao = $_POST['ref_cod_instituicao'] ? $_POST['ref_cod_instituicao'] : $_SESSION['calendario']['ref_cod_instituicao'];
+            $this->ref_cod_escola = $_POST['ref_cod_escola'] ? $_POST['ref_cod_escola'] : Session::get('calendario.ref_cod_escola');
+            $this->ref_cod_instituicao = $_POST['ref_cod_instituicao'] ? $_POST['ref_cod_instituicao'] : Session::get('calendario.ref_cod_instituicao');
             if ($_POST['mes']) {
                 $this->mes = $_POST['mes'];
             }
@@ -107,15 +105,15 @@ class indice extends clsListagem
             if ($_POST['cod_calendario_ano_letivo']) {
                 $this->cod_calendario_ano_letivo = $_POST['cod_calendario_ano_letivo'];
             }
-        } elseif (isset($_SESSION['calendario'])) {
+        } elseif (isset(Session::has('calendario'))) {
             // passa todos os valores em SESSION para atributos do objeto
-            foreach ($_SESSION['calendario'] as $var => $val) {
+            foreach (Session::has('calendario') as $var => $val) {
                 $this->$var = ($val === '') ? null : $val;
             }
         }
 
         if ($_GET) {
-            header('Location: educar_calendario_ano_letivo_lst.php');
+            $this->simpleRedirect('educar_calendario_ano_letivo_lst.php');
         }
 
         if (!$this->mes) {
@@ -194,13 +192,13 @@ class indice extends clsListagem
         if (is_array($lista) && count($lista)) {
             foreach ($lista as $key => $registro) {
                 // Guarda dados na $_SESSION
-                $_SESSION['calendario'] = [
+                Session::put('calendario', [
                     'cod_calendario_ano_letivo' => $registro['cod_calendario_ano_letivo'],
                     'ref_cod_instituicao' => $this->ref_cod_instituicao,
                     'ref_cod_escola' => $this->ref_cod_escola,
                     'ano' => $this->ano,
                     'mes' => $this->mes
-                ];
+                ]);
 
                 // Nome da escola
                 $obj_ref_cod_escola = new clsPmieducarEscola($registro['ref_cod_escola']);
@@ -465,12 +463,12 @@ class indice extends clsListagem
         }
 
         if ($obj_permissoes->permissao_cadastra(620, $this->pessoa_logada, 7)) {
-            if ($_POST && empty($lista) && $_SESSION['calendario']['ultimo_valido']) {
+            if ($_POST && empty($lista) && Session::get('calendario.ultimo_valido')) {
                 $url = sprintf(
                     'educar_calendario_ano_letivo_lst.php?ref_cod_instituicao=%s&ref_cod_escola=%s&ano=%s',
                     $this->ref_cod_instituicao,
                     $this->ref_cod_escola,
-                    $_SESSION['calendario']['ano']
+                    Session::get('calendario.ano')
                 );
 
                 $bt_voltar = sprintf(
