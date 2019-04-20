@@ -93,7 +93,7 @@
     <div id="DOM_expansivel" class="DOM_expansivel"></div>
     <table summary="" class='tabelanum1' id="tablenum1" border='0' cellspacing='0' cellpadding='0'>
         <tr id="topo" class="topo">
-            <td class="logo" align="left"><a style="color:#FFF; text-decoration: none;" href="/">i-Educar</a></td>
+            <td class="logo" align="left"><a style="color:#FFF; text-decoration: none;" href="/">Trilha Jovem Iguassu</a></td>
             <td id="perfil-user-id" class="perfil-user" align="right">
                 <a class="icons-top" href="#">
                     <img id="notificacao" src="/intranet/imagens/icon-nav-notifications.png">
