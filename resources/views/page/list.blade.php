@@ -4,7 +4,6 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.1.1/jqc-1.12.4/jszip-2.5.0/dt-1.10.18/b-1.5.2/b-colvis-1.5.1/b-html5-1.5.2/b-print-1.5.2/cr-1.5.0/sc-1.5.0/sl-1.2.6/datatables.min.js"></script>
-    <script src="http://code.jquery.com/jquery-migrate-1.1.0.js"></script>
 @endpush
 
 @php
@@ -52,7 +51,8 @@
             /*$('[data-toggle="popover"]').popover()*/
             var table = $('#table_id').DataTable({
                 colReorder: true,
-                scrollX: true,
+                select: true,
+                responsive: true,
                 lengthChange: true,
                 pageLength: 50,
                 dom: "lf<'floatright'B>rtip",
