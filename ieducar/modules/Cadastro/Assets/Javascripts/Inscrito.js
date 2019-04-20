@@ -429,7 +429,8 @@ var handleGetPersonDetails = function (dataResponse) {
 
     var alunoId = dataResponse.aluno_id;
 
-    if (alunoId && alunoId != resource.id()) {
+    // TODO: Comparar com inscrito essa parte está bugando o código
+    /*if (alunoId && alunoId != resource.id())) {
         $submitButton.attr('disabled', 'disabled').hide();
 
         $pessoaNotice.html('Esta pessoa já possui o aluno código ' + alunoId + ' cadastrado, ')
@@ -441,12 +442,12 @@ var handleGetPersonDetails = function (dataResponse) {
             .attr('target', '_blank')
             .html('acessar cadastro.')
             .appendTo($pessoaNotice);
-    } else {
+    } else {*/
         $j('.pessoa-links .editar-pessoa')//.attr('href', '/intranet/atendidos_cad.php?cod_pessoa_fj=' + dataResponse.id)
             .show().css('display', 'inline');
 
         $submitButton.removeAttr('disabled').show();
-    }
+    //}
 
     $j('#pessoa_id').val(dataResponse.id);
     var nameFull = dataResponse.id + ' - ' + dataResponse.nome;
