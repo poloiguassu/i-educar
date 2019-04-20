@@ -128,6 +128,19 @@ class indice extends clsCadastro
         );
 
         $this->inputsHelper()->integer('total_etapas', $options);
+
+        // Projetos
+        $this->campoTabelaInicio("projetos", "Projetos", array("Projeto", Portabilis_String_Utils::toLatin1("Data inclusão"), "Data desligamento", 'Turno'));
+
+        $this->inputsHelper()->text('projeto_cod_projeto', array('required' => false));
+
+        $this->inputsHelper()->date('projeto_data_inclusao', array('required' => false));
+
+        $this->inputsHelper()->date('projeto_data_desligamento', array('required' => false));
+
+        $this->inputsHelper()->select('projeto_turno', array('required' => false, 'resources' => array('' => "Selecione", 1 => 'Matutino', 2 => 'Vespertino', 3 => 'Noturno', 4 => 'Integral')));
+
+        $this->campoTabelaFim();
     }
 
     function Novo()

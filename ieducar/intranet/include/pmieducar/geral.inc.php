@@ -114,6 +114,7 @@ require_once 'include/pmieducar/clsPmieducarEscolaCandidatoFilaUnica.inc.php';
 require_once 'include/pmieducar/clsPmieducarResponsaveisAluno.inc.php';
 
 require_once 'include/pmieducar/clsPmieducarProcessoSeletivo.inc.php';
+require_once 'include/pmieducar/clsPmieducarProcessoSeletivoDataEtapa.inc.php';
 require_once 'include/pmieducar/clsPmieducarInscrito.inc.php';
 require_once 'include/pmieducar/clsPmieducarInscritoEtapa.inc.php';
 

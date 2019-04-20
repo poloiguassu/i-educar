@@ -330,6 +330,10 @@ class Portabilis_View_Helper_Inputs
         $this->resourceInput('processoSeletivo', $this->mergeInputOptions($inputOptions, $helperOptions));
     }
 
+    public function selecaoDataEtapa($inputOptions = [], $helperOptions = [])
+    {
+        $this->resourceInput('selecaoDataEtapa', $this->mergeInputOptions($inputOptions, $helperOptions));
+    }
 
     public function escolaMunicipio($inputOptions = [], $helperOptions = [])
     {

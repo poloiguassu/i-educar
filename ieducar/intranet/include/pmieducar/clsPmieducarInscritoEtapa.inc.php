@@ -8,6 +8,7 @@ class clsPmieducarInscritoEtapa
     public $ref_cod_inscrito;
     public $etapa;
     public $situacao;
+    public $ref_cod_etapa_data;
 
     public $_tabela;
     public $_schema;
@@ -18,7 +19,8 @@ class clsPmieducarInscritoEtapa
     public function __construct(
         $ref_cod_inscrito = null,
         $etapa = null,
-        $situacao = null
+        $situacao = null,
+        $ref_cod_etapa_data = null
     ) {
         if (is_numeric($ref_cod_inscrito)) {
             $this->ref_cod_inscrito = $ref_cod_inscrito;
@@ -32,17 +34,22 @@ class clsPmieducarInscritoEtapa
             $this->situacao = $situacao;
         }
 
+        if (is_numeric($ref_cod_etapa_data)) {
+            $this->ref_cod_etapa_data = $ref_cod_etapa_data;
+        }
+
         $this->_schema = 'pmieducar.';
         $this->_tabela = $this->_schema . 'inscrito_etapa';
 
         $this->_campos_lista = $this->_todos_campos =  'ref_cod_inscrito,
-            etapa, situacao';
+            etapa, situacao, ref_cod_etapa_data';
     }
 
     public function lista(
         $ref_cod_inscrito = null,
         $etapa = null,
-        $situacao = null
+        $situacao = null,
+        $ref_cod_etapa_data = null
     ) {
         $whereAnd = '';
         $where    = '';
@@ -59,6 +66,11 @@ class clsPmieducarInscritoEtapa
 
         if (is_numeric($situacao)) {
             $where   .= "{$whereAnd} situacao = '$situacao'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($ref_cod_etapa_data)) {
+            $where   .= "{$whereAnd} ref_cod_etapa_data = '$$ref_cod_etapa_data'";
             $whereAnd = ' AND ';
         }
 
@@ -130,6 +142,12 @@ class clsPmieducarInscritoEtapa
                 $gruda = ', ';
             }
 
+            if (is_numeric($this->ref_cod_etapa_data)) {
+                $campos  .= "{$gruda}ref_cod_etapa_data";
+                $valores .= "{$gruda}'{$this->ref_cod_etapa_data}'";
+                $gruda = ', ';
+            }
+
             $db->Consulta(
                 "INSERT INTO
                     {$this->_tabela} ($campos)
@@ -149,18 +167,13 @@ class clsPmieducarInscritoEtapa
             $set = '';
             $gruda = '';
 
-            if (is_numeric($this->ref_cod_inscrito)) {
-                $set .= " ref_cod_inscrito =  '$this->ref_cod_inscrito' ";
-                $gruda = ', ';
-            }
-
-            if (is_numeric($this->etapa)) {
-                $set .= "$gruda etapa =  '$this->etapa' ";
-                $gruda = ', ';
-            }
-
             if (is_numeric($this->situacao)) {
-                $set .= "$gruda situacao =  '$this->situacao' ";
+                $set .= "$gruda situacao = '$this->situacao' ";
+                $gruda = ', ';
+            }
+
+            if (is_numeric($this->ref_cod_etapa_data)) {
+                $set .= "$gruda ref_cod_etapa_data = '$this->ref_cod_etapa_data' ";
                 $gruda = ', ';
             }
 
@@ -222,10 +235,27 @@ class clsPmieducarInscritoEtapa
                 "DELETE FROM
                     {$this->_tabela}
                 WHERE
-                    cod_selecao_processo = {$this->cod_selecao_processo}
+                    ref_cod_inscrito = '{$this->ref_cod_inscrito}'
                 AND
-                    etapa = {$this->etapa}"
+                    etapa = '{$this->etapa}'"
             );
         }
+    }
+
+    public function excluirTodas()
+    {
+        if (is_numeric($this->ref_cod_inscrito)) {
+            $db  = new clsBanco();
+
+            $retorno = $db->Consulta(
+                "DELETE FROM
+                    {$this->_tabela}
+                WHERE
+                    ref_cod_inscrito = '{$this->ref_cod_inscrito}'"
+            );
+
+            return $retorno;
+        }
+        return false;
     }
 }

@@ -231,6 +231,190 @@ class clsPmieducarInscrito
         return false;
     }
 
+    public function listaDataEtapa(
+        $int_ref_cod_selecao_processo = false,
+        $etapa = false,
+        $etapa_situacao = false,
+        $etapa_data = false,
+        $str_nome = false,
+        $numeric_cpf = false,
+        $inicial_min = false,
+        $inicial_max = false,
+        $int_turno = false,
+        $bool_egresso = false,
+        $int_encaminhamento = false,
+        $inicio_limite = false,
+        $qtd_registros = false,
+        $str_orderBy = false,
+        $int_area_selecionado = false
+    ) {
+        $whereAnd = '';
+        $where    = '';
+        $limite   = '';
+
+        if (is_string($str_nome) && $str_nome != '') {
+            $str_nome = addslashes($str_nome);
+            $str_nome = str_replace(' ', '%', $str_nome);
+
+            $where   .= "{$whereAnd} fcn_upper_nrm(p.nome) ILIKE fcn_upper_nrm(E'%{$str_nome}%') ";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_string($numeric_cpf) && !empty($numeric_cpf)) {
+            $numeric_cpf = addslashes($numeric_cpf);
+
+            $where   .= "{$whereAnd} cpf::text ILIKE E'%{$numeric_cpf}%' ";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_ref_cod_selecao_processo)) {
+            $where   .= "{$whereAnd} i.ref_cod_selecao_processo = '$int_ref_cod_selecao_processo'";
+            $whereAnd = ' AND ';
+        }
+
+        if (preg_match('/^[a-zA-Z]/i', $inicial_min)) {
+            $where   .= "{$whereAnd} fcn_upper_nrm(p.nome) >= '$inicial_min'";
+            $whereAnd = ' AND ';
+        }
+
+        if (preg_match('/^[a-zA-Z]/i', $inicial_max)) {
+            $where   .= "{$whereAnd} fcn_upper_nrm(p.nome) < '$inicial_max'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($etapa) && is_numeric($etapa_situacao)) {
+            $where   .= "{$whereAnd} et.etapa = '{$etapa}' AND et.situacao >= '{$etapa_situacao}'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_turno)) {
+            $where   .= "{$whereAnd} i.estudando_turno = '$int_turno'";
+            $whereAnd = ' AND ';
+        }
+
+        if ($int_encaminhamento) {
+            $where   .= "{$whereAnd} i.encaminhamento = '$int_encaminhamento'";
+            $whereAnd = ' AND ';
+        }
+
+        if (is_numeric($int_area_selecionado)) {
+            $where   .= "{$whereAnd} i.area_selecionado = '$int_area_selecionado'";
+            $whereAnd = ' AND ';
+        }
+
+        if ($bool_egresso) {
+            $where   .= "{$whereAnd} i.egresso is not NULL";
+            $whereAnd = ' AND ';
+        }
+
+        if (!is_null($etapa_data) && is_numeric($etapa_data)) {
+            $where   .= "{$whereAnd} et.ref_cod_etapa_data = '$etapa_data'";
+            $whereAnd = ' AND ';
+        } else {
+            $where   .= "{$whereAnd} et.ref_cod_etapa_data is NULL";
+            $whereAnd = ' AND ';
+        }
+
+        $join = "LEFT JOIN
+                    cadastro.pessoa as p
+                ON
+                    p.idpes = a.ref_idpes
+                LEFT JOIN
+                    cadastro.fisica as f
+                ON
+                    f.idpes = a.ref_idpes
+                LEFT JOIN
+                    cadastro.documento as d
+                ON
+                    d.idpes = a.ref_idpes
+                LEFT JOIN
+                    cadastro.endereco_pessoa as e
+                ON
+                    e.idpes = a.ref_idpes
+                LEFT JOIN
+                    modules.ficha_medica_aluno as m
+                ON
+                    m.ref_cod_aluno = a.cod_aluno,
+                {$this->_tabela}
+                LEFT JOIN
+                    pmieducar.inscrito_etapa as et
+                ON
+                    et.ref_cod_inscrito = i.cod_inscrito
+                LEFT JOIN
+                    pmieducar.selecao_etapa_data as ed
+                ON
+                    ed.cod_etapa_data = et.ref_cod_etapa_data
+                LEFT JOIN
+                    public.escola_municipio as em
+                ON
+                    em.idescola = i.estudando_escola ";
+
+        $where   .= "{$whereAnd} i.ref_cod_aluno = a.cod_aluno ";
+        $whereAnd = ' AND ';
+
+        if ($inicio_limite !== false && $qtd_registros) {
+            $limite = "LIMIT $qtd_registros OFFSET $inicio_limite ";
+        }
+
+        $orderBy = ' ORDER BY ';
+
+        if ($str_orderBy) {
+            $orderBy .= $str_orderBy . ' ';
+        } else {
+            $orderBy .= 'fcn_upper_nrm(p.nome) ';
+        }
+
+        $db  = new clsBanco();
+
+        if ($where) {
+            $where = 'WHERE '. $where;
+        }
+
+        $where = $join . $where;
+
+        $tabela = "pmieducar.aluno as a";
+        $campos = $this->_campos_lista;
+
+        $this->_campos_lista .= " ,p.nome, f.data_nasc, f.sexo, f.cpf,
+            p.email, d.rg, e.cep, m.grupo_sanguineo, m.fator_rh,
+            em.nome as nome_escola, et.ref_cod_etapa_data, ed.data_etapa,
+            ed.horario";
+
+        $total = $db->CampoUnico(
+            "SELECT
+                COUNT(0)
+            FROM
+                {$tabela}
+                {$where}"
+        );
+
+        $db->Consulta(
+            "SELECT
+                {$this->_campos_lista}
+            FROM
+                {$tabela}
+                {$where} {$orderBy} {$limite}"
+        );
+
+        $resultado = [];
+
+        while ($db->ProximoRegistro()) {
+            $tupla = $db->Tupla();
+            $tupla['nome']  = transforma_minusculo($tupla['nome']);
+            $tupla['total'] = $total;
+
+            $resultado[] = $tupla;
+        }
+
+        $this->_campos_lista = $campos;
+
+        if (count($resultado) > 0) {
+            return $resultado;
+        }
+
+        return false;
+    }
+
     public function lista(
         $array_etapas = array(),
         $int_ref_cod_selecao_processo = false,
