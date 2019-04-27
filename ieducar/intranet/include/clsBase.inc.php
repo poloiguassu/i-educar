@@ -377,19 +377,13 @@ class clsBase extends clsConfig
         $this->VerificaPermicao();
         $this->CadastraAcesso();
 
-        $saida_geral = '';
+        $saida_geral = null;
 
         app(TopMenu::class)->current($this->processoAp,  request()->getRequestUri());
 
         View::share('title', $this->titulo);
 
-        if ($this->renderMenu) {
-            $saida_geral .= $this->MakeBody();
-        } else {
-            foreach ($this->clsForm as $form) {
-                $saida_geral .= $form->RenderHTML();
-            }
-        }
+        $saida_geral = $this->MakeBody();
 
         $view = 'legacy.body';
 
