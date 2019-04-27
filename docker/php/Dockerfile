@@ -30,7 +30,7 @@ COPY php.ini /usr/local/etc/php/php.ini
 
 RUN mkdir -p /usr/share/man/man1
 
-RUN apt-get install -y openjdk-8-jre
+RUN apt-get install -y default-jdk
 
 RUN docker-php-ext-install bcmath
 
